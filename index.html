@@ -1,0 +1,280 @@
+<!-- Test Git at 08/01/2025 -->
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<title>Data Tables</title>
+
+		<!-- นำเข้า  CSS จาก Bootstrap -->
+		<link rel="stylesheet" href="bootstrap-5.3.3/dist/css/bootstrap.min.css" />
+
+		<!-- นำเข้า  CSS จาก dataTables -->
+		<link rel="stylesheet" type="text/css" href="DataTables/datatables.css" />
+		<!-- <link rel="stylesheet" type="text/css" href="DataTables/dataTables.dataTables.css" />
+		<link rel="stylesheet" type="text/css" href="DataTables/buttons.dataTables.css" /> -->
+		<!-- <link rel="stylesheet" type="text/css" href="DataTables/jquery.dataTables.css" /> ลบ-->
+
+		<!-- นำเข้า  Javascript จาก  Jquery -->
+		<script type="text/javascript" src="jQuery/jquery-3.7.1.min.js"></script>
+
+		<!-- นำเข้า  Javascript  จาก   dataTables -->
+		<script type="text/javascript" charset="utf8" src="DataTables/datatables.js"></script>
+		<!-- <script type="text/javascript" charset="utf8" src="DataTables/dataTables.buttons.js"></script>
+		<script type="text/javascript" charset="utf8" src="DataTables/buttons.dataTables.js"></script>
+		<script type="text/javascript" charset="utf8" src="DataTables/jszip.min.js"></script>
+		<script type="text/javascript" charset="utf8" src="DataTables/pdfmake.min.js"></script>
+		<script type="text/javascript" charset="utf8" src="DataTables/vfs_fonts.js"></script>
+		<script type="text/javascript" charset="utf8" src="DataTables/buttons.html5.min.js"></script>
+		<script type="text/javascript" charset="utf8" src="DataTables/buttons.print.min.js"></script> -->
+
+		<!-- ลบออก -->
+		<!-- <script type="text/javascript" charset="utf8" src="DataTables/jquery.dataTables.js"></script>  -->
+
+		<script type="text/javascript">
+			//คำสั่ง Jquery เริ่มทำงาน เมื่อ โหลดหน้า Page เสร็จ
+			$(function () {
+				//กำหนดให้  Plug-in dataTable ทำงาน ใน ตาราง Html ที่มี id เท่ากับ example
+				$("#example")
+					.dataTable({
+						fixedHeader: {
+							header: true,
+							footer: true,
+						},
+						paging: false,
+						lengthChange: false,
+						scrollCollapse: true,
+						scrollY: "50vh",
+						searching: false,
+						autoWidth: false, //กำหนดความกว้างอัตโนมัติ
+						info: true,
+						pageResize: true,
+
+						scrollResize: true,
+						layout: {
+							topStart: {
+								buttons: ["copy", "csv", "excel", "pdf", "print"],
+							},
+						},
+						language: {
+							url: "//cdn.datatables.net/plug-ins/2.1.8/i18n/th.json",
+						},
+						dom: "lBfrtip",
+						buttons: [
+							{ extend: "copy", className: "btn-warning" },
+							{ extend: "csv", className: "btn-primary" },
+							{ extend: "excel", className: "btn-success" },
+							{ extend: "pdf", className: "btn-danger" },
+							{ extend: "print", className: "btn-info" },
+						],
+					})
+					.buttons()
+					.container()
+					.appendTo("#example1_wrapper .col-md-6:eq(0)");
+			});
+		</script>
+
+		<style>
+			.container {
+				display: grid;
+				grid-template-columns: 1fr 4fr;
+				grid-template-rows: 1fr 5fr;
+				border: 1px solid red;
+				height: 80vh;
+				grid-template-areas:
+					"logo1 menu1"
+					"side1 content1";
+				overflow-y: auto;
+			}
+
+			.item {
+				border: 1px solid blue;
+			}
+
+			#logo1 {
+				grid-area: logo1;
+				border: 1px solid green;
+			}
+
+			#menu1 {
+				grid-area: menu1;
+				border: 1px solid green;
+			}
+
+			#side1 {
+				grid-area: side1;
+				border: 1px solid green;
+			}
+
+			#content1 {
+				grid-area: content1;
+				border: 1px solid rgb(58, 55, 193);
+				display: flex;
+				align-items: stretch;
+			}
+
+			#example {
+				align-self: stretch;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>Data Tables</h1>
+		<div class="container">
+			<div class="item" id="logo1">Item 1</div>
+			<div class="item" id="menu1">
+				<img src="../images/map.jpg" width="320" height="160" orgwidth="320" orgheight="160"
+					usemap="#world-continents" />
+				<map name="world-continents">
+					<area title="North America" href="https://en.wikipedia.org/wiki/North_America" shape="poly"
+						coords="48,89,67,69,77,49,140,0,68,0,6,10,4,31,16,69" />
+					<area title="South America" href="https://en.wikipedia.org/wiki/South_America" shape="poly"
+						coords="48,88,61,74,119,99,95,160,66,159" />
+					<area title="Europe" href="https://en.wikipedia.org/wiki/Europe" shape="poly"
+						coords="124,49,145,46,158,50,187,43,198,6,146,1,115,21" />
+					<area title="Africa" href="https://en.wikipedia.org/wiki/Africa" shape="poly"
+						coords="121,53,140,47,169,51,186,77,196,80,188,137,156,136,138,97,118,86" />
+					<area title="Asia" href="https://en.wikipedia.org/wiki/Asia" shape="poly"
+						coords="166,50,184,77,201,74,215,91,258,108,263,87,283,74,297,8,192,3,191,29,187,46,170,42" />
+					<area title="Australia" href="https://en.wikipedia.org/wiki/Australia_(continent)" shape="poly"
+						coords="257,107,263,85,314,89,316,137,294,151,249,132,248,114" />
+				</map>
+			</div>
+			<div class="item" id="side1">Item 3</div>
+			<div class="item" id="content1">
+				<table class="table table-striped table-bordered table-sm" style="width: 100%" id="example">
+					<thead class="table-dark">
+						<tr>
+							<th>Name</th>
+							<th>Position</th>
+							<th>Office</th>
+							<th>Age</th>
+							<th>Start date</th>
+							<th>Salary</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Zorita Serrano</td>
+							<td>Software Engineer</td>
+							<td>San Francisco</td>
+							<td>56</td>
+							<td>2012/06/01</td>
+							<td>$115,000</td>
+						</tr>
+						<tr>
+							<td>Jennifer Acosta</td>
+							<td>Junior Javascript Developer</td>
+							<td>Edinburgh</td>
+							<td>43</td>
+							<td>2013/02/01</td>
+							<td>$75,650</td>
+						</tr>
+						<tr>
+							<td>Cara Stevens</td>
+							<td>ซอฟต์แวร์ เอ็นจิเนียร์</td>
+							<td>New York</td>
+							<td>46</td>
+							<td>2011/12/06</td>
+							<td>$145,600</td>
+						</tr>
+						<tr>
+							<td>Hermione Butler</td>
+							<td>Regional Director</td>
+							<td>London</td>
+							<td>47</td>
+							<td>2011/03/21</td>
+							<td>$356,250</td>
+						</tr>
+						<tr>
+							<td>Lael Greer</td>
+							<td>Systems Administrator</td>
+							<td>London</td>
+							<td>21</td>
+							<td>2009/02/27</td>
+							<td>$103,500</td>
+						</tr>
+						<tr>
+							<td>Jonas Alexander</td>
+							<td>Developer</td>
+							<td>San Francisco</td>
+							<td>30</td>
+							<td>2010/07/14</td>
+							<td>$86,500</td>
+						</tr>
+						<tr>
+							<td>Shad Decker</td>
+							<td>Regional Director</td>
+							<td>Edinburgh</td>
+							<td>51</td>
+							<td>2008/11/13</td>
+							<td>$183,000</td>
+						</tr>
+						<tr>
+							<td>Michael Bruce</td>
+							<td>Javascript Developer</td>
+							<td>Singapore</td>
+							<td>29</td>
+							<td>2011/06/27</td>
+							<td>$183,000</td>
+						</tr>
+						<tr>
+							<td>Donna Snider</td>
+							<td>Customer Support</td>
+							<td>New York</td>
+							<td>27</td>
+							<td>2011/01/25</td>
+							<td>$112,000</td>
+						</tr>
+
+						<tr>
+							<td>Jena Gaines</td>
+							<td>Office Manager</td>
+							<td>London</td>
+							<td>30</td>
+							<td>2008/12/19</td>
+							<td>$90,560</td>
+						</tr>
+						<tr>
+							<td>Quinn Flynn</td>
+							<td>Support Lead</td>
+							<td>Edinburgh</td>
+							<td>22</td>
+							<td>2013/03/03</td>
+							<td>$342,000</td>
+						</tr>
+						<tr>
+							<td>Charde Marshall</td>
+							<td>Regional Director</td>
+							<td>San Francisco</td>
+							<td>36</td>
+							<td>2008/10/16</td>
+							<td>$470,600</td>
+						</tr>
+						<tr>
+							<td>Haley Kennedy</td>
+							<td>Senior Marketing Designer</td>
+							<td>London</td>
+							<td>43</td>
+							<td>2012/12/18</td>
+							<td>$313,500</td>
+						</tr>
+						<tr>
+							<td>Tatyana Fitzpatrick</td>
+							<td>Regional Director</td>
+							<td>London</td>
+							<td>19</td>
+							<td>2010/03/17</td>
+							<td>$385,750</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</body>
+
+</html>
