@@ -263,6 +263,29 @@ require_once 'config.php';
             </div>
         </div>
         <div class="row">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Launch demo modal
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="container-fluid d-flex justify-content-evenly text-start text-bg-dark bg-transparent mb-5">
                 <!-- <div class="d-flex justify-content-around bg-secondary mb-3"> -->
                 <div class="col">
@@ -340,7 +363,7 @@ require_once 'config.php';
                         <!-- <input type="hidden" name="action" id="" value='insertdata'> -->
                         <!-- <div class="col-sm-12 d-none d-md-block" id="image-sub" style="border:1px solid gray;"> -->
                         <div class="col-sm-12 d-none d-md-block mb-3" id="image-sub">
-                            <img src="images/impact-muang-thong-thani.png" class="img-fluid rounded-2" />
+                            <img src="_images/impact-muang-thong-thani.png" class="img-fluid rounded-2" />
                         </div>
 
                         <!-- <div class="col-sm-12"> -->
@@ -417,6 +440,29 @@ require_once 'config.php';
                             </div>
                     </form>
 
+                    <div class="mb-4 align-items-center d-flex justify-content-center">
+                        <div class="w-50 border border-2 border-dark-subtle border-opacity-10"></div>
+                        <small class="text-black-50 py-0 px-3 text-uppercas">หรือ</small>
+                        <div class="w-50 border border-2 border-dark-subtle border-opacity-10"></div>
+                    </div>
+
+                    <?php
+                    if (!isset($_SESSION['profile'])) :
+                        $_SESSION['line_event'] = 'addfriend';
+
+                        $link = $line->getLinkAddFriend($state);
+                        echo "<div id='button'>
+                                <a href='{$link}' id='lineSignup'>
+                                    <img class='image' id='img'>
+                                    <div class='div_text'>สมัครสมาชิกด้วย Line</div>
+                                </a>
+                            </div>";
+                    // echo "<div class='button'><a href='{$link}'><img class='image'><div class='div_text'>สมัครสมาชิกด้วย Line</div></a></div>";
+                    // echo '<a class='button' href='' , $link, ''><img class='image'>สมัครสมาชิกด้วย Line</a>';
+                    endif;
+                    ?>
+
+
                 </div>
             </div>
         </div>
@@ -425,7 +471,7 @@ require_once 'config.php';
 
     <!-- jQuery -->
     <script src="plugins/jQuery-3.7.1/jquery-3.7.1.min.js"></script>
-    <!-- Bootstrap 5 -->
+    <!-- Bootstrap 4 add by Poj-->
     <script src="plugins/bootstrap-5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->

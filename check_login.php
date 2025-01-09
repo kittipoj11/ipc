@@ -1,7 +1,7 @@
 <?php
 @session_start();
-require_once '../config.php';
-require_once '../class/user.class.php';
+require_once 'config.php';
+require_once 'class/user.class.php';
 
 $user = new User;
 
