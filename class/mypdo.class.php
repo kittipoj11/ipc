@@ -10,26 +10,28 @@ class MyConnection
     private $port = '3306';
     private $username = 'root';
     private $password = '';
-    private $dbname = 'carstaging_db';
+    private $dbname = 'inspection_db';
 
     public $myPdo;
 
     function __construct()
     {
-        
+
         try {
             // $this->myPdo = $this->connection();
             $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4";
 
             $pdoObj = new PDO($dsn, $this->username, $this->password);
-            $pdoObj->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             $pdoObj->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            // $pdoObj->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-            $this->myPdo= $pdoObj;
+            $pdoObj->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $pdoObj->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
+            // echo "Connection successfully: ";
+
+            $this->myPdo = $pdoObj;
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }
-
     }
 
     protected function connection()
@@ -42,6 +44,7 @@ class MyConnection
         $pdoObj = new PDO($dsn, $this->username, $this->password);
         $pdoObj->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         $pdoObj->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdoObj->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         return $pdoObj;
     }
 }

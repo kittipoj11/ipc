@@ -5,7 +5,7 @@ require_once 'class/user.class.php';
 
 $user = new User;
 
-$result = $user->checkLogin($_POST);
+$result = $user->checkLogin($_POST['username'],$_POST['password']);
 $_SESSION['result'] = $result;
 
 echo $result;

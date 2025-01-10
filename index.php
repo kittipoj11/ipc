@@ -250,9 +250,7 @@ require_once 'config.php';
         </div>
     </nav>
 
-    <div class="d-flex flex-column  justify-content-end align-items-center min-vh-100 impact-image p-5">
-        <!-- <div class="p-4 p-md-5 mx-3 mt-2 text-bg-dark impact-image"> -->
-        <!-- <h1 class="display-4 fw-bold text-body-emphasis">Centered screenshot</h1> -->
+    <!-- <div class="d-flex flex-column  justify-content-end align-items-center min-vh-100 impact-image p-5">
         <div class="row text-start text-bg-dark bg-transparent">
             <div class="col-md-6 px-0">
                 <h1 class="display-4 fst-italic fw-bold">IPC</h1>
@@ -264,7 +262,6 @@ require_once 'config.php';
         </div>
         <div class="row">
             <div class="container-fluid d-flex justify-content-evenly text-start text-bg-dark bg-transparent mb-5">
-                <!-- <div class="d-flex justify-content-around bg-secondary mb-3"> -->
                 <div class="col">
                     <img src="images/image1.jpg" class="img-thumbnail" alt="รูปที่ 1" width="500px">
                 </div>
@@ -278,7 +275,7 @@ require_once 'config.php';
             </div>
 
         </div>
-    </div>
+    </div> -->
 
 
     <!-- ส่วน footer -->
@@ -299,22 +296,22 @@ require_once 'config.php';
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form name="frmLogin" id="frmLogin" action="check_login.php" method="POST">
+                    <form name="frmLogin" id="frmLogin" action="" method="">
                         <!-- Username input -->
                         <div class="form-outline mb-2">
                             <label class="form-label" for="username">User Name</label>
-                            <input type="text" name="username" id="username" class="form-control" autocomplete="off" />
+                            <input type="text" name="username" id="username" class="form-control" autocomplete="off" placeholder="Username">
                         </div>
 
                         <!-- Password input -->
                         <div class="form-outline mb-2">
                             <label class="form-label" for="password">Password</label>
-                            <input type="password" name="password" id="password" class="form-control" />
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Password">
                         </div>
 
                         <div class="form-outline my-3">
                             <!-- Submit button -->
-                            <button type="submit" name="login" id="login" class="btn btn-primary btn-block form-control">Log in</button>
+                            <button type="submit" name="login" id="login" class="btn btn-primary btn-block form-control">Login</button>
                         </div>
 
                     </form>
@@ -327,7 +324,7 @@ require_once 'config.php';
     </div>
 
     <!-- Modal: Registration Form -->
-    <div class="modal fade modal-md" id="registrationForm" tabindex="-1" aria-hidden="true">
+    <!-- <div class="modal fade modal-md" id="registrationForm" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -337,13 +334,10 @@ require_once 'config.php';
                 <div class="modal-body">
                     <form name="frmMemberRegistration" id="frmMemberRegistration" action="" method=""
                         class="row g-3 needs-validation" novalidate>
-                        <!-- <input type="hidden" name="action" id="" value='insertdata'> -->
-                        <!-- <div class="col-sm-12 d-none d-md-block" id="image-sub" style="border:1px solid gray;"> -->
                         <div class="col-sm-12 d-none d-md-block mb-3" id="image-sub">
                             <img src="images/impact-muang-thong-thani.png" class="img-fluid rounded-2" />
                         </div>
 
-                        <!-- <div class="col-sm-12"> -->
                         <div class="col-sm-12">
                             <div class="row">
                                 <div class="col-sm-12 mb-1">
@@ -387,7 +381,6 @@ require_once 'config.php';
                                 <div class="col-sm-12 mb-1">
                                     <div class="input-group input-group-sm mb-2">
                                         <label class="input-group-text" for="password">Password</label>
-                                        <!-- <input type="password" name="password" id="password" class="form-control form-control-sm" onkeyup='check();' required /> -->
                                         <input type="text" name="enter_password" id="enter_password"
                                             class="form-control form-control-sm" onkeyup='check();' required />
                                         <div class="invalid-feedback">
@@ -401,7 +394,6 @@ require_once 'config.php';
                                     <div class="input-group input-group-sm mb-2">
                                         <label class="input-group-text" for="confirm_password">Confirm
                                             password</label>
-                                        <!-- <input type="password" name="confirm_password" id="confirm_password" class="form-control form-control-sm" onkeyup='check();' required /> -->
                                         <input type="text" name="confirm_password" id="confirm_password"
                                             class="form-control form-control-sm" onkeyup='check();' required />
                                         <div id='message' class="invalid-feedback">
@@ -411,8 +403,7 @@ require_once 'config.php';
                                 </div>
                             </div>
                             <div class="form-outline my-3">
-                                <!-- Submit button -->
-                                <button type="submit" name="login" id="login"
+                                <button type="submit" name="signup" id="signup"
                                     class="btn btn-primary btn-block form-control div_text">สมัครสมาชิก</button>
                             </div>
                     </form>
@@ -420,7 +411,7 @@ require_once 'config.php';
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
     <!-- jQuery -->
@@ -433,7 +424,7 @@ require_once 'config.php';
 
     <!-- Custom scripts for all pages-->
     <script src="plugins/dist/js/adminlte.min.js"></script>
-    <script src="signinup.js"></script>
+    <script src="javascript/signinup.js"></script>
 
     <script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields

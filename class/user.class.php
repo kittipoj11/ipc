@@ -1,21 +1,66 @@
 <?php
-require_once  'myPdo.class.php';
+@session_start();
 
-// namespace ropa;
+// destroy the session
+// session_destroy();
 
-// use ropa\Db;
+require_once  'mypdo.class.php';
 
 class User extends MyConnection
 {
+    public function checkLogin($getUsername, $getPassword)
+    {
+        // echo($getUsername . $getPassword);
+        // exit;
+        $username = $getUsername;
+        $password = $getPassword;
+        $sql = <<<EOD
+                select * 
+                from users u
+                left join departments d
+                    on u.department_id = d.department_id
+                left join roles r
+                    on u.role_id = r.role_id
+                where username = :username
+                EOD;
+
+        $stmt = $this->myPdo->prepare($sql);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        // @session_start();
+
+        // remove all session variables
+        session_unset();
+        $_SESSION = [];
+        if ($user && $password == $user['password']) {
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['full_name'] = $user['full_name'];
+            $_SESSION['role_id'] = $user['role_id'];
+            $_SESSION['role_name'] = $user['role_name'];
+            $_SESSION['department_id'] = $user['department_id'];
+            $_SESSION['department_name'] = $user['department_name'];
+
+            $_SESSION['login_status'] = 'success';
+            return true;
+        } else {
+            $_SESSION['login_status'] = 'fail';
+            return false;
+        }
+    }
+
     public function getAllRecord()
     {
-        $sql = "select * 
-                from tbl_user u
-                left join tbl_department d
+        $sql = <<<EOD
+                select * 
+                from users u
+                left join departments d
                     on u.department_id = d.department_id
-                left join tbl_role r
-                    on u.role_id = r.role_id
-                where u.is_deleted = false";
+                left join roles r
+                    on u.role_id = r.role_id"
+                EOD;
 
         $stmt = $this->myPdo->prepare($sql);
         $stmt->execute();
@@ -25,14 +70,15 @@ class User extends MyConnection
 
     public function getRecordByUsername($username)
     {
-        $sql = "select * 
-                from tbl_user u
-                left join tbl_department d
+        $sql = <<<EOD
+                select * 
+                from users u
+                left join departments d
                     on u.department_id = d.department_id
-                left join tbl_role r
+                left join roles r
                     on u.role_id = r.role_id
-                where u.is_deleted = false
-                and username = :username";
+                where username = :username
+                EOD;
 
         $stmt = $this->myPdo->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
@@ -44,7 +90,7 @@ class User extends MyConnection
     public function getLineUserID($username)
     {
         $sql = "select line_user_id 
-                from tbl_user 
+                from users 
                 where username = :username";
 
         $stmt = $this->myPdo->prepare($sql);
@@ -93,7 +139,7 @@ class User extends MyConnection
         $phone = $getData['phone'];
         $email = $getData['email'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
-        $sql = "insert into tbl_user(username, password, fullname, role_id, department_id, phone, email) 
+        $sql = "insert into users(username, password, fullname, role_id, department_id, phone, email) 
                 values(:username, :password, :fullname, :role_id, :department_id, :phone, :email)";
         $stmt = $this->myPdo->prepare($sql);
         // $stmt->bindParam(':username', $username, PDO::PARAM_STR);
@@ -129,7 +175,7 @@ class User extends MyConnection
         $phone = $getData['phone'];
         $email = $getData['email'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
-        $sql = "update tbl_user 
+        $sql = "update users 
                 set fullname = :fullname
                 , password = :password
                 , role_id = :role_id
@@ -164,7 +210,7 @@ class User extends MyConnection
     {
         $username = $getData['delete_id'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
-        $sql = "update tbl_user 
+        $sql = "update users 
                 set is_deleted = 1
                 where username = :username";
         $stmt = $this->myPdo->prepare($sql);
@@ -183,46 +229,5 @@ class User extends MyConnection
         }
     }
 
-    public function checkLogin($getData)
-    {
-        // print_r($_REQUEST);
-        // exit;
-        $username = $getData['username'];
-        $password = $getData['password'];
-        $sql = "select * 
-                from tbl_user u
-                left join tbl_department d
-                    on u.department_id = d.department_id
-                left join tbl_role r
-                    on u.role_id = r.role_id
-                where u.is_deleted = false
-                and username = :username";
-
-        $stmt = $this->myPdo->prepare($sql);
-        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-        $stmt->execute();
-        $rs = $stmt->fetchAll();
-
-        // @session_start();
-        $_SESSION = [];
-        if ($password == $rs[0]['password']) {
-            $_SESSION['username'] = $rs[0]['username'];
-            $_SESSION['password'] = $rs[0]['password'];
-            $_SESSION['fullname'] = $rs[0]['fullname'];
-            $_SESSION['role_id'] = $rs[0]['role_id'];
-            $_SESSION['role_name'] = $rs[0]['role_name'];
-            $_SESSION['department_id'] = $rs[0]['department_id'];
-            $_SESSION['department_name'] = $rs[0]['department_name'];
-            $_SESSION['phone'] = $rs[0]['phone'];
-            $_SESSION['email'] = $rs[0]['email'];
-            $_SESSION['line_user_id'] = $rs[0]['line_user_id'];
-            $_SESSION['line_id'] = $rs[0]['line_id'];
-
-            $_SESSION['login_status'] = true;
-            return true;
-        } else {
-            $_SESSION['login_status'] = false;
-            return false;
-        }
-    }
+    
 }

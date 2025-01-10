@@ -2,15 +2,22 @@ $(document).ready(function () {
   $("#frmLogin").submit(function (e) {
     e.preventDefault();
 
+    let username = $("#username").val();
+    let password = $("#password").val();
     $.ajax({
       url: "check_login.php",
       // data: $(this).serialize(),
-      data: $(this).serialize(),
+      data: {
+        username: username,
+        password: password,
+      },
       method: "POST",
+      datatype: "json",
       success: function (response) {
-        // alert("res = " + response);
+        // console.log(`response => ${response}`);
         if (response) {
-          window.location = "520booking.php";
+          // return;
+          window.location = "index1.html";
         } else {
           // var jsonData = JSON.parse(response); //ส่งกลับมาเป็น html ว่าสำเร็จหรือไม่
           Swal.fire({
@@ -20,7 +27,7 @@ $(document).ready(function () {
             background: "#fff url(images/trees.png)",
             backdrop: `
                       rgba(219, 68, 55,0.4)
-                      url("_images/ani.gif")
+                      url("images/ani.gif")
                       left top
                       no-repeat
                       `,
@@ -28,6 +35,9 @@ $(document).ready(function () {
             // timer: 1500
           });
         }
+      },
+      error: function (response) {
+        console.log(`response => FAIL!!!`);
       },
     });
   });
