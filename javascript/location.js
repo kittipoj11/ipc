@@ -3,17 +3,17 @@ $(document).ready(function () {
   $(document).on("click", "#btnInsertData", function (e) {
     e.preventDefault();
     // แบบที่ 1 ใช้ serializeArray() แล้ว push ค่าเพิ่มเติมให้ array
-    let location_name = $("#location_name").val();
-    let data_sent = $("#frmInsert").serializeArray();
-    data_sent.push({
-      name: "action",
-      value: "insertdata",
-    });
-    // หรือ
+    // let data_sent = $("#frmInsert").serializeArray();
+    // data_sent.push({
+    //   name: "action",
+    //   value: "insertdata",
+    // });
+    
     // แบบที่ 2 ใช้ serialize() แล้ว + ด้วย "&action=insertdata"
     // let data_sent = $("#frmInsert").serialize() + "&action=insertdata";
-    // หรือ
+
     // แบบที่ 3 ใช้กำหนดที่ละตัวแปร 
+    let location_name = $("#location_name").val();
     // let data_sent = {
     //   var1: ตัวแปรvar1,
     //   var2: ตัวแปรvar2,
@@ -44,6 +44,7 @@ $(document).ready(function () {
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
+            // $(".result").html("Data added successfully");
             // Load เฉพาะ card-body
             $("#frmInsert")[0].reset();
             $("#card-body").empty();

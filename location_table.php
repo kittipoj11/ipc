@@ -24,6 +24,7 @@
                </div>
            </div><!-- /.container-fluid -->
        </section>
+       <!-- <div class="result"></div> -->
 
        <!-- Main content -->
        <section class="content">
@@ -40,8 +41,8 @@
                                <table id="example1" class="table table-bordered table-striped table-sm">
                                    <thead>
                                        <tr>
-                                           <th class="text-center" style="width: 50px;">#</th>
-                                           <th class="text-center" width="30%">Location name</th>
+                                           <th class="text-center" style="width: 100px;">#</th>
+                                           <th class="text-center">Location name</th>
                                            <th class="text-center" style="width: 120px;">Action</th>
                                        </tr>
                                    </thead>
@@ -88,7 +89,6 @@
    <!-- logout.php -->
 
    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Insert data Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-   <!-- <div class="container-fluid table-responsive-sm p-0"> -->
    <div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
        <div class="modal-dialog modal-dialog-centered">
            <div class="modal-content">
@@ -102,14 +102,6 @@
 
                <form name="frmInsert" id="frmInsert" action="" method="">
                    <div class="modal-body">
-
-                       <!-- <div class="row m-3">
-                           <label for="location_id" class="col-sm-6 col-form-label">ซัมเมอร์โน๊ต</label>
-                           <textarea id="summernote">
-                                Place <em>some</em> <u>text</u> <strong>here</strong>
-                            </textarea>
-                       </div> -->
-
                        <div class="row m-3">
                            <label for="location_id" class="col-sm-6 col-form-label">#</label>
                            <div class="col-sm-6">
