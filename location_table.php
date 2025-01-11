@@ -17,7 +17,7 @@
                <div class="row mb-2">
                    <div class="col-sm-6 d-flex">
                        <h4>Location</h4>
-                       <a class="btn btn-success btn-sm" data-toggle="modal" data-placement="right" title="เพิ่มข้อมูล" data-target="#insertModal" style="margin: 0px 5px 5px 5px;">
+                       <a class="btn btn-success btn-sm" data-bs-toggle="modal" data-placement="right" title="เพิ่มข้อมูล" data-bs-target="#insertModal" style="margin: 0px 5px 5px 5px;">
                            <i class="fa-solid fa-plus"></i>
                        </a>
                    </div>
@@ -120,7 +120,7 @@
                        <div class="row m-3">
                            <label for="location_name" class="col-sm-6 col-form-label">Location name</label>
                            <div class="col-sm-6">
-                               <input type="input" class="form-control form-control-sm" name="location_name">
+                               <input type="input" class="form-control form-control-sm" name="location_name" id="location_name">
                            </div>
                        </div>
 

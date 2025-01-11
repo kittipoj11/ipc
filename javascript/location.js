@@ -2,8 +2,8 @@ $(document).ready(function () {
   // $('#myForm').submit(function (e) {
   $(document).on("click", "#btnInsertData", function (e) {
     e.preventDefault();
-
     // แบบที่ 1 ใช้ serializeArray() แล้ว push ค่าเพิ่มเติมให้ array
+    let location_name = $("#location_name").val();
     let data_sent = $("#frmInsert").serializeArray();
     data_sent.push({
       name: "action",
@@ -24,6 +24,7 @@ $(document).ready(function () {
       url: "location_crud.php",
       data: {
         location_name: location_name,
+        action: 'insertdata',
       },
       method: "POST",
       datatype: "json",
