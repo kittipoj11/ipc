@@ -17,7 +17,7 @@ $(document).ready(function () {
         // console.log(`response => ${response}`);
         if (response) {
           // return;
-          window.location = "index1.html";
+          window.location = "location.php";
         } else {
           // var jsonData = JSON.parse(response); //ส่งกลับมาเป็น html ว่าสำเร็จหรือไม่
           Swal.fire({
@@ -26,18 +26,25 @@ $(document).ready(function () {
             color: "#DB4437",
             background: "#fff url(images/trees.png)",
             backdrop: `
-                      rgba(219, 68, 55,0.4)
-                      url("images/ani.gif")
-                      left top
-                      no-repeat
-                      `,
+            rgba(219, 68, 55,0.4)
+            url("images/ani.gif")
+            left top
+            no-repeat
+            `,
+            // confirmButtonText: "555",
             // showConfirmButton: false,
             // timer: 1500
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location = "index2.html";
+            }
           });
         }
+
       },
       error: function (response) {
         console.log(`response => FAIL!!!`);
+        window.location = "index3.html";
       },
     });
   });

@@ -27,21 +27,21 @@ class User extends MyConnection
         $stmt = $this->myPdo->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
-        $user = $stmt->fetch();
+        $rs = $stmt->fetch();
 
         // @session_start();
 
         // remove all session variables
         session_unset();
         $_SESSION = [];
-        if ($user && $password == $user['password']) {
-            $_SESSION['user_id'] = $user['user_id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['full_name'] = $user['full_name'];
-            $_SESSION['role_id'] = $user['role_id'];
-            $_SESSION['role_name'] = $user['role_name'];
-            $_SESSION['department_id'] = $user['department_id'];
-            $_SESSION['department_name'] = $user['department_name'];
+        if ($rs && $password == $rs['password']) {
+            $_SESSION['user_id'] = $rs['user_id'];
+            $_SESSION['username'] = $rs['username'];
+            $_SESSION['full_name'] = $rs['full_name'];
+            $_SESSION['role_id'] = $rs['role_id'];
+            $_SESSION['role_name'] = $rs['role_name'];
+            $_SESSION['department_id'] = $rs['department_id'];
+            $_SESSION['department_name'] = $rs['department_name'];
 
             $_SESSION['login_status'] = 'success';
             return true;

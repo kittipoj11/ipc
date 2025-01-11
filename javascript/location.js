@@ -12,11 +12,21 @@ $(document).ready(function () {
     // หรือ
     // แบบที่ 2 ใช้ serialize() แล้ว + ด้วย "&action=insertdata"
     // let data_sent = $("#frmInsert").serialize() + "&action=insertdata";
+    // หรือ
+    // แบบที่ 3 ใช้กำหนดที่ละตัวแปร 
+    // let data_sent = {
+    //   var1: ตัวแปรvar1,
+    //   var2: ตัวแปรvar2,
+    //   action: 'insertdata',
+    // };
 
     $.ajax({
-      url: "101cartype_crud.php",
-      type: "POST",
-      data: data_sent,      // data: $(this).serialize(),
+      url: "location_crud.php",
+      data: {
+        location_name: location_name,
+      },
+      method: "POST",
+      datatype: "json",
       success: function (response) {
         // var jsonData = JSON.parse(response); //ส่งกลับมาเป็น html ว่าสำเร็จหรือไม่
         Swal.fire({
@@ -69,7 +79,7 @@ $(document).ready(function () {
     let id = $(this).attr("iid");
     // console.log(id);
     $.ajax({
-      url: "101cartype_crud.php",
+      url: "location_crud.php",
       type: "POST",
       data: { edit_id: id },
       success: function (response) {
@@ -94,7 +104,7 @@ $(document).ready(function () {
     // });
     // console.log(data_sent);
     $.ajax({
-      url: "101cartype_crud.php",
+      url: "location_crud.php",
       type: "POST",
       // data: $(this).serialize(),
       data: data_sent,
@@ -178,7 +188,7 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "101cartype_crud.php",
+          url: "location_crud.php",
           type: "POST",
           data: { delete_id: id },
           success: function (response) {
