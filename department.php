@@ -50,9 +50,9 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/location.class.php';
-    $location = new location;
-    $rs = $location->getAllRecord();
+    require_once  'class/department.class.php';
+    $department = new department;
+    $rs = $department->getAllRecord();
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -62,7 +62,7 @@ require_once 'auth.php';
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6 d-flex">
-              <h4>Location</h4>
+              <h4>Department</h4>
               <a class="btn btn-success btn-sm" data-bs-toggle="modal" data-placement="right" title="เพิ่มข้อมูล" data-bs-target="#insertModal" style="margin: 0px 5px 5px 5px;">
                 <i class="fa-solid fa-plus"></i>
               </a>
@@ -80,7 +80,7 @@ require_once 'auth.php';
 
               <div class="card">
                 <!-- <div class="card-header">
-                               <h3 class="card-title">location</h3>
+                               <h3 class="card-title">department</h3>
                            </div> -->
                 <!-- /.card-header -->
                 <div class="card-body" id="card-body">
@@ -88,7 +88,7 @@ require_once 'auth.php';
                     <thead>
                       <tr>
                         <th class="text-center" style="width: 100px;">#</th>
-                        <th class="text-center">location name</th>
+                        <th class="text-center">department name</th>
                         <th class="text-center" style="width: 120px;">Action</th>
                       </tr>
                     </thead>
@@ -96,14 +96,14 @@ require_once 'auth.php';
                       <?php foreach ($rs as $row) {
                         $html = <<<EOD
                                         <tr>
-                                            <td>{$row['location_id']}</td>
-                                            <td>{$row['location_name']}</td>
+                                            <td>{$row['department_id']}</td>
+                                            <td>{$row['department_name']}</td>
                                             <td align='center'>
                                                 <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' data-toggle='modal'  data-placement='right' title='Edit' data-target='#editModal' iid='{$row['location_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-warning btn-sm btnEdit' data-toggle='modal'  data-placement='right' title='Edit' data-target='#editModal' iid='{$row['department_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-pen-to-square'></i>
                                                     </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' data-toggle='modal'  data-placement='right' title='Delete' data-target='#deleteModal' iid='{$row['location_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-danger btn-sm btnDelete' data-toggle='modal'  data-placement='right' title='Delete' data-target='#deleteModal' iid='{$row['department_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-trash-can'></i>
                                                     </a>
                                                 </div>
@@ -149,16 +149,16 @@ require_once 'auth.php';
           <form name="frmInsert" id="frmInsert" action="" method="">
             <div class="modal-body">
               <div class="row m-3">
-                <label for="location_id" class="col-sm-6 col-form-label">#</label>
+                <label for="department_id" class="col-sm-6 col-form-label">#</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm fst-italic" name="location_id" value="[Autonumber]" disabled>
+                  <input type="input" class="form-control form-control-sm fst-italic" name="department_id" value="[Autonumber]" disabled>
                 </div>
               </div>
 
               <div class="row m-3">
-                <label for="location_name" class="col-sm-6 col-form-label">location name</label>
+                <label for="department_name" class="col-sm-6 col-form-label">department name</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm" name="location_name" id="location_name">
+                  <input type="input" class="form-control form-control-sm" name="department_name" id="department_name">
                 </div>
               </div>
 
@@ -201,17 +201,17 @@ require_once 'auth.php';
             <!-- <input type="text" name="action" id="action"> -->
             <div class="modal-body">
               <div class="row m-3">
-                <label for="location_id" class="col-sm-6 col-form-label">#</label>
+                <label for="department_id" class="col-sm-6 col-form-label">#</label>
                 <div class="col-sm-6">
-                  <!-- <input type="hidden" class="location_id" name="location_id"> -->
-                  <input type="input" class="form-control form-control-sm fst-italic location_id" id="location_id" readonly name="location_id">
+                  <!-- <input type="hidden" class="department_id" name="department_id"> -->
+                  <input type="input" class="form-control form-control-sm fst-italic department_id" id="department_id" readonly name="department_id">
                 </div>
               </div>
 
               <div class="row m-3">
-                <label for="location_name" class="col-sm-6 col-form-label">location name</label>
+                <label for="department_name" class="col-sm-6 col-form-label">department name</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm" name="location_name" id="location_name">
+                  <input type="input" class="form-control form-control-sm" name="department_name" id="department_name">
                 </div>
               </div>
 
@@ -262,4 +262,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/location.js"></script>
+    <script src="javascript/department.js"></script>

@@ -21,18 +21,19 @@ require_once 'auth.php';
 
   <!-- Bootstrap 5.3.3 add by Poj-->
   <link rel="stylesheet" href="plugins/bootstrap-5.3.3/dist/css/bootstrap.min.css">
-  <!-- ใช้แสดง icon ปุ่ม Insert, Update, Delete และ icon เมนูต่างๆบน sidebar-->
+  <!-- Custom fonts for this template-->
+  <!-- <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css"> -->
   <link rel="stylesheet" href="plugins/fontawesome-free-6.5.1-web/css/all.min.css" type="text/css">
   <!-- Google Font: Source Sans Pro -->
-  <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"> -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
   <!-- flaticon dist\bootstrap-icons-1.11.3\font\bootstrap-icons.min.css-->
-  <!-- <link rel="stylesheet" href="plugins/dist/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"> -->
+  <link rel="stylesheet" href="plugins/dist/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
   <!-- flaticon -->
-  <!-- <link rel="stylesheet" href="plugins/uicons-regular-rounded/css/uicons-regular-rounded.css"> -->
+  <link rel="stylesheet" href="plugins/uicons-regular-rounded/css/uicons-regular-rounded.css">
   <!-- DataTables -->
-  <!-- <link rel="stylesheet" href="plugins/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="plugins/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="plugins/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css"> -->
+  <link rel="stylesheet" href="plugins/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
 </head>
@@ -50,9 +51,9 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/location.class.php';
-    $location = new location;
-    $rs = $location->getAllRecord();
+    require_once  'class/department.class.php';
+    $department = new department;
+    $rs = $department->getAllRecord();
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -62,7 +63,7 @@ require_once 'auth.php';
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6 d-flex">
-              <h4>Location</h4>
+              <h4>Department</h4>
               <a class="btn btn-success btn-sm" data-bs-toggle="modal" data-placement="right" title="เพิ่มข้อมูล" data-bs-target="#insertModal" style="margin: 0px 5px 5px 5px;">
                 <i class="fa-solid fa-plus"></i>
               </a>
@@ -80,7 +81,7 @@ require_once 'auth.php';
 
               <div class="card">
                 <!-- <div class="card-header">
-                               <h3 class="card-title">location</h3>
+                               <h3 class="card-title">Department</h3>
                            </div> -->
                 <!-- /.card-header -->
                 <div class="card-body" id="card-body">
@@ -88,7 +89,7 @@ require_once 'auth.php';
                     <thead>
                       <tr>
                         <th class="text-center" style="width: 100px;">#</th>
-                        <th class="text-center">location name</th>
+                        <th class="text-center">Department name</th>
                         <th class="text-center" style="width: 120px;">Action</th>
                       </tr>
                     </thead>
@@ -96,14 +97,14 @@ require_once 'auth.php';
                       <?php foreach ($rs as $row) {
                         $html = <<<EOD
                                         <tr>
-                                            <td>{$row['location_id']}</td>
-                                            <td>{$row['location_name']}</td>
+                                            <td>{$row['department_id']}</td>
+                                            <td>{$row['department_name']}</td>
                                             <td align='center'>
                                                 <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' data-toggle='modal'  data-placement='right' title='Edit' data-target='#editModal' iid='{$row['location_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-warning btn-sm btnEdit' data-toggle='modal'  data-placement='right' title='Edit' data-target='#editModal' iid='{$row['department_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-pen-to-square'></i>
                                                     </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' data-toggle='modal'  data-placement='right' title='Delete' data-target='#deleteModal' iid='{$row['location_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-danger btn-sm btnDelete' data-toggle='modal'  data-placement='right' title='Delete' data-target='#deleteModal' iid='{$row['department_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-trash-can'></i>
                                                     </a>
                                                 </div>
@@ -149,16 +150,16 @@ require_once 'auth.php';
           <form name="frmInsert" id="frmInsert" action="" method="">
             <div class="modal-body">
               <div class="row m-3">
-                <label for="location_id" class="col-sm-6 col-form-label">#</label>
+                <label for="department_id" class="col-sm-6 col-form-label">#</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm fst-italic" name="location_id" value="[Autonumber]" disabled>
+                  <input type="input" class="form-control form-control-sm fst-italic" name="department_id" value="[Autonumber]" disabled>
                 </div>
               </div>
 
               <div class="row m-3">
-                <label for="location_name" class="col-sm-6 col-form-label">location name</label>
+                <label for="department_name" class="col-sm-6 col-form-label">Department name</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm" name="location_name" id="location_name">
+                  <input type="input" class="form-control form-control-sm" name="department_name" id="department_name">
                 </div>
               </div>
 
@@ -201,17 +202,17 @@ require_once 'auth.php';
             <!-- <input type="text" name="action" id="action"> -->
             <div class="modal-body">
               <div class="row m-3">
-                <label for="location_id" class="col-sm-6 col-form-label">#</label>
+                <label for="department_id" class="col-sm-6 col-form-label">#</label>
                 <div class="col-sm-6">
-                  <!-- <input type="hidden" class="location_id" name="location_id"> -->
-                  <input type="input" class="form-control form-control-sm fst-italic location_id" id="location_id" readonly name="location_id">
+                  <!-- <input type="hidden" class="department_id" name="department_id"> -->
+                  <input type="input" class="form-control form-control-sm fst-italic department_id" id="department_id" readonly name="department_id">
                 </div>
               </div>
 
               <div class="row m-3">
-                <label for="location_name" class="col-sm-6 col-form-label">location name</label>
+                <label for="department_name" class="col-sm-6 col-form-label">Department name</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm" name="location_name" id="location_name">
+                  <input type="input" class="form-control form-control-sm" name="department_name" id="department_name">
                 </div>
               </div>
 
@@ -240,26 +241,6 @@ require_once 'auth.php';
 
     <?php include 'logout_modal.php'; ?>
 
-    <?php include 'footer_bar.php'; ?>
+    <?php include 'footer.php'; ?>
 
-
-    <!-- ./wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <!-- <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a> -->
-
-    <!-- REQUIRED SCRIPTS -->
-    <!-- Bootstrap 5.3.3 -->
-    <script src="plugins/bootstrap-5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
-    <!-- jQuery -->
-    <script src="plugins/jQuery-3.7.1/jquery-3.7.1.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="plugins/dist/js/adminlte.js"></script>
-    <!-- Sweet Alert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- My JavaScript  -->
-    <script src="javascript/location.js"></script>
+    <script src="javascript/department.js"></script>

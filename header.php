@@ -1,7 +1,7 @@
 <?php
 @session_start();
 require_once 'config.php';
-// require_once 'auth.php';
+require_once 'auth.php';
 
 ?>
 
@@ -32,38 +32,16 @@ require_once 'config.php';
     <link rel="stylesheet" href="plugins/uicons-regular-rounded/css/uicons-regular-rounded.css">
     <!-- DataTables -->
     <link rel="stylesheet" href="plugins/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="plugins/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="plugins/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="plugins/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css">
-    <!-- jQuery Timepicker -->
-    <link rel="stylesheet" href="plugins/jquery-timepicker-1.3.5/jquery.timepicker-master.min.css">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
-    <!-- Custom styles for this template-->
-    <!-- <link rel="stylesheet" href="../css/sb-admin-2.min.css"> -->
-    <!-- summernote -->
-    <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
-    <!-- mycss -->
-    <!-- <link rel="stylesheet" href="plugins/mycss/live.css">
-    <link rel="stylesheet" href="plugins/mycss/scan.css">
-    <link rel="stylesheet" href="plugins/mycss/today.css"> -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
 
-<!-- <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed"> -->
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 
-    <!-- <body id="page-top" class="hold-transition sidebar-mini layout-fixed"> -->
 
     <!-- Page Wrapper -->
     <div class="wrapper">
-
-        <!-- Preloader -->
-        <!-- <div class="preloader flex-column justify-content-center align-items-center">
-                <img class="animation__shake" src="../dist/img/mypic.jpg" alt="mypic" height="60" width="60">
-            </div> -->
-        <!-- <img class="animation__wobble" src="../dist/img/mypic.jpg" alt="mypic" height="60" width="60"> -->

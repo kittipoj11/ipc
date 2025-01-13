@@ -9,7 +9,6 @@
     ?>
 
    <!-- Content Wrapper. Contains page content -->
-   <!-- <div id="content-wrapper" class="d-flex flex-column"> -->
    <div class="content-wrapper">
        <!-- Content Header (Page header) -->
        <section class="content-header">

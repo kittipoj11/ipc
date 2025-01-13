@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 10, 2025 at 10:35 AM
+-- Generation Time: Jan 13, 2025 at 11:43 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -64,15 +64,18 @@ CREATE TABLE `approval_workflow` (
 
 CREATE TABLE `departments` (
   `department_id` int(10) UNSIGNED NOT NULL,
-  `department_name` varchar(255) DEFAULT NULL
+  `department_name` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `departments`
 --
 
-INSERT INTO `departments` (`department_id`, `department_name`) VALUES
-(1, 'IT');
+INSERT INTO `departments` (`department_id`, `department_name`, `is_deleted`) VALUES
+(1, 'IT', 0),
+(2, 'FM', 0),
+(3, 'FA', 0);
 
 -- --------------------------------------------------------
 
@@ -169,13 +172,21 @@ CREATE TABLE `inspect_status` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `location`
+-- Table structure for table `locations`
 --
 
-CREATE TABLE `location` (
+CREATE TABLE `locations` (
   `location_id` int(10) UNSIGNED NOT NULL,
-  `location_name` varchar(255) DEFAULT NULL
+  `location_name` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `locations`
+--
+
+INSERT INTO `locations` (`location_id`, `location_name`, `is_deleted`) VALUES
+(1, 'Sky', 0);
 
 -- --------------------------------------------------------
 
@@ -249,9 +260,17 @@ INSERT INTO `roles` (`role_id`, `role_name`) VALUES
 --
 
 CREATE TABLE `suppliers` (
-  `suppliers_id` int(10) UNSIGNED NOT NULL,
-  `supplier_name` varchar(255) DEFAULT NULL
+  `supplier_id` int(10) UNSIGNED NOT NULL,
+  `supplier_name` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `suppliers`
+--
+
+INSERT INTO `suppliers` (`supplier_id`, `supplier_name`, `is_deleted`) VALUES
+(1, 'บริษัทวินสตาร์คอร์ปจำกัด', 0);
 
 -- --------------------------------------------------------
 
@@ -345,9 +364,9 @@ ALTER TABLE `inspect_status`
   ADD PRIMARY KEY (`inspect_status_id`);
 
 --
--- Indexes for table `location`
+-- Indexes for table `locations`
 --
-ALTER TABLE `location`
+ALTER TABLE `locations`
   ADD PRIMARY KEY (`location_id`);
 
 --
@@ -381,7 +400,7 @@ ALTER TABLE `roles`
 -- Indexes for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  ADD PRIMARY KEY (`suppliers_id`);
+  ADD PRIMARY KEY (`supplier_id`);
 
 --
 -- Indexes for table `users`
@@ -417,7 +436,7 @@ ALTER TABLE `approval_workflow`
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `department_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `department_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `inspect_approvals`
@@ -450,10 +469,10 @@ ALTER TABLE `inspect_status`
   MODIFY `inspect_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `location`
+-- AUTO_INCREMENT for table `locations`
 --
-ALTER TABLE `location`
-  MODIFY `location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `locations`
+  MODIFY `location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `plan_status`
@@ -483,7 +502,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `suppliers_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `supplier_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -536,8 +555,8 @@ ALTER TABLE `inspect_period_detail`
 --
 ALTER TABLE `po`
   ADD CONSTRAINT `po_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`),
-  ADD CONSTRAINT `po_ibfk_2` FOREIGN KEY (`suppliers_id`) REFERENCES `suppliers` (`suppliers_id`),
-  ADD CONSTRAINT `po_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`);
+  ADD CONSTRAINT `po_ibfk_2` FOREIGN KEY (`suppliers_id`) REFERENCES `suppliers` (`supplier_id`),
+  ADD CONSTRAINT `po_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`location_id`);
 
 --
 -- Constraints for table `users`

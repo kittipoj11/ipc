@@ -11,8 +11,11 @@
     <div class="float-right d-none d-sm-inline-block">
         <b>IPC Version 1.0.0</b>
     </div>
+    
 </footer>
 </div>
+
+
 <!-- ./wrapper -->
 
 <!-- Scroll to Top Button-->
@@ -28,7 +31,7 @@
 <!-- Bootstrap 4.6.2 add by Poj-->
 <!-- <script src="plugins/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script> -->
 <!-- Bootstrap 5.3.3 add by Poj-->
-<!-- <script src="plugins/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script> -->
+<script src="plugins/bootstrap-5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- overlayScrollbars -->
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- Summernote -->
@@ -73,7 +76,7 @@
 <!-- <script src="../js/sb-admin-2.min.js"></script> -->
 <!-- AdminLTE App -->
 <!-- <script src="../dist/js/adminlte.js"></script> -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
 <script>
     $(function() {
         $('.time').timepicker({

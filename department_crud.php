@@ -2,9 +2,9 @@
 // @session_start();
 
 require_once 'config.php';
-require_once 'class/location.class.php';
+require_once 'class/department.class.php';
 
-$obj = new location();
+$obj = new department();
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
@@ -37,7 +37,7 @@ function getAllRecord($getObj)
                         <thead>
                             <tr>
                                 <th class="text-center" style="width: 100px;">#</th>
-                                <th class="text-center">Location name</th>
+                                <th class="text-center">Department name</th>
                                 <th class="text-center" style="width: 120px;">Action</th>
                             </tr>
                         </thead>
@@ -47,14 +47,14 @@ function getAllRecord($getObj)
         foreach ($rs as $row) {
             $html = <<<EOD
                         <tr>
-                            <td>{$row['location_id']}</td>
-                            <td>{$row['location_name']}</td>
+                            <td>{$row['department_id']}</td>
+                            <td>{$row['department_name']}</td>
                             <td align='center'>
                                 <div class='btn-group-sm'>
-                                    <a class='btn btn-warning btn-sm btnEdit' data-toggle='modal' data-placement='right' title='Edit' data-target='#editModal' iid='{$row['location_id']}' style='margin: 0px 5px 5px 5px'>
+                                    <a class='btn btn-warning btn-sm btnEdit' data-toggle='modal' data-placement='right' title='Edit' data-target='#editModal' iid='{$row['department_id']}' style='margin: 0px 5px 5px 5px'>
                                         <i class='fa-regular fa-pen-to-square'></i>
                                     </a>
-                                    <a class='btn btn-danger btn-sm btnDelete' data-toggle='modal' data-placement='right' title='Delete' data-target='#deleteModal' iid='{$row['location_id']}'  style='margin: 0px 5px 5px 5px'>
+                                    <a class='btn btn-danger btn-sm btnDelete' data-toggle='modal' data-placement='right' title='Delete' data-target='#deleteModal' iid='{$row['department_id']}'  style='margin: 0px 5px 5px 5px'>
                                         <i class='fa-regular fa-trash-can'></i>
                                     </a>
                                 </div>
