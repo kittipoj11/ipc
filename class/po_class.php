@@ -1,17 +1,17 @@
 <?php
 // require_once 'config.php';
-require_once 'myPdo.class.php';
+require_once 'connection_class.php';
 
-class supplier extends MyConnection
+class Po extends Connection
 {
     public function getAllRecord()
     {
         $sql = <<<EOD
-                select supplier_id, supplier_name, is_deleted 
-                from suppliers 
-                where is_deleted = false
+                SELECT `po_id`, `po_no`, `project_name`, `suppliers_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `create_by`, `create_date`
+                FROM `po` 
+                -- where is_deleted = false
                 EOD;
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
         return $rs;
@@ -20,13 +20,12 @@ class supplier extends MyConnection
     public function getRecordById($id)
     {
         $sql = <<<EOD
-                select supplier_id, supplier_name, is_deleted 
-                from supplier
-                where is_deleted = false
-                and supplier_id = :id
+                SELECT `po_id`, `po_no`, `project_name`, `suppliers_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `create_by`, `create_date`
+                FROM `po` 
+                where po_id = :id
                 EOD;
 
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
@@ -35,12 +34,12 @@ class supplier extends MyConnection
 
     public function insertData($getData)
     {
-        $supplier_name = $getData['supplier_name'];
+        $po_name = $getData['po_name'];
 
-        $sql = "insert into suppliers(supplier_name) 
-                values(:supplier_name)";
-        $stmt = $this->myPdo->prepare($sql);
-        $stmt->bindParam(':supplier_name', $supplier_name, PDO::PARAM_STR);
+        $sql = "insert into pos(po_name) 
+                values(:po_name)";
+        $stmt = $this->myConnect->prepare($sql);
+        $stmt->bindParam(':po_name', $po_name, PDO::PARAM_STR);
 
         try {
             if ($stmt->execute()) {
@@ -56,15 +55,15 @@ class supplier extends MyConnection
     }
     public function updateData($getData)
     {
-        $supplier_id = $getData['supplier_id'];
-        $supplier_name = $getData['supplier_name'];
-        $sql = "update suppliers 
-                set supplier_name = :supplier_name
-                where supplier_id = :supplier_id";
+        $po_id = $getData['po_id'];
+        $po_name = $getData['po_name'];
+        $sql = "update po
+                set po_name = :po_name
+                where po_id = :po_id";
         // , update_datetime = CURRENT_TIMESTAMP()
-        $stmt = $this->myPdo->prepare($sql);
-        $stmt->bindParam(':supplier_id', $supplier_id, PDO::PARAM_INT);
-        $stmt->bindParam(':supplier_name', $supplier_name, PDO::PARAM_STR);
+        $stmt = $this->myConnect->prepare($sql);
+        $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+        $stmt->bindParam(':po_name', $po_name, PDO::PARAM_STR);
 
         try {
             if ($stmt->execute()) {
@@ -80,13 +79,13 @@ class supplier extends MyConnection
     }
     public function deleteData($getData)
     {
-        $supplier_id = $getData['delete_id'];
+        $po_id = $getData['delete_id'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
-        $sql = "update suppliers 
+        $sql = "update po
                 set is_deleted = 1
-                where supplier_id = :supplier_id";
-        $stmt = $this->myPdo->prepare($sql);
-        $stmt->bindParam(':supplier_id', $supplier_id, PDO::PARAM_INT);
+                where po_id = :po_id";
+        $stmt = $this->myConnect->prepare($sql);
+        $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
 
         try {
             if ($stmt->execute()) {
@@ -103,11 +102,11 @@ class supplier extends MyConnection
 
     public function getHtmlData()
     {
-        $sql = "select supplier_id, supplier_name, is_deleted 
-                from suppliers 
+        $sql = "select po_id, po_name, is_deleted 
+                from po
                 where is_deleted = false";
 
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
 
@@ -128,8 +127,8 @@ class supplier extends MyConnection
         $html .= "</tr>";
         foreach ($rs as $row) :
             $html .=  "<tr bgcolor='#c7c7c7'>";
-            $html .=  "<td>{$row['supplier_id']}</td>";
-            $html .=  "<td>{$row['supplier_name']}</td>";
+            $html .=  "<td>{$row['po_id']}</td>";
+            $html .=  "<td>{$row['po_name']}</td>";
             $html .=  "</tr>";
         endforeach;
 

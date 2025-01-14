@@ -18,7 +18,7 @@
         <!-- Navbar Search -->
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <!-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">< ?php echo $_SESSION['full_name'] ?></span> -->
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['full_name'] ?></span>
                 <img class="rounded-circle" style="height: 2rem;width: 2rem;" src="images/undraw_profile.svg">
@@ -38,7 +38,7 @@
                     Activity Log
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     Logout
                 </a>

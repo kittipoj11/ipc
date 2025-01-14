@@ -50,8 +50,8 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/department.class.php';
-    $department = new department;
+    require_once  'class/department_class.php';
+    $department = new Department;
     $rs = $department->getAllRecord();
     ?>
 

@@ -1,10 +1,10 @@
 <?php
-// @session_start();
+@session_start();
 // namespace ropa;
 
 // use PDO;
 
-class MyConnection
+class Connection
 {
     private $host = 'localhost';
     private $port = '3306';
@@ -12,13 +12,13 @@ class MyConnection
     private $password = '';
     private $dbname = 'inspection_db';
 
-    public $myPdo;
+    public $myConnect;
 
     function __construct()
     {
 
         try {
-            // $this->myPdo = $this->connection();
+            // $this->myConnect = $this->connection();
             $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4";
 
             $pdoObj = new PDO($dsn, $this->username, $this->password);
@@ -28,9 +28,10 @@ class MyConnection
 
             // echo "Connection successfully: ";
 
-            $this->myPdo = $pdoObj;
+            $this->myConnect = $pdoObj;
         } catch (PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
+            throw new PDOException("Connection failed: " . $e->getMessage());
+            // echo "Connection failed: " . $e->getMessage();
         }
     }
 

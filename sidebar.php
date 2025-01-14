@@ -119,6 +119,18 @@
                     <!-- <ul class="nav nav-treeview"> -->
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
+                            <a href="po.php" class="nav-link text-dark">
+                                <i class="nav-icon fi fi-rr-calendar-days"></i>
+                                <p>All purchase orders</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="inspection.php" class="nav-link text-dark">
+                                <i class="nav-icon fi fi-rr-calendar-days"></i>
+                                <p>All Inspection</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="approval_workflow.php?page=table" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-clock"></i>
                                 <p>Inspect status (สถานะการตรวจสอบ)***system only</p>
@@ -128,12 +140,6 @@
                             <a href="approval_levels.php" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-days"></i>
                                 <p>Plan status (สถานะแผน)***system only</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="approval_status.php" class="nav-link text-dark">
-                                <i class="nav-icon fi fi-rr-calendar-days"></i>
-                                <p>Inspection lists</p>
                             </a>
                         </li>
                     </ul>

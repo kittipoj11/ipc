@@ -4,9 +4,9 @@
 // destroy the session
 // session_destroy();
 
-require_once  'mypdo.class.php';
+require_once  'connection_class.php';
 
-class User extends MyConnection
+class User extends Connection
 {
     public function checkLogin($getUsername, $getPassword)
     {
@@ -24,7 +24,7 @@ class User extends MyConnection
                 where username = :username
                 EOD;
 
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
         $rs = $stmt->fetch();
@@ -62,7 +62,7 @@ class User extends MyConnection
                     on u.role_id = r.role_id"
                 EOD;
 
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
         return $rs;
@@ -80,7 +80,7 @@ class User extends MyConnection
                 where username = :username
                 EOD;
 
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
         $rs = $stmt->fetchAll();
@@ -93,7 +93,7 @@ class User extends MyConnection
                 from users 
                 where username = :username";
 
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
         $rs = $stmt->fetchAll();
@@ -141,7 +141,7 @@ class User extends MyConnection
         // $is_active = isset($getData['is_active']) ? 1 : 0;
         $sql = "insert into users(username, password, fullname, role_id, department_id, phone, email) 
                 values(:username, :password, :fullname, :role_id, :department_id, :phone, :email)";
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         // $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
@@ -184,7 +184,7 @@ class User extends MyConnection
                 , email = :email
                 , update_datetime = CURRENT_TIMESTAMP()
                 where username = :username";
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
         $stmt->bindParam(':password', $password, PDO::PARAM_STR);
@@ -213,7 +213,7 @@ class User extends MyConnection
         $sql = "update users 
                 set is_deleted = 1
                 where username = :username";
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
 
         try {

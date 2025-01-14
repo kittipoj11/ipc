@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 13, 2025 at 11:43 AM
+-- Generation Time: Jan 14, 2025 at 11:57 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -208,7 +208,7 @@ CREATE TABLE `plan_status` (
 CREATE TABLE `po` (
   `po_id` int(10) UNSIGNED NOT NULL,
   `po_no` varchar(255) DEFAULT NULL,
-  `project_id` int(10) UNSIGNED DEFAULT NULL,
+  `project_name` varchar(255) DEFAULT NULL,
   `suppliers_id` int(10) UNSIGNED DEFAULT NULL,
   `location_id` int(10) UNSIGNED DEFAULT NULL,
   `working_name_th` varchar(255) DEFAULT NULL,
@@ -222,17 +222,6 @@ CREATE TABLE `po` (
   `deposit_value` decimal(19,2) DEFAULT NULL,
   `create_by` int(10) UNSIGNED DEFAULT NULL,
   `create_date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `project`
---
-
-CREATE TABLE `project` (
-  `project_id` int(10) UNSIGNED NOT NULL,
-  `project_name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
@@ -380,15 +369,8 @@ ALTER TABLE `plan_status`
 --
 ALTER TABLE `po`
   ADD PRIMARY KEY (`po_id`),
-  ADD KEY `project_id` (`project_id`),
   ADD KEY `suppliers_id` (`suppliers_id`),
   ADD KEY `location_id` (`location_id`);
-
---
--- Indexes for table `project`
---
-ALTER TABLE `project`
-  ADD PRIMARY KEY (`project_id`);
 
 --
 -- Indexes for table `roles`
@@ -487,12 +469,6 @@ ALTER TABLE `po`
   MODIFY `po_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `project`
---
-ALTER TABLE `project`
-  MODIFY `project_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
@@ -554,7 +530,6 @@ ALTER TABLE `inspect_period_detail`
 -- Constraints for table `po`
 --
 ALTER TABLE `po`
-  ADD CONSTRAINT `po_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`),
   ADD CONSTRAINT `po_ibfk_2` FOREIGN KEY (`suppliers_id`) REFERENCES `suppliers` (`supplier_id`),
   ADD CONSTRAINT `po_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`location_id`);
 

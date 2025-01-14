@@ -50,8 +50,8 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/supplier.class.php';
-    $supplier = new supplier;
+    require_once  'class/supplier_class.php';
+    $supplier = new Supplier;
     $rs = $supplier->getAllRecord();
     ?>
 

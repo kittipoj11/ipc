@@ -2,9 +2,9 @@
 // @session_start();
 
 require_once 'config.php';
-require_once 'class/location.class.php';
+require_once 'class/location_class.php';
 
-$obj = new location();
+$obj = new Location();
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {

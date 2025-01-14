@@ -2,9 +2,9 @@
 // @session_start();
 
 require_once 'config.php';
-require_once 'class/supplier.class.php';
+require_once 'class/supplier_class.php';
 
-$obj = new supplier();
+$obj = new Supplier();
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {

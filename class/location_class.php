@@ -1,8 +1,8 @@
 <?php
 // require_once 'config.php';
-require_once 'myPdo.class.php';
+require_once 'connection_class.php';
 
-class location extends MyConnection
+class Location extends Connection
 {
     public function getAllRecord()
     {
@@ -11,7 +11,7 @@ class location extends MyConnection
                 from locations 
                 where is_deleted = false
                 EOD;
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
         return $rs;
@@ -26,7 +26,7 @@ class location extends MyConnection
                 and location_id = :id
                 EOD;
 
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
@@ -39,7 +39,7 @@ class location extends MyConnection
 
         $sql = "insert into locations(location_name) 
                 values(:location_name)";
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':location_name', $location_name, PDO::PARAM_STR);
 
         try {
@@ -62,7 +62,7 @@ class location extends MyConnection
                 set location_name = :location_name
                 where location_id = :location_id";
         // , update_datetime = CURRENT_TIMESTAMP()
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':location_id', $location_id, PDO::PARAM_INT);
         $stmt->bindParam(':location_name', $location_name, PDO::PARAM_STR);
 
@@ -85,7 +85,7 @@ class location extends MyConnection
         $sql = "update locations 
                 set is_deleted = 1
                 where location_id = :location_id";
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':location_id', $location_id, PDO::PARAM_INT);
 
         try {
@@ -107,7 +107,7 @@ class location extends MyConnection
                 from locations 
                 where is_deleted = false";
 
-        $stmt = $this->myPdo->prepare($sql);
+        $stmt = $this->myConnect->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
 

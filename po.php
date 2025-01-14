@@ -21,19 +21,18 @@ require_once 'auth.php';
 
   <!-- Bootstrap 5.3.3 add by Poj-->
   <link rel="stylesheet" href="plugins/bootstrap-5.3.3/dist/css/bootstrap.min.css">
-  <!-- Custom fonts for this template-->
-  <!-- <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css"> -->
+  <!-- ใช้แสดง icon ปุ่ม Insert, Update, Delete และ icon เมนูต่างๆบน sidebar-->
   <link rel="stylesheet" href="plugins/fontawesome-free-6.5.1-web/css/all.min.css" type="text/css">
   <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+  <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"> -->
   <!-- flaticon dist\bootstrap-icons-1.11.3\font\bootstrap-icons.min.css-->
-  <link rel="stylesheet" href="plugins/dist/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
+  <!-- <link rel="stylesheet" href="plugins/dist/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"> -->
   <!-- flaticon -->
-  <link rel="stylesheet" href="plugins/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <!-- <link rel="stylesheet" href="plugins/uicons-regular-rounded/css/uicons-regular-rounded.css"> -->
   <!-- DataTables -->
-  <link rel="stylesheet" href="plugins/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <!-- <link rel="stylesheet" href="plugins/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="plugins/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <link rel="stylesheet" href="plugins/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css"> -->
   <!-- Theme style -->
   <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
 </head>
@@ -51,9 +50,17 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/department.class.php';
-    $department = new department;
-    $rs = $department->getAllRecord();
+    require_once  'class/po_class.php';
+    require_once  'class/supplier_class.php';
+    require_once  'class/location_class.php';
+    $po = new Po;
+    $rs = $po->getAllRecord();
+
+    $supplier = new Supplier;
+    $supplier_rs = $supplier->getAllRecord();
+
+    $location = new Location;
+    $location_rs = $location->getAllRecord();
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -63,7 +70,7 @@ require_once 'auth.php';
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6 d-flex">
-              <h4>Department</h4>
+              <h4>Po</h4>
               <a class="btn btn-success btn-sm" data-bs-toggle="modal" data-placement="right" title="เพิ่มข้อมูล" data-bs-target="#insertModal" style="margin: 0px 5px 5px 5px;">
                 <i class="fa-solid fa-plus"></i>
               </a>
@@ -81,15 +88,21 @@ require_once 'auth.php';
 
               <div class="card">
                 <!-- <div class="card-header">
-                               <h3 class="card-title">Department</h3>
+                               <h3 class="card-title">po</h3>
                            </div> -->
                 <!-- /.card-header -->
                 <div class="card-body" id="card-body">
                   <table id="example1" class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
-                        <th class="text-center" style="width: 100px;">#</th>
-                        <th class="text-center">Department name</th>
+                        <th class="text-center" style="width: 150px;">เลขที่ PO</th>
+                        <th class="text-center">โครงการ</th>
+                        <th class="text-center">ผู้รับเหมา</th>
+                        <th class="text-center">สถานที่</th>
+                        <th class="text-center">งาน</th>
+                        <th class="text-center">มูลค่า PO ไม่รวม VAT</th>
+                        <th class="text-center">มูลค่า PO</th>
+                        <th class="text-center">จำนวนงวดงาน</th>
                         <th class="text-center" style="width: 120px;">Action</th>
                       </tr>
                     </thead>
@@ -97,14 +110,20 @@ require_once 'auth.php';
                       <?php foreach ($rs as $row) {
                         $html = <<<EOD
                                         <tr>
-                                            <td>{$row['department_id']}</td>
-                                            <td>{$row['department_name']}</td>
+                                            <td>{$row['po_id']}</td>
+                                            <td>{$row['po_no']}</td>
+                                            <td>{$row['po_no']}</td>
+                                            <td>{$row['po_no']}</td>
+                                            <td>{$row['po_no']}</td>
+                                            <td>{$row['po_no']}</td>
+                                            <td>{$row['po_no']}</td>
+                                            <td>{$row['po_no']}</td>
                                             <td align='center'>
                                                 <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' data-toggle='modal'  data-placement='right' title='Edit' data-target='#editModal' iid='{$row['department_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-warning btn-sm btnEdit' data-toggle='modal'  data-placement='right' title='Edit' data-target='#editModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-pen-to-square'></i>
                                                     </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' data-toggle='modal'  data-placement='right' title='Delete' data-target='#deleteModal' iid='{$row['department_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-danger btn-sm btnDelete' data-toggle='modal'  data-placement='right' title='Delete' data-target='#deleteModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-trash-can'></i>
                                                     </a>
                                                 </div>
@@ -150,16 +169,75 @@ require_once 'auth.php';
           <form name="frmInsert" id="frmInsert" action="" method="">
             <div class="modal-body">
               <div class="row m-3">
-                <label for="department_id" class="col-sm-6 col-form-label">#</label>
+                <label for="po_id" class="col-sm-6 col-form-label">#</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm fst-italic" name="department_id" value="[Autonumber]" disabled>
+                  <input type="text" class="form-control form-control-sm fst-italic" name="po_id" value="[Autonumber]" disabled>
                 </div>
               </div>
 
               <div class="row m-3">
-                <label for="department_name" class="col-sm-6 col-form-label">Department name</label>
+                <label for="po_no" class="col-sm-6 col-form-label">เลขที่ PO</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm" name="department_name" id="department_name">
+                  <input type="text" class="form-control form-control-sm" name="po_no" id="po_no">
+                </div>
+              </div>
+
+              <div class="row m-3">
+                <label for="project_name" class="col-sm-6 col-form-label">โครงการ</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control form-control-sm" name="project_name" id="project_name">
+                </div>
+              </div>
+
+              <div class="row m-3">
+                <label for="supplier_id" class="col-sm-4 col-form-label">ผู้รับเหมา</label>
+                <div class="col-sm-8">
+                  <select class="form-select form-control form-control-sm supplier_id" name="supplier_id">
+                    <?php
+                    foreach ($supplier_rs as $row) :
+                      echo "<option value='{$row['supplier_id']}'>{$row['supplier_name']}</option>";
+                    endforeach ?>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row m-3">
+                <label for="location_id" class="col-sm-4 col-form-label">สถานที่</label>
+                <div class="col-sm-8">
+                  <select class="form-select form-control form-control-sm location_id" name="location_id">
+                    <?php
+                    foreach ($location_rs as $row) :
+                      echo "<option value='{$row['location_id']}'>{$row['location_name']}</option>";
+                    endforeach ?>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row m-3">
+                <label for="working_name_th" class="col-sm-6 col-form-label">ชื่องาน(ภาษาไทย)</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control form-control-sm" name="working_name_th" id="working_name_th">
+                </div>
+              </div>
+
+              <div class="row m-3">
+                <label for="working_name_en" class="col-sm-6 col-form-label">ชื่องาน(ภาษาอังกฤษ)</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control form-control-sm" name="working_name_en" id="working_name_en">
+                </div>
+              </div>
+              
+              <div class="row m-3">
+                <label for="contract_value" class="col-sm-6 col-form-label">มูลค่างาน</label>
+                <div class="col-sm-6">
+                  <input type="number" class="form-control form-control-sm" name="contract_value" id="contract_value">
+                </div>
+              </div>
+              
+              <div class="row m-3">
+                <label for="vat" class="col-sm-6 col-form-label">VAT</label>
+                <div class="col-sm-6">
+                  <input type="number" class="form-control form-control-sm" name="vat" id="vat">
                 </div>
               </div>
 
@@ -202,17 +280,17 @@ require_once 'auth.php';
             <!-- <input type="text" name="action" id="action"> -->
             <div class="modal-body">
               <div class="row m-3">
-                <label for="department_id" class="col-sm-6 col-form-label">#</label>
+                <label for="po_id" class="col-sm-6 col-form-label">#</label>
                 <div class="col-sm-6">
-                  <!-- <input type="hidden" class="department_id" name="department_id"> -->
-                  <input type="input" class="form-control form-control-sm fst-italic department_id" id="department_id" readonly name="department_id">
+                  <!-- <input type="hidden" class="po_id" name="po_id"> -->
+                  <input type="input" class="form-control form-control-sm fst-italic po_id" id="po_id" readonly name="po_id">
                 </div>
               </div>
 
               <div class="row m-3">
-                <label for="department_name" class="col-sm-6 col-form-label">Department name</label>
+                <label for="po_no" class="col-sm-6 col-form-label">เลขที่ PO</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm" name="department_name" id="department_name">
+                  <input type="input" class="form-control form-control-sm" name="po_no" id="po_no">
                 </div>
               </div>
 
@@ -241,6 +319,26 @@ require_once 'auth.php';
 
     <?php include 'logout_modal.php'; ?>
 
-    <?php include 'footer.php'; ?>
+    <?php include 'footer_bar.php'; ?>
 
-    <script src="javascript/department.js"></script>
+
+    <!-- ./wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <!-- <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a> -->
+
+    <!-- REQUIRED SCRIPTS -->
+    <!-- Bootstrap 5.3.3 -->
+    <script src="plugins/bootstrap-5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
+    <!-- jQuery -->
+    <script src="plugins/jQuery-3.7.1/jquery-3.7.1.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="plugins/dist/js/adminlte.js"></script>
+    <!-- Sweet Alert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- My JavaScript  -->
+    <script src="javascript/po.js"></script>

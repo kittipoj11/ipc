@@ -50,8 +50,8 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/location.class.php';
-    $location = new location;
+    require_once  'class/location_class.php';
+    $location = new Location;
     $rs = $location->getAllRecord();
     ?>
 
