@@ -50,17 +50,12 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
+    require_once  'class/inspection_class.php';
     require_once  'class/po_class.php';
-    require_once  'class/supplier_class.php';
-    require_once  'class/location_class.php';
-    $po = new Po;
-    $rs = $po->getAllRecord();
 
-    $supplier = new Supplier;
-    $supplier_rs = $supplier->getAllRecord();
+    $inspection = new Inspection;
+    $rs = $inspection->getAllRecord();
 
-    $location = new Location;
-    $location_rs = $location->getAllRecord();
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -69,9 +64,9 @@ require_once 'auth.php';
       <section class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
-            <div class="col-sm-6 d-flex">
-              <h4>All Purchase Orders</h4>
-              <a class="btn btn-success btn-sm" data-bs-toggle="modal" data-placement="right" title="เพิ่มข้อมูล" data-bs-target="#insertModal" style="margin: 0px 5px 5px 5px;">
+            <div class="col-sm-6">
+              <h4>All Inspections</h4>
+              <a class="btn btn-success btn-sm  d-none" data-bs-toggle="modal" data-placement="right" title="เพิ่มข้อมูล" data-bs-target="#insertModal" style="margin: 0px 5px 5px 5px;">
                 <i class="fa-solid fa-plus"></i>
               </a>
             </div>
@@ -101,7 +96,6 @@ require_once 'auth.php';
                         <th class="text-center">ผู้รับเหมา</th>
                         <th class="text-center">สถานที่</th>
                         <th class="text-center">งาน</th>
-                        <th class="text-center">มูลค่า PO ไม่รวม VAT</th>
                         <th class="text-center">มูลค่า PO</th>
                         <th class="text-center">จำนวนงวดงาน</th>
                         <th class="text-center d-none" style="width: 120px;">Action</th>
@@ -117,7 +111,6 @@ require_once 'auth.php';
                                             <td>{$row['supplier_name']}</td>
                                             <td>{$row['location_name']}</td>
                                             <td>{$row['working_name_th']}</td>
-                                            <td>{$row['contract_value_before']}</td>
                                             <td>{$row['contract_value']}</td>
                                             <td>{$row['number_of_period']}</td>
                                             <td class="d-none" align='center'>

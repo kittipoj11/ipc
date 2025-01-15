@@ -2,17 +2,19 @@
 // require_once 'config.php';
 require_once 'connection_class.php';
 
-class Po extends Connection
+class Inspection extends Connection
 {
     public function getAllRecord()
     {
         $sql = <<<EOD
-                SELECT `po_id`, `po_no`, `project_name`, `po`.`supplier_id`, `po`.`location_id`, `working_name_th`
-                , `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`
-                , `deposit_percent`, `deposit_value`, `create_by`, `create_date`, `number_of_period`
-                , `suppliers`.`supplier_name`
-                , `locations`.`location_name`
-                FROM `po`
+                SELECT `inspect_id`, `inspect_main`.`po_id`, `working_date_from`, `working_date_to`, `working_day`
+                , `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `inspect_main`.`create_by`
+                ,`inspect_main`.`create_date`
+                ,`po`.`po_no`, `po`.`project_name`, `po`.`working_name_th`, `po`.`contract_value`, `po`.`number_of_period`
+                , `supplier_name`, `location_name`
+                FROM `inspect_main` 
+                INNER JOIN `po`
+                    ON `inspect_main`.`po_id` = `po`.`po_id`
                 INNER JOIN `suppliers`
                     ON `suppliers`.`supplier_id` = `po`.`supplier_id`
                 INNER JOIN `locations`
@@ -27,12 +29,14 @@ class Po extends Connection
     public function getRecordById($id)
     {
         $sql = <<<EOD
-                SELECT `po_id`, `po_no`, `project_name`, `po`.`supplier_id`, `po`.`location_id`, `working_name_th`
-                , `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`
-                , `deposit_percent`, `deposit_value`, `create_by`, `create_date`, `number_of_period`
-                , `suppliers`.`supplier_name`
-                , `locations`.`location_name`
-                FROM `po`
+                SELECT `inspect_id`, `inspect_main`.`po_id`, `working_date_from`, `working_date_to`, `working_day`
+                , `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `inspect_main`.`create_by`
+                ,`inspect_main`.`create_date`
+                ,`po`.`po_no`, `po`.`project_name`, `po`.`working_name_th`, `po`.`contract_value`, `po`.`number_of_period`
+                , `supplier_name`, `location_name`
+                FROM `inspect_main` 
+                INNER JOIN `po`
+                    ON `inspect_main`.`po_id` = `po`.`po_id`
                 INNER JOIN `suppliers`
                     ON `suppliers`.`supplier_id` = `po`.`supplier_id`
                 INNER JOIN `locations`
