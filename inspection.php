@@ -106,7 +106,7 @@ require_once 'auth.php';
                         $html = <<<EOD
                                         <tr>
                                             <td class="d-none">{$row['po_id']}</td>
-                                            <td>{$row['po_no']}</td>
+                                            <td><a href="location.php">{$row['po_no']}</a></td>
                                             <td>{$row['project_name']}</td>
                                             <td>{$row['supplier_name']}</td>
                                             <td>{$row['location_name']}</td>

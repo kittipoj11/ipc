@@ -112,7 +112,7 @@ require_once 'auth.php';
                         $html = <<<EOD
                                         <tr>
                                             <td class="d-none">{$row['po_id']}</td>
-                                            <td>{$row['po_no']}</td>
+                                            <td><a class='link-opacity-100 pe-auto' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#editModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>{$row['po_no']}</a></td>
                                             <td>{$row['project_name']}</td>
                                             <td>{$row['supplier_name']}</td>
                                             <td>{$row['location_name']}</td>
