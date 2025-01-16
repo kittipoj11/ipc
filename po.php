@@ -35,6 +35,12 @@ require_once 'auth.php';
   <link rel="stylesheet" href="plugins/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css"> -->
   <!-- Theme style -->
   <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
+
+  <style>
+    table tr {
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 
