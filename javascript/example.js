@@ -8,7 +8,7 @@ $(document).ready(function () {
     //   name: "action",
     //   value: "insertdata",
     // });
-    
+
     // แบบที่ 2 ใช้ serialize() แล้ว + ด้วย "&action=insertdata"
     // let data_sent = $("#frmInsert").serialize() + "&action=insertdata";
 
@@ -78,20 +78,22 @@ $(document).ready(function () {
   $(document).on("click", ".btnEdit", function (e) {
     e.preventDefault();
     // let id = $(this).attr("id").slice("edit".length);
-    let id = $(this).attr("iid");
-    // console.log(id);
+    let iid = $(this).attr("iid");
+    let id = $(this).closest("tr").attr("id");
+    console.log("id");
     $.ajax({
       url: "department_crud.php",
       type: "POST",
-      data: { edit_id: id },
+      data: {
+        edit_id: id,
+        action: 'updatedata'
+      },
       success: function (response) {
         // console.log(response);
         data = JSON.parse(response);
         // console.log(data);
-        $("#car_type_id").val(data.car_type_id);
-        $("#car_type_name").val(data["car_type_name"]);
-        $("#take_time_minutes").val(data.take_time_minutes);
-        $("#parking_fee").val(data.parking_fee);
+        $("#department_id").val(data.department_id);
+        $("#department_name").val(data["department_name"]);
       },
     });
   });

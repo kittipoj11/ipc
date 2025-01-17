@@ -1,8 +1,5 @@
 <?php
 @session_start();
-// namespace ropa;
-
-// use PDO;
 
 class Connection
 {

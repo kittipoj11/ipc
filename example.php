@@ -259,4 +259,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/department.js"></script>
+    <script src="javascript/example.js"></script>

@@ -88,7 +88,7 @@ class Department extends Connection
     }
     public function deleteData($getData)
     {
-        $department_id = $getData['delete_id'];
+        $department_id = $getData['department_id'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
         $sql = "update departments 
                 set is_deleted = 1
