@@ -47,7 +47,7 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/example_class.php';
+    require_once  'class/department_class.php';
     $department = new Department;
     $rs = $department->getAllRecord();
     ?>
@@ -259,4 +259,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/example.js"></script>
+    <script src="javascript/department.js"></script>
