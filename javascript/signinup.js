@@ -17,7 +17,7 @@ $(document).ready(function () {
         // console.log(`response => ${response}`);
         if (response) {
           // return;
-          window.location = "location.php";
+          window.location = "index.php";
         } else {
           // var jsonData = JSON.parse(response); //ส่งกลับมาเป็น html ว่าสำเร็จหรือไม่
           Swal.fire({
@@ -36,7 +36,7 @@ $(document).ready(function () {
             // timer: 1500
           }).then((result) => {
             if (result.isConfirmed) {
-              window.location = "index2.html";
+              window.location = "login.php";
             }
           });
         }
@@ -44,7 +44,7 @@ $(document).ready(function () {
       },
       error: function (response) {
         console.log(`response => FAIL!!!`);
-        window.location = "index3.html";
+        window.location = "login.php";
       },
     });
   });

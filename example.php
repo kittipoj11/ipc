@@ -139,7 +139,7 @@ require_once 'auth.php';
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="modal">จัดการข้อมูล</h1>
-            <a class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <a class="" data-bs-dismiss="modal" aria-label="Close">
               <i class="fa-solid fa-xmark"></i>
             </a>
           </div>

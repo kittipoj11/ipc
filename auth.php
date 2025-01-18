@@ -17,7 +17,7 @@ if (!isset($_SESSION['login_status']) || $_SESSION['login_status'] == false) :
     $message = "คุณยังไม่ได้ Login!";
     $_SESSION['message'] = $message;
     echo 'alert(' . $message . '); ';
-    header('location: index.php');
+    header('location: login.php');
     exit;
 else :
     $_SESSION['message'] = "Login already";

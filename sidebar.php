@@ -12,13 +12,10 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
-                <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
                 <!-- Nav Item - หน้าหลัก -->
                 <li class="nav-item">
                     <a href="index.php" class="nav-link">
                         <i class="nav-icon fas fa-landmark"></i>
-                        <!-- <i class="nav-icon fi fi-rr-house-blank"></i> -->
                         <p>
                             หน้าหลัก
                         </p>
@@ -29,20 +26,18 @@
                 <hr class="sidebar-divider">
 
                 <!-- Nav Item - Today Activities -->
-                <li class="nav-item">
-                    <a href="001today.php" class="nav-link">
-                        <!-- <i class="nav-icon fas fa-file"></i> -->
+                <!-- <li class="nav-item">
+                    <a href="index.php" class="nav-link">
+                        <i class="nav-icon fas fa-file"></i>
                         <i class="nav-icon fas fi-rr-chart-tree-map"></i>
                         <p>
-                            Today Activities
-                            <!-- <i class="nav-icon right fas fa-angle-left"></i> -->
+                            Dashboard
                         </p>
                     </a>
-
-                </li>
+                </li> -->
 
                 <!-- Divider -->
-                <hr class="sidebar-divider">
+                <!-- <hr class="sidebar-divider"> -->
 
                 <!-- Nav Item - ข้อมูลพื้นฐาน -->
                 <li class="nav-item">
@@ -53,7 +48,6 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <!-- <ul class="nav nav-treeview"> -->
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
                             <a href="location.php" class="nav-link text-dark">
@@ -75,6 +69,7 @@
                         </li>
                     </ul>
                 </li>
+
                 <!-- Nav Item - Approval(การอนุมัติ) -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -84,7 +79,6 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <!-- <ul class="nav nav-treeview"> -->
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
                             <a href="approval_workflow.php?page=table" class="nav-link text-dark">
@@ -116,7 +110,6 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <!-- <ul class="nav nav-treeview"> -->
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
                             <a href="po.php" class="nav-link text-dark">
@@ -154,7 +147,6 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <!-- <ul class="nav nav-treeview"> -->
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
                             <a href="role.php?page=table" class="nav-link text-dark">
@@ -187,7 +179,6 @@
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
-                    <!-- <ul class="nav nav-treeview"> -->
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
                             <a href="401report.php" class="nav-link text-dark">

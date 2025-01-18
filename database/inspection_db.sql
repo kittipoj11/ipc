@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 15, 2025 at 11:07 AM
+-- Generation Time: Jan 18, 2025 at 12:54 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -90,8 +90,10 @@ CREATE TABLE `departments` (
 
 INSERT INTO `departments` (`department_id`, `department_name`, `is_deleted`) VALUES
 (1, 'IT', 0),
-(2, 'FM', 0),
-(3, 'FA', 0);
+(2, 'FMD', 0),
+(3, 'FAD', 0),
+(4, 'BD', 1),
+(5, 'PMD', 1);
 
 -- --------------------------------------------------------
 
@@ -102,7 +104,7 @@ INSERT INTO `departments` (`department_id`, `department_name`, `is_deleted`) VAL
 CREATE TABLE `inspect_approvals` (
   `approval_id` int(10) UNSIGNED NOT NULL,
   `inspect_id` int(10) UNSIGNED DEFAULT NULL,
-  `period` int(11) DEFAULT NULL,
+  `period` int(11) DEFAULT 0,
   `level_id` int(10) UNSIGNED DEFAULT NULL,
   `approver_id` int(10) UNSIGNED DEFAULT NULL,
   `approval_status_id` int(10) UNSIGNED DEFAULT NULL,
@@ -119,14 +121,14 @@ CREATE TABLE `inspect_approvals` (
 CREATE TABLE `inspect_main` (
   `inspect_id` int(10) UNSIGNED NOT NULL,
   `po_id` int(10) UNSIGNED DEFAULT NULL,
-  `working_date_from` date DEFAULT NULL,
-  `working_date_to` date DEFAULT NULL,
-  `working_day` int(11) DEFAULT NULL,
-  `remain_value_interim_payment` decimal(19,2) DEFAULT NULL,
-  `total_retention_value` decimal(19,2) DEFAULT NULL,
-  `inspect_status` int(10) UNSIGNED DEFAULT NULL,
+  `working_date_from` date DEFAULT current_timestamp(),
+  `working_date_to` date DEFAULT current_timestamp(),
+  `working_day` int(11) DEFAULT 0,
+  `remain_value_interim_payment` decimal(19,2) DEFAULT 0.00,
+  `total_retention_value` decimal(19,2) DEFAULT 0.00,
+  `inspect_status` int(10) UNSIGNED DEFAULT 1,
   `create_by` int(10) UNSIGNED DEFAULT NULL,
-  `create_date` datetime DEFAULT NULL
+  `create_date` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -146,6 +148,9 @@ CREATE TABLE `inspect_period` (
   `inspect_period_id` int(10) UNSIGNED NOT NULL,
   `inspect_id` int(10) UNSIGNED DEFAULT NULL,
   `period` int(11) DEFAULT NULL,
+  `working_date_from` date NOT NULL DEFAULT current_timestamp(),
+  `working_date_to` date NOT NULL DEFAULT current_timestamp(),
+  `working_day` int(11) NOT NULL DEFAULT 0,
   `workload_planned_percent` decimal(5,2) DEFAULT NULL,
   `workload_actual_completed_percent` decimal(5,2) DEFAULT NULL,
   `workload_remaining_percent` decimal(5,2) DEFAULT NULL,
@@ -171,10 +176,10 @@ CREATE TABLE `inspect_period` (
 -- Dumping data for table `inspect_period`
 --
 
-INSERT INTO `inspect_period` (`inspect_period_id`, `inspect_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_level`) VALUES
-(1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `inspect_period` (`inspect_period_id`, `inspect_id`, `period`, `working_date_from`, `working_date_to`, `working_day`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_level`) VALUES
+(1, 1, 1, '2025-01-18', '2025-01-18', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 1, 2, '2025-01-18', '2025-01-18', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 1, 3, '2025-01-18', '2025-01-18', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -236,7 +241,10 @@ CREATE TABLE `locations` (
 --
 
 INSERT INTO `locations` (`location_id`, `location_name`, `is_deleted`) VALUES
-(1, 'Sky', 0);
+(1, 'Sky', 0),
+(2, 'Aktiv', 1),
+(3, 'Forum', 1),
+(4, 'Exhibition', 0);
 
 -- --------------------------------------------------------
 
@@ -280,7 +288,7 @@ CREATE TABLE `po` (
   `deposit_percent` decimal(5,2) DEFAULT NULL,
   `deposit_value` decimal(19,2) DEFAULT NULL,
   `create_by` varchar(255) DEFAULT NULL,
-  `create_date` datetime DEFAULT NULL,
+  `create_date` datetime DEFAULT current_timestamp(),
   `number_of_period` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -479,7 +487,7 @@ ALTER TABLE `approval_workflow`
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `department_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `department_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `inspect_approvals`
@@ -509,7 +517,7 @@ ALTER TABLE `inspect_period_detail`
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `po`
