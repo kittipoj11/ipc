@@ -14,7 +14,8 @@ $(document).ready(function () {
       url: "department_crud.php",
       type: "POST",
       data: {
-        department_id: department_id
+        department_id: department_id,
+        action: 'selectdata'
       },
       success: function (response) {
         console.log(`response={$response}`);
@@ -30,16 +31,16 @@ $(document).ready(function () {
     e.preventDefault();
     // let id = $(this).attr("id").slice("delete".length);
     let department_id = $(this).closest("tr").attr("id");
-    let department_name = 'xxx';
     $.ajax({
       url: "department_crud.php",
       type: "POST",
       data: {
-        department_id: department_id
+        department_id: department_id,
+        action: 'selectdata'
       },
       success: function (response) {
         data = JSON.parse(response);
-        department_name = data.department_name;
+        let department_name = data.department_name;
         Swal.fire({
           title: "Are you sure?",
           // text: `You want to delete this item!:${department_name}`,

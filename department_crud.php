@@ -16,11 +16,10 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $obj->deleteData($_REQUEST);
     getAllRecord($obj);
-} elseif (isset($_REQUEST['department_id'])) {
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
     $rs = $obj->getRecordById($_REQUEST['department_id']);
     echo json_encode($rs);
-} elseif (isset($_REQUEST['delete_id'])) {
-    $obj->deleteData($_REQUEST);
+} else {
     getAllRecord($obj);
 }
 

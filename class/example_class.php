@@ -29,7 +29,7 @@ class Department extends Connection
     {
         $sql = <<<EOD
                 select department_id, department_name, is_deleted 
-                from department
+                from departments
                 where is_deleted = false
                 and department_id = :id
                 EOD;
@@ -52,7 +52,7 @@ class Department extends Connection
 
         try {
             if ($stmt->execute()) {
-                echo  'data has been created successfully.';
+                // echo  'Data has been created successfully.';
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
@@ -76,7 +76,7 @@ class Department extends Connection
 
         try {
             if ($stmt->execute()) {
-                echo 'data has been update successfully.';
+                // echo 'Data has been update successfully.';
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
@@ -98,7 +98,7 @@ class Department extends Connection
 
         try {
             if ($stmt->execute()) {
-                echo 'data has been delete successfully.';
+                echo 'Data has been delete successfully.';
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {

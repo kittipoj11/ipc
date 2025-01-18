@@ -13,7 +13,15 @@ class Location extends Connection
                 EOD;
         $stmt = $this->myConnect->prepare($sql);
         $stmt->execute();
+
+        // สำหรับใช้ตรวจสอบ SQL Statement เสมือนเป็นการ debug คำสั่ง
+        // echo "sql = {$sql}<br>";
+        // $stmt->debugDumpParams();
+        // exit;
+
         $rs = $stmt->fetchAll();
+
+
         return $rs;
     }
 
@@ -21,7 +29,7 @@ class Location extends Connection
     {
         $sql = <<<EOD
                 select location_id, location_name, is_deleted 
-                from location
+                from locations
                 where is_deleted = false
                 and location_id = :id
                 EOD;
@@ -44,7 +52,7 @@ class Location extends Connection
 
         try {
             if ($stmt->execute()) {
-                echo  'data has been created successfully.';
+                // echo  'Data has been created successfully.';
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
@@ -68,7 +76,7 @@ class Location extends Connection
 
         try {
             if ($stmt->execute()) {
-                echo 'data has been update successfully.';
+                // echo 'Data has been update successfully.';
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
@@ -80,7 +88,7 @@ class Location extends Connection
     }
     public function deleteData($getData)
     {
-        $location_id = $getData['delete_id'];
+        $location_id = $getData['location_id'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
         $sql = "update locations 
                 set is_deleted = 1
@@ -90,7 +98,7 @@ class Location extends Connection
 
         try {
             if ($stmt->execute()) {
-                echo 'data has been delete successfully.';
+                echo 'Data has been delete successfully.';
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {

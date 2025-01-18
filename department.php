@@ -48,7 +48,7 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/example_class.php';
+    require_once  'class/department_class.php';
     $department = new Department;
     $rs = $department->getAllRecord();
     ?>
@@ -86,7 +86,7 @@ require_once 'auth.php';
                     <thead>
                       <tr>
                         <th class="text-center" style="width: 100px;">#</th>
-                        <th class="text-center">department name</th>
+                        <th class="text-center">Department name</th>
                         <th class="text-center" style="width: 120px;">Action</th>
                       </tr>
                     </thead>

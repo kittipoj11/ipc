@@ -16,14 +16,12 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $obj->deleteData($_REQUEST);
     getAllRecord($obj);
-} elseif (isset($_REQUEST['edit_id'])) {
-    $rs = $obj->getRecordById($_REQUEST['edit_id']);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
+    $rs = $obj->getRecordById($_REQUEST['supplier_id']);
     echo json_encode($rs);
-} elseif (isset($_REQUEST['delete_id'])) {
-    $obj->deleteData($_REQUEST);
+} else {
     getAllRecord($obj);
 }
-
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
 function getAllRecord($getObj)
@@ -37,7 +35,7 @@ function getAllRecord($getObj)
                         <thead>
                             <tr>
                                 <th class="text-center" style="width: 100px;">#</th>
-                                <th class="text-center">supplier name</th>
+                                <th class="text-center">Supplier name</th>
                                 <th class="text-center" style="width: 120px;">Action</th>
                             </tr>
                         </thead>
@@ -46,21 +44,21 @@ function getAllRecord($getObj)
         echo $html;
         foreach ($rs as $row) {
             $html = <<<EOD
-                        <tr>
+                        <tr id="{$row['supplier_id']}">
                             <td>{$row['supplier_id']}</td>
                             <td>{$row['supplier_name']}</td>
                             <td align='center'>
                                 <div class='btn-group-sm'>
-                                    <a class='btn btn-warning btn-sm btnEdit' data-toggle='modal' data-placement='right' title='Edit' data-target='#editModal' iid='{$row['supplier_id']}' style='margin: 0px 5px 5px 5px'>
+                                    <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' style='margin: 0px 5px 5px 5px'>
                                         <i class='fa-regular fa-pen-to-square'></i>
                                     </a>
-                                    <a class='btn btn-danger btn-sm btnDelete' data-toggle='modal' data-placement='right' title='Delete' data-target='#deleteModal' iid='{$row['supplier_id']}'  style='margin: 0px 5px 5px 5px'>
+                                    <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' style='margin: 0px 5px 5px 5px'>
                                         <i class='fa-regular fa-trash-can'></i>
                                     </a>
                                 </div>
                             </td>
                         </tr>
-                    EOD;
+                        EOD;
             echo $html;
         }
         $html = <<<EOD
