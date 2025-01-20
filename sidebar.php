@@ -39,6 +39,30 @@
                 <!-- Divider -->
                 <!-- <hr class="sidebar-divider"> -->
 
+                <!-- Nav Item - ข้อมูลระบบ -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-database"></i>
+                        <p>
+                            ข้อมูลระบบ
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
+                        <li class="nav-item">
+                            <a href="inspect_status.php" class="nav-link text-dark">
+                                <i class="nav-icon fa-solid fa-truck"></i>
+                                <p>Inspection status(สถานะการตรวจสอบ)</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="plan_status.php" class="nav-link text-dark">
+                                <i class="nav-icon fa-solid fa-city"></i>
+                                <p>Plan Status(สถานะแผนงาน)</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <!-- Nav Item - ข้อมูลพื้นฐาน -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
@@ -75,11 +99,17 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-fw fa-truck-loading"></i>
                         <p>
-                            Approval
+                            ข้อมูลการอนุมัติ
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
+                        <li class="nav-item">
+                            <a href="approval_status.php" class="nav-link text-dark">
+                                <i class="nav-icon fi fi-rr-calendar-days"></i>
+                                <p>Approval status (สถานะในการอนุมัติ)***system only</p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="approval_workflow.php?page=table" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-clock"></i>
@@ -90,12 +120,6 @@
                             <a href="approval_levels.php" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-days"></i>
                                 <p>approval_levels (กำหนดระดับการอนุมัติในแต่ละ Workflow)</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="approval_status.php" class="nav-link text-dark">
-                                <i class="nav-icon fi fi-rr-calendar-days"></i>
-                                <p>approval_status (สถานะในการอนุมัติ)***system only</p>
                             </a>
                         </li>
                     </ul>

@@ -1,0 +1,136 @@
+[33mcommit 140f609adf4da1f4451d0c30ed7afaa546a7c38c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Fri Jan 17 16:32:14 2025 +0700
+
+    Update Master DB pages#3
+
+[33mcommit b206ccd14e28e2904a92ab3533781aac4c3d2d1f[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Thu Jan 16 16:57:07 2025 +0700
+
+    change the cursor pointer to hand when my mouse goes over a tr
+
+[33mcommit a77f834a92ba8c5e9b4314c66796c0738422ed5f[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Thu Jan 16 16:52:26 2025 +0700
+
+    Update Master DB pages#2
+
+[33mcommit 87ce33e3cab83ed1a059dfc82519056e5c326033[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Wed Jan 15 17:08:09 2025 +0700
+
+    Update Master DB pages
+
+[33mcommit 27d8baf8ef02365f7dd77b8dd192b601750ad372[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Tue Jan 14 18:00:06 2025 +0700
+
+    Update Master DB pages and Modified myConnection class
+
+[33mcommit cf0193537914fbd1d22050f4aab1fa8e1c812261[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Mon Jan 13 17:44:28 2025 +0700
+
+    Create Master menu
+
+[33mcommit be262252e5fd66a7e7ebe820069db65e3654183b[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Sat Jan 11 22:56:53 2025 +0700
+
+    Add undraw_profile.svg
+
+[33mcommit d228523a70abf679d4208341b804d04332e6441f[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Sat Jan 11 19:01:11 2025 +0700
+
+    Add new plugins
+
+[33mcommit 280a5f2f191d7cf0096a1fc8e5b25f78e180ae41[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Sat Jan 11 18:57:20 2025 +0700
+
+    Fix Location
+
+[33mcommit 978cf014079144b7c3af00a3e670c0f4f04e36ce[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Sat Jan 11 15:17:14 2025 +0700
+
+    Create Location
+
+[33mcommit 67312fbcade63f5f902360d0d26a6046863909e1[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Sat Jan 11 12:40:03 2025 +0700
+
+    Create sidebar
+
+[33mcommit cbb18fbc2cbee495a3388b1926b023bb79ea815a[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Fri Jan 10 16:55:48 2025 +0700
+
+    Fix Login at 10/01/2025
+
+[33mcommit 2d07885fb9e63e9c053bef5a0298e33a0f19e748[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Thu Jan 9 22:36:16 2025 +0700
+
+    Fixed error modal form
+
+[33mcommit 57625ff22bbc322da9745d7fed1e7020e4b69025[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Thu Jan 9 17:01:12 2025 +0700
+
+    Create Signin Signup Logout at 09/01/2025
+
+[33mcommit 488192932fd0059167d3fe643f95fca00c774a94[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Wed Jan 8 14:40:08 2025 +0700
+
+    Revert "Delete index2.html"
+    
+    This reverts commit 3d40a15499731719513bf304a0a21b18e5965b26.
+
+[33mcommit 1d56e00119edd262a0e6eaf8e3c2c23ccb192354[m
+Merge: e9a9aa7 3d40a15
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Wed Jan 8 14:38:40 2025 +0700
+
+    Merge branch 'main' of https://github.com/kittipoj11/ipc
+
+[33mcommit 3d40a15499731719513bf304a0a21b18e5965b26[m
+Author: kittipoj11 <120871739+kittipoj11@users.noreply.github.com>
+Date:   Wed Jan 8 14:37:36 2025 +0700
+
+    Delete index2.html
+
+[33mcommit e9a9aa7ff22904fd1d54272417ff093391a42e54[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Wed Jan 8 14:30:18 2025 +0700
+
+    Revert "Delete index2.html"
+    
+    This reverts commit 3b1ccaf910ddb9e72a8190331fc45c37783b5d0d.
+
+[33mcommit 3b1ccaf910ddb9e72a8190331fc45c37783b5d0d[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Wed Jan 8 14:29:22 2025 +0700
+
+    Delete index2.html
+
+[33mcommit 9789cd2d97cb58781230914918f9a9b3ff91bcc0[m
+Author: kittipoj11 <120871739+kittipoj11@users.noreply.github.com>
+Date:   Wed Jan 8 14:20:23 2025 +0700
+
+    Update index2.html
+
+[33mcommit defef6f08215d8ff519e3f0cb94b6fbdda0a0924[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Wed Jan 8 14:14:49 2025 +0700
+
+    Delete index4.html
+
+[33mcommit 4c18556577eaf7d6ec0012c317e444a8db9dc1b1[m
+Author: kittipoj11 <poj11@hotmail.com>
+Date:   Wed Jan 8 14:10:50 2025 +0700
+
+    Start project at 08/01/2025

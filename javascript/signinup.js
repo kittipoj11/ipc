@@ -14,7 +14,7 @@ $(document).ready(function () {
       method: "POST",
       datatype: "json",
       success: function (response) {
-        // console.log(`response => ${response}`);
+        console.log(`response => ${response}`);
         if (response) {
           // return;
           window.location = "index.php";
