@@ -94,43 +94,30 @@ require_once 'auth.php';
                 <div class="card-body">
                   <form name="myForm" id="myForm">
 
-                    <div class="row m-3">
-                      <label for="po_id" class="col-2 col-form-label">#</label>
-                      <div class="col-10">
+                    <div class="row d-none">
+                      <label for="po_id" class="col-3">#</label>
+                      <div class="col-9">
                         <input type="text" class="form-control form-control-sm fst-italic" name="po_id" value="[Autonumber]" disabled>
                       </div>
                     </div>
 
-                    <div class="row m-3">
-                      <label for="po_no" class="col-2 col-form-label">เลขที่ PO</label>
-                      <div class="col-10">
-                        <input type="text" class="form-control form-control-sm" name="po_no" id="po_no">
+                    <div class="row">
+                      <div class="col-12 input-group">
+                        <label for="po_no" class="input-group-text">เลขที่ PO</label>
+                        <input type="text" class="form-control" name="po_no" id="po_no">
                       </div>
                     </div>
 
-                    <div class="row m-3">
-                      <label for="project_name" class="col-2 col-form-label">ชื่อโครงการ</label>
-                      <div class="col-10">
-                        <input type="text" class="form-control form-control-sm" name="project_name" id="project_name">
+                    <div class="row">
+                      <div class="col-8 input-group">
+                        <label for="project_name" class="input-group-text">ชื่อโครงการ</label>
+                        <input type="text" class="form-control" name="project_name" id="project_name">
                       </div>
-                    </div>
 
-                    <div class="row m-3">
-                      <label for="supplier_id" class="col-2 col-form-label">ผู้รับเหมา</label>
-                      <div class="col-10">
-                        <select class="form-select form-control form-control-sm supplier_id" name="supplier_id">
-                          <?php
-                          foreach ($supplier_rs as $row) :
-                            echo "<option value='{$row['supplier_id']}'>{$row['supplier_name']}</option>";
-                          endforeach ?>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="row m-3">
-                      <label for="location_id" class="col-2 col-form-label">สถานที่</label>
-                      <div class="col-10">
-                        <select class="form-select form-control form-control-sm location_id" name="location_id">
+                      <div class="col-4 input-group">
+                        <label for="location_id" class="input-group-text">สถานที่</label>
+                        <select class="form-select form-control" name="location_id" id="location_id">
+                          <option value="">...</option>
                           <?php
                           foreach ($location_rs as $row) :
                             echo "<option value='{$row['location_id']}'>{$row['location_name']}</option>";
@@ -139,80 +126,47 @@ require_once 'auth.php';
                       </div>
                     </div>
 
-                    <div class="row m-3">
-                      <label for="working_name_th" class="col-2 col-form-label">ชื่องาน(ภาษาไทย)</label>
-                      <div class="col-10">
-                        <input type="text" class="form-control form-control-sm" name="working_name_th" id="working_name_th">
-                      </div>
-                    </div>
-
-                    <div class="row m-3">
-                      <label for="working_name_en" class="col-2 col-form-label">ชื่องาน(ภาษาอังกฤษ)</label>
-                      <div class="col-10">
-                        <input type="text" class="form-control form-control-sm" name="working_name_en" id="working_name_en">
-                      </div>
-                    </div>
-
-                    <div class="row m-3">
-                      <label for="contract_value" class="col-2 col-form-label">มูลค่างาน</label>
-                      <div class="col-10">
-                        <input type="number" class="form-control form-control-sm" name="contract_value" id="contract_value">
-                      </div>
-                    </div>
-
-                    <div class="row m-3">
-                      <label for="vat" class="col-2 col-form-label">VAT</label>
-                      <div class="col-10">
-                        <input type="number" class="form-control form-control-sm" name="vat" id="vat">
-                      </div>
-                    </div>
                     <div class="row">
-                      <div class="col-sm-4 px-0">
-                        <div class="input-group input-group-sm mb-1">
-                          <label for="building_id" class="input-group-text">อาคาร</label>
-                          <div class="col">
-                            <select name="building_id" id="building_id" class="form-select form-select-sm form-control">
-                              <!-- <option value="">-- เลือกอีเวนต์ --</option> -->
-                              <option value="">...</option>
-                              <?php foreach ($rsBuilding as $row) { ?>
-                                <option value="<?php echo $row['building_id'] ?>">
-                                  <?php echo $row['building_name'] ?></option>
-                              <?php } ?>
-                            </select>
-                          </div>
-                        </div>
+                      <div class="col-6 input-group">
+                        <label for="working_name_th" class="input-group-text">ชื่องาน(ภาษาไทย)</label>
+                        <input type="text" class="form-control" name="working_name_th" id="working_name_th">
                       </div>
-                      <div class="col-sm-4 px-0">
-                        <div class="input-group input-group-sm mb-1">
-                          <label for="hall_id" class="input-group-text">พื้นที่</label>
-                          <div class="col">
-                            <select name="hall_id" id="hall_id" class="form-select form-select-sm form-control">
-                              <!-- <option value="">-- เลือกพื้นที่ --</option> -->
-                              <option value="">...</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-4 px-0">
-                        <div class="input-group input-group-sm mb-1">
-                          <label for="total_slots" class="input-group-text">Total Slots</label>
-                          <div class="col">
-                            <input type="number" name='total_slots' id='total_slots' class="form-control">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-12 px-0">
-                        <div class="input-group input-group-sm mb-1">
-                          <span class="input-group-text">ชื่องาน(Event)</span>
-                          <div class="col">
-                            <input type="text" name='event_name' id='event_name' class="form-control" oncut="alert('123')">
-                          </div>
-                        </div>
+
+                      <div class="col-6 input-group">
+                        <label for="working_name_en" class="input-group-text">ชื่องาน(ภาษาอังกฤษ)</label>
+                        <input type="text" class="form-control" name="working_name_en" id="working_name_en">
                       </div>
                     </div>
 
+                    <div class="row">
+                      <div class="col-6 input-group">
+                        <label for="supplier_id" class="input-group-text">ผู้รับเหมา</label>
+                        <select class="form-select form-control" name="supplier_id" id="supplier_id">
+                          <option value="">...</option>
+                          <?php
+                          foreach ($supplier_rs as $row) :
+                            echo "<option value='{$row['supplier_id']}'>{$row['supplier_name']}</option>";
+                          endforeach ?>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-5 input-group">
+                        <label for="contract_value" class="input-group-text">มูลค่างาน</label>
+                        <input type="number" class="form-control" name="contract_value" id="contract_value">
+                      </div>
+
+                      <div class="col-3 form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="include_vat">
+                        <label class="form-check-label" for="include_vat">Include VAT</label>
+                      </div>
+
+                      <div class="col-4 input-group">
+                        <label for="vat" class="input-group-text">VAT</label>
+                        <input type="text" class="form-control" name="vat" id="vat">
+                      </div>
+                    </div>
 
                     <div class="row inline d-none">
                       <!-- ค่า Default ที่ดึงจาก tbl_hall-->
@@ -234,19 +188,18 @@ require_once 'auth.php';
                       </div>
                     </div>
 
-                    <div class="card border border-1 border-dark mt-3" style="display:none" id="div_open_area_schedule">
+                    <div class="card border border-1 border-dark mt-3" id="div_open_area_schedule">
                       <!-- <div class="card-header" style="display: flex;"> -->
                       <div class="card-header p-2">
-                        <h6>ช่วงเวลาเปิดพื้นที่</h6>
                         <a id="btnAdd" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="right" style="margin: 0px 5px 5px 5px;" title="เพิ่มรายการ">
-                          Add
+                          + งวดงาน
                         </a>
                         <!-- <a id="btnDeleteListx" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="right" style="margin: 0px 5px 5px 5px;display:none" title="ลบรายการล่าสุด">
                                                Delete
                                            </a> -->
 
                         <a id="btnClear" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" style="margin: 0px 5px 5px 5px;" title="ลบรายการทั้งหมด">
-                          Clear
+                          ล้างงวดงานทั้งหมด
                         </a>
                       </div>
 
@@ -255,37 +208,21 @@ require_once 'auth.php';
                         <table class="table table-bordered justify-content-center text-center">
                           <thead>
                             <tr>
-                              <th width="10%">วันที่เปิด</th>
-                              <th width="10%">วันที่ปิด</th>
-                              <th width="10%">เวลาเปิด</th>
-                              <th width="10%">เวลาปิด</th>
-                              <th width="15%">จำนวน Slots ที่เปิด</th>
-                              <th>ประเภทรถ</th>
-                              <th width="5%">Action</th>
+                              <th width="10%">งวดงาน</th>
+                              <th width="20%">จำนวนเงิน</th>
+                              <th>เงื่อนไขการจ่ายเงิน</th>
                               <th style="display:none">id</th>
                             </tr>
                           </thead>
                           <tbody id="tableBody">
                             <tr class="firstTr">
-                              <td class="p-1"><input type="date" name="date_start[]" class="form-control date_start" value="<?php echo date_format(new DateTime('tomorrow'), "Y-m-d"); ?>" min="<?php echo date_format(new DateTime('tomorrow'), "Y-m-d"); ?>" required>
+                              <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
+                              <td class="p-1"><input type="number" name="date_start[]" class="form-control date_start" value="" required>
                               </td>
-                              <td class="p-1"><input type="date" name="date_end[]" class="form-control date_end" value="<?php echo date_format(new DateTime('tomorrow'), "Y-m-d"); ?>" min="<?php echo date_format(new DateTime('tomorrow'), "Y-m-d"); ?>" required>
-                              </td>
-                              <td class="p-1"><input type="text" name="time_start[]" class="form-control time_start" required></td>
-                              <td class="p-1"><input type="text" name="time_end[]" class="form-control time_end" required></td>
                               <td class="p-1"><input type="number" name="reservable_slots[]" class="form-control reservable_slots" require>
                               </td>
                               <td class="p-1">
-                                <?php foreach ($rsCarType as $dr) :
-                                  echo "<div class='form-check form-check-inline'>";
-                                  echo "<input type='checkbox' name='chkCarType0[]' 
-                                                                class='form-check-input checkbox' value='{$dr['car_type_id']}' checked>";
-                                  echo "<label class='form-check-label' for='chkCarType{$dr['car_type_id']}'>{$dr['car_type_name']}</label>";
-                                  echo "</div>";
-                                endforeach; ?>
-                              </td>
-                              <td class="p-1 align-content-center">
-                                <a class="btn btn-outline-danger btn-sm btnDeleteList align-self-center" data-toggle="tooltip" data-placement="right" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-cross-small"></i></a>
+                                <input type="text" name="remark[]" class="form-control remark" require>
                               </td>
                               <td style="display:none"><input type="text" name="id[]" class="form-control id" value="0"></td>
                             </tr>

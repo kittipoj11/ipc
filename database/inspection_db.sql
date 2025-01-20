@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 18, 2025 at 12:54 PM
+-- Generation Time: Jan 20, 2025 at 11:44 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -34,6 +34,15 @@ CREATE TABLE `approval_levels` (
   `approver_role` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Dumping data for table `approval_levels`
+--
+
+INSERT INTO `approval_levels` (`level_id`, `workflow_id`, `level_order`, `approver_role`) VALUES
+(1, 1, 1, 2),
+(2, 1, 2, 3),
+(3, 1, 3, 4);
+
 -- --------------------------------------------------------
 
 --
@@ -42,17 +51,18 @@ CREATE TABLE `approval_levels` (
 
 CREATE TABLE `approval_status` (
   `approval_status_id` int(10) UNSIGNED NOT NULL,
-  `approval_status_name` varchar(255) DEFAULT NULL
+  `approval_status_name` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `approval_status`
 --
 
-INSERT INTO `approval_status` (`approval_status_id`, `approval_status_name`) VALUES
-(0, 'ไม่อนุมัติ'),
-(1, 'รออนุมัติ'),
-(2, 'อนุมัติ');
+INSERT INTO `approval_status` (`approval_status_id`, `approval_status_name`, `is_deleted`) VALUES
+(0, 'ไม่อนุมัติ', 0),
+(1, 'รออนุมัติ', 0),
+(2, 'อนุมัติ', 0);
 
 -- --------------------------------------------------------
 
@@ -62,15 +72,16 @@ INSERT INTO `approval_status` (`approval_status_id`, `approval_status_name`) VAL
 
 CREATE TABLE `approval_workflow` (
   `workflow_id` int(10) UNSIGNED NOT NULL,
-  `workflow_name` varchar(255) DEFAULT NULL
+  `workflow_name` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `approval_workflow`
 --
 
-INSERT INTO `approval_workflow` (`workflow_id`, `workflow_name`) VALUES
-(1, 'การอนุมัติ Inspect ทั่วไป');
+INSERT INTO `approval_workflow` (`workflow_id`, `workflow_name`, `is_deleted`) VALUES
+(1, 'การอนุมัติ Inspect ทั่วไป', 0);
 
 -- --------------------------------------------------------
 
@@ -90,10 +101,8 @@ CREATE TABLE `departments` (
 
 INSERT INTO `departments` (`department_id`, `department_name`, `is_deleted`) VALUES
 (1, 'IT', 0),
-(2, 'FMD', 0),
-(3, 'FAD', 0),
-(4, 'BD', 1),
-(5, 'PMD', 1);
+(2, 'FM', 0),
+(3, 'FA', 0);
 
 -- --------------------------------------------------------
 
@@ -104,7 +113,7 @@ INSERT INTO `departments` (`department_id`, `department_name`, `is_deleted`) VAL
 CREATE TABLE `inspect_approvals` (
   `approval_id` int(10) UNSIGNED NOT NULL,
   `inspect_id` int(10) UNSIGNED DEFAULT NULL,
-  `period` int(11) DEFAULT 0,
+  `period` int(11) DEFAULT NULL,
   `level_id` int(10) UNSIGNED DEFAULT NULL,
   `approver_id` int(10) UNSIGNED DEFAULT NULL,
   `approval_status_id` int(10) UNSIGNED DEFAULT NULL,
@@ -121,14 +130,14 @@ CREATE TABLE `inspect_approvals` (
 CREATE TABLE `inspect_main` (
   `inspect_id` int(10) UNSIGNED NOT NULL,
   `po_id` int(10) UNSIGNED DEFAULT NULL,
-  `working_date_from` date DEFAULT current_timestamp(),
-  `working_date_to` date DEFAULT current_timestamp(),
-  `working_day` int(11) DEFAULT 0,
-  `remain_value_interim_payment` decimal(19,2) DEFAULT 0.00,
-  `total_retention_value` decimal(19,2) DEFAULT 0.00,
-  `inspect_status` int(10) UNSIGNED DEFAULT 1,
+  `working_date_from` date DEFAULT NULL,
+  `working_date_to` date DEFAULT NULL,
+  `working_day` int(11) DEFAULT NULL,
+  `remain_value_interim_payment` decimal(19,2) DEFAULT NULL,
+  `total_retention_value` decimal(19,2) DEFAULT NULL,
+  `inspect_status` int(10) UNSIGNED DEFAULT NULL,
   `create_by` int(10) UNSIGNED DEFAULT NULL,
-  `create_date` datetime DEFAULT current_timestamp()
+  `create_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -148,9 +157,6 @@ CREATE TABLE `inspect_period` (
   `inspect_period_id` int(10) UNSIGNED NOT NULL,
   `inspect_id` int(10) UNSIGNED DEFAULT NULL,
   `period` int(11) DEFAULT NULL,
-  `working_date_from` date NOT NULL DEFAULT current_timestamp(),
-  `working_date_to` date NOT NULL DEFAULT current_timestamp(),
-  `working_day` int(11) NOT NULL DEFAULT 0,
   `workload_planned_percent` decimal(5,2) DEFAULT NULL,
   `workload_actual_completed_percent` decimal(5,2) DEFAULT NULL,
   `workload_remaining_percent` decimal(5,2) DEFAULT NULL,
@@ -176,10 +182,10 @@ CREATE TABLE `inspect_period` (
 -- Dumping data for table `inspect_period`
 --
 
-INSERT INTO `inspect_period` (`inspect_period_id`, `inspect_id`, `period`, `working_date_from`, `working_date_to`, `working_day`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_level`) VALUES
-(1, 1, 1, '2025-01-18', '2025-01-18', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 1, 2, '2025-01-18', '2025-01-18', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, 1, 3, '2025-01-18', '2025-01-18', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `inspect_period` (`inspect_period_id`, `inspect_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_level`) VALUES
+(1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -211,18 +217,19 @@ INSERT INTO `inspect_period_detail` (`inspect_period_detail_id`, `inspect_period
 
 CREATE TABLE `inspect_status` (
   `inspect_status_id` int(10) UNSIGNED NOT NULL,
-  `inspect_status_name` varchar(255) DEFAULT NULL
+  `inspect_status_name` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `inspect_status`
 --
 
-INSERT INTO `inspect_status` (`inspect_status_id`, `inspect_status_name`) VALUES
-(0, 'ไม่ผ่าน'),
-(1, 'รอตรวจ'),
-(2, 'ตรวจแล้ว'),
-(3, 'ผ่าน');
+INSERT INTO `inspect_status` (`inspect_status_id`, `inspect_status_name`, `is_deleted`) VALUES
+(0, 'ไม่ผ่าน', 0),
+(1, 'รอตรวจ', 0),
+(2, 'ตรวจแล้ว', 0),
+(3, 'ผ่าน', 0);
 
 -- --------------------------------------------------------
 
@@ -241,10 +248,7 @@ CREATE TABLE `locations` (
 --
 
 INSERT INTO `locations` (`location_id`, `location_name`, `is_deleted`) VALUES
-(1, 'Sky', 0),
-(2, 'Aktiv', 1),
-(3, 'Forum', 1),
-(4, 'Exhibition', 0);
+(1, 'Sky', 0);
 
 -- --------------------------------------------------------
 
@@ -254,17 +258,18 @@ INSERT INTO `locations` (`location_id`, `location_name`, `is_deleted`) VALUES
 
 CREATE TABLE `plan_status` (
   `plan_status_id` int(10) UNSIGNED NOT NULL,
-  `plan_status_name` varchar(255) DEFAULT NULL
+  `plan_status_name` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `plan_status`
 --
 
-INSERT INTO `plan_status` (`plan_status_id`, `plan_status_name`) VALUES
-(0, 'ล่าช้ากว่าแผนงาน'),
-(1, 'ตามแผนงาน'),
-(2, 'เร็วกว่าแผนงาน');
+INSERT INTO `plan_status` (`plan_status_id`, `plan_status_name`, `is_deleted`) VALUES
+(0, 'ล่าช้ากว่าแผนงาน', 0),
+(1, 'ตามแผนงาน', 0),
+(2, 'เร็วกว่าแผนงาน', 0);
 
 -- --------------------------------------------------------
 
@@ -288,7 +293,7 @@ CREATE TABLE `po` (
   `deposit_percent` decimal(5,2) DEFAULT NULL,
   `deposit_value` decimal(19,2) DEFAULT NULL,
   `create_by` varchar(255) DEFAULT NULL,
-  `create_date` datetime DEFAULT current_timestamp(),
+  `create_date` datetime DEFAULT NULL,
   `number_of_period` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -315,7 +320,11 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`role_id`, `role_name`) VALUES
-(1, 'admin');
+(1, 'admin'),
+(2, 'ผู้ช่วยผู้จัดการ'),
+(3, 'ผู้จัดการ'),
+(4, 'ผู้อำนวยการ'),
+(5, 'กรรมการผู้จัดการ');
 
 -- --------------------------------------------------------
 
@@ -334,7 +343,8 @@ CREATE TABLE `suppliers` (
 --
 
 INSERT INTO `suppliers` (`supplier_id`, `supplier_name`, `is_deleted`) VALUES
-(1, 'บริษัทวินสตาร์คอร์ปจำกัด', 0);
+(1, 'บริษัทวินสตาร์คอร์ปจำกัด', 0),
+(2, 'xxx', 1);
 
 -- --------------------------------------------------------
 
@@ -344,6 +354,7 @@ INSERT INTO `suppliers` (`supplier_id`, `supplier_name`, `is_deleted`) VALUES
 
 CREATE TABLE `users` (
   `user_id` int(10) UNSIGNED NOT NULL,
+  `user_code` varchar(5) NOT NULL,
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `full_name` varchar(255) DEFAULT NULL,
@@ -355,8 +366,14 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `password`, `full_name`, `role_id`, `department_id`) VALUES
-(1, 'admin', 'admin', 'Administrator', 1, 1);
+INSERT INTO `users` (`user_id`, `user_code`, `username`, `password`, `full_name`, `role_id`, `department_id`) VALUES
+(1, '05389', 'admin', 'admin', 'Administrator', 1, 1),
+(3, '05389', 'nathapat', '1111', 'Nathapat Soontornpurmsap', 2, 1),
+(4, '00001', 'A00001', '1111', 'AA Admin', 1, 1),
+(5, '00002', 'A00002', '1111', 'BB AM', 2, 1),
+(6, '00003', 'A00003', '1111', 'CC Mgr', 3, 1),
+(7, '00004', 'A00004', '1111', 'DD D', 4, 1),
+(8, '00005', 'A00005', '1111', 'EE MD', 5, 1);
 
 --
 -- Indexes for dumped tables
@@ -475,7 +492,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `approval_levels`
 --
 ALTER TABLE `approval_levels`
-  MODIFY `level_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `level_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `approval_workflow`
@@ -487,7 +504,7 @@ ALTER TABLE `approval_workflow`
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `department_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `department_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `inspect_approvals`
@@ -517,7 +534,7 @@ ALTER TABLE `inspect_period_detail`
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `po`
@@ -529,19 +546,19 @@ ALTER TABLE `po`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `supplier_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `supplier_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
