@@ -51,14 +51,14 @@
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
                             <a href="inspect_status.php" class="nav-link text-dark">
-                                <i class="nav-icon fa-solid fa-truck"></i>
-                                <p>Inspection status(สถานะการตรวจสอบ)</p>
+                                <i class="nav-icon fa-solid fa-truck d-none"></i>
+                                <p>Inspection status(สถานะการตรวจสอบ) ***system only</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="plan_status.php" class="nav-link text-dark">
-                                <i class="nav-icon fa-solid fa-city"></i>
-                                <p>Plan Status(สถานะแผนงาน)</p>
+                                <i class="nav-icon fa-solid fa-city d-none"></i>
+                                <p>Plan Status(สถานะแผนงาน) ***system only</p>
                             </a>
                         </li>
                     </ul>
@@ -75,19 +75,19 @@
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
                             <a href="location.php" class="nav-link text-dark">
-                                <i class="nav-icon fa-solid fa-truck"></i>
+                                <i class="nav-icon fa-solid fa-truck d-none"></i>
                                 <p>Location</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="department.php" class="nav-link text-dark">
-                                <i class="nav-icon fa-solid fa-city"></i>
+                                <i class="nav-icon fa-solid fa-city d-none"></i>
                                 <p>Department</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="supplier.php" class="nav-link text-dark">
-                                <i class="nav-icon fa-solid fa-grip"></i>
+                                <i class="nav-icon fa-solid fa-grip d-none"></i>
                                 <p>Suppliers</p>
                             </a>
                         </li>
@@ -97,7 +97,7 @@
                 <!-- Nav Item - Approval(การอนุมัติ) -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-fw fa-truck-loading"></i>
+                        <i class="nav-icon fas fa-database"></i>
                         <p>
                             ข้อมูลการอนุมัติ
                             <i class="fas fa-angle-left right"></i>
@@ -106,20 +106,20 @@
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
                             <a href="approval_status.php" class="nav-link text-dark">
-                                <i class="nav-icon fi fi-rr-calendar-days"></i>
-                                <p>Approval status (สถานะในการอนุมัติ)***system only</p>
+                                <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
+                                <p>Approval status (สถานะในการอนุมัติ) ***system only</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="approval_workflow.php?page=table" class="nav-link text-dark">
-                                <i class="nav-icon fi fi-rr-calendar-clock"></i>
-                                <p>approval_workflow (รูปแบบการอนุมัติ)</p>
+                                <i class="nav-icon fi fi-rr-calendar-clock d-none"></i>
+                                <p>approval_workflow (รูปแบบการอนุมัติ) ***admin</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="approval_levels.php" class="nav-link text-dark">
-                                <i class="nav-icon fi fi-rr-calendar-days"></i>
-                                <p>approval_levels (กำหนดระดับการอนุมัติในแต่ละ Workflow)</p>
+                                <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
+                                <p>approval_levels (กำหนดระดับการอนุมัติในแต่ละ Workflow) ***admin</p>
                             </a>
                         </li>
                     </ul>
@@ -128,7 +128,7 @@
                 <!-- Nav Item - Inspection(การตรวจรับงาน) -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-fw fa-truck-loading"></i>
+                        <i class="nav-icon fas fa-database"></i>
                         <p>
                             Inspection
                             <i class="fas fa-angle-left right"></i>
@@ -137,26 +137,26 @@
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
                             <a href="po.php" class="nav-link text-dark">
-                                <i class="nav-icon fi fi-rr-calendar-days"></i>
+                                <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
                                 <p>All purchase orders</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="inspection.php" class="nav-link text-dark">
-                                <i class="nav-icon fi fi-rr-calendar-days"></i>
+                                <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
                                 <p>All Inspection</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="approval_workflow.php?page=table" class="nav-link text-dark">
-                                <i class="nav-icon fi fi-rr-calendar-clock"></i>
-                                <p>Inspect status (สถานะการตรวจสอบ)***system only</p>
+                                <i class="nav-icon fi fi-rr-calendar-clock d-none"></i>
+                                <p>Inspect status (สถานะการตรวจสอบ) ***system only</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="approval_levels.php" class="nav-link text-dark">
-                                <i class="nav-icon fi fi-rr-calendar-days"></i>
-                                <p>Plan status (สถานะแผน)***system only</p>
+                                <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
+                                <p>Plan status (สถานะแผน) ***system only</p>
                             </a>
                         </li>
                     </ul>

@@ -263,13 +263,13 @@ require_once 'config.php';
         <div class="row">
             <div class="container-fluid d-flex justify-content-evenly text-start text-bg-dark bg-transparent mb-5">
                 <div class="col">
+                    <img src="images/image3.jpg" class="img-thumbnail" alt="รูปที่ 3" width="500px">
+                </div>
+                <div class="col">
                     <img src="images/image1.jpg" class="img-thumbnail" alt="รูปที่ 1" width="500px">
                 </div>
                 <div class="col">
                     <img src="images/image2.jpg" class="img-thumbnail" alt="รูปที่ 2" width="500px">
-                </div>
-                <div class="col">
-                    <img src="images/image3.jpg" class="img-thumbnail" alt="รูปที่ 3" width="500px">
                 </div>
 
             </div>

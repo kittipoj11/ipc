@@ -278,4 +278,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/po.js"></script>
+    <script src="javascript/po_create.js"></script>
