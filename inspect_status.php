@@ -197,6 +197,10 @@ require_once 'auth.php';
     <script src="plugins/dist/js/adminlte.js"></script>
     <!-- Sweet Alert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <!-- DataTable -->
     <!-- My JavaScript  -->
     <script src="javascript/inspect_status.js"></script>
+
+</body>
+
+</html>

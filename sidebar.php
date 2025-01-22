@@ -110,16 +110,22 @@
                                 <p>Approval status (สถานะในการอนุมัติ) ***system only</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="approval_workflow.php?page=table" class="nav-link text-dark">
+                        <li class="nav-item d-none">
+                            <a href="approval_workflow.php" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-clock d-none"></i>
-                                <p>approval_workflow (รูปแบบการอนุมัติ) ***admin</p>
+                                <p>approval_workflow (กำหนดรูปแบบการอนุมัติ) ***admin</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item d-none">
                             <a href="approval_levels.php" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
                                 <p>approval_levels (กำหนดระดับการอนุมัติในแต่ละ Workflow) ***admin</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="approval_workflow.php" class="nav-link text-dark">
+                                <i class="nav-icon fi fi-rr-calendar-clock d-none"></i>
+                                <p>Approval Workflow (กำหนดรูปแบบและระดับการอนุมัติในแต่ละ Workflow) ***admin</p>
                             </a>
                         </li>
                     </ul>

@@ -61,7 +61,7 @@ require_once 'auth.php';
           <div class="row mb-2">
             <div class="col-sm-6 d-flex">
               <h4>Approval_workflow</h4>
-              <a class="btn btn-success btn-sm btnNew" data-bs-toggle="modal" data-bs-placement="right" title="New" data-bs-target="#openModal" style="margin: 0px 5px 5px 5px;">
+              <a href="approval_workflow_create.php" class="btn btn-success btn-sm btnNew" style="margin: 0px 5px 5px 5px;">
                 <i class="fa-solid fa-plus"></i>
               </a>
             </div>
@@ -126,52 +126,6 @@ require_once 'auth.php';
       <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-
-    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ส่วน Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-
-    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Logout Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-    <!-- logout.php -->
-
-    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Open(Insert/Update) data Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-    <!-- <div class="container-fluid table-responsive-sm p-0"> -->
-    <div class="modal fade" id="openModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="modal">จัดการข้อมูล</h1>
-            <a class="" data-bs-dismiss="modal" aria-label="Close">
-              <i class="fa-solid fa-xmark"></i>
-            </a>
-          </div>
-
-          <form name="frmOpen" id="frmOpen" action="" method="">
-            <!-- <input type="text" name="action" id="action"> -->
-            <div class="modal-body">
-              <div class="row m-3">
-                <label for="workflow_id" class="col-sm-6 col-form-label">#</label>
-                <div class="col-sm-6">
-                  <!-- <input type="hidden" class="workflow_id" name="workflow_id"> -->
-                  <input type="input" class="form-control form-control-sm fst-italic workflow_id" id="workflow_id" readonly name="workflow_id">
-                </div>
-              </div>
-
-              <div class="row m-3">
-                <label for="workflow_name" class="col-sm-6 col-form-label">approval_workflow name</label>
-                <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm" name="workflow_name" id="workflow_name">
-                </div>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" name="btnSaveData" id="btnSaveData" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-          </form>
-
-        </div>
-      </div>
-    </div>
 
     <!-- Main Content End -->
 
