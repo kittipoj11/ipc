@@ -37,19 +37,16 @@ require_once 'config.php';
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 
     <!-- <link rel="stylesheet" href="_css/login.css"> -->
-    <!-- <link rel="stylesheet" href="_css/styles.css" /> -->
+    <!-- <link rel="stylesheet" href="css/styles.css" /> -->
+    <link rel="stylesheet" href="css/style.css">
 
     <script>
         var check = function() {
-            // console.log(document.getElementById('enter_password').value);
-            // console.log(document.getElementById('confirm_password').value);
             if (document.getElementById('enter_password').value == document.getElementById('confirm_password')
                 .value) {
-                // console.log('EQ');
                 document.getElementById('message').style.color = 'green';
                 document.getElementById('message').innerHTML = '';
             } else {
-                // console.log('Not EQ');
                 document.getElementById('message').style.color = 'red';
                 document.getElementById('message').innerHTML = 'not matching';
             }
@@ -64,12 +61,21 @@ require_once 'config.php';
             box-sizing: border-box;
         }
 
-        html,
-        body {
+        html {
             /* height: 100vh;
             width: 100%;
             background-color: #fbfbfb; */
             height: 100%;
+        }
+
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4),
+                    rgba(0, 0, 0, 0.7)),
+                url("images/impact_muangthong.jpg");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
         }
 
         .impact-image {
@@ -237,182 +243,73 @@ require_once 'config.php';
             </a>
 
             <!-- Hamburger bar -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button> -->
 
-            <div class="collapse navbar-collapse" id="navbarResponsive">
+            <!-- <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="#!" data-bs-toggle="modal"
                             data-bs-target="#registrationForm">Sign Up</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!" data-bs-toggle="modal"
                             data-bs-target="#loginForm">Sign In</a></li>
                 </ul>
-            </div>
+            </div> -->
         </div>
     </nav>
 
-    <!-- <div class="d-flex flex-column  justify-content-end align-items-center min-vh-100 impact-image p-5">
-        <div class="row text-start text-bg-dark bg-transparent">
-            <div class="col-md-6 px-0">
-                <h1 class="display-4 fst-italic fw-bold">IPC</h1>
-                <p class="lead my-3">
-                    IPC
-                    เป็นระบบการจัดการเอกสารการตรวจรับงาน(Inspection of work)
-                </p>
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section">Login</h2>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="container-fluid d-flex justify-content-evenly text-start text-bg-dark bg-transparent mb-5">
-                <div class="col">
-                    <img src="images/image3.jpg" class="img-thumbnail" alt="รูปที่ 3" width="500px">
-                </div>
-                <div class="col">
-                    <img src="images/image1.jpg" class="img-thumbnail" alt="รูปที่ 1" width="500px">
-                </div>
-                <div class="col">
-                    <img src="images/image2.jpg" class="img-thumbnail" alt="รูปที่ 2" width="500px">
-                </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="login-wrap p-0">
+                        <form action="#" class="signin-form">
+                            <div class="form-group">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Username"
+                                    required />
+                            </div>
+                            <div class="form-group">
+                                <input
+                                    id="password-field"
+                                    type="password"
+                                    class="form-control"
+                                    placeholder="Password"
+                                    required />
+                                <span
+                                    toggle="#password-field"
+                                    class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                            </div>
+                            <div class="form-group">
+                                <button
+                                    type="submit"
+                                    class="form-control btn btn-primary submit px-3">
+                                    Sign In
+                                </button>
+                            </div>
+                            <div class="form-group d-md-flex">
+                                <div class="w-50">
+                                    <label class="checkbox-wrap checkbox-primary">Remember Me
+                                        <input type="checkbox" checked />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="w-50 text-md-right">
+                                    <a href="#" style="color: #fff">Forgot Password</a>
+                                </div>
+                            </div>
+                        </form>
 
-            </div>
-
-        </div>
-    </div> -->
-
-
-    <!-- ส่วน footer -->
-    <div class="row d-sm-flex fixed-bottom">
-        <div class="col col-sm-12">
-            <?php include 'footer.php' ?>
-
-        </div>
-    </div>
-
-    <!-- Modal: Login Form -->
-    <div class="modal fade" id="loginForm" tabindex="-1" aria-labelledby="LoginModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <!-- <div class="modal-content opacity-75"> -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="LoginModalLabel">ลงชื่อเข้าใช้</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form name="frmLogin" id="frmLogin" action="" method="">
-                        <!-- Username input -->
-                        <div class="form-outline mb-2">
-                            <label class="form-label" for="username">User Name</label>
-                            <input type="text" name="username" id="username" class="form-control" autocomplete="off" placeholder="Username">
-                        </div>
-
-                        <!-- Password input -->
-                        <div class="form-outline mb-2">
-                            <label class="form-label" for="password">Password</label>
-                            <input type="password" name="password" id="password" class="form-control" placeholder="Password">
-                        </div>
-
-                        <div class="form-outline my-3">
-                            <!-- Submit button -->
-                            <button type="submit" name="login" id="login" class="btn btn-primary btn-block form-control">Login</button>
-                        </div>
-
-                    </form>
-                    <!-- <p>Don't have an account yet?
-                        <a href="signinup.php">Sign-up now.</a>
-                    </p> -->
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Modal: Registration Form -->
-    <!-- <div class="modal fade modal-md" id="registrationForm" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5">สร้างบัญชีผู้ใช้งานใหม่</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form name="frmMemberRegistration" id="frmMemberRegistration" action="" method=""
-                        class="row g-3 needs-validation" novalidate>
-                        <div class="col-sm-12 d-none d-md-block mb-3" id="image-sub">
-                            <img src="images/impact-muang-thong-thani.png" class="img-fluid rounded-2" />
-                        </div>
-
-                        <div class="col-sm-12">
-                            <div class="row">
-                                <div class="col-sm-12 mb-1">
-                                    <div class="input-group input-group-sm mb-2">
-                                        <label class="input-group-text" for="firstname">Firstname</label>
-                                        <input type="text" name="firstname" id="firstname"
-                                            class="form-control form-control-sm" required />
-                                        <div class="invalid-feedback">
-                                            Please enter a firstname.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12 mb-1">
-                                    <div class="input-group input-group-sm mb-2">
-                                        <label class="input-group-text" for="lastname">Lastname</label>
-                                        <input type="text" name="lastname" id="lastname"
-                                            class="form-control form-control-sm" required />
-                                        <div class="invalid-feedback">
-                                            Please enter a lastname.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-12 mb-1">
-                                    <div class="input-group input-group-sm mb-2">
-                                        <label class="input-group-text" for="username">Username</label>
-                                        <input type="text" name="username" id="username"
-                                            class="form-control form-control-sm" required />
-                                        <div class="invalid-feedback">
-                                            Please enter a username.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-12 mb-1">
-                                    <div class="input-group input-group-sm mb-2">
-                                        <label class="input-group-text" for="password">Password</label>
-                                        <input type="text" name="enter_password" id="enter_password"
-                                            class="form-control form-control-sm" onkeyup='check();' required />
-                                        <div class="invalid-feedback">
-                                            Please enter a password.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12 mb-1">
-                                    <div class="input-group input-group-sm mb-2">
-                                        <label class="input-group-text" for="confirm_password">Confirm
-                                            password</label>
-                                        <input type="text" name="confirm_password" id="confirm_password"
-                                            class="form-control form-control-sm" onkeyup='check();' required />
-                                        <div id='message' class="invalid-feedback">
-                                            Please enter a confirm password.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-outline my-3">
-                                <button type="submit" name="signup" id="signup"
-                                    class="btn btn-primary btn-block form-control div_text">สมัครสมาชิก</button>
-                            </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div> -->
-
+    </section>
 
     <!-- jQuery -->
     <script src="plugins/jQuery-3.7.1/jquery-3.7.1.min.js"></script>
@@ -447,18 +344,6 @@ require_once 'config.php';
                     }, false)
                 })
         })()
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            // Open modal on page load
-            // $("#registrationForm").modal('show');
-
-            // Close modal on button click
-            $(".signup").click(function() {
-                $("#registrationForm").modal('hide');
-            });
-        });
     </script>
 
 </body>

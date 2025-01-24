@@ -17,7 +17,7 @@ $(document).ready(function () {
         console.log(`response => ${response}`);
         if (response) {
           // return;
-          window.location = "index.php";
+          window.location = "dashboard.php";
         } else {
           // var jsonData = JSON.parse(response); //ส่งกลับมาเป็น html ว่าสำเร็จหรือไม่
           Swal.fire({

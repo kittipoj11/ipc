@@ -15,7 +15,7 @@ body {
 
 .impact-image {
     /* background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)), url("../_images/impact-muang-thong-thani.png"); */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)), url("../_images/impact_muangthong.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)), url("images/impact_muangthong.jpg");
     /* height: 100%; */
     background-position: center;
     background-repeat: no-repeat;
