@@ -1600,7 +1600,7 @@ pre {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   -o-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -8132,7 +8132,7 @@ a.text-dark:hover, a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6; } }
 
-body {
+.body {
   font-family: "Lato", Arial, sans-serif;
   font-size: 16px;
   line-height: 1.8;
@@ -8149,7 +8149,7 @@ body {
     bottom: 0;
     content: '';
     background: #000;
-    opacity: .3;
+    opacity: .5;
     z-index: -1; }
 
 a {

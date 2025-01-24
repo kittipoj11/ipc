@@ -1,0 +1,140 @@
+1. login.php
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <?php if (isset($_GET['error'])) { ?>
+            <p class="error"><?php echo $_GET['error']; ?></p>
+        <?php } ?>
+        <form action="check_login.php" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>
+
+----------------------------------------------------------------
+2. check_login.php
+<?php
+session_start(); // เริ่ม session
+
+$servername = "localhost"; // ชื่อโฮสต์ของฐานข้อมูล
+$username = "your_db_username"; // ชื่อผู้ใช้ฐานข้อมูล
+$password = "your_db_password"; // รหัสผ่านฐานข้อมูล
+$dbname = "your_db_name"; // ชื่อฐานข้อมูล
+
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    if (isset($_POST['username']) && isset($_POST['password'])) {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($password, $user['password'])) { // ตรวจสอบรหัสผ่านที่ hash แล้ว
+            $_SESSION['username'] = $username; // เก็บชื่อผู้ใช้ใน session
+            header("Location: welcome.php"); // ไปยังหน้า welcome
+            exit();
+        } else {
+            header("Location: login.php?error=Invalid username or password"); // แสดงข้อความผิดพลาด
+            exit();
+        }
+    }
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+}
+$conn = null;
+?>
+----------------------------------------------------------------
+
+3. welcome.php
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+</head>
+<body>
+    <h1>Welcome, <?php echo $_SESSION['username']; ?>!</h1>
+    <a href="logout.php">Logout</a>
+</body>
+</html>
+----------------------------------------------------------------
+
+4. logout.php
+<?php
+session_start();
+session_destroy();
+header("Location: login.php");
+exit();
+?>
+----------------------------------------------------------------
+
+5. เพิ่มผู้ใช้ในฐานข้อมูล โดยใช้ password_hash() เพื่อเข้ารหัสรหัสผ่านก่อนบันทึก
+<?php
+$password = "your_password"; // รหัสผ่านที่คุณต้องการตั้ง
+$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+echo $hashed_password; // นำค่านี้ไปใส่ในฐานข้อมูล
+?>

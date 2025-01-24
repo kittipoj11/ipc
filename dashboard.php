@@ -3,6 +3,10 @@
 require_once 'config.php';
 require_once 'auth.php';
 
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>

@@ -78,6 +78,8 @@ require_once 'config.php';
             background-size: cover;
         }
 
+
+
         .impact-image {
             /* background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)), url("../_images/impact-muang-thong-thani.png"); */
             background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)), url("images/impact_muangthong.jpg");
@@ -236,27 +238,15 @@ require_once 'config.php';
 
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
         <div class="container px-5">
             <a class="navbar-brand" href="http://www.impact.co.th/">
                 <img src="images/logo-impact.svg" alt="Impact" width="100px" class="d-inline-block align-text-top">
             </a>
-
-            <!-- Hamburger bar -->
-            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button> -->
-
-            <!-- <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#!" data-bs-toggle="modal"
-                            data-bs-target="#registrationForm">Sign Up</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#!" data-bs-toggle="modal"
-                            data-bs-target="#loginForm">Sign In</a></li>
-                </ul>
-            </div> -->
         </div>
-    </nav>
+    </nav> -->
 
-    <section class="ftco-section">
+    <div class="containerx">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center mb-5">
@@ -309,7 +299,7 @@ require_once 'config.php';
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- jQuery -->
     <script src="plugins/jQuery-3.7.1/jquery-3.7.1.min.js"></script>
