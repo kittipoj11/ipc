@@ -2,6 +2,10 @@
 @session_start();
 
 require_once 'config.php';
+// require_once 'class/LineLogin.class.php';
+
+// $line = new LineLogin();
+// $state = $line->getState();
 ?>
 
 <!doctype html>
@@ -62,53 +66,56 @@ require_once 'config.php';
         </div>
     </nav> -->
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 text-center mb-5">
-                <h2 class="heading-section">IPC</h2>
+    <div class="containerx">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section">IPC</h2>
+                </div>
             </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4">
-                <div class="login-wrap p-0">
-                    <form name="frmLogin" id="frmLogin" action="" method="" class="signin-form">
-                        <div class="form-group">
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Username"
-                                name="username" id="username"
-                                required />
-                        </div>
-                        <div class="form-group">
-                            <input
-                                type="password"
-                                class="form-control"
-                                placeholder="Password"
-                                name="password" id="password"
-                                required />
-                        </div>
-                        <div class="form-group">
-                            <button
-                                type="submit"
-                                name="login" id="login"
-                                class="form-control btn btn-primary submit px-3">
-                                Sign In
-                            </button>
-                        </div>
-                        <div class="form-group d-md-flex">
-                            <div class="w-50">
-                                <label class="checkbox-wrap checkbox-primary">Remember Me
-                                    <input type="checkbox" checked />
-                                    <span class="checkmark"></span>
-                                </label>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="login-wrap p-0">
+                        <form action="#" class="signin-form">
+                            <div class="form-group">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Username"
+                                    required />
                             </div>
-                            <div class="w-50 text-md-right">
-                                <a href="#" style="color: #00f">Forgot Password?</a>
+                            <div class="form-group">
+                                <input
+                                    id="password-field"
+                                    type="password"
+                                    class="form-control"
+                                    placeholder="Password"
+                                    required />
+                                <!-- <span
+                                    toggle="#password-field"
+                                    class="fa fa-fw fa-eye field-icon toggle-password"></span> -->
                             </div>
-                        </div>
-                    </form>
+                            <div class="form-group">
+                                <button
+                                    type="submit"
+                                    class="form-control btn btn-primary submit px-3">
+                                    Sign In
+                                </button>
+                            </div>
+                            <div class="form-group d-md-flex">
+                                <div class="w-50">
+                                    <label class="checkbox-wrap checkbox-primary">Remember Me
+                                        <input type="checkbox" checked />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="w-50 text-md-right">
+                                    <a href="#" style="color: #00f">Forgot Password?</a>
+                                </div>
+                            </div>
+                        </form>
 
+                    </div>
                 </div>
             </div>
         </div>
@@ -126,28 +133,6 @@ require_once 'config.php';
     <script src="plugins/dist/js/adminlte.min.js"></script>
     <script src="javascript/signinup.js"></script>
 
-    <script>
-        // Example starter JavaScript for disabling form submissions if there are invalid fields
-        (function() {
-            'use strict'
-
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.querySelectorAll('.needs-validation')
-
-            // Loop over them and prevent submission
-            Array.prototype.slice.call(forms)
-                .forEach(function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
-
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-        })()
-    </script>
 </body>
 
 </html>

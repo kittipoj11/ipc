@@ -1,4 +1,7 @@
 $(document).ready(function () {
+  $("#username").val("");
+  $("#password").val("");
+
   $("#frmLogin").submit(function (e) {
     e.preventDefault();
 
@@ -6,7 +9,6 @@ $(document).ready(function () {
     let password = $("#password").val();
     $.ajax({
       url: "check_login.php",
-      // data: $(this).serialize(),
       data: {
         username: username,
         password: password,
@@ -19,7 +21,6 @@ $(document).ready(function () {
           // return;
           window.location = "dashboard.php";
         } else {
-          // var jsonData = JSON.parse(response); //ส่งกลับมาเป็น html ว่าสำเร็จหรือไม่
           Swal.fire({
             icon: "error",
             title: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
@@ -73,11 +74,9 @@ $(document).ready(function () {
 
       let data_sent =
         $("#frmMemberRegistration").serialize() + "&action=register";
-      // let data_sent = $("#frmMemberRegistration").serialize();
 
       $.ajax({
         url: "customer_crud.php",
-        // data: $(this).serialize(),
         data: data_sent,
         method: "POST",
         success: function (response) {
@@ -182,7 +181,7 @@ $(document).ready(function () {
                                 `,
         });
 
-        // // $("#modalInsert").modal('hide');
+        // $("#modalInsert").modal('hide');
         $("#frmEdit")[0].reset();
         $("#tbody").empty();
         $("#tbody").html(response);
@@ -242,12 +241,12 @@ $(document).ready(function () {
                                 `,
             });
 
-            // // $("#modalInsert").modal('hide');
+            // $("#modalInsert").modal('hide');
             $("#frmEdit")[0].reset();
             $("#tbody").empty();
             $("#tbody").html(response);
 
-            // // $("#modalInsert").modal('hide');
+            // $("#modalInsert").modal('hide');
             $("#tbody").empty();
             $("#tbody").html(response);
           },
