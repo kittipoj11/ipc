@@ -10,14 +10,7 @@ require_once 'auth.php';
 
 <head>
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <title>IPC | Test</title>
-  <link rel="shortcut icon" href="images/inspection.png" type="image/png">
+  <?php include 'header_main.php'; ?>
 
   <!-- Bootstrap 5.3.3 add by Poj-->
   <link rel="stylesheet" href="plugins/bootstrap-5.3.3/dist/css/bootstrap.min.css">
@@ -139,7 +132,7 @@ require_once 'auth.php';
                               </td>
                               <td class="p-1"><input type="number" name="approval_level[]" class="form-control approval_level" require>
                               </td>
-                              
+
                             </tr>
                           </tbody>
                         </table>

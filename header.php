@@ -17,7 +17,8 @@ require_once 'auth.php';
     <meta name="author" content="">
 
     <title>IPC | Test</title>
-    <link rel="shortcut icon" href="images/inspection.png" type="image/png">
+    <!-- <link rel="shortcut icon" href="images/inspection.png" type="image/png"> -->
+    <link rel="shortcut icon" href="images/fluent-color--clipboard-text-edit-32.svg" type="image/svg">
 
     <!-- Bootstrap 5.3.3 add by Poj-->
     <link rel="stylesheet" href="plugins/bootstrap-5.3.3/dist/css/bootstrap.min.css">
