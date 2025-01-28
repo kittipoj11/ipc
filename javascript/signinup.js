@@ -122,6 +122,31 @@ $(document).ready(function () {
     }
   });
 
+  // Delete
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Delete
   $(document).on("click", ".btnEdit", function (e) {
     e.preventDefault();
     let id = $(this).attr("id");

@@ -29,7 +29,7 @@ require_once 'config.php';
     <!-- <link rel="stylesheet" href="_css/login.css"> -->
     <!-- <link rel="stylesheet" href="css/styles.css" /> -->
     <!-- <link rel="stylesheet" href="css/style.css"> -->
-    <link rel="stylesheet" href="css/signinup.css">
+    <link rel="stylesheet" href="css/signup.css">
 
     <script>
         var check = function() {
@@ -58,56 +58,30 @@ require_once 'config.php';
 
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4">
-                <div class="login-wrap p-0">
-                    <div class="logo">
-                        <img src="images/logo-impact.svg" alt="">
-                    </div>
-                    <div class="text-center mt-4 name">
-                        IPC
-                    </div>
-                    <form name="frmLogin" id="frmLogin" action="" method="" class="signin-form">
-                        <div class="form-group">
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Username"
-                                name="username" id="username"
-                                required />
-                        </div>
-                        <div class="form-group">
-                            <input
-                                type="password"
-                                class="form-control"
-                                placeholder="Password"
-                                name="password" id="password"
-                                required />
-                        </div>
-                        <div class="form-group">
-                            <button
-                                type="submit"
-                                name="login" id="login"
-                                class="btn mt-3">
-                                Login
-                            </button>
-                        </div>
-                        <div class="form-group d-md-flex">
-                            <!-- <div class="w-50">
-                                <label class="checkbox-wrap checkbox-primary">Remember Me
-                                    <input type="checkbox" checked />
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="w-50 text-md-right">
-                                <a href="#" style="color: #00f">Forgot Password?</a>
-                            </div> -->
-                            <div class="text-center fs-6 fw-bold" style="color: white">
-                                <a href="#" style="color: gold">Forget password?</a> or <a href="signup.php" style="color: gold">Sign up</a>
-                            </div>
-                        </div>
-                    </form>
-
+            <div class="col-md-6 text-center mb-5">
+                <h2 class="heading-section">IPC</h2>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="logo">
+                <img src="images/logo-impact.svg" alt="">
+            </div>
+            <div class="text-center mt-4 name">
+                Twitter
+            </div>
+            <form class="p-3 mt-3">
+                <div class="form-field d-flex align-items-center">
+                    <span class="far fa-user"></span>
+                    <input type="text" name="userName" id="userName" placeholder="Username">
                 </div>
+                <div class="form-field d-flex align-items-center">
+                    <span class="fas fa-key"></span>
+                    <input type="password" name="password" id="pwd" placeholder="Password">
+                </div>
+                <button class="btn mt-3">Login</button>
+            </form>
+            <div class="text-center fs-6">
+                <a href="#">Forget password?</a> or <a href="#">Sign up</a>
             </div>
         </div>
     </div>
