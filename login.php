@@ -68,39 +68,18 @@ require_once 'config.php';
                     </div>
                     <form name="frmLogin" id="frmLogin" action="" method="" class="signin-form">
                         <div class="form-group">
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Username"
-                                name="username" id="username"
-                                required />
+                            <input type="text" class="form-control" placeholder="Username" name="username" id="username" required>
                         </div>
-                        <div class="form-group">
-                            <input
-                                type="password"
-                                class="form-control"
-                                placeholder="Password"
-                                name="password" id="password"
-                                required />
+                        <div class="form-group d-flex align-items-center">
+                            <input type="password" class="form-control me-1" placeholder="Password" name="password" id="password" required>
+                            <i class="fa fa-eye" id="togglePassword"
+                                style="cursor: pointer"></i>
                         </div>
+
                         <div class="form-group">
-                            <button
-                                type="submit"
-                                name="login" id="login"
-                                class="btn mt-3">
-                                Login
-                            </button>
+                            <button type="submit" name="login" id="login" class="btn mt-3">Login</button>
                         </div>
                         <div class="form-group d-md-flex">
-                            <!-- <div class="w-50">
-                                <label class="checkbox-wrap checkbox-primary">Remember Me
-                                    <input type="checkbox" checked />
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="w-50 text-md-right">
-                                <a href="#" style="color: #00f">Forgot Password?</a>
-                            </div> -->
                             <div class="text-center fs-6 fw-bold" style="color: white">
                                 <a href="#" style="color: gold">Forget password?</a> or <a href="signup.php" style="color: gold">Sign up</a>
                             </div>
@@ -145,6 +124,19 @@ require_once 'config.php';
                     }, false)
                 })
         })()
+
+        const togglePassword = document.querySelector("#togglePassword");
+        const password = document.querySelector("#password");
+
+        togglePassword.addEventListener("click", function() {
+
+            // toggle the type attribute
+            const type = password.getAttribute("type") === "password" ? "text" : "password";
+            password.setAttribute("type", type);
+            // toggle the eye icon
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
     </script>
 </body>
 
