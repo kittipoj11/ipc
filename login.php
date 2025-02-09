@@ -1,7 +1,7 @@
 <?php
 @session_start();
 
-require_once 'config.php';
+require_once "config.php";
 ?>
 
 <!doctype html>
@@ -86,6 +86,29 @@ require_once 'config.php';
                         </div>
                     </form>
 
+                    <div class="bg-white p-3">
+                        <section class="with-styles">
+                            <kbd>ตัวอย่างการใช้ Semantic Elements</kbd>
+                            <kbd>Shift</kbd>
+                            <kbd>+</kbd>
+                            <kbd>Alt</kbd>
+                            <kbd>+</kbd>
+                            <kbd>C</kbd>
+                            <br>
+                            <code>05389</code>
+                            <br>
+                            <samp>05389</samp>
+                            <br>
+                            <var>05389</var>
+                            <br>
+                            <q>Quote</q>
+                            <blockquote>Block Quote</blockquote>
+                            <cite>Citation</cite>
+                            <address>Address</address>
+
+
+                        </section>
+                    </div>
                 </div>
             </div>
         </div>
