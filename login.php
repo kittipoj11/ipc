@@ -61,7 +61,7 @@ require_once "config.php";
             <div class="col-md-6 col-lg-4">
                 <div class="login-wrap p-0">
                     <div class="logo">
-                        <img src="images/logo-impact.svg" alt="">
+                        <img src="images/logo-impact.svg" alt="logo impact">
                     </div>
                     <div class="text-center mt-4 name">
                         IPC
@@ -95,18 +95,17 @@ require_once "config.php";
                             <kbd>+</kbd>
                             <kbd>C</kbd>
                             <br>
-                            <code>05389</code>
+                            <code>code</code>
                             <br>
-                            <samp>05389</samp>
+                            <samp>samp</samp>
                             <br>
-                            <var>05389</var>
+                            <var>var</var>
                             <br>
-                            <q>Quote</q>
-                            <blockquote>Block Quote</blockquote>
-                            <cite>Citation</cite>
-                            <address>Address</address>
-
-
+                            <hr>
+                            <q>q(Quote)</q>
+                            <blockquote>blockquote</blockquote>
+                            <cite>cite</cite>
+                            <address>address</address>
                         </section>
                     </div>
                 </div>
