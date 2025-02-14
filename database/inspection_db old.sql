@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 14, 2025 at 10:21 AM
+-- Generation Time: Feb 14, 2025 at 08:52 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -275,10 +275,10 @@ INSERT INTO `plan_status` (`plan_status_id`, `plan_status_name`, `is_deleted`) V
 -- --------------------------------------------------------
 
 --
--- Table structure for table `po_main`
+-- Table structure for table `po`
 --
 
-CREATE TABLE `po_main` (
+CREATE TABLE `po` (
   `po_id` int(10) UNSIGNED NOT NULL,
   `po_no` varchar(255) DEFAULT NULL,
   `project_name` varchar(255) DEFAULT NULL,
@@ -293,78 +293,17 @@ CREATE TABLE `po_main` (
   `is_deposit` tinyint(1) DEFAULT NULL,
   `deposit_percent` decimal(5,2) DEFAULT NULL,
   `deposit_value` decimal(19,2) DEFAULT NULL,
-  `working_date_from` date DEFAULT NULL,
-  `working_date_to` date DEFAULT NULL,
-  `working_day` int(11) DEFAULT NULL,
-  `remain_value_interim_payment` decimal(19,2) DEFAULT NULL,
-  `total_retention_value` decimal(19,2) DEFAULT NULL,
   `create_by` varchar(255) DEFAULT NULL,
   `create_date` datetime DEFAULT NULL,
   `number_of_period` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Dumping data for table `po_main`
+-- Dumping data for table `po`
 --
 
-INSERT INTO `po_main` (`po_id`, `po_no`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `remain_value_interim_payment`, `total_retention_value`, `create_by`, `create_date`, `number_of_period`) VALUES
-(1, 'IMPO23020769', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 869161.00, 812300.00, 86861.00, 0, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, 'nathapats', '2025-01-15 10:03:35', 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `po_period`
---
-
-CREATE TABLE `po_period` (
-  `po_period_id` int(10) UNSIGNED NOT NULL,
-  `po_id` int(10) UNSIGNED DEFAULT NULL,
-  `period` int(11) DEFAULT NULL,
-  `workload_planned_percent` decimal(5,2) DEFAULT NULL,
-  `workload_actual_completed_percent` decimal(5,2) DEFAULT NULL,
-  `workload_remaining_percent` decimal(5,2) DEFAULT NULL,
-  `interim_payment` decimal(19,2) DEFAULT NULL,
-  `interim_payment_percent` decimal(5,2) DEFAULT NULL,
-  `interim_payment_less_previous` decimal(19,2) DEFAULT NULL,
-  `interim_payment_less_previous_percent` decimal(5,2) DEFAULT NULL,
-  `interim_payment_accumulated` decimal(19,2) DEFAULT NULL,
-  `interim_payment_accumulated_percent` decimal(5,2) DEFAULT NULL,
-  `interim_payment_remain` decimal(19,2) DEFAULT NULL,
-  `interim_payment_remain_percent` decimal(5,2) DEFAULT NULL,
-  `retention_value` decimal(19,2) DEFAULT NULL,
-  `remark` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `po_period`
---
-
-INSERT INTO `po_period` (`po_period_id`, `po_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `remark`) VALUES
-(1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `po_period_detail`
---
-
-CREATE TABLE `po_period_detail` (
-  `po_period_detail_id` int(10) UNSIGNED NOT NULL,
-  `po_period_id` int(10) UNSIGNED DEFAULT NULL,
-  `order_no` int(11) DEFAULT NULL,
-  `details` text DEFAULT NULL,
-  `remark` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `po_period_detail`
---
-
-INSERT INTO `po_period_detail` (`po_period_detail_id`, `po_period_id`, `order_no`, `details`, `remark`) VALUES
-(1, 1, 1, 'งานเดินท่อ', NULL),
-(2, 1, 2, 'งานติดตั้งโคมไฟ LED', NULL);
+INSERT INTO `po` (`po_id`, `po_no`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `create_by`, `create_date`, `number_of_period`) VALUES
+(1, 'IMPO23020769', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 869161.00, 812300.00, 86861.00, 0, 0.00, 0.00, 'nathapats', '2025-01-15 10:03:35', 0);
 
 -- --------------------------------------------------------
 
@@ -519,26 +458,12 @@ ALTER TABLE `plan_status`
   ADD PRIMARY KEY (`plan_status_id`);
 
 --
--- Indexes for table `po_main`
+-- Indexes for table `po`
 --
-ALTER TABLE `po_main`
+ALTER TABLE `po`
   ADD PRIMARY KEY (`po_id`),
   ADD KEY `suppliers_id` (`supplier_id`),
   ADD KEY `location_id` (`location_id`);
-
---
--- Indexes for table `po_period`
---
-ALTER TABLE `po_period`
-  ADD PRIMARY KEY (`po_period_id`),
-  ADD KEY `po_id` (`po_id`);
-
---
--- Indexes for table `po_period_detail`
---
-ALTER TABLE `po_period_detail`
-  ADD PRIMARY KEY (`po_period_detail_id`),
-  ADD KEY `po_period_id` (`po_period_id`);
 
 --
 -- Indexes for table `roles`
@@ -613,39 +538,82 @@ ALTER TABLE `locations`
   MODIFY `location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `po_main`
+-- AUTO_INCREMENT for table `po`
 --
-ALTER TABLE `po_main`
+ALTER TABLE `po`
   MODIFY `po_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `po_period`
+-- AUTO_INCREMENT for table `roles`
 --
-ALTER TABLE `po_period`
-  MODIFY `po_period_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `roles`
+  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `po_period_detail`
+-- AUTO_INCREMENT for table `suppliers`
 --
-ALTER TABLE `po_period_detail`
-  MODIFY `po_period_detail_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `suppliers`
+  MODIFY `supplier_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `po_main`
+-- Constraints for table `approval_levels`
 --
-ALTER TABLE `po_main`
-  ADD CONSTRAINT `po_main_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`supplier_id`),
-  ADD CONSTRAINT `po_main_ibfk_2` FOREIGN KEY (`location_id`) REFERENCES `locations` (`location_id`);
+ALTER TABLE `approval_levels`
+  ADD CONSTRAINT `approval_levels_ibfk_1` FOREIGN KEY (`workflow_id`) REFERENCES `approval_workflow` (`workflow_id`),
+  ADD CONSTRAINT `approval_levels_ibfk_2` FOREIGN KEY (`approver_role`) REFERENCES `roles` (`role_id`);
 
 --
--- Constraints for table `po_period`
+-- Constraints for table `inspect_approvals`
 --
-ALTER TABLE `po_period`
-  ADD CONSTRAINT `po_period_ibfk_1` FOREIGN KEY (`po_id`) REFERENCES `po_main` (`po_id`);
+ALTER TABLE `inspect_approvals`
+  ADD CONSTRAINT `inspect_approvals_ibfk_1` FOREIGN KEY (`inspect_id`) REFERENCES `inspect_main` (`inspect_id`),
+  ADD CONSTRAINT `inspect_approvals_ibfk_2` FOREIGN KEY (`level_id`) REFERENCES `approval_levels` (`level_id`),
+  ADD CONSTRAINT `inspect_approvals_ibfk_3` FOREIGN KEY (`approver_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `inspect_approvals_ibfk_4` FOREIGN KEY (`approval_status_id`) REFERENCES `approval_status` (`approval_status_id`);
+
+--
+-- Constraints for table `inspect_main`
+--
+ALTER TABLE `inspect_main`
+  ADD CONSTRAINT `inspect_main_ibfk_1` FOREIGN KEY (`po_id`) REFERENCES `po` (`po_id`),
+  ADD CONSTRAINT `inspect_main_ibfk_2` FOREIGN KEY (`inspect_status`) REFERENCES `inspect_status` (`inspect_status_id`);
+
+--
+-- Constraints for table `inspect_period`
+--
+ALTER TABLE `inspect_period`
+  ADD CONSTRAINT `inspect_period_ibfk_1` FOREIGN KEY (`inspect_id`) REFERENCES `inspect_main` (`inspect_id`),
+  ADD CONSTRAINT `inspect_period_ibfk_2` FOREIGN KEY (`plan_status`) REFERENCES `plan_status` (`plan_status_id`);
+
+--
+-- Constraints for table `inspect_period_detail`
+--
+ALTER TABLE `inspect_period_detail`
+  ADD CONSTRAINT `inspect_period_detail_ibfk_1` FOREIGN KEY (`inspect_period_id`) REFERENCES `inspect_period` (`inspect_period_id`);
+
+--
+-- Constraints for table `po`
+--
+ALTER TABLE `po`
+  ADD CONSTRAINT `po_ibfk_2` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`supplier_id`),
+  ADD CONSTRAINT `po_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`location_id`);
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`),
+  ADD CONSTRAINT `users_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
