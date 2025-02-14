@@ -7,18 +7,18 @@ class Inspection extends Connection
     public function getAllRecord()
     {
         $sql = <<<EOD
-                SELECT `inspect_id`, `inspect_main`.`po_id`, `working_date_from`, `working_date_to`, `working_day`
-                , `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `inspect_main`.`create_by`
+                SELECT `inspect_id`, `inspect_main`.`po_id`, `po_main`.`working_date_from`, `po_main`.`working_date_to`, `po_main`.`working_day`
+                , `po_main`.`remain_value_interim_payment`, `po_main`.`total_retention_value`, `inspect_status`, `inspect_main`.`create_by`
                 ,`inspect_main`.`create_date`
-                ,`po`.`po_no`, `po`.`project_name`, `po`.`working_name_th`, `po`.`contract_value`, `po`.`number_of_period`
+                ,`po_main`.`po_no`, `po_main`.`project_name`, `po_main`.`working_name_th`, `po_main`.`contract_value`, `po_main`.`number_of_period`
                 , `supplier_name`, `location_name`
                 FROM `inspect_main` 
-                INNER JOIN `po`
-                    ON `inspect_main`.`po_id` = `po`.`po_id`
+                INNER JOIN `po_main`
+                    ON `inspect_main`.`po_id` = `po_main`.`po_id`
                 INNER JOIN `suppliers`
-                    ON `suppliers`.`supplier_id` = `po`.`supplier_id`
+                    ON `suppliers`.`supplier_id` = `po_main`.`supplier_id`
                 INNER JOIN `locations`
-                    ON `locations`.`location_id` = `po`.`location_id`
+                    ON `locations`.`location_id` = `po_main`.`location_id`
                 EOD;
         $stmt = $this->myConnect->prepare($sql);
         $stmt->execute();
@@ -29,18 +29,18 @@ class Inspection extends Connection
     public function getRecordById($id)
     {
         $sql = <<<EOD
-                SELECT `inspect_id`, `inspect_main`.`po_id`, `working_date_from`, `working_date_to`, `working_day`
-                , `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `inspect_main`.`create_by`
+                SELECT `inspect_id`, `inspect_main`.`po_id`, `po_main`.`working_date_from`, `po_main`.`working_date_to`, `po_main`.`working_day`
+                , `po_main`.`remain_value_interim_payment`, `po_main`.`total_retention_value`, `inspect_status`, `inspect_main`.`create_by`
                 ,`inspect_main`.`create_date`
-                ,`po`.`po_no`, `po`.`project_name`, `po`.`working_name_th`, `po`.`contract_value`, `po`.`number_of_period`
+                ,`po_main`.`po_no`, `po_main`.`project_name`, `po_main`.`working_name_th`, `po_main`.`contract_value`, `po_main`.`number_of_period`
                 , `supplier_name`, `location_name`
                 FROM `inspect_main` 
-                INNER JOIN `po`
-                    ON `inspect_main`.`po_id` = `po`.`po_id`
+                INNER JOIN `po_main`
+                    ON `inspect_main`.`po_id` = `po_main`.`po_id`
                 INNER JOIN `suppliers`
-                    ON `suppliers`.`supplier_id` = `po`.`supplier_id`
+                    ON `suppliers`.`supplier_id` = `po_main`.`supplier_id`
                 INNER JOIN `locations`
-                    ON `locations`.`location_id` = `po`.`location_id`
+                    ON `locations`.`location_id` = `po_main`.`location_id`
                 EOD;
 
         $stmt = $this->myConnect->prepare($sql);

@@ -88,11 +88,12 @@ require_once "config.php";
 
                     <div class="bg-white p-3">
                         <section class="with-styles">
-                            <kbd>ตัวอย่างการใช้ Semantic Elements</kbd>
+                            <h6>ตัวอย่างการใช้ Semantic Elements</h6>
+                            <kbd>kbd</kbd>
                             <kbd>Shift</kbd>
-                            <kbd>+</kbd>
+                            +
                             <kbd>Alt</kbd>
-                            <kbd>+</kbd>
+                            +
                             <kbd>C</kbd>
                             <br>
                             <code>code</code>

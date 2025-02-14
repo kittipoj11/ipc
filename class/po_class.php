@@ -7,16 +7,16 @@ class Po extends Connection
     public function getAllRecord()
     {
         $sql = <<<EOD
-                SELECT `po_id`, `po_no`, `project_name`, `po`.`supplier_id`, `po`.`location_id`, `working_name_th`
+                SELECT `po_id`, `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`, `working_name_th`
                 , `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`
                 , `deposit_percent`, `deposit_value`, `create_by`, `create_date`, `number_of_period`
                 , `suppliers`.`supplier_name`
                 , `locations`.`location_name`
-                FROM `po`
+                FROM `po_main`
                 INNER JOIN `suppliers`
-                    ON `suppliers`.`supplier_id` = `po`.`supplier_id`
+                    ON `suppliers`.`supplier_id` = `po_main`.`supplier_id`
                 INNER JOIN `locations`
-                    ON `locations`.`location_id` = `po`.`location_id`
+                    ON `locations`.`location_id` = `po_main`.`location_id`
                 EOD;
         $stmt = $this->myConnect->prepare($sql);
         $stmt->execute();
@@ -27,16 +27,16 @@ class Po extends Connection
     public function getRecordById($id)
     {
         $sql = <<<EOD
-                SELECT `po_id`, `po_no`, `project_name`, `po`.`supplier_id`, `po`.`location_id`, `working_name_th`
+                SELECT `po_id`, `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`, `working_name_th`
                 , `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`
                 , `deposit_percent`, `deposit_value`, `create_by`, `create_date`, `number_of_period`
                 , `suppliers`.`supplier_name`
                 , `locations`.`location_name`
-                FROM `po`
+                FROM `po_main`
                 INNER JOIN `suppliers`
-                    ON `suppliers`.`supplier_id` = `po`.`supplier_id`
+                    ON `suppliers`.`supplier_id` = `po_main`.`supplier_id`
                 INNER JOIN `locations`
-                    ON `locations`.`location_id` = `po`.`location_id`
+                    ON `locations`.`location_id` = `po_main`.`location_id`
                 EOD;
 
         $stmt = $this->myConnect->prepare($sql);
