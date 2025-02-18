@@ -1,12 +1,9 @@
-// window.location.href = "main.php?page=open_area_schedule";
+// window.location.href = "main.php?page=open_area_schedule"; 
 
 $(document).ready(function () {
   // $('#myForm').submit(function (e) {
   $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();
-        // window.location.href = "inspection_one.php";
-        window.location = "inspection_one.php";
-        
     let dateStart = document.getElementsByClassName("date_start");
     let dateEnd = document.getElementsByClassName("date_end");
     let timeStart = document.getElementsByClassName("time_start");
@@ -198,67 +195,86 @@ $(document).ready(function () {
   });
 });
 
-// document.getElementById("opt_event_id").addEventListener("change", complete_selection);
-// document
-//   .getElementById("building_id")
-//   .addEventListener("change", complete_selection);
-// document
-//   .getElementById("hall_id")
-//   .addEventListener("change", complete_selection);
-// document
-//   .getElementById("event_name")
-//   .addEventListener("keyup", complete_selection);
 
-// function complete_selection() {
-//   if (
-//     $("#event_name").val().trim().length === 0 ||
-//     $("#building_id option:selected").text() == "..." ||
-//     $("#hall_id option:selected").text() == "..."
-//   ) {
-//     $("#div_open_area_schedule").hide();
-//   } else {
-//     $("#div_open_area_schedule").show();
-//   }
-// }
+// document.getElementById("opt_event_id").addEventListener("change", complete_selection);
+document
+  .getElementById("building_id")
+  .addEventListener("change", complete_selection);
+document
+  .getElementById("hall_id")
+  .addEventListener("change", complete_selection);
+document
+  .getElementById("event_name")
+  .addEventListener("keyup", complete_selection);
+
+function complete_selection() {
+  if (
+    $("#event_name").val().trim().length === 0 ||
+    $("#building_id option:selected").text() == "..." ||
+    $("#hall_id option:selected").text() == "..."
+  ) {
+    $("#div_open_area_schedule").hide();
+  } else {
+    $("#div_open_area_schedule").show();
+  }
+}
 
 $(document).ready(function () {
   let i = 0; //เพื่อไว้กำกับเลขที่ของแถว
-  let period=1;
 
   $("#btnAdd").click(function () {
     i++;
-    period++;
-    
-    $(".firstTr:first")
+    $(".firstTr:eq(0)")
       .clone(false)
-      // .attr("id", "row" + i + "")
-      .find(".period:last")
-      .val(period)
+      .attr("id", "row" + i + "")
+      // .addClass("OtherTr")
+      // .removeClass("firstTr")
+      .find(".id:eq(0)")
+      .val(i)
       .end()
 
-      // .find(".checkbox")
-      // .attr("name", "chkCarType" + i + "[]")
-      // .end()
+      .find(".checkbox")
+      .attr("name", "chkCarType" + i + "[]")
+      .end()
 
-      .find("a:first")
+      // .find(".checkbox").attr("iid", "chkCarType" + i).end()
+      .find("a:eq(0)")
       .css("display", "inline")
-      // .css("background-color", "yellow")
-      .css("color", "red")
       .end()
 
-      .find("a:last")
-      .css("display", "inline")
-      // .css("background-color", "yellow")
-      .css("color", "red")
+      .find("a:eq(0)")
+      .attr("iid", "" + i + "")
       .end()
 
-      // .find("a:first")
-      // .attr("iid", "" + i + "")
-      // .end()
-
-      .appendTo("#tableBody");
-
-
+      .appendTo($("#tableBody"));
+    // .find("input:eq(0)").val("2023-05-12").end()
+    // .find(".oaData:eq(1)").attr("value", '2023-05-15').end()
+    // .find(".oaData:eq(2)").attr("value", '08:00').end()
+    // .find(".oaData:eq(3)").attr("value", '18:00').end()
+    // .find(".oaData:eq(4)").attr("value", 40).end()
+    // alert(">>> 1 รายการ");
+    $(".time_start").timepicker({
+      minTime: $("#time_start_header").val(),
+      maxTime: $("#time_end_header").val(),
+      timeFormat: "H:i",
+      show2400: true,
+      step: 30,
+      closeOnScroll: true,
+      // orientation: 'c',
+      listWidth: 1,
+      disableTextInput: true,
+    });
+    $(".time_end").timepicker({
+      minTime: $("#time_start_header").val(),
+      maxTime: $("#time_end_header").val(),
+      timeFormat: "H:i",
+      show2400: true,
+      step: 30,
+      closeOnScroll: true,
+      // orientation: 'c',
+      listWidth: 1,
+      disableTextInput: true,
+    });
   });
 
   $("#btnClear").click(function () {
@@ -271,8 +287,7 @@ $(document).ready(function () {
     // ส่วนสำหรับการลบ
     let row_id = $(this).attr("iid");
     // console.log("#row" + row_id + "");
-    // $("#row" + row_id + "").remove(); // ลบรายการสุดท้าย
-    $(".btnDeleteList").closest("tr").remove(); // ลบรายการสุดท้าย
+    $("#row" + row_id + "").remove(); // ลบรายการสุดท้าย
   });
 
   $(document).ready(function () {

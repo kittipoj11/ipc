@@ -21,7 +21,7 @@ require_once 'auth.php';
   <!-- flaticon dist\bootstrap-icons-1.11.3\font\bootstrap-icons.min.css-->
   <!-- <link rel="stylesheet" href="plugins/dist/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"> -->
   <!-- flaticon -->
-  <!-- <link rel="stylesheet" href="plugins/uicons-regular-rounded/css/uicons-regular-rounded.css"> -->
+  <link rel="stylesheet" href="plugins/uicons-regular-rounded/css/uicons-regular-rounded.css">
   <!-- DataTables -->
   <!-- <link rel="stylesheet" href="plugins/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -73,10 +73,10 @@ require_once 'auth.php';
               <div class="card">
                 <div class="card-body m-0 p-0">
                   <form name="myForm" id="myForm">
-                    <input type="text" class="d-none" name="po_id" value="[Autonumber]">
+                    <input type="text" class="d-none" name="po_id" id="po_id" value="[Autonumber]">
 
                     <div class="row m-1">
-                      <div class="col-2 input-group input-group-sm">
+                      <div class="col-4 input-group input-group-sm">
                         <label for="po_no" class="input-group-text">เลขที่ PO</label>
                         <input type="text" class="form-control" name="po_no" id="po_no">
                       </div>
@@ -126,7 +126,7 @@ require_once 'auth.php';
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
-                        <label for="working_name_th" class="input-group-text">PO ไม่รวม VAT</label>
+                        <label for="contract_value_before" class="input-group-text">PO ไม่รวม VAT</label>
                         <input type="text" class="form-control" name="contract_value_before" id="contract_value_before">
                       </div>
 
@@ -159,45 +159,28 @@ require_once 'auth.php';
                       </div>
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
-                        <label for="working_date_to" class="input-group-text col-6 justify-content-end"> ถึง </label>
-                        <input type="date" class="form-control col-6" name="working_date_to" id="working_date_to">
+                          <label for="working_date_to" class="input-group-text col-6 justify-content-end"> ถึง </label>
+                          <input type="date" class="form-control col-6" name="working_date_to" id="working_date_to">
                         </div>
                       </div>
 
                       <div class="col-2 input-group input-group-sm">
-                        <label for="vat" class="input-group-text">รวม</label>
-                        <input type="number" class="form-control" name="vat" id="vat" disabled>
+                        <label for="working_day" class="input-group-text">รวม</label>
+                        <input type="number" class="form-control" name="working_day" id="working_day" disabled>
                       </div>
                     </div>
 
-                    <div class="row m-1 inline d-none">
-                      <!-- ค่า Default ที่ดึงจาก tbl_hall-->
-                      <div class="col-sm-3 px-0">
-                        <div class="input-group input-group-sm mb-1">
-                          <span class="input-group-text">Time Start</span>
-                          <div class="col">
-                            <input type="time" name="time_start_header" id="time_start_header" class="form-control">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-3 px-0">
-                        <div class="input-group input-group-sm mb-1">
-                          <span class="input-group-text">Time End</span>
-                          <div class="col">
-                            <input type="time" class="form-control" name="time_end_header" id="time_end_header">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <hr>
 
                     <div class="card border border-1 border-dark m-1" id="div_open_area_schedule">
+                      <h6 class="m-1 fw-bold">รายการงวดงาน</h6>
                       <!-- <div class="card-header" style="display: flex;"> -->
                       <div class="m-1">
-                        <a id="btnAdd" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="right" title="เพิ่มงวด">
+                        <a id="btnAdd" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="right" title="เพิ่มงวดงาน">
                           Add Period
                         </a>
 
-                        <a id="btnClear" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="ลบงวดทั้งหมด">
+                        <a id="btnClear" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="ลบงวดงานทั้งหมด">
                           Clear all period
                         </a>
                       </div>
@@ -207,23 +190,31 @@ require_once 'auth.php';
                         <table class="table table-bordered justify-content-center text-center">
                           <thead>
                             <tr>
-                              <th class="p-1" width="10%">Period</th>
+                              <th class="p-1" width="5%">งวดงาน</th>
                               <th class="p-1" width="20%">จำนวนเงิน</th>
+                              <th class="p-1" width="10%">คิดเป็น(%)</th>
                               <th class="p-1">เงื่อนไขการจ่ายเงิน</th>
-                              <th class="d-none">id</th>
+                              <th class="p-1" width="5%">Action</th>
+                              <th class="p-1 d-nonex" width="5%">id</th>
                             </tr>
                           </thead>
                           <tbody id="tableBody">
                             <tr class="firstTr">
                               <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                              <td class="input-group-sm p-0"><input type="number" name="date_start[]" class="form-control date_start" value="" disabled>
+                              <td class="input-group-sm p-0"><input type="number" name="period[]" class="form-control period" value="1" disabled>
                               </td>
-                              <td class="input-group-sm p-0"><input type="number" name="reservable_slots[]" class="form-control reservable_slots" require>
+                              <td class="input-group-sm p-0"><input type="number" name="interim_payment[]" class="form-control interim_payment" require>
+                              </td>
+                              <td class="input-group-sm p-0"><input type="number" name="interim_payment_percent[]" class="form-control interim_payment_percent">
                               </td>
                               <td class="input-group-sm p-0">
-                                <input type="text" name="remark[]" class="form-control remark" require>
+                                <input type="text" name="remark[]" class="form-control remark">
                               </td>
-                              <td class="d-none"><input type="text" name="id[]" class="form-control id" value="0"></td>
+                              <td class="p-1 align-content-center">
+                                <a class="btn btn-sm align-self-center btnDeleteList" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-trash"></i></a>
+                                <a class="btn btn-sm align-self-center btnDeleteList" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-cross-circle"></i></a>
+                              </td>
+                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="po_period_id[]" class="form-control po_period_id" disabled></td>
                             </tr>
                           </tbody>
                         </table>
