@@ -228,7 +228,7 @@ $(document).ready(function () {
   $("#btnAdd").click(function () {
     i++;
     period++;
-    
+    console.log("Test");
     $(".firstTr:first")
       .clone(false)
       // .attr("id", "row" + i + "")
@@ -271,8 +271,9 @@ $(document).ready(function () {
     // ส่วนสำหรับการลบ
     let row_id = $(this).attr("iid");
     // console.log("#row" + row_id + "");
-    // $("#row" + row_id + "").remove(); // ลบรายการสุดท้าย
-    $(".btnDeleteList").closest("tr").remove(); // ลบรายการสุดท้าย
+    $(this).parents("tr").remove();// ลบรายการสุดท้าย 
+    // หรือใช้ 
+    // $(this).closest("tr").remove(); // ลบรายการสุดท้าย
   });
 
   $(document).ready(function () {
