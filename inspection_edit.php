@@ -57,12 +57,14 @@ require_once 'auth.php';
 
     $location = new Location;
     $location_rs = $location->getAllRecord();
+
+    $rs = [0 => 'งวดที่ 1', 1 => 'งวดที่ 2', 2 => 'งวดที่ 3'];
     ?>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
-      <h6 class="m-1 fw-bold">Create Purchase Order</h6>
+      <h6 class="m-1 fw-bold">IMP001: Statue of Load Indra Riding on Erawan Elephant</h6>
 
       <!-- Main content -->
       <section>
@@ -175,19 +177,6 @@ require_once 'auth.php';
                     <div class="card border border-1 border-dark m-1" id="div_open_area_schedule">
                       <h6 class="m-1 fw-bold">รายการงวดงาน</h6>
                       <!-- <div class="card-header" style="display: flex;"> -->
-                      <div class="m-1">
-                        <a id="btnAdd" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="right" title="เพิ่มงวดงาน">
-                          Add Period
-                        </a>
-
-                        <a id="btnDeleteLast" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="ลบงวดงานล่าสุด">
-                          Delete last period
-                        </a>
-                        <a id="btnClear" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="ลบงวดงานทั้งหมด">
-                          Clear all period
-                        </a>
-                      </div>
-
                       <div class="card-body p-0">
                         <!-- สร้าง Table ตามปกติ -->
                         <table class="table table-bordered justify-content-center text-center">
@@ -197,28 +186,22 @@ require_once 'auth.php';
                               <th class="p-1" width="20%">จำนวนเงิน</th>
                               <th class="p-1" width="10%">คิดเป็น(%)</th>
                               <th class="p-1">เงื่อนไขการจ่ายเงิน</th>
-                              <th class="p-1 d-none" width="5%">Action</th>
                               <th class="p-1 d-nonex" width="5%">id</th>
                             </tr>
                           </thead>
                           <tbody id="tableBody">
-                            <tr class="firstTr">
-                              <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                              <td class="input-group-sm p-0"><input type="number" name="period[]" class="form-control period" value="1" disabled>
-                              </td>
-                              <td class="input-group-sm p-0"><input type="number" name="interim_payment[]" class="form-control interim_payment" require>
-                              </td>
-                              <td class="input-group-sm p-0"><input type="number" name="interim_payment_percent[]" class="form-control interim_payment_percent">
-                              </td>
-                              <td class="input-group-sm p-0">
-                                <input type="text" name="remark[]" class="form-control remark">
-                              </td>
-                              <td class="p-1 align-content-center d-none">
-                                <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-trash"></i></a>
-                                <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-cross-circle"></i></a>
-                              </td>
-                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="po_period_id[]" class="form-control po_period_id" disabled></td>
-                            </tr>
+                          <?php foreach ($rs as $key => $row) {
+                              $html = <<<EOD
+                                            <tr id="{$key}">
+                                              <td class="input-group-sm p-0"><a href="inspection_period_one.php" name="period[]" class="form-control period">{$row}</a></td>
+                                              <td class="input-group-sm p-0" name="interim_payment[]"></td>
+                                              <td class="input-group-sm p-0" name="interim_payment_percent[]"></td>
+                                              <td class="input-group-sm p-0">เงื่อนไขการจ่ายเงิน</td>
+                                              <td class="input-group-sm p-0 d-nonex" name="po_period_id[]"></td>
+                                            </tr>
+                                            EOD;
+                              echo $html;
+                            } ?>
                           </tbody>
                         </table>
                       </div>
@@ -271,4 +254,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/po_create.js"></script>
+    <script src="javascript/inspection_edit.js"></script>
