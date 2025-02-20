@@ -225,8 +225,8 @@ require_once 'auth.php';
                     </div>
 
                     <div class="card-footer p-0 d-flex justify-content-end">
-                      <a type="submit" name="btnSave" id="btnSave" class="btn btn-primary btn-sm m-1">บันทึก</a>
-                      <a type="button" name="btnCancel" id="btnCancel" class="btn btn-secondary btn-sm m-1">ยกเลิก</a>
+                      <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary btn-sm m-1">บันทึก</button>
+                      <button type="button" name="btnCancel" id="btnCancel" class="btn btn-secondary btn-sm m-1">ยกเลิก</button>
                     </div>
 
                   </form>

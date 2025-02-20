@@ -1,69 +1,11 @@
 // window.location.href = "main.php?page=open_area_schedule";
 
 $(document).ready(function () {
-  // $('#myForm').submit(function (e) {
-  $(document).on("click", "#btnSave", function (e) {
+  $('#myForm').submit(function (e) {
+  // $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();
-        // window.location.href = "inspection_one.php";
-        window.location = "inspection_one.php";
+        window.location = "inspection_edit.php";
         
-    let dateStart = document.getElementsByClassName("date_start");
-    let dateEnd = document.getElementsByClassName("date_end");
-    let timeStart = document.getElementsByClassName("time_start");
-    let timeEnd = document.getElementsByClassName("time_end");
-    let can_save = true;
-    // console.log("dateStart = " + dateStart);
-    // console.log("dateStart.length = " + dateStart.length);
-
-    // ส่วนนี้ใช้ในการเปรียบเทียบรายการในตารางรายการที่ i เทียบกับรายการที่ i+1,i+2,i+3,... ว่ามีวันที่คาบเกี่ยวกันหรือไม่
-    for (let i = 0; i < dateStart.length; i++) {
-      // console.log("i = " + i);
-      for (let j = i + 1; j < dateStart.length; j++) {
-        // console.log("j = " + j);
-        // console.log(dateStart[i].value + " " + dateEnd[i].value);
-        // console.log(timeStart[i].value + " " + timeEnd[i].value);
-        // console.log(dateStart[j].value + " " + dateEnd[j].value);
-        // console.log(timeStart[j].value + " " + timeEnd[j].value);
-        //ตรวจสอบเงื่อนไขของขอบบนหรือขอบล่างของช่วงของวันที่ 2 เทียบกับช่วงของวันที่ 1
-        let dateStart1 = new Date(dateStart[i].value);
-        let dateStart2 = new Date(dateStart[j].value);
-        let dateEnd1 = new Date(dateEnd[i].value);
-        let dateEnd2 = new Date(dateEnd[j].value);
-        let timeStart1 = new Date(timeStart[i].value);
-        let timeStart2 = new Date(timeStart[j].value);
-        let timeEnd1 = new Date(timeEnd[i].value);
-        let timeEnd2 = new Date(timeEnd[j].value);
-
-        // if (dateStart2.getTime() > dateEnd1.getTime() || dateEnd2.getTime() < dateStart1.getTime()) {
-        if (
-          dateStart[j].value > dateEnd[i].value ||
-          dateEnd[j].value < dateStart[i].value
-        ) {
-          console.log(
-            "Yes: ช่วงของวันที่2 อยู่นอกช่วงของวันที่1 = กำหนดเวลาได้ทุกเวลา"
-          );
-        } else {
-          console.log(
-            "No:  ขอบบนหรือขอบล่างของช่วงของวันที่2 ขอบใดขอบหนึ่งอยู่ในช่วงของวันที่1"
-          );
-
-          //ในกรณีที่ช่วงวันที่คาบเกี่ยวกัน
-          //จะต้องตรวจสอบเงื่อนไขของขอบบนหรือขอบล่างของช่วงของเวลา2 เทียบกับช่วงของเวลา1
-          if (
-            timeStart[j].value > timeEnd[i].value ||
-            timeEnd[j].value < timeStart[i].value
-          ) {
-            console.log("Yes: ช่วงของเวลา2 อยู่นอกช่วงของเวลา1 = กำหนดเวลาได้");
-          } else {
-            console.log("No: กำหนดค่าไม่ได้");
-            alert("ไม่สามารถบันทึกข้อมูลได้ เนื่องจากมีช่วงเวลาคาบเกี่ยวกัน");
-            can_save = false;
-            exit();
-          }
-        }
-      }
-    }
-
     if (can_save == true) {
       let data_sent = $("#myForm").serializeArray();
       data_sent.push({
@@ -73,7 +15,7 @@ $(document).ready(function () {
       // console.log(data_sent);
       $.ajax({
         type: "POST",
-        url: "201open_area_schedule_crud.php",
+        url: "po_crud.php",
         // data: $(this).serialize(),
         data: data_sent,
         success: function (response) {
