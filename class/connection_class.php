@@ -51,7 +51,7 @@ class Connection
 // PDO::PARAM_BOOL  ข้อมูล Boolean
 // PDO::PARAM_NULL  ข้อมูลค่าว่าง(Null)
 // PDO::PARAM_INT   ข้อมูล Integer 
-// PDO::PARAM_STR   ข้อมูล String
+// PDO::PARAM_STR   ข้อมูล String เป็นการบอก PDO ว่าข้อมูลนี้ควรถูกจัดการในรูปแบบ String ซึ่ง PDO จะแปลงให้เหมาะสมกับฐานข้อมูล ถ้าเป็นจำนวนจริงให้ใช้ DataType นี้
 // PDO::PARAM_LOB   ข้อมูล Object
 // PDO::PARAM_STMT  ข้อมูล Recordset
 
@@ -60,3 +60,5 @@ class Connection
 // PDO::FETCH_ASSOC คืนค่าเป็น Array ใช้ชื่อคอลัมน์เป็น Index
 // PDO::FETCH_BOTH  คืนค่าเป็น Array ใช้เลขลำดับของคอลัมน์หรือชื่อคอลัมน์เป็น Index
 // PDO::FETCH_OBJ   คืนค่าเป็น Object ใช้ชื่อคอลัมน์เป็นชื่อ Property
+
+// PDOStatement::debugDumpParams() เป็นฟังก์ชันใน PHP Data Objects (PDO) ที่ใช้สำหรับการดีบัก (debugging) prepared statements ในการทำงานกับฐานข้อมูล

@@ -142,10 +142,10 @@ require_once 'auth.php';
 
                       <div class="col-2 input-group input-group-sm">
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="" id="include_vat">
+                          <input class="form-check-input" type="checkbox" value=""  name="is_deposit" id="is_deposit">
                         </div>
                         <label class="form-check-label" for="deposit_percent">เงินมัดจำ</label>
-                        <input type="number" class="form-control" name="deposit" id="deposit">%
+                        <input type="number" class="form-control" name="deposit_percent" id="deposit_percent">%
                       </div>
                     </div>
                     <hr>

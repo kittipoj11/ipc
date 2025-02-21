@@ -1,0 +1,41 @@
+_REQUEST|a:17:
+{
+s:5:"po_id";s:12:"[Autonumber]";
+s:5:"po_no";s:6:"IMP001";
+s:12:"project_name";s:6:"Sunset";
+s:11:"supplier_id";s:1:"1";
+s:11:"location_id";s:1:"1";
+s:15:"working_name_th";s:22:"ซันเซต ๑";
+s:15:"working_name_en";s:8:"Sunset 1";
+s:21:"contract_value_before";s:4:"1000";
+:14:"contract_value";s:4:"1070";
+s:3:"vat";s:2:"70";
+s:7:"deposit";s:0:"";
+s:17:"working_date_from";s:10:"2025-02-01";
+s:15:"working_date_to";s:10:"2025-02-28";
+s:15:"interim_payment";a:1:{i:0;s:3:"400";}
+s:23:"interim_payment_percent";a:1:{i:0;s:2:"40";}
+s:6:"remark";a:1:{i:0;s:15:"จ่าย 40";}
+s:6:"action";s:6:"insert";
+}
+
+
+_REQUEST|a:17:{
+s:5:"po_id";s:12:"[Autonumber]";
+s:5:"po_no";s:6:"IMP001";
+s:12:"project_name";s:6:"Sunset";
+s:11:"supplier_id";s:1:"1";
+s:11:"location_id";s:1:"1";
+s:15:"working_name_th";s:22:"ซันเซต ๑";
+s:15:"working_name_en";s:8:"Sunset 1";
+s:21:"contract_value_before";s:4:"1000";
+s:14:"contract_value";s:4:"1070";
+s:3:"vat";s:2:"70";
+s:7:"deposit";s:2:"10";
+s:17:"working_date_from";s:10:"2025-02-01";
+s:15:"working_date_to";s:10:"2025-02-28";
+s:15:"interim_payment";		a:4:{i:0;s:3:"400";	i:1;s:3:"300";		i:2;s:3:"200";		i:3;s:3:"100";}
+s:23:"interim_payment_percent";	a:4:{i:0;s:2:"40";	i:1;s:2:"30";		i:2;s:2:"20";		i:3;s:2:"10";}
+s:6:"remark";			a:4:{i:0;s:15:"จ่าย 40";	i:1;s:15:"จ่าย 30";	i:2;s:15:"จ่าย 20";	i:3;s:15:"จ่าย 10";}
+s:6:"action";s:6:"insert";
+}

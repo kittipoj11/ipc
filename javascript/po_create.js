@@ -1,18 +1,15 @@
-// window.location.href = "main.php?page=open_area_schedule";
-
 $(document).ready(function () {
   $('#myForm').submit(function (e) {
   // $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();
-        window.location = "inspection_edit.php";
-        
+        let can_save = true;
     if (can_save == true) {
       let data_sent = $("#myForm").serializeArray();
       data_sent.push({
         name: "action",
-        value: "insertdata",
+        value: "insert",
       });
-      // console.log(data_sent);
+      console.log(data_sent);
       $.ajax({
         type: "POST",
         url: "po_crud.php",
@@ -34,7 +31,7 @@ $(document).ready(function () {
             // timer: 15000
           }).then((result) => {
             if (result.isConfirmed) {
-              window.location.href = "201open_area_schedule.php";
+              // window.location.href = "201open_area_schedule.php";
               // window.location.reload();
             }
           });
@@ -71,7 +68,7 @@ $(document).ready(function () {
       if (result.isConfirmed) {
         $.ajax({
           url: "201open_area_schedule_crud.php", // ให้ส่งข้อมูลไปตาม url ที่กำหนด
-          data: { action: "deletedata", delete_id: id }, //จะทำการส่งเป็นรูปแบบ java object ->{name: value}
+          data: { action: "delete", delete_id: id }, //จะทำการส่งเป็นรูปแบบ java object ->{name: value}
           method: "POST", //เป็นวิธีการส่ง POST หรือ GET อาจะใช้เป็น type: 'post'
           success: function (response) {
             //ถ้าดึงข้อมูลมาเสร็จเรียบร้อยแล้วข้อมูลจะถูกส่งกลับมาไว้ที่ response

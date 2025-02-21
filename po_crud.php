@@ -1,24 +1,24 @@
 <?php
-// @session_start();
+@session_start();
 
 require_once 'config.php';
 require_once 'class/po_class.php';
 
+$_SESSION['_REQUEST'] = $_REQUEST;
 if (isset($_REQUEST['submit'])) {
-
     $obj = new Po();
     // print_r($_REQUEST);
     // exit;
-    if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
+    if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
         $obj->insertData($_REQUEST);
         getAllRecord($obj);
-    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
+    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
         $obj->updateData($_REQUEST);
         getAllRecord($obj);
-    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
+    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         $obj->deleteData($_REQUEST);
         getAllRecord($obj);
-    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
+    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
         $rs = $obj->getRecordById($_REQUEST['plan_status_id']);
         echo json_encode($rs);
     } else {
