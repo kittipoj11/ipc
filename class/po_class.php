@@ -49,9 +49,11 @@ class Po extends Connection
     public function insertData($getData)
     {
         @session_start();
-        $_SESSION['getData'] = $getData;
+
+        // $_SESSION['getData'] = $getData;
 
         try {
+            $this->myConnect->beginTransaction();
             // สร้าง id มี prefix ในที่นี่ให้ prefix เป็น PO 
             // $po_id = uniqid('PO', true);
             // ดึงข้อมูล id ที่เป็น Auto Increment หลังจาก Insert ข้อมูล Header แล้ว
@@ -70,25 +72,33 @@ class Po extends Connection
             $vat = $getData['vat'];
             $is_deposit = $getData['is_deposit'];
             $deposit_percent = $getData['deposit_percent'];
+            $deposit_value = $deposit_percent * $contract_value / 100;
             $working_date_from = $getData['working_date_from'];
             $working_date_to = $getData['working_date_to'];
-            $working_day = $working_date_from- $working_date_to;
+            // Create DateTime objects from the input strings
+            $date1 = new DateTime($working_date_from);
+            $date2 = new DateTime($working_date_to);
+            // Calculate the difference between the two dates
+            $interval = $date1->diff($date2);
+            $working_day =  $interval->days + 1;
             $create_by = $_SESSION['user_code'];
             // $is_active = isset($getData['is_active']) ? 1 : 0;
 
             // parameters ในส่วน po_period
-            $number_of_period=count($getData['period']);
-            $_SESSION['number_of_period'] = $number_of_period;
-            $sql =<<<EOD
+            $periods = $getData['period'];
+            $number_of_period = count($periods);
+            $interim_payments = $getData['interim_payment'];
+            $interim_payment_percents = $getData['interim_payment_percent'];
+            $remarks = $getData['remark'];
+            $sql = <<<EOD
                         INSERT INTO `po_main`(`po_no`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`
                         , `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`
-                        , `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`) 
+                        , `working_date_from`, `working_date_to`, `working_day`, `create_by`, `number_of_period`) 
                         VALUES(:po_no, :project_name, :supplier_id, :location_id, :working_name_th, :working_name_en
                         , :is_include_vat, :contract_value, :contract_value_before, :vat, :is_deposit, :deposit_percent, :deposit_value
-                        , :working_date_from, :working_date_to, :working_day, :create_by, :create_date, :number_of_period)
+                        , :working_date_from, :working_date_to, :working_day, :create_by, :number_of_period)
                     EOD;
-            $_SESSION['sql'] = $sql;
-                    $stmt = $this->myConnect->prepare($sql);
+            $stmt = $this->myConnect->prepare($sql);
             // $stmt->bindParam(':id', $headerId, PDO::PARAM_STR);
             $stmt->bindParam(':po_no', $po_no, PDO::PARAM_STR);
             $stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
@@ -102,100 +112,41 @@ class Po extends Connection
             $stmt->bindParam(':vat', $vat, PDO::PARAM_STR);
             $stmt->bindParam(':is_deposit', $is_deposit, PDO::PARAM_BOOL);
             $stmt->bindParam(':deposit_percent', $deposit_percent, PDO::PARAM_STR);
-            $stmt->bindParam(':working_date_from', $working_date_from->format('Y-m-d'), PDO::PARAM_STR);
-            $stmt->bindParam(':working_date_to', $working_date_to->format('Y-m-d'), PDO::PARAM_STR);
+            $stmt->bindParam(':deposit_value', $deposit_value, PDO::PARAM_STR);
+            $stmt->bindParam(':working_date_from', $working_date_from, PDO::PARAM_STR);
+            $stmt->bindParam(':working_date_to', $working_date_to, PDO::PARAM_STR);
             $stmt->bindParam(':working_day', $working_day, PDO::PARAM_INT);
             $stmt->bindParam(':number_of_period', $number_of_period, PDO::PARAM_INT);
             $stmt->bindParam(':create_by', $create_by, PDO::PARAM_STR);
-
             // $stmt->bindParam(':is_active', $is_active, PDO::PARAM_BOOL);
             // $affected = $stmt->execute();
             // $_SESSION['getData'] = $getData;
-            $_SESSION['sql'] = $stmt->debugDumpParams();
+            // $_SESSION['sqldump'] = $stmt->debugDumpParams();
             // $stmt->debugDumpParams();
             // exit;
             if ($stmt->execute()) {
+                $stmt->closeCursor();
                 $po_id = $this->myConnect->lastInsertId();
-                $sqlDetail = 'insert into tbl_open_area_schedule_detail(id, po_id, po_no, supplier_id, project_name, working_date_from, working_date_to, working_name_en, contract_value_before, location_id, car_type_json) 
-                        values(:id, :po_id, :po_no, :supplier_id, :project_name, :working_date_from, :working_date_to, :working_name_en, :contract_value_before, :location_id, :car_type_arr)';
-                $stmtDetail = $this->myConnect->prepare($sqlDetail);
+                $_SESSION['xxx'] = $po_id;
+                $sql = <<<EOD
+                        INSERT INTO `po_period`(`po_id`, `period`, `interim_payment`, `interim_payment_percent`, `remark`) 
+                        VALUES (:po_id, :period, :interim_payment, :interim_payment_percent, :remark)
+                    EOD;
+                $stmtPeriod = $this->myConnect->prepare($sql);
+                // $stmtPeriod->bindParam(':id', $headerId, PDO::PARAM_STR);
+                for ($i = 0; $i < $number_of_period; $i++) {
+                    $stmtPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+                    $stmtPeriod->bindParam(':period', $periods[$i], PDO::PARAM_STR);
+                    $stmtPeriod->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
+                    $stmtPeriod->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
+                    $stmtPeriod->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
 
-                $sqlSubs = 'insert into tbl_open_area_schedule_sub_details(id, po_id, po_no, supplier_id, project_name, working_date_from, working_date_to, working_name_en, contract_value_before, open_date, open_time_json, location_id, car_type_json) 
-                            values(:id, :po_id, :po_no, :supplier_id, :project_name, :working_date_from, :working_date_to, :working_name_en, :contract_value_before, :open_date, :open_time_json, :location_id, :car_type_arr)';
-                $stmtSubs = $this->myConnect->prepare($sqlSubs);
-
-                // กำหนด parameter
-                foreach ($getData['date_start'] as $key_data => $value_data) :
-                    $working_date_from = $getData['date_start'][$key_data];
-                    $working_date_to = $getData['date_end'][$key_data];
-
-                    $working_name_en = $getData['time_start'][$key_data];
-                    $contract_value_before = $getData['time_end'][$key_data];
-                    $location_id = $getData['location_id'][$key_data];
-
-                    $rowid = $getData['id'][$key_data];
-                    $checkbox = implode(',', $getData['chkCarType' . $rowid]);
-                    $car_type_arr = '[' . $checkbox . ']';
-
-                    $stmtDetail->bindParam(':id', $id, PDO::PARAM_STR);
-                    $stmtDetail->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                    $stmtDetail->bindParam(':po_no', $po_no, PDO::PARAM_STR);
-                    $stmtDetail->bindParam(':supplier_id', $supplier_id, PDO::PARAM_STR);
-                    $stmtDetail->bindParam(':project_name', $project_name, PDO::PARAM_STR);
-                    $stmtDetail->bindParam(':working_date_from', $working_date_from, PDO::PARAM_STR);
-                    $stmtDetail->bindParam(':working_date_to', $working_date_to, PDO::PARAM_STR);
-                    $stmtDetail->bindParam(':working_name_en', $working_name_en, PDO::PARAM_STR);
-                    $stmtDetail->bindParam(':contract_value_before', $contract_value_before, PDO::PARAM_STR);
-                    $stmtDetail->bindParam(':location_id', $location_id, PDO::PARAM_INT);
-                    $stmtDetail->bindParam(':car_type_arr', $car_type_arr);
-                    if ($stmtDetail->execute()) {
-                        //Sub detail
-                        $start = new DateTime($working_date_from);
-                        $end = new DateTime($working_date_to);
-                        $end->modify('+1 day');
-                        $interval = new DateInterval('P1D');
-                        //หรือ $interval = DateInterval::createFromDateString('1 day');
-                        $period = new DatePeriod($start, $interval, $end);
-
-                        $start_time = new DateTime($working_name_en);
-                        $end_time = new DateTime($contract_value_before);
-                        $end_time->modify('+10 minute');
-                        $interval_time = new DateInterval('PT10M');
-                        $period_time = new DatePeriod($start_time, $interval_time, $end_time);
-
-                        $stmtSubs->bindParam(':id', $id, PDO::PARAM_STR);
-                        $stmtSubs->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                        $stmtSubs->bindParam(':po_no', $po_no, PDO::PARAM_STR);
-                        $stmtSubs->bindParam(':supplier_id', $supplier_id, PDO::PARAM_STR);
-                        $stmtSubs->bindParam(':project_name', $project_name, PDO::PARAM_STR);
-                        $stmtSubs->bindParam(':working_date_from', $working_date_from, PDO::PARAM_STR);
-                        $stmtSubs->bindParam(':working_date_to', $working_date_to, PDO::PARAM_STR);
-                        $stmtSubs->bindParam(':working_name_en', $working_name_en, PDO::PARAM_STR);
-                        $stmtSubs->bindParam(':contract_value_before', $contract_value_before, PDO::PARAM_STR);
-                        $stmtSubs->bindParam(':location_id', $location_id, PDO::PARAM_INT);
-                        $stmtSubs->bindParam(':car_type_arr', $car_type_arr);
-
-                        foreach ($period as $date) :
-                            $open_date = $date->format("Y-m-d");
-                            $stmtSubs->bindParam(':open_date', $open_date, PDO::PARAM_STR);
-
-                            // แก้ไขตรงนี้
-                            $open_time_json = '{';
-                            foreach ($period_time as $time) :
-                                $open_time_json .= '"' . $time->format("H:i") . '":' . $location_id . ',';
-
-                            endforeach;
-                            $open_time_json = substr($open_time_json, 0, -1);
-                            $open_time_json .= '}';
-
-                            // $_SESSION['open_time_json'] = $open_time_json;
-                            $stmtSubs->bindParam(':open_time_json', $open_time_json, PDO::PARAM_STR);
-                            $stmtSubs->execute();
-                        endforeach;
-                    }
-                endforeach;
+                    $stmtPeriod->execute();
+                    $stmtPeriod->closeCursor();
+                }
 
                 $_SESSION['message'] =  'data has been created successfully.';
+                $this->myConnect->commit();
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
@@ -203,13 +154,13 @@ class Po extends Connection
             } else {
                 $_SESSION['message'] =  'Something is wrong.Can not add data.';
             }
-        }finally{
-            $stmt->closeCursor();
-            // $stmtDetail->closeCursor();
+            $this->myConnect->rollBack();
+        } finally {
+            // $stmt->closeCursor();
+            // $stmtPeriod->closeCursor();
             // $stmtSubs->closeCursor();
-            unset($stmt);
-            unset($stmtDetail);
-            unset($stmtSubs);
+            // unset($stmt);
+            // unset($stmtPeriod);
         }
     }
 
@@ -305,3 +256,21 @@ class Po extends Connection
 // $stmt->bindParam(':is_active', $is_active, PDO::PARAM_BOOL);
 // $stmt->execute();
 // $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// function calculateVATExcludingVAT($amount, $vatRate)
+// {
+//     $vatAmount = $amount * ($vatRate / 100);
+//     return $vatAmount;
+// }
+
+// function calculateTotalIncludingVAT($amount, $vatRate)
+// {
+//     $totalAmount = $amount * (1 + ($vatRate / 100));
+//     return $totalAmount;
+// }
+
+// $amount_exclude_vat = 1000;
+// $vat_rate = 7;
+
+// $vat = calculateVATExcludingVAT($amount_exclude_vat, $vat_rate);
+// $total_include_vat = calculateTotalIncludingVAT($amount_exclude_vat, $vat_rate);
