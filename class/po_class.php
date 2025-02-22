@@ -48,6 +48,9 @@ class Po extends Connection
 
     public function insertData($getData)
     {
+        @session_start();
+        $_SESSION['getData'] = $getData;
+
         try {
             // สร้าง id มี prefix ในที่นี่ให้ prefix เป็น PO 
             // $po_id = uniqid('PO', true);
@@ -61,6 +64,7 @@ class Po extends Connection
             $location_id = $getData['location_id'];
             $working_name_th = $getData['working_name_th'];
             $working_name_en = $getData['working_name_en'];
+            $is_include_vat = 1;
             $contract_value_before = $getData['contract_value_before'];
             $contract_value = $getData['contract_value'];
             $vat = $getData['vat'];
@@ -68,23 +72,23 @@ class Po extends Connection
             $deposit_percent = $getData['deposit_percent'];
             $working_date_from = $getData['working_date_from'];
             $working_date_to = $getData['working_date_to'];
-            $working_day = $getData['working_day'];
+            $working_day = $working_date_from- $working_date_to;
+            $create_by = $_SESSION['user_code'];
             // $is_active = isset($getData['is_active']) ? 1 : 0;
 
             // parameters ในส่วน po_period
             $number_of_period=count($getData['period']);
-
-            $sql = <<<EOD
-                        INSERT INTO `po_main`(`po_id`, `po_no`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`
+            $_SESSION['number_of_period'] = $number_of_period;
+            $sql =<<<EOD
+                        INSERT INTO `po_main`(`po_no`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`
                         , `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`
-                        , `working_date_from`, `working_date_to`, `working_day`, `remain_value_interim_payment`, `total_retention_value`
-                        , `create_by`, `create_date`, `number_of_period`) 
-                        VALUES(:po_id, :po_no, :project_name, :supplier_id, :location_id, :working_name_th, :working_name_en
+                        , `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`) 
+                        VALUES(:po_no, :project_name, :supplier_id, :location_id, :working_name_th, :working_name_en
                         , :is_include_vat, :contract_value, :contract_value_before, :vat, :is_deposit, :deposit_percent, :deposit_value
-                        , :working_date_from, :working_date_to, :working_day, :remain_value_interim_payment, :total_retention_value
-                        , :create_by, :create_date, :number_of_period)
+                        , :working_date_from, :working_date_to, :working_day, :create_by, :create_date, :number_of_period)
                     EOD;
-            $stmt = $this->myConnect->prepare($sql);
+            $_SESSION['sql'] = $sql;
+                    $stmt = $this->myConnect->prepare($sql);
             // $stmt->bindParam(':id', $headerId, PDO::PARAM_STR);
             $stmt->bindParam(':po_no', $po_no, PDO::PARAM_STR);
             $stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
@@ -92,6 +96,7 @@ class Po extends Connection
             $stmt->bindParam(':location_id', $location_id, PDO::PARAM_INT);
             $stmt->bindParam(':working_name_th', $working_name_th, PDO::PARAM_STR);
             $stmt->bindParam(':working_name_en', $working_name_en, PDO::PARAM_STR);
+            $stmt->bindParam(':is_include_vat', $is_include_vat, PDO::PARAM_BOOL);
             $stmt->bindParam(':contract_value_before', $contract_value_before, PDO::PARAM_STR);
             $stmt->bindParam(':contract_value', $contract_value, PDO::PARAM_STR);
             $stmt->bindParam(':vat', $vat, PDO::PARAM_STR);
@@ -101,13 +106,14 @@ class Po extends Connection
             $stmt->bindParam(':working_date_to', $working_date_to->format('Y-m-d'), PDO::PARAM_STR);
             $stmt->bindParam(':working_day', $working_day, PDO::PARAM_INT);
             $stmt->bindParam(':number_of_period', $number_of_period, PDO::PARAM_INT);
+            $stmt->bindParam(':create_by', $create_by, PDO::PARAM_STR);
 
             // $stmt->bindParam(':is_active', $is_active, PDO::PARAM_BOOL);
             // $affected = $stmt->execute();
             // $_SESSION['getData'] = $getData;
-            // $_SESSION['sql'] = $stmt->debugDumpParams();
+            $_SESSION['sql'] = $stmt->debugDumpParams();
             // $stmt->debugDumpParams();
-            exit;
+            // exit;
             if ($stmt->execute()) {
                 $po_id = $this->myConnect->lastInsertId();
                 $sqlDetail = 'insert into tbl_open_area_schedule_detail(id, po_id, po_no, supplier_id, project_name, working_date_from, working_date_to, working_name_en, contract_value_before, location_id, car_type_json) 

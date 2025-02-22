@@ -4,27 +4,28 @@
 require_once 'config.php';
 require_once 'class/po_class.php';
 
-$_SESSION['_REQUEST'] = $_REQUEST;
-if (isset($_REQUEST['submit'])) {
+// $_SESSION['_POST'] = $_POST;
+// if (isset($_REQUEST['submit'])) {
+    // $_SESSION['_REQUEST2'] = $_REQUEST;
     $obj = new Po();
     // print_r($_REQUEST);
     // exit;
     if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
         $obj->insertData($_REQUEST);
-        getAllRecord($obj);
+        // getAllRecord($obj);
     } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
         $obj->updateData($_REQUEST);
-        getAllRecord($obj);
+        // getAllRecord($obj);
     } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
         $obj->deleteData($_REQUEST);
-        getAllRecord($obj);
+        // getAllRecord($obj);
     } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
         $rs = $obj->getRecordById($_REQUEST['plan_status_id']);
         echo json_encode($rs);
     } else {
-        getAllRecord($obj);
+        // getAllRecord($obj);
     }
-}
+// }
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
 function getAllRecord($getObj)
 {

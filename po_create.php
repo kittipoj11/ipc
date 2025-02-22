@@ -72,7 +72,7 @@ require_once 'auth.php';
 
               <div class="card">
                 <div class="card-body m-0 p-0">
-                  <form name="myForm" id="myForm">
+                  <form name="myForm" id="myForm" action="" method="post">
                     <input type="text" class="d-none" name="po_id" id="po_id" value="[Autonumber]">
 
                     <div class="row m-1">
@@ -142,7 +142,7 @@ require_once 'auth.php';
 
                       <div class="col-2 input-group input-group-sm">
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value=""  name="is_deposit" id="is_deposit">
+                          <input class="form-check-input" type="checkbox" checked name="is_deposit" id="is_deposit">
                         </div>
                         <label class="form-check-label" for="deposit_percent">เงินมัดจำ</label>
                         <input type="number" class="form-control" name="deposit_percent" id="deposit_percent">%
@@ -204,7 +204,7 @@ require_once 'auth.php';
                           <tbody id="tableBody">
                             <tr class="firstTr">
                               <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                              <td class="input-group-sm p-0"><input type="number" name="period[]" class="form-control period" value="1" disabled>
+                              <td class="input-group-sm p-0"><input type="number" name="period[]" class="form-control period" value="1" readonly>
                               </td>
                               <td class="input-group-sm p-0"><input type="number" name="interim_payment[]" class="form-control interim_payment" require>
                               </td>
@@ -217,7 +217,7 @@ require_once 'auth.php';
                                 <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-trash"></i></a>
                                 <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-cross-circle"></i></a>
                               </td>
-                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="po_period_id[]" class="form-control po_period_id" disabled></td>
+                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="po_period_id[]" class="form-control po_period_id" readonly></td>
                             </tr>
                           </tbody>
                         </table>
@@ -225,7 +225,8 @@ require_once 'auth.php';
                     </div>
 
                     <div class="card-footer p-0 d-flex justify-content-end">
-                      <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary btn-sm m-1">บันทึก</button>
+                      <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก">
+                      <!-- <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary btn-sm m-1">บันทึก</button> -->
                       <button type="button" name="btnCancel" id="btnCancel" class="btn btn-secondary btn-sm m-1">ยกเลิก</button>
                     </div>
 

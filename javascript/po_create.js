@@ -1,8 +1,9 @@
 $(document).ready(function () {
-  $('#myForm').submit(function (e) {
-  // $(document).on("click", "#btnSave", function (e) {
+  $("#myForm").on("submit", function (e) {
+    // $(document).on("click", "#btnSave", function (e) {
+    // console.log('submit');
     e.preventDefault();
-        let can_save = true;
+    let can_save = true;
     if (can_save == true) {
       let data_sent = $("#myForm").serializeArray();
       data_sent.push({
@@ -173,7 +174,7 @@ $(document).ready(function () {
       .val(period)
       // .attr("id", "row" + i + "")
       .end()
-      
+
       .find(".interim_payment:last")
       .val("")
       .end()
@@ -201,8 +202,6 @@ $(document).ready(function () {
       // .end()
 
       .appendTo("#tableBody");
-
-
   });
 
   $("#btnClear").click(function () {
@@ -216,9 +215,9 @@ $(document).ready(function () {
 
   $("#btnDeleteLast").click(function () {
     let period;
-    // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tableBody 
-        // $("#tableBody").find("tr:not(:first):last").remove();
-        $("#tableBody tr:not(:first):last").remove();
+    // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tableBody
+    // $("#tableBody").find("tr:not(:first):last").remove();
+    $("#tableBody tr:not(:first):last").remove();
   });
 
   // $(".btnDeleteThis").click(function() {
@@ -227,9 +226,9 @@ $(document).ready(function () {
     // let row_id = $(this).attr("iid");
     // console.log("#row" + row_id + "");
     // เมื่อปุ่มนี้ถูกกด(this)จะลบ tr ของปุ่มนี้ออกไป
-    // $(this).closest("tr").remove(); 
-    // หรือใช้ 
-    $(this).parents("tr").remove(); 
+    // $(this).closest("tr").remove();
+    // หรือใช้
+    $(this).parents("tr").remove();
   });
 
   $(document).ready(function () {

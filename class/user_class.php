@@ -36,6 +36,7 @@ class User extends Connection
         $_SESSION = [];
         if ($rs && $password == $rs['password']) {
             $_SESSION['user_id'] = $rs['user_id'];
+            $_SESSION['user_code'] = $rs['user_code'];
             $_SESSION['username'] = $rs['username'];
             $_SESSION['full_name'] = $rs['full_name'];
             $_SESSION['role_id'] = $rs['role_id'];
