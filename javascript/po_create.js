@@ -32,7 +32,7 @@ $(document).ready(function () {
             // timer: 15000
           }).then((result) => {
             if (result.isConfirmed) {
-              // window.location.href = "201open_area_schedule.php";
+              window.location.href = "po.php";
               // window.location.reload();
             }
           });
@@ -353,3 +353,4 @@ $(function () {
     );
   });
 });
+

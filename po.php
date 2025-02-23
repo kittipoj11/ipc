@@ -63,17 +63,14 @@ require_once 'auth.php';
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6 d-flex">
-              <h4>All Purchase Orders</h4>
-              <a href="po_create.php" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
-                <i class="fa-solid fa-plus"></i>
-              </a>
-            </div>
-          </div>
-        </div><!-- /.container-fluid -->
+      <section class="container-fluid content-header">
+        <div class="col-sm-6 d-flex">
+          <h6 class="m-1 fw-bold">All Purchase Order</h6>
+          <a href="po_create.php" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
+            <i class="fa-solid fa-plus"></i>
+          </a>
+        </div>
+        <!-- /.container-fluid -->
       </section>
       <!-- <div class="result"></div> -->
 
@@ -88,36 +85,36 @@ require_once 'auth.php';
                                <h3 class="card-title">supplier</h3>
                            </div> -->
                 <!-- /.card-header -->
-                <div class="card-body" id="card-body">
-                  <table id="example1" class="table table-bordered table-striped table-sm">
+                <div class="card-body p-0" id="card-body">
+                  <table id="example1" class="table table-bordered table-striped table-sm" style="font-size: 0.75em;">
                     <thead>
                       <tr>
-                        <th class="text-center d-none">#</th>
-                        <th class="text-center" style="width: 150px;">เลขที่ PO</th>
-                        <th class="text-center">โครงการ</th>
-                        <th class="text-center">ผู้รับเหมา</th>
-                        <th class="text-center">สถานที่</th>
-                        <th class="text-center">งาน</th>
-                        <th class="text-center">มูลค่า PO ไม่รวม VAT</th>
-                        <th class="text-center">มูลค่า PO</th>
-                        <th class="text-center">จำนวนงวดงาน</th>
-                        <th class="text-center d-none" style="width: 120px;">Action</th>
+                        <th class="text-center p-1 d-none">#</th>
+                        <th class="text-center p-1" style="width: 150px;">เลขที่ PO</th>
+                        <th class="text-center p-1">โครงการ</th>
+                        <th class="text-center p-1">ผู้รับเหมา</th>
+                        <th class="text-center p-1">สถานที่</th>
+                        <th class="text-center p-1">งาน</th>
+                        <th class="text-center p-1">มูลค่า PO ไม่รวม VAT</th>
+                        <th class="text-center p-1">มูลค่า PO</th>
+                        <th class="text-center p-1">จำนวนงวดงาน</th>
+                        <th class="text-center p-1 d-none" style="width: 120px;">Action</th>
                       </tr>
                     </thead>
                     <tbody id="tbody">
                       <?php foreach ($rs as $row) {
                         $html = <<<EOD
                                         <tr>
-                                            <td class="d-none">{$row['po_id']}</td>
-                                            <td><a class='link-opacity-100 pe-auto' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#editModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>{$row['po_no']}</a></td>
-                                            <td>{$row['project_name']}</td>
-                                            <td>{$row['supplier_name']}</td>
-                                            <td>{$row['location_name']}</td>
-                                            <td>{$row['working_name_th']}</td>
-                                            <td>{$row['contract_value_before']}</td>
-                                            <td>{$row['contract_value']}</td>
-                                            <td>{$row['number_of_period']}</td>
-                                            <td class="" align='center'>
+                                            <td class="p-0 d-none">{$row['po_id']}</td>
+                                            <td class="p-0"><a class='link-opacity-100 pe-auto' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#editModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>{$row['po_no']}</a></td>
+                                            <td class="p-0">{$row['project_name']}</td>
+                                            <td class="p-0">{$row['supplier_name']}</td>
+                                            <td class="p-0">{$row['location_name']}</td>
+                                            <td class="p-0">{$row['working_name_th']}</td>
+                                            <td class="p-0">{$row['contract_value_before']}</td>
+                                            <td class="p-0">{$row['contract_value']}</td>
+                                            <td class="p-0">{$row['number_of_period']}</td>
+                                            <td class="p-0" align='center'>
                                                 <div class='btn-group-sm'>
                                                     <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-pen-to-square'></i>

@@ -155,6 +155,7 @@ class Po extends Connection
                 $_SESSION['message'] =  'Something is wrong.Can not add data.';
             }
             $this->myConnect->rollBack();
+            
         } finally {
             // $stmt->closeCursor();
             // $stmtPeriod->closeCursor();
