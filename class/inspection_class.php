@@ -52,25 +52,100 @@ class Inspection extends Connection
 
     public function insertData($getData)
     {
-        $po_name = $getData['po_name'];
+        @session_start();
 
-        $sql = "insert into pos(po_name) 
-                values(:po_name)";
-        $stmt = $this->myConnect->prepare($sql);
-        $stmt->bindParam(':po_name', $po_name, PDO::PARAM_STR);
+        // $_SESSION['getData'] = $getData;
 
         try {
+            $this->myConnect->beginTransaction();
+            // สร้าง id มี prefix ในที่นี่ให้ prefix เป็น PO 
+            // $po_id = uniqid('PO', true);
+            // ดึงข้อมูล id ที่เป็น Auto Increment หลังจาก Insert ข้อมูล Header แล้ว
+            // $po_id = $pdo->lastInsertId();
+
+            // parameters ในส่วน po_main
+            $po_no = $getData['po_no'];
+            $project_name = $getData['project_name'];
+            $supplier_id = $getData['supplier_id'];
+            $location_id = $getData['location_id'];
+            $working_name_th = $getData['working_name_th'];
+            $working_name_en = $getData['working_name_en'];
+            $is_include_vat = 1;
+            $contract_value_before = $getData['contract_value_before'];
+            $contract_value = $getData['contract_value'];
+            $vat = $getData['vat'];
+            $is_deposit = $getData['is_deposit'];
+            $deposit_percent = $getData['deposit_percent'];
+            $deposit_value = $deposit_percent * $contract_value / 100;
+            $working_date_from = $getData['working_date_from'];
+            $working_date_to = $getData['working_date_to'];
+            // Create DateTime objects from the input strings
+            $date1 = new DateTime($working_date_from);
+            $date2 = new DateTime($working_date_to);
+            // Calculate the difference between the two dates
+            $interval = $date1->diff($date2);
+            $working_day =  $interval->days + 1;
+            $create_by = $_SESSION['user_code'];
+            // $is_active = isset($getData['is_active']) ? 1 : 0;
+
+            // parameters ในส่วน po_period
+            $periods = $getData['period'];
+            $number_of_period = count($periods);
+            $interim_payments = $getData['interim_payment'];
+            $interim_payment_percents = $getData['interim_payment_percent'];
+            $remarks = $getData['remark'];
+            $sql = <<<EOD
+                        INSERT INTO `inspect_main`(`po_id`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `create_by`) 
+                        VALUES(:po_id, :remain_value_interim_payment, :total_retention_value, :inspect_status, :create_by)
+                    EOD;
+            $stmt = $this->myConnect->prepare($sql);
+            // $stmt->bindParam(':id', $headerId, PDO::PARAM_STR);
+            $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+            $stmt->bindParam(':remain_value_interim_payment', $remain_value_interim_payment, PDO::PARAM_STR);
+            $stmt->bindParam(':total_retention_value', $total_retention_value,  PDO::PARAM_STR);
+            $stmt->bindParam(':inspect_status', $inspect_status, PDO::PARAM_INT);
+            $stmt->bindParam(':create_by', $create_by, PDO::PARAM_STR);
+
             if ($stmt->execute()) {
-                echo  'data has been created successfully.';
+                $stmt->closeCursor();
+                $po_id = $this->myConnect->lastInsertId();
+                $_SESSION['xxx'] = $po_id;
+                $sql = <<<EOD
+                        INSERT INTO `po_period`(`po_id`, `period`, `interim_payment`, `interim_payment_percent`, `remark`) 
+                        VALUES (:po_id, :period, :interim_payment, :interim_payment_percent, :remark)
+                    EOD;
+                $stmtPeriod = $this->myConnect->prepare($sql);
+                // $stmtPeriod->bindParam(':id', $headerId, PDO::PARAM_STR);
+                for ($i = 0; $i < $number_of_period; $i++) {
+                    $stmtPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+                    $stmtPeriod->bindParam(':period', $periods[$i], PDO::PARAM_STR);
+                    $stmtPeriod->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
+                    $stmtPeriod->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
+                    $stmtPeriod->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
+
+                    $stmtPeriod->execute();
+                    $stmtPeriod->closeCursor();
+                }
+
+                $_SESSION['message'] =  'data has been created successfully.';
+                $this->myConnect->commit();
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
-                echo  'This item could not be added.Because the data has duplicate values!!!';
+                $_SESSION['message'] =  'This item could not be added.Because the data has duplicate values!!!';
             } else {
-                echo  'Something is wrong.Can not add data.';
+                $_SESSION['message'] =  'Something is wrong.Can not add data.';
             }
+            $this->myConnect->rollBack();
+        } finally {
+            // $stmt->closeCursor();
+            // $stmtPeriod->closeCursor();
+            // $stmtSubs->closeCursor();
+            // unset($stmt);
+            // unset($stmtPeriod);
         }
     }
+
     public function updateData($getData)
     {
         $po_id = $getData['po_id'];

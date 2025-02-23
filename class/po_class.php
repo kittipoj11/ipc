@@ -53,7 +53,7 @@ class Po extends Connection
         // $_SESSION['getData'] = $getData;
 
         try {
-            $this->myConnect->beginTransaction();
+            // $this->myConnect->beginTransaction();
             // สร้าง id มี prefix ในที่นี่ให้ prefix เป็น PO 
             // $po_id = uniqid('PO', true);
             // ดึงข้อมูล id ที่เป็น Auto Increment หลังจาก Insert ข้อมูล Header แล้ว
@@ -127,41 +127,88 @@ class Po extends Connection
             if ($stmt->execute()) {
                 $stmt->closeCursor();
                 $po_id = $this->myConnect->lastInsertId();
-                $_SESSION['xxx'] = $po_id;
+
+                // INSERT INTO inspect_main
+                $remain_value_interim_payment = $contract_value;
+                $inspect_status = 1; //1:รอตรวจ
+                $sql = <<<EOD
+                        INSERT INTO `inspect_main`(`po_id`, `remain_value_interim_payment`, `inspect_status`, `create_by`) 
+                        VALUES(:po_id, :remain_value_interim_payment, :inspect_status, :create_by)
+                    EOD;
+                $stmtInspect = $this->myConnect->prepare($sql);
+                // $stmtInspect->bindParam(':id', $headerId, PDO::PARAM_STR);
+                $stmtInspect->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+                $stmtInspect->bindParam(':remain_value_interim_payment', $remain_value_interim_payment, PDO::PARAM_STR);
+                $stmtInspect->bindParam(':inspect_status', $inspect_status, PDO::PARAM_INT);
+                $stmtInspect->bindParam(':create_by', $create_by, PDO::PARAM_STR);
+
+                $stmtInspect->execute();
+                $stmtInspect->closeCursor();
+
+                $inspect_id = $this->myConnect->lastInsertId();
+
+                // INSERT INTO po_period
                 $sql = <<<EOD
                         INSERT INTO `po_period`(`po_id`, `period`, `interim_payment`, `interim_payment_percent`, `remark`) 
                         VALUES (:po_id, :period, :interim_payment, :interim_payment_percent, :remark)
                     EOD;
-                $stmtPeriod = $this->myConnect->prepare($sql);
-                // $stmtPeriod->bindParam(':id', $headerId, PDO::PARAM_STR);
-                for ($i = 0; $i < $number_of_period; $i++) {
-                    $stmtPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                    $stmtPeriod->bindParam(':period', $periods[$i], PDO::PARAM_STR);
-                    $stmtPeriod->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
-                    $stmtPeriod->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
-                    $stmtPeriod->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
+                $stmtPoPeriod = $this->myConnect->prepare($sql);
 
-                    $stmtPeriod->execute();
-                    $stmtPeriod->closeCursor();
+                // INSERT INTO inspect_period
+                $sql = <<<EOD
+                        INSERT INTO `inspect_period`(`inspect_id`, `period`, `plan_status`, `is_paid`, `is_retention`, `workflow_id`, `current_status`, `current_level`) 
+                        VALUES (:inspect_id, :period, :plan_status, :is_paid, :is_retention, :workflow_id, :current_status, :current_level)
+                    EOD;
+                $stmtInspectPeriod = $this->myConnect->prepare($sql);
+
+                // $stmtPoPeriod->bindParam(':id', $headerId, PDO::PARAM_STR);
+                for ($i = 0; $i < $number_of_period; $i++) {
+                    $stmtPoPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+                    $stmtPoPeriod->bindParam(':period', $periods[$i], PDO::PARAM_STR);
+                    $stmtPoPeriod->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
+                    $stmtPoPeriod->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
+                    $stmtPoPeriod->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
+
+                    $stmtPoPeriod->execute();
+                    $stmtPoPeriod->closeCursor();
+
+                    $plan_status=1;
+                    $is_paid=0;
+                    $is_retention=0;
+                    $workflow_id=1;
+                    $current_status=1;
+                    $current_level=1;//จะใช้เป็นอะไร: level_order หรือ level_id
+
+                    $stmtInspectPeriod->bindParam(':inspect_id', $inspect_id, PDO::PARAM_INT);
+                    $stmtInspectPeriod->bindParam(':period', $periods[$i], PDO::PARAM_STR);
+                    $stmtInspectPeriod->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
+                    $stmtInspectPeriod->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
+                    $stmtInspectPeriod->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
+                    $stmtInspectPeriod->bindParam(':workflow_id', $workflow_id,  PDO::PARAM_INT);
+                    $stmtInspectPeriod->bindParam(':current_status', $current_status,  PDO::PARAM_INT);
+                    $stmtInspectPeriod->bindParam(':current_level', $current_level,  PDO::PARAM_INT);
+
+                    $stmtInspectPeriod->execute();
+                    $stmtInspectPeriod->closeCursor();
                 }
 
                 $_SESSION['message'] =  'data has been created successfully.';
-                $this->myConnect->commit();
+                // $this->myConnect->commit();
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
                 $_SESSION['message'] =  'This item could not be added.Because the data has duplicate values!!!';
             } else {
-                $_SESSION['message'] =  'Something is wrong.Can not add data.';
+                $_SESSION['message'] =  $e->getCode() + ' '+ $e->getMessage();
             }
-            $this->myConnect->rollBack();
+            // $this->myConnect->rollBack();
             
         } finally {
             // $stmt->closeCursor();
-            // $stmtPeriod->closeCursor();
+            // $stmtPoPeriod->closeCursor();
             // $stmtSubs->closeCursor();
             // unset($stmt);
-            // unset($stmtPeriod);
+            // unset($stmtPoPeriod);
         }
     }
 

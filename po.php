@@ -86,7 +86,7 @@ require_once 'auth.php';
                            </div> -->
                 <!-- /.card-header -->
                 <div class="card-body p-0" id="card-body">
-                  <table id="example1" class="table table-bordered table-striped table-sm" style="font-size: 0.75em;">
+                  <table id="example1" class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
                         <th class="text-center p-1 d-none">#</th>
