@@ -187,12 +187,12 @@ class Po extends Connection
                     $stmtPoPeriod->execute();
                     $stmtPoPeriod->closeCursor();
 
-                    $plan_status=1;
-                    $is_paid=0;
-                    $is_retention=0;
-                    $workflow_id=1;
-                    $current_status=1;
-                    $current_level=1;//จะใช้เป็นอะไร: level_order หรือ level_id
+                    $plan_status = 1;
+                    $is_paid = 0;
+                    $is_retention = 0;
+                    $workflow_id = 1;
+                    $current_status = 1;
+                    $current_level = 1; //จะใช้เป็นอะไร: level_order หรือ level_id
 
                     $stmtInspectPeriod->bindParam(':inspect_id', $inspect_id, PDO::PARAM_INT);
                     $stmtInspectPeriod->bindParam(':period', $periods[$i], PDO::PARAM_STR);
@@ -214,10 +214,10 @@ class Po extends Connection
             if ($e->getCode() == 23000) {
                 $_SESSION['message'] =  'This item could not be added.Because the data has duplicate values!!!';
             } else {
-                $_SESSION['message'] =  $e->getCode() + ' '+ $e->getMessage();
+                $_SESSION['message'] =  $e->getCode() + ' ' + $e->getMessage();
             }
             // $this->myConnect->rollBack();
-            
+
         } finally {
             // $stmt->closeCursor();
             // $stmtPoPeriod->closeCursor();
@@ -253,24 +253,33 @@ class Po extends Connection
     }
     public function deleteData($getData)
     {
-        $po_id = $getData['delete_id'];
-        // $is_active = isset($getData['is_active']) ? 1 : 0;
-        $sql = "update po
-                set is_deleted = 1
-                where po_id = :po_id";
-        $stmt = $this->myConnect->prepare($sql);
-        $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-
         try {
+            $po_id = $getData['po_id'];
+            // $is_active = isset($getData['is_active']) ? 1 : 0;
+            // $sql = "update po
+            //         set is_deleted = 1
+            //         where po_id = :po_id";
+            $sql = <<<EOD
+                    DELETE FROM `po_period` 
+                    WHERE po_id = :po_id;
+                    EOD;
+            $stmt = $this->myConnect->prepare($sql);
+            $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $sql = <<<EOD
+                    DELETE FROM `po_main` 
+                    WHERE po_id = :po_id;
+                    EOD;
+            $stmt = $this->myConnect->prepare($sql);
+            $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+            $stmt->execute();
+
             if ($stmt->execute()) {
-                echo 'data has been delete successfully.';
+                echo 'success';
             }
         } catch (PDOException $e) {
-            if ($e->getCode() == 23000) {
-                echo 'This item could not be added.Because the data has duplicate values!!!';
-            } else {
-                echo 'Something is wrong.Can not add data.';
-            }
+            echo 'error';
         }
     }
 

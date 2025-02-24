@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($updateResult) {
             echo "แก้ไขข้อมูลสำเร็จ!";
-            echo '<br><a href="index2.php">กลับไปหน้าหลัก</a>';
+            echo '<br><a href="index.php">กลับไปหน้าหลัก</a>';
         } else {
             echo "เกิดข้อผิดพลาดในการแก้ไขข้อมูล";
             echo '<br><a href="edit_data.php?id=' . htmlspecialchars($id) . '">ลองแก้ไขใหม่อีกครั้ง</a>';

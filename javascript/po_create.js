@@ -44,13 +44,15 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    // $('.btnDelete').on('click', function() { // แบบนี้ -> ไม่สามารถใช้งานได้เมื่อสร้างปุ่มขึ้นมาที่หลัง
-    $(document).on("click", ".btnDelete", function (e) {
+  // $('.btnDelete').on('click', function() { // แบบนี้ -> ไม่สามารถใช้งานได้เมื่อสร้างปุ่มขึ้นมาที่หลัง
+  $(document).on("click", ".btnDelete", function (e) {
     e.preventDefault();
-    let id = $(this).parents("tr").attr("iid");
+    const po_id = $(this).data("id");
+    const po_no = $(this).parents("tr").find("a:first").data("id");
+
     Swal.fire({
       title: "Are you sure?",
-      text: "You want to delete this item!",
+      text: `You want to delete PO NO: ${po_no}!`,
       icon: "warning",
       showCancelButton: true,
       cancelButtonColor: "gray",
@@ -69,9 +71,9 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "201open_area_schedule_crud.php", // ให้ส่งข้อมูลไปตาม url ที่กำหนด
-          data: { action: "delete", delete_id: id }, //จะทำการส่งเป็นรูปแบบ java object ->{name: value}
-          method: "POST", //เป็นวิธีการส่ง POST หรือ GET อาจะใช้เป็น type: 'post'
+          url: "po_crud.php", // ให้ส่งข้อมูลไปตาม url ที่กำหนด
+          data: { action: "delete", po_id: po_id }, //จะทำการส่งเป็นรูปแบบ java object ->{name: value}
+          method: "POST", //เป็นวิธีการส่ง POST หรือ GET อาจจะใช้เป็น type: 'post'
           success: function (response) {
             //ถ้าดึงข้อมูลมาเสร็จเรียบร้อยแล้วข้อมูลจะถูกส่งกลับมาไว้ที่ response
             if (response == "success") {
@@ -94,7 +96,7 @@ $(document).ready(function () {
               }).then((result) => {
                 if (result.isConfirmed) {
                   // window.location.href = "201open_area_schedule.php";
-                  window.location.reload();
+                  window.location.reload();//เปลี่ยนเป็นโหลด Table Body ใหม่เพื่อไม่ให้หน้าเพจกระพริบ
                 }
               });
             } else {
@@ -102,7 +104,7 @@ $(document).ready(function () {
               // alert('ไม่สามารถลบรายการนี้ได้');
               Swal.fire({
                 title: "Oops...!",
-                text: "Something went wrong!",
+                text: `Something went wrong!`,
                 icon: "error",
                 // width: 600,
                 // padding: '3em',
@@ -123,61 +125,52 @@ $(document).ready(function () {
     });
   });
 
-  $('.btnEdit').each(function() {
-      $(this).on('click', function(event) {
-          event.preventDefault();
-          const po_id = $(this).parents("tr").attr("po-id");
-          window.location.href = "po_edit.php?id=" + po_id;
-      });
-  });        
-  
-  $('.btnEdit').each(function() { // เลือกทุก element ที่มี class 'btnEdit'
-    $(this).on('click', function(event) {
-        event.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
-        const po_id = $(this).data('id'); // อ่านค่า data-id จากลิงก์ที่คลิก
+  // $('.btnEdit').each(function() {
+  //     $(this).on('click', function(event) {
+  //         event.preventDefault();
+  //         const po_id = $(this).parents("tr").attr("po-id");
+  //         window.location.href = "po_edit.php?id=" + po_id;
+  //     });
+  // });
 
-        // AJAX Request ไปยัง edit_form.php เพื่อดึงฟอร์มแก้ไข
-        $.ajax({
-            url: 'po_edit.php', // URL ของไฟล์ที่จะไปดึงข้อมูล
-            type: 'POST', // Method เป็น GET
-            data: { po_id: po_id }, // ส่ง ID ไปเป็น GET parameter
-            success: function(response) { // ฟังก์ชันที่ทำงานเมื่อ AJAX สำเร็จ
-                $('#editFormContainer').html(response); // นำ HTML form ที่ได้มาใส่ใน div#editFormContainer
-            },
-            error: function() { // ฟังก์ชันที่ทำงานเมื่อ AJAX ไม่สำเร็จ (error)
-                alert('เกิดข้อผิดพลาดในการโหลดฟอร์มแก้ไข'); // แสดงข้อความ error (ปรับปรุงได้ตามต้องการ)
-            }
-        });
+  $(".btnEdit").each(function () {
+    // เลือกทุก element ที่มี class 'btnEdit'
+    $(this).on("click", function (event) {
+      event.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
+      const po_id = $(this).data("id"); // อ่านค่า data-id จากลิงก์ที่คลิก
+      const po_no = $(this).parents("tr").find("a:first").data("id");
+
+      window.location.href = "po_edit.php?po_id=" + po_id;
     });
-});
+  });
 });
 
 $(document).ready(function () {
   // Click ที่รายการใดๆ
   $(document).on("click", ".tdMain", function (e) {
     e.preventDefault();
-    $(".content-period").removeClass( "d-none" );
-    // หรือ    
+    $(".content-period").removeClass("d-none");
+    // หรือ
     // $(".content-period").removeClass('d-none').addClass('d-flex');
 
-    let po_id =     $(this).parents("tr").attr("po-id");//$(this).closest("tr")
+    let po_id = $(this).parents("tr").attr("po-id"); //$(this).closest("tr")
     let po_no = $(this).parents("tr").find("a:first").html();
     // let po_id = $(this).closest('tr').attr('po-id');
     $(".card-title").html(po_no);
-    
+
     $.ajax({
       url: "po_crud.php",
       type: "POST",
       data: {
         po_id: po_id,
-        dataType: 'json',
-        action: 'selectperiod'
+        dataType: "json",
+        action: "selectperiod",
       },
       success: function (response) {
         console.log(`response=${response}`);
         // data = JSON.parse(response);
         // console.log(data);
-        
+
         $("#tbody-period").html(response);
       },
     });
@@ -398,4 +391,3 @@ $(function () {
     );
   });
 });
-
