@@ -30,7 +30,7 @@ require_once 'auth.php';
   <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
 
   <style>
-    table tr {
+    #tbody tr, #tbody-period tr td a {
       cursor: pointer;
     }
   </style>
@@ -52,12 +52,7 @@ require_once 'auth.php';
     require_once  'class/location_class.php';
     $po = new Po;
     $rs = $po->getAllRecord();
-
-    $supplier = new Supplier;
-    $supplier_rs = $supplier->getAllRecord();
-
-    $location = new Location;
-    $location_rs = $location->getAllRecord();
+    $rsPeriod = $po->getPeriodByPoId(2);
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -104,22 +99,22 @@ require_once 'auth.php';
                     <tbody id="tbody">
                       <?php foreach ($rs as $row) {
                         $html = <<<EOD
-                                        <tr>
-                                            <td class="p-0 d-none">{$row['po_id']}</td>
-                                            <td class="p-0"><a class='link-opacity-100 pe-auto' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#editModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>{$row['po_no']}</a></td>
-                                            <td class="p-0">{$row['project_name']}</td>
-                                            <td class="p-0">{$row['supplier_name']}</td>
-                                            <td class="p-0">{$row['location_name']}</td>
-                                            <td class="p-0">{$row['working_name_th']}</td>
-                                            <td class="p-0">{$row['contract_value_before']}</td>
-                                            <td class="p-0">{$row['contract_value']}</td>
-                                            <td class="p-0">{$row['number_of_period']}</td>
-                                            <td class="p-0" align='center'>
+                                        <tr po-id={$row['po_id']}>
+                                            <td class="tdMain p-0 d-none">{$row['po_id']}</td>
+                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#editModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>{$row['po_no']}</a></td>
+                                            <td class="tdMain p-0">{$row['project_name']}</td>
+                                            <td class="tdMain p-0">{$row['supplier_name']}</td>
+                                            <td class="tdMain p-0">{$row['location_name']}</td>
+                                            <td class="tdMain p-0">{$row['working_name_th']}</td>
+                                            <td class="tdMain p-0 text-right">{$row['contract_value_before']}</td>
+                                            <td class="tdMain p-0 text-right">{$row['contract_value']}</td>
+                                            <td class="tdMain p-0 text-right">{$row['number_of_period']}</td>
+                                            <td class="tdMain p-0" align='center'>
                                                 <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>
                                                         <i class='fa-regular fa-pen-to-square'></i>
                                                     </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>
                                                         <i class='fa-regular fa-trash-can'></i>
                                                     </a>
                                                 </div>
@@ -142,6 +137,53 @@ require_once 'auth.php';
         <!-- /.container-fluid -->
       </section>
       <!-- /.content -->
+
+      <section class="content-period d-none">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title"></h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0" id="card-body">
+                <table class="table table-bordered justify-content-center text-center">
+                          <thead>
+                            <tr>
+                              <th class="text-center p-1" width="5%">งวดงาน</th>
+                              <th class="text-center p-1" width="20%">จำนวนเงิน</th>
+                              <th class="text-center p-1" width="10%">คิดเป็น(%)</th>
+                              <th class="text-center p-1">เงื่อนไขการจ่ายเงิน</th>
+                            </tr>
+                          </thead>
+                    <tbody id="tbody-period">
+                      <!-- < ?php foreach ($rsPeriod as $row) {
+                        $html = <<<EOD
+                                        <tr>
+                                            <td class="p-0 d-none">{$row['po_period_id']}</td>
+                                            <td class="text-left py-0 px-1">{$row['period']}</td>
+                                            <td class="text-left py-0 px-1">{$row['interim_payment']}</td>
+                                            <td class="text-left py-0 px-1">{$row['interim_payment_percent']}</td>
+                                            <td class="text-left py-0 px-1">{$row['remark']}</td>
+                                        </tr>
+                                    EOD;
+                        echo $html;
+                      } ?> -->
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+      </section>
+      <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
 
@@ -149,106 +191,6 @@ require_once 'auth.php';
 
     <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Logout Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
     <!-- logout.php -->
-
-    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Open(Insert/Update) data Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-    <!-- <div class="container-fluid table-responsive-sm p-0"> -->
-    <div class="modal fade" id="openModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="modal">จัดการข้อมูล</h1>
-            <a class="" data-bs-dismiss="modal" aria-label="Close">
-              <i class="fa-solid fa-xmark"></i>
-            </a>
-          </div>
-
-          <form name="frmOpen" id="frmOpen" action="" method="">
-            <!-- <input type="text" name="action" id="action"> -->
-            <div class="modal-body">
-              <!-- <div class="row m-3 d-none"> -->
-              <div class="row m-3">
-                <label for="po_id" class="col-4 col-form-label">#</label>
-                <div class="col-8">
-                  <input type="text" class="form-control form-control-sm fst-italic" name="po_id" value="[Autonumber]" disabled>
-                </div>
-              </div>
-
-              <div class="row m-3">
-                <label for="po_no" class="col-4 col-form-label">เลขที่ PO</label>
-                <div class="col-8">
-                  <input type="text" class="form-control form-control-sm" name="po_no" id="po_no">
-                </div>
-              </div>
-
-              <div class="row m-3">
-                <label for="project_name" class="col-4 col-form-label">ชื่อโครงการ</label>
-                <div class="col-8">
-                  <input type="text" class="form-control form-control-sm" name="project_name" id="project_name">
-                </div>
-              </div>
-
-              <div class="row m-3">
-                <label for="supplier_id" class="col-4 col-form-label">ผู้รับเหมา</label>
-                <div class="col-8">
-                  <select class="form-select form-control form-control-sm supplier_id" name="supplier_id">
-                    <?php
-                    foreach ($supplier_rs as $row) :
-                      echo "<option value='{$row['supplier_id']}'>{$row['supplier_name']}</option>";
-                    endforeach ?>
-                  </select>
-                </div>
-              </div>
-
-              <div class="row m-3">
-                <label for="location_id" class="col-4 col-form-label">สถานที่</label>
-                <div class="col-8">
-                  <select class="form-select form-control form-control-sm location_id" name="location_id">
-                    <?php
-                    foreach ($location_rs as $row) :
-                      echo "<option value='{$row['location_id']}'>{$row['location_name']}</option>";
-                    endforeach ?>
-                  </select>
-                </div>
-              </div>
-
-              <div class="row m-3">
-                <label for="working_name_th" class="col-4 col-form-label">ชื่องาน(ภาษาไทย)</label>
-                <div class="col-8">
-                  <input type="text" class="form-control form-control-sm" name="working_name_th" id="working_name_th">
-                </div>
-              </div>
-
-              <div class="row m-3">
-                <label for="working_name_en" class="col-4 col-form-label">ชื่องาน(ภาษาอังกฤษ)</label>
-                <div class="col-8">
-                  <input type="text" class="form-control form-control-sm" name="working_name_en" id="working_name_en">
-                </div>
-              </div>
-
-              <div class="row m-3">
-                <label for="contract_value" class="col-4 col-form-label">มูลค่างาน</label>
-                <div class="col-8">
-                  <input type="number" class="form-control form-control-sm" name="contract_value" id="contract_value">
-                </div>
-              </div>
-
-              <div class="row m-3">
-                <label for="vat" class="col-4 col-form-label">VAT</label>
-                <div class="col-8">
-                  <input type="number" class="form-control form-control-sm" name="vat" id="vat">
-                </div>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="button" name="btnSaveData" id="btnSaveData" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-          </form>
-
-        </div>
-      </div>
-    </div>
 
     <!-- Main Content End -->
 
@@ -276,4 +218,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/po.js"></script>
+    <script src="javascript/po_create.js"></script>

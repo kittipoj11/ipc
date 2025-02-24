@@ -44,7 +44,8 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  $(document).on("click", ".btnDelete", function (e) {
+    // $('.btnDelete').on('click', function() { // แบบนี้ -> ไม่สามารถใช้งานได้เมื่อสร้างปุ่มขึ้นมาที่หลัง
+    $(document).on("click", ".btnDelete", function (e) {
     e.preventDefault();
     let id = $(this).parents("tr").attr("iid");
     Swal.fire({
@@ -121,23 +122,67 @@ $(document).ready(function () {
       }
     });
   });
+
+  $('.btnEdit').each(function() {
+      $(this).on('click', function(event) {
+          event.preventDefault();
+          const po_id = $(this).parents("tr").attr("po-id");
+          window.location.href = "po_edit.php?id=" + po_id;
+      });
+  });        
+  
+  $('.btnEdit').each(function() { // เลือกทุก element ที่มี class 'btnEdit'
+    $(this).on('click', function(event) {
+        event.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
+        const po_id = $(this).data('id'); // อ่านค่า data-id จากลิงก์ที่คลิก
+
+        // AJAX Request ไปยัง edit_form.php เพื่อดึงฟอร์มแก้ไข
+        $.ajax({
+            url: 'po_edit.php', // URL ของไฟล์ที่จะไปดึงข้อมูล
+            type: 'POST', // Method เป็น GET
+            data: { po_id: po_id }, // ส่ง ID ไปเป็น GET parameter
+            success: function(response) { // ฟังก์ชันที่ทำงานเมื่อ AJAX สำเร็จ
+                $('#editFormContainer').html(response); // นำ HTML form ที่ได้มาใส่ใน div#editFormContainer
+            },
+            error: function() { // ฟังก์ชันที่ทำงานเมื่อ AJAX ไม่สำเร็จ (error)
+                alert('เกิดข้อผิดพลาดในการโหลดฟอร์มแก้ไข'); // แสดงข้อความ error (ปรับปรุงได้ตามต้องการ)
+            }
+        });
+    });
+});
 });
 
 $(document).ready(function () {
   // Click ที่รายการใดๆ
   $(document).on("click", ".tdMain", function (e) {
-    // $('.btnDelete').on('click', function() { // แบบเดิม -> ไม่สามารถใช้งานได้เมื่อสร้างปุ่มขึ้นมาที่หลัง
-    // let edit_id = $(this).attr('id');//ค่า id ของปุ่มที่กำหนดไว้ซึ่งในที่นี้มาจาก <?php echo $datarow['id'] ?>
     e.preventDefault();
-    // console.log('click');
-    let id = $(this).parents("tr").attr("iid"); //ค่า id ของปุ่มที่กำหนดไว้ซึ่งในที่นี้มาจาก <?php echo $datarow['id'] ?>
-    // $('.cell-main').load('open_area_schedule_view.php' + '?id=' + id, "_self");
-    window.location.href = "201open_area_schedule.php?page=view&id=" + id;
-    // window.open('main.php?page=open_area_schedule_view?id=' + id);
-    // window.open('open_area_schedule_view.php' + '?id=' + edit_id, "_self");
+    $(".content-period").removeClass( "d-none" );
+    // หรือ    
+    // $(".content-period").removeClass('d-none').addClass('d-flex');
+
+    let po_id =     $(this).parents("tr").attr("po-id");//$(this).closest("tr")
+    let po_no = $(this).parents("tr").find("a:first").html();
+    // let po_id = $(this).closest('tr').attr('po-id');
+    $(".card-title").html(po_no);
+    
+    $.ajax({
+      url: "po_crud.php",
+      type: "POST",
+      data: {
+        po_id: po_id,
+        dataType: 'json',
+        action: 'selectperiod'
+      },
+      success: function (response) {
+        console.log(`response=${response}`);
+        // data = JSON.parse(response);
+        // console.log(data);
+        
+        $("#tbody-period").html(response);
+      },
+    });
   });
 });
-
 // document.getElementById("opt_event_id").addEventListener("change", complete_selection);
 // document
 //   .getElementById("building_id")

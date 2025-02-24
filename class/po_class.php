@@ -46,6 +46,21 @@ class Po extends Connection
         return $rs;
     }
 
+    public function getPeriodByPoId($getPoId)
+    {
+        $sql = <<<EOD
+                SELECT `po_period_id`, `po_id`, `period`, `interim_payment`, `interim_payment_percent`, `remark`
+                FROM `po_period`
+                WHERE `po_id` = :po_id
+                ORDER BY `period`
+                EOD;
+        $stmt = $this->myConnect->prepare($sql);
+        $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs = $stmt->fetchAll();
+        return $rs;
+    }
+
     public function insertData($getData)
     {
         @session_start();
