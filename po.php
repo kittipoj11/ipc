@@ -99,7 +99,7 @@ require_once 'auth.php';
                     <tbody id="tbody">
                       <?php foreach ($rs as $row) {
                         $html = <<<EOD
-                                        <tr po-id={$row['po_id']}>
+                                        <tr data-id='{$row['po_id']}'>
                                             <td class="tdMain p-0 d-none">{$row['po_id']}</td>
                                             <td class="tdMain p-0"><a class='link-opacity-100 pe-auto' title='Edit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_no']}'>{$row['po_no']}</a></td>
                                             <td class="tdMain p-0">{$row['project_name']}</td>
@@ -109,7 +109,7 @@ require_once 'auth.php';
                                             <td class="tdMain p-0 text-right">{$row['contract_value_before']}</td>
                                             <td class="tdMain p-0 text-right">{$row['contract_value']}</td>
                                             <td class="tdMain p-0 text-right">{$row['number_of_period']}</td>
-                                            <td class="tdMain p-0" align='center'>
+                                            <td class="tdMain p-0 action" align='center'>
                                                 <div class='btn-group-sm'>
                                                     <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>
                                                         <i class='fa-regular fa-pen-to-square'></i>
@@ -218,4 +218,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/po_create.js"></script>
+    <script src="javascript/po.js"></script>

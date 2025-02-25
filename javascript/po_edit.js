@@ -185,10 +185,13 @@ $(document).ready(function () {
 
   $("#btnAdd").click(function () {
     // console.log($(".firstTr:last").find(".period:last").val());
-    period = $(".firstTr:last").find(".period:last").val();
+    period = $(".firstTr[crud!='d']:last").find(".period:last").val();
     period++;
-    $(".firstTr:last")
+    $(".firstTr[crud!='d']:last")
       .clone(false)
+      .attr("crud", "i")
+      .removeClass("d-none")
+
       .find(".period:last")
       .val(period)
       // .attr("id", "row" + i + "")
@@ -203,6 +206,10 @@ $(document).ready(function () {
       .end()
 
       .find(".remark:last")
+      .val("")
+      .end()
+
+      .find(".po_period_id:last")
       .val("")
       .end()
 
@@ -236,7 +243,8 @@ $(document).ready(function () {
     let period;
     // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tableBody
     // $("#tableBody").find("tr:not(:first):last").remove();
-    $("#tableBody tr:not(:first):last").remove();
+    // $("#tableBody tr:not(:first):last").remove();
+    $("#tableBody tr:not(:first)[crud!='d']:last").attr('crud','d').addClass('d-none');
   });
 
   // $(".btnDeleteThis").click(function() {
