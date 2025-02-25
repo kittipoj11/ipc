@@ -7,9 +7,10 @@ class Po extends Connection
     public function getAllRecord()
     {
         $sql = <<<EOD
-                SELECT `po_id`, `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`, `working_name_th`
-                , `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`
-                , `deposit_percent`, `deposit_value`, `create_by`, `create_date`, `number_of_period`
+                SELECT `po_id`, `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`
+                , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
+                , `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`
+                , `remain_value_interim_payment`, `total_retention_value`, `create_by`, `create_date`, `number_of_period`
                 , `suppliers`.`supplier_name`
                 , `locations`.`location_name`
                 FROM `po_main`
@@ -24,12 +25,14 @@ class Po extends Connection
         return $rs;
     }
 
-    public function getRecordById($id)
+    public function getRecordById($getPoId)
     {
+        $po_id=$getPoId;
         $sql = <<<EOD
-                SELECT `po_id`, `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`, `working_name_th`
-                , `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`
-                , `deposit_percent`, `deposit_value`, `create_by`, `create_date`, `number_of_period`
+                SELECT `po_id`, `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`
+                , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
+                , `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`
+                , `remain_value_interim_payment`, `total_retention_value`, `create_by`, `create_date`, `number_of_period`
                 , `suppliers`.`supplier_name`
                 , `locations`.`location_name`
                 FROM `po_main`
@@ -37,10 +40,11 @@ class Po extends Connection
                     ON `suppliers`.`supplier_id` = `po_main`.`supplier_id`
                 INNER JOIN `locations`
                     ON `locations`.`location_id` = `po_main`.`location_id`
+                WHERE `po_id` = :po_id
                 EOD;
 
         $stmt = $this->myConnect->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
         return $rs;

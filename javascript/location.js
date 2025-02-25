@@ -9,7 +9,7 @@ $(document).ready(function () {
   $(document).on("click", ".btnEdit", function (e) {
     e.preventDefault();
     let location_id = $(this).closest("tr").attr("id");
-    console.log(`location_id = ${location_id} `);
+    // console.log(`location_id = ${location_id} `);
     $.ajax({
       url: "location_crud.php",
       type: "POST",

@@ -52,7 +52,7 @@ require_once 'auth.php';
     require_once  'class/location_class.php';
     $po = new Po;
     $rs = $po->getAllRecord();
-    $rsPeriod = $po->getPeriodByPoId(2);
+    $rsPeriod = $po->getPeriodByPoId(0);
     ?>
 
     <!-- Content Wrapper. Contains page content -->

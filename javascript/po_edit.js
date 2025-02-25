@@ -124,26 +124,6 @@ $(document).ready(function () {
       }
     });
   });
-
-
-  // $('.btnEdit').each(function() {
-  //     $(this).on('click', function(event) {
-  //         event.preventDefault();
-  //         const po_id = $(this).parents("tr").attr("po-id");
-  //         window.location.href = "po_edit.php?id=" + po_id;
-  //     });
-  // });
-
-  $(".btnEdit").each(function () {
-    // เลือกทุก element ที่มี class 'btnEdit'
-    $(this).on("click", function (event) {
-      event.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
-      const po_id = $(this).data("id"); // อ่านค่า data-id จากลิงก์ที่คลิก
-      const po_no = $(this).parents("tr").find("a:first").data("id");
-
-      window.location.href = "po_edit.php?po_id=" + po_id;
-    });
-  });
 });
 
 $(document).ready(function () {
@@ -202,6 +182,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   let period;
+
   $("#btnAdd").click(function () {
     // console.log($(".firstTr:last").find(".period:last").val());
     period = $(".firstTr:last").find(".period:last").val();
@@ -269,14 +250,13 @@ $(document).ready(function () {
     $(this).parents("tr").remove();
   });
 
-  $(document).ready(function () {
-    $("#btnCancel").click(function () {
-      // history.go(-1);
-      // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
-      // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
-      window.location.href = "po.php";
-    });
+  $("#btnCancel").click(function () {
+    // history.go(-1);
+    // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
+    // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
+    window.location.href = "po.php";
   });
+
 });
 
 $(function () {
