@@ -222,7 +222,7 @@ require_once 'auth.php';
                             <?php foreach ($rsPeriod as $row) { ?>
                                 
 
-                            <tr class="firstTr">
+                            <tr class="firstTr" crud="s">
                               <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
                               <td class="input-group-sm p-0"><input type="number" name="period[]" class="form-control period" value="<?php echo isset($row['period']) ? htmlspecialchars($row['period']) : ''; ?>" readonly>
                               </td>
@@ -234,7 +234,7 @@ require_once 'auth.php';
                                 <input type="text" name="remark[]" class="form-control remark" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">
                               </td>
                               <td class="p-1 align-content-center">
-                              <input type="text" name="crud[]" class="form-control crud" value="u">
+                              <input type="text" name="crud[]" class="form-control crud" value="s">
                               </td>
                               <td class="input-group-sm p-0 d-nonex"><input type="text" name="po_period_id[]" class="form-control po_period_id" value="<?php echo isset($row['po_period_id']) ? htmlspecialchars($row['po_period_id']) : ''; ?>" readonly></td>
                             </tr>

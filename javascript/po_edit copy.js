@@ -8,7 +8,7 @@ $(document).ready(function () {
       let data_sent = $("#myForm").serializeArray();
       data_sent.push({
         name: "action",
-        value: "update",
+        value: "insert",
       });
       console.log(data_sent);
       $.ajax({
@@ -96,7 +96,7 @@ $(document).ready(function () {
               }).then((result) => {
                 if (result.isConfirmed) {
                   // window.location.href = "201open_area_schedule.php";
-                  window.location.reload();//เปลี่ยนเป็นโหลด Table Body ใหม่เพื่อไม่ให้หน้าเพจกระพริบ
+                  window.location.reload(); //เปลี่ยนเป็นโหลด Table Body ใหม่เพื่อไม่ให้หน้าเพจกระพริบ
                 }
               });
             } else {
@@ -183,62 +183,6 @@ $(document).ready(function () {
 $(document).ready(function () {
   let period;
 
-  $("#btnAddx").click(function () {
-    // console.log($(".firstTr:last").find(".period:last").val());
-    // หา คลาส firstTr ตัวสุดท้ายที่มี class crud ซึ่ง class crud ต้องไม่มีค่าเท่ากับ 'd'
-    // period = $(".firstTr[crud!='d']:last").find(".period:last").val();
-
-    // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
-    // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
-    period = $(".firstTr").has(".crud:not([value='d'])").last().find(".period").val();
-    // period = $(".firstTr:has(.crud:not([value='d'])):last").find(".period").val();
-    period++;
-    // console.log(`Period = ${period}`);
-    $(".firstTr:first")
-      .clone(false)
-      // .removeClass("d-none")
-
-      .find(".period")
-      .val(period)
-      .end()
-
-      .find(".interim_payment")
-      .val("")
-      .end()
-
-      .find(".interim_payment_percent")
-      .val("")
-      .end()
-
-      .find(".remark")
-      .val("")
-      .end()
-
-      .find(".po_period_id")
-      .val("")
-      .end()
-
-      .find(".crud")
-      .val("i")
-      .end()
-
-      // .find("a:first")
-      // .css("display", "inline")
-      // .css("color", "red")
-      // .end()
-
-      // .find("a:last")
-      // .css("display", "inline")
-      // .css("color", "red")
-      // .end()
-
-      // .find("a:first")
-      // .attr("iid", "" + i + "")
-      // .end()
-
-      .appendTo("#tableBody");
-  });
-
   $("#btnAdd").click(function () {
     // console.log($(".firstTr:last").find(".period:last").val());
     period = $(".firstTr[crud!='d']:last").find(".period:last").val();
@@ -268,10 +212,6 @@ $(document).ready(function () {
       .val("")
       .end()
 
-      .find(".crud")
-      .val("i")
-      .end()
-
       // .find("a:first")
       // .css("display", "inline")
       // .css("color", "red")
@@ -298,33 +238,16 @@ $(document).ready(function () {
     $("#tableBody").find("tr:gt(0)").remove();
   });
 
-  $("#btnDeleteLastx").click(function () {
+  $("#btnDeleteLast").click(function () {
+    let period;
     // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tableBody
+    // $("#tableBody").find("tr:not(:first):last").remove();
     // $("#tableBody tr:not(:first):last").remove();
-    // $("#tableBody tr:not(:first)[crud!='d']:last").attr('crud','d').addClass('d-none');
-    // $(".firstTr:has(.crud:not([value='d'])):last").find(".crud:not([value='d'])").first().val('d');
-    // $(".firstTr:has(.crud:not([value='d'])):last").find(".crud:not([value='d'])").first().val('d');
-    // $(".firstTr:has(.crud:not([value='d'])):last").css("background-color","red");
-    // $(".firstTr").has(".crud:not([value='d'])").last().find(".crud").val('d');
-    // $(".firstTr").has(".crud:not([value='d'])").last().addClass('d-none');
-
-    $("#tableBody tr:not(:first):has(.crud[value!='d']):last").find(".crud").val('d');
+    $("#tableBody tr:not(:first)[crud!='d']:last")
+      .attr("crud", "d")
+      .addClass("d-none");
   });
 
-    $("#btnDeleteLast").click(function () {
-      let period;
-      // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tableBody
-      // $("#tableBody").find("tr:not(:first):last").remove();
-      // $("#tableBody tr:not(:first):last").remove();
-      $("#tableBody tr:not(:first)[crud!='d']:last")
-        .attr("crud", "d")
-        .addClass("d-none")
-
-        .find(".crud")
-        .val("d")
-        .end();
-    });
-  
   // $(".btnDeleteThis").click(function() {
   $(document).on("click", ".btnDeleteThis", function () {
     // ส่วนสำหรับการลบ
@@ -342,9 +265,7 @@ $(document).ready(function () {
     // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
     window.location.href = "po.php";
   });
-
 });
-
 
 $(function () {
   // Event: on change
