@@ -199,7 +199,7 @@ require_once 'auth.php';
                         <a id="btnDeleteLast" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="ลบงวดงานล่าสุด">
                           Delete last period
                         </a>
-                        <a id="btnClear" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="ลบงวดงานทั้งหมด">
+                        <a id="btnClear" class="btn btn-danger btn-sm d-none" data-toggle="tooltip" data-placement="right" title="ลบงวดงานทั้งหมด">
                           Clear all period
                         </a>
                       </div>
@@ -213,7 +213,7 @@ require_once 'auth.php';
                               <th class="p-1" width="20%">จำนวนเงิน</th>
                               <th class="p-1" width="10%">คิดเป็น(%)</th>
                               <th class="p-1">เงื่อนไขการจ่ายเงิน</th>
-                              <th class="p-1 d-none" width="5%">Action</th>
+                              <th class="p-1" width="5%">Crud</th>
                               <th class="p-1 d-nonex" width="5%">po_period_id</th>
                             </tr>
                           </thead>
@@ -233,9 +233,8 @@ require_once 'auth.php';
                               <td class="input-group-sm p-0">
                                 <input type="text" name="remark[]" class="form-control remark" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">
                               </td>
-                              <td class="p-1 align-content-center d-none">
-                                <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-trash"></i></a>
-                                <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-cross-circle"></i></a>
+                              <td class="p-1 align-content-center">
+                              <input type="text" name="crud[]" class="form-control crud" value="u">
                               </td>
                               <td class="input-group-sm p-0 d-nonex"><input type="text" name="po_period_id[]" class="form-control po_period_id" value="<?php echo isset($row['po_period_id']) ? htmlspecialchars($row['po_period_id']) : ''; ?>" readonly></td>
                             </tr>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ทดสอบ jQuery Selector</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+
+<table border="1">
+  <tr class="firstTr">
+    <td><input type="text" class="crud"></td>
+    <td><input type="text" class="crud"></td>
+    <td><input type="text" class="crud"></td>
+  </tr>
+  <tr class="firstTr">
+    <td><input type="text" class="crud"></td>
+    <td><input type="text" class="crud"></td>
+    <td><input type="text" class="crud"></td>
+  </tr>
+  <tr class="firstTr">
+    <td><input type="text" class="crud"></td>
+    <td><input type="text" class="crud"></td>
+    <td><input type="text" class="crud"></td>
+  </tr>
+</table>
+
+<button id="runSelector">Run Selector</button>
+
+<script>
+$(document).ready(function(){
+  $("#runSelector").click(function(){
+    $(".firstTr:has(.crud:not([value='d'])):last").find(".crud:not([value='d'])").first().val('d');
+    console.log("Selector executed"); // เพิ่ม console.log เพื่อตรวจสอบการทำงาน
+  });
+});
+</script>
+
+</body>
+</html>

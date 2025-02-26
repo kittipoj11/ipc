@@ -8,7 +8,7 @@ $(document).ready(function () {
       let data_sent = $("#myForm").serializeArray();
       data_sent.push({
         name: "action",
-        value: "insert",
+        value: "update",
       });
       console.log(data_sent);
       $.ajax({
@@ -185,32 +185,39 @@ $(document).ready(function () {
 
   $("#btnAdd").click(function () {
     // console.log($(".firstTr:last").find(".period:last").val());
-    period = $(".firstTr[crud!='d']:last").find(".period:last").val();
+    // หา คลาส firstTr ตัวสุดท้ายที่มี class crud ซึ่ง class crud ต้องไม่มีค่าเท่ากับ 'd'
+    // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
+    // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
+    period = $(".firstTr").has(".crud:not([value='d'])").last().find(".period").val();
+    // period = $(".firstTr:has(.crud:not([value='d'])):last").find(".period").val();
     period++;
-    $(".firstTr[crud!='d']:last")
+    console.log(`Period = ${period}`);
+    $(".firstTr:first")
       .clone(false)
-      .attr("crud", "i")
-      .removeClass("d-none")
+      // .removeClass("d-none")
 
-      .find(".period:last")
+      .find(".period")
       .val(period)
-      // .attr("id", "row" + i + "")
       .end()
 
-      .find(".interim_payment:last")
+      .find(".interim_payment")
       .val("")
       .end()
 
-      .find(".interim_payment_percent:last")
+      .find(".interim_payment_percent")
       .val("")
       .end()
 
-      .find(".remark:last")
+      .find(".remark")
       .val("")
       .end()
 
-      .find(".po_period_id:last")
+      .find(".po_period_id")
       .val("")
+      .end()
+
+      .find(".crud")
+      .val("i")
       .end()
 
       // .find("a:first")
@@ -240,11 +247,16 @@ $(document).ready(function () {
   });
 
   $("#btnDeleteLast").click(function () {
-    let period;
     // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tableBody
-    // $("#tableBody").find("tr:not(:first):last").remove();
     // $("#tableBody tr:not(:first):last").remove();
-    $("#tableBody tr:not(:first)[crud!='d']:last").attr('crud','d').addClass('d-none');
+    // $("#tableBody tr:not(:first)[crud!='d']:last").attr('crud','d').addClass('d-none');
+    // $(".firstTr:has(.crud:not([value='d'])):last").find(".crud:not([value='d'])").first().val('d');
+    // $(".firstTr:has(.crud:not([value='d'])):last").find(".crud:not([value='d'])").first().val('d');
+    // $(".firstTr:has(.crud:not([value='d'])):last").css("background-color","red");
+    // $(".firstTr").has(".crud:not([value='d'])").last().find(".crud").val('d');
+    // $(".firstTr").has(".crud:not([value='d'])").last().addClass('d-none');
+
+    $("#tableBody tr:not(:first):has(.crud[value!='d']):last").find(".crud").val('d');
   });
 
   // $(".btnDeleteThis").click(function() {
@@ -265,6 +277,39 @@ $(document).ready(function () {
     window.location.href = "po.php";
   });
 
+});
+
+$(document).ready(function(){
+  let lastSelectedRow = null; // ตัวแปรเก็บแถวที่ถูกเลือกครั้งล่าสุด
+
+  $("#runSelector").click(function(){
+    console.log("--- เริ่มต้น Selector - รันใหม่ ---");
+
+    // 1. ใช้ Selector เดิมเพื่อหาแถว "ควรจะ" เป็นตัวเลือก
+    var potentialRow = $("#tableBody tr:not(:first):has(.crud[value!='d']):last");
+    console.log("1. แถวที่ Selector เลือก (potential):", potentialRow);
+
+    if (potentialRow.length > 0) { // ถ้า selector เจอแถว
+      // 2. ตรวจสอบว่าเป็นแถวเดียวกับที่เคยเลือกไปแล้วหรือไม่
+      if (potentialRow[0] !== lastSelectedRow) { // เปรียบเทียบ DOM element โดยตรง
+        console.log("2. แถวใหม่! (ไม่ใช่แถวเดิม)");
+        lastSelectedRow = potentialRow[0]; // เก็บแถวปัจจุบันไว้เป็นแถวที่เลือกครั้งล่าสุด
+
+        // 3. ค้นหา .crud และเปลี่ยนค่า
+        var crudElement = potentialRow.find(".crud");
+        crudElement.val('d');
+        console.log("3. กำหนดค่า 'd' ให้กับ .crud ในแถว:", potentialRow);
+      } else {
+        console.log("2. แถวเดิม! (ไม่ขยับขึ้นแล้ว)");
+        console.log("ไม่พบแถวใหม่ที่ตรงเงื่อนไข");
+      }
+    } else {
+      console.log("1. Selector ไม่พบแถวที่ตรงเงื่อนไขเลย");
+      lastSelectedRow = null; // Reset lastSelectedRow เมื่อไม่เจอแถว
+    }
+
+    console.log("--- สิ้นสุด Selector - รันใหม่ ---");
+  });
 });
 
 $(function () {

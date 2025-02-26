@@ -233,105 +233,26 @@ class Po extends Connection
 
     public function updateData($getData)
     {
-        @session_start();
+        $po_id = $getData['po_id'];
+        $po_name = $getData['po_name'];
+        $sql = "update po
+                set po_name = :po_name
+                where po_id = :po_id";
+        // , update_datetime = CURRENT_TIMESTAMP()
+        $stmt = $this->myConnect->prepare($sql);
+        $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+        $stmt->bindParam(':po_name', $po_name, PDO::PARAM_STR);
 
-        try{
-            $_SESSION['Begin'] =  'Begin';
-            // $this->myConnect->beginTransaction();
-
-            // parameters ในส่วน po_main
-            $po_id = $getData['po_id'];
-            $po_no = $getData['po_no'];
-            $project_name = $getData['project_name'];
-            $supplier_id = $getData['supplier_id'];
-            $location_id = $getData['location_id'];
-            $working_name_th = $getData['working_name_th'];
-            $working_name_en = $getData['working_name_en'];
-            $is_include_vat = 1;
-            $contract_value_before = $getData['contract_value_before'];
-            $contract_value = $getData['contract_value'];
-            $vat = $getData['vat'];
-            $is_deposit = $getData['is_deposit'];
-            $deposit_percent = $getData['deposit_percent'];
-            $deposit_value = $deposit_percent * $contract_value / 100;
-            $working_date_from = $getData['working_date_from'];
-            $working_date_to = $getData['working_date_to'];
-            // Create DateTime objects from the input strings
-            $date1 = new DateTime($working_date_from);
-            $date2 = new DateTime($working_date_to);
-            // Calculate the difference between the two dates
-            $interval = $date1->diff($date2);
-            $working_day =  $interval->days + 1;
-            $create_by = $_SESSION['user_code'];
-            // $is_active = isset($getData['is_active']) ? 1 : 0;
-
-            // parameters ในส่วน po_period
-            $periods = $getData['period'];
-            $number_of_period = count($periods);
-            $interim_payments = $getData['interim_payment'];
-            $interim_payment_percents = $getData['interim_payment_percent'];
-            $remarks = $getData['remark'];
-
-            // foreach($periods as period){
-            //     $delete_periods
-
-            // }
-
-            $sql = <<<EOD
-                        UPDATE `po_main`
-                        SET `project_name`= :project_name
-                        , `supplier_id`= :supplier_id
-                        , `location_id`= :location_id
-                        , `working_name_th`= :working_name_th
-                        , `working_name_en`= :working_name_en
-                        , `is_include_vat`= :is_include_vat
-                        , `contract_value`= :contract_value
-                        , `contract_value_before`= :contract_value_before
-                        , `vat`= :vat
-                        , `is_deposit`= :is_deposit
-                        , `deposit_percent`= :deposit_percent
-                        , `deposit_value`= :deposit_value
-                        , `working_date_from`= :working_date_from
-                        , `working_date_to`= :working_date_to
-                        , `working_day`= :working_day
-                        , `number_of_period` = :number_of_period
-                        WHERE `po_id` = :po_id
-                    EOD;
-            $stmt = $this->myConnect->prepare($sql);
-            // $stmt->bindParam(':id', $headerId, PDO::PARAM_STR);
-            // $stmt->bindParam(':po_no', $po_no, PDO::PARAM_STR);
-            $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-            $stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
-            $stmt->bindParam(':supplier_id', $supplier_id,  PDO::PARAM_INT);
-            $stmt->bindParam(':location_id', $location_id, PDO::PARAM_INT);
-            $stmt->bindParam(':working_name_th', $working_name_th, PDO::PARAM_STR);
-            $stmt->bindParam(':working_name_en', $working_name_en, PDO::PARAM_STR);
-            $stmt->bindParam(':is_include_vat', $is_include_vat, PDO::PARAM_BOOL);
-            $stmt->bindParam(':contract_value_before', $contract_value_before, PDO::PARAM_STR);
-            $stmt->bindParam(':contract_value', $contract_value, PDO::PARAM_STR);
-            $stmt->bindParam(':vat', $vat, PDO::PARAM_STR);
-            $stmt->bindParam(':is_deposit', $is_deposit, PDO::PARAM_BOOL);
-            $stmt->bindParam(':deposit_percent', $deposit_percent, PDO::PARAM_STR);
-            $stmt->bindParam(':deposit_value', $deposit_value, PDO::PARAM_STR);
-            $stmt->bindParam(':working_date_from', $working_date_from, PDO::PARAM_STR);
-            $stmt->bindParam(':working_date_to', $working_date_to, PDO::PARAM_STR);
-            $stmt->bindParam(':working_day', $working_day, PDO::PARAM_INT);
-            $stmt->bindParam(':number_of_period', $number_of_period, PDO::PARAM_INT);
-
+        try {
             if ($stmt->execute()) {
-                $stmt->closeCursor();
-    
-                // Manage po_period
-                $sql = <<<EOD
-                        INSERT INTO `po_period`(`po_id`, `period`, `interim_payment`, `interim_payment_percent`, `remark`) 
-                        VALUES (:po_id, :period, :interim_payment, :interim_payment_percent, :remark)
-                    EOD;
-                $stmtPoPeriod = $this->myConnect->prepare($sql);
-
-                $_SESSION['message transaction'] =  'data has been updated successfully.';
+                echo 'data has been update successfully.';
             }
-        }catch (PDOException $e) {
-            $_SESSION['message'] =  $e->getCode() + ' : ' + $e->getMessage();
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                echo 'This item could not be added.Because the data has duplicate values!!!';
+            } else {
+                echo 'Something is wrong.Can not add data.';
+            }
         }
     }
     public function deleteData($getData)

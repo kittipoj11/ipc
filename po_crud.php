@@ -6,7 +6,6 @@ require_once 'class/po_class.php';
 
 // $_SESSION['_POST'] = $_POST;
 // if (isset($_REQUEST['submit'])) {
-    // $_SESSION['_REQUEST2'] = $_REQUEST;
     $obj = new Po();
     // print_r($_REQUEST);
     // exit;
