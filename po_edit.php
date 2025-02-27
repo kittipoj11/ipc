@@ -233,7 +233,7 @@ require_once 'auth.php';
                               <td class="input-group-sm p-0">
                                 <input type="text" name="remark[]" class="form-control remark" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">
                               </td>
-                              <td class="p-1 align-content-center">
+                              <td class="input-group-sm p-0">
                               <input type="text" name="crud[]" class="form-control crud" value="s">
                               </td>
                               <td class="input-group-sm p-0 d-nonex"><input type="text" name="po_period_id[]" class="form-control po_period_id" value="<?php echo isset($row['po_period_id']) ? htmlspecialchars($row['po_period_id']) : ''; ?>" readonly></td>
