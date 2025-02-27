@@ -266,7 +266,6 @@ class Po extends Connection
             $interval = $date1->diff($date2);
             $working_day =  $interval->days + 1;
             $create_by = $_SESSION['user_code'];
-            // $is_active = isset($getData['is_active']) ? 1 : 0;
 
             // parameters ในส่วน po_period
             $periods = $getData['period'];
@@ -320,7 +319,6 @@ class Po extends Connection
                         WHERE `po_id` = :po_id
                     EOD;
             $stmt = $this->myConnect->prepare($sql);
-            // $stmt->bindParam(':id', $headerId, PDO::PARAM_STR);
             // $stmt->bindParam(':po_no', $po_no, PDO::PARAM_STR);
             $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
             $stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
@@ -353,7 +351,6 @@ class Po extends Connection
                         WHERE `po_id` = :po_id 
                     EOD;
                 $stmtInspectMain = $this->myConnect->prepare($sql);
-                // $stmtInspectMain->bindParam(':id', $headerId, PDO::PARAM_STR);
                 $stmtInspectMain->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                 $stmtInspectMain->bindParam(':remain_value_interim_payment', $remain_value_interim_payment, PDO::PARAM_STR);
                 $stmtInspectMain->bindParam(':inspect_status', $inspect_status, PDO::PARAM_INT);
@@ -381,7 +378,7 @@ class Po extends Connection
                 $workflow_id = 1;
                 $current_status = 1;
                 $current_level = 1; //จะใช้เป็นอะไร: level_order หรือ level_id
-                // $stmtPoPeriod->bindParam(':id', $headerId, PDO::PARAM_STR);
+
                 foreach ($insert_indexs as $i) { //ถ้าต้องการใช้ key ด้วย foreach($insert_indexs as $key=> $value){
                     $stmtPoPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtPoPeriod->bindParam(':period', $periods[$i], PDO::PARAM_STR);
@@ -499,6 +496,14 @@ class Po extends Connection
             //         set is_deleted = 1
             //         where po_id = :po_id";
             $sql = <<<EOD
+                    DELETE FROM `inspect_period` 
+                    WHERE po_id = :po_id;
+                    EOD;
+            $stmt = $this->myConnect->prepare($sql);
+            $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $sql = <<<EOD
                     DELETE FROM `po_period` 
                     WHERE po_id = :po_id;
                     EOD;
@@ -507,6 +512,14 @@ class Po extends Connection
             $stmt->execute();
 
             $sql = <<<EOD
+                    DELETE FROM `inspect_main` 
+                    WHERE po_id = :po_id;
+                    EOD;
+            $stmt = $this->myConnect->prepare($sql);
+            $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $sql = <<<EOD
                     DELETE FROM `po_main` 
                     WHERE po_id = :po_id;
                     EOD;
@@ -514,9 +527,8 @@ class Po extends Connection
             $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
             $stmt->execute();
 
-            if ($stmt->execute()) {
-                echo 'success';
-            }
+
+
         } catch (PDOException $e) {
             echo 'error';
         }
