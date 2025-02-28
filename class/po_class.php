@@ -56,7 +56,7 @@ class Po extends Connection
                 SELECT `po_period_id`, `po_id`, `period`, `interim_payment`, `interim_payment_percent`, `remark`
                 FROM `po_period`
                 WHERE `po_id` = :po_id
-                ORDER BY `period`
+                ORDER BY `po_id`, `period`
                 EOD;
         $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
@@ -70,7 +70,6 @@ class Po extends Connection
         @session_start();
 
         // $_SESSION['getData'] = $getData;
-
         try {
             // $this->myConnect->beginTransaction();
             // สร้าง id มี prefix ในที่นี่ให้ prefix เป็น PO 

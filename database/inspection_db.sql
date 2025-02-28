@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 14, 2025 at 10:21 AM
+-- Generation Time: Feb 28, 2025 at 10:27 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -145,7 +145,8 @@ CREATE TABLE `inspect_main` (
 --
 
 INSERT INTO `inspect_main` (`inspect_id`, `po_id`, `working_date_from`, `working_date_to`, `working_day`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `create_by`, `create_date`) VALUES
-(1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(1, 1, NULL, NULL, NULL, 869161.00, NULL, 1, NULL, NULL),
+(2, 2, NULL, NULL, NULL, 107000.00, NULL, 1, 5389, NULL);
 
 -- --------------------------------------------------------
 
@@ -154,8 +155,8 @@ INSERT INTO `inspect_main` (`inspect_id`, `po_id`, `working_date_from`, `working
 --
 
 CREATE TABLE `inspect_period` (
-  `inspect_period_id` int(10) UNSIGNED NOT NULL,
-  `inspect_id` int(10) UNSIGNED DEFAULT NULL,
+  `po_period_id` int(10) UNSIGNED NOT NULL,
+  `po_id` int(10) UNSIGNED DEFAULT NULL,
   `period` int(11) DEFAULT NULL,
   `workload_planned_percent` decimal(5,2) DEFAULT NULL,
   `workload_actual_completed_percent` decimal(5,2) DEFAULT NULL,
@@ -182,10 +183,12 @@ CREATE TABLE `inspect_period` (
 -- Dumping data for table `inspect_period`
 --
 
-INSERT INTO `inspect_period` (`inspect_period_id`, `inspect_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_level`) VALUES
-(1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `inspect_period` (`po_period_id`, `po_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_level`) VALUES
+(1, 1, 1, 30.00, 30.00, 70.00, 1.00, NULL, 1.00, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
+(17, 2, 1, NULL, NULL, NULL, 1.00, NULL, 2.00, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
+(20, 1, 2, 60.00, 60.00, 40.00, 3.00, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
+(21, 1, 3, 100.00, 100.00, 0.00, 4.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
+(22, 2, 2, NULL, NULL, NULL, 5.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1);
 
 -- --------------------------------------------------------
 
@@ -249,7 +252,8 @@ CREATE TABLE `locations` (
 
 INSERT INTO `locations` (`location_id`, `location_name`, `is_deleted`) VALUES
 (1, 'Sky', 0),
-(2, 'Aktiv xxx', 1);
+(2, 'Aktiv xxx', 0),
+(3, 'Challenger', 0);
 
 -- --------------------------------------------------------
 
@@ -308,7 +312,8 @@ CREATE TABLE `po_main` (
 --
 
 INSERT INTO `po_main` (`po_id`, `po_no`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `remain_value_interim_payment`, `total_retention_value`, `create_by`, `create_date`, `number_of_period`) VALUES
-(1, 'IMPO23020769', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 869161.00, 812300.00, 86861.00, 0, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, 'nathapats', '2025-01-15 10:03:35', 0);
+(1, 'IMPO23020769', 'Statue of Load Indra Riding on Erawan Elephant', 1, 3, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 869161.00, 812300.00, 86861.00, NULL, 0.00, 0.00, '2025-02-01', '2025-02-08', 8, NULL, NULL, 'nathapats', '2025-01-15 10:03:35', 3),
+(2, 'IMP002', 'ข่าวช่องวันเสาร์-อาทิตย์', 1, 3, 'ซันเซต ๑', 'Sunset 1', 1, 107000.00, 100000.00, 7000.00, NULL, 10.00, 10700.00, '2025-02-01', '2025-02-08', 8, NULL, NULL, '05389', NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -340,9 +345,11 @@ CREATE TABLE `po_period` (
 --
 
 INSERT INTO `po_period` (`po_period_id`, `po_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `remark`) VALUES
-(1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 1, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, 1, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(1, 1, 1, NULL, NULL, NULL, 1.00, 1.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1'),
+(17, 2, 1, NULL, NULL, NULL, 10.00, 1.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'จ่าย QR'),
+(20, 1, 2, NULL, NULL, NULL, 2.00, 2.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'จ่าย QR'),
+(21, 1, 3, NULL, NULL, NULL, 3.00, 3.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'จ่าย QR'),
+(22, 2, 2, NULL, NULL, NULL, 20.00, 2.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'จ่าย QR');
 
 -- --------------------------------------------------------
 
@@ -489,8 +496,8 @@ ALTER TABLE `inspect_main`
 -- Indexes for table `inspect_period`
 --
 ALTER TABLE `inspect_period`
-  ADD PRIMARY KEY (`inspect_period_id`),
-  ADD KEY `inspect_id` (`inspect_id`),
+  ADD PRIMARY KEY (`po_period_id`),
+  ADD KEY `inspect_id` (`po_id`),
   ADD KEY `plan_status` (`plan_status`);
 
 --
@@ -592,13 +599,7 @@ ALTER TABLE `inspect_approvals`
 -- AUTO_INCREMENT for table `inspect_main`
 --
 ALTER TABLE `inspect_main`
-  MODIFY `inspect_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `inspect_period`
---
-ALTER TABLE `inspect_period`
-  MODIFY `inspect_period_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `inspect_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `inspect_period_detail`
@@ -610,19 +611,19 @@ ALTER TABLE `inspect_period_detail`
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `po_main`
 --
 ALTER TABLE `po_main`
-  MODIFY `po_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `po_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `po_period`
 --
 ALTER TABLE `po_period`
-  MODIFY `po_period_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `po_period_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `po_period_detail`
