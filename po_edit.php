@@ -214,7 +214,7 @@ require_once 'auth.php';
                               <th class="p-1" width="10%">คิดเป็น(%)</th>
                               <th class="p-1">เงื่อนไขการจ่ายเงิน</th>
                               <th class="p-1" width="5%">Crud</th>
-                              <th class="p-1 d-nonex" width="5%">po_period_id</th>
+                              <th class="p-1 d-nonex" width="5%">po_period_id</th> 
                             </tr>
                           </thead>
                           

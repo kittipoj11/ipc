@@ -2,7 +2,8 @@ $(document).ready(function () {
   // $('.btnDelete').on('click', function() { // แบบนี้ -> ไม่สามารถใช้งานได้เมื่อสร้างปุ่มขึ้นมาที่หลัง
   $(document).on("click", ".btnDelete", function (e) {
     e.preventDefault();
-    const po_id = $(this).data("id");
+    // const po_id = $(this).data("id");
+    const po_id = $(this).parents("tr").data("id");
     const po_no = $(this).parents("tr").find("a:first").data("id");
 
     Swal.fire({
@@ -87,22 +88,37 @@ $(document).ready(function () {
   //         window.location.href = "po_edit.php?id=" + po_id;
   //     });
   // });
-
-  $(".btnEdit").each(function () {
-    // เลือกทุก element ที่มี class 'btnEdit'
-    $(this).on("click", function (event) {
-      event.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
-      const po_id = $(this).data("id"); // อ่านค่า data-id จากลิงก์ที่คลิก
-      const po_no = $(this).parents("tr").find("a:first").data("id");
-
+    $(document).on("click", ".btnEdit", function (e) {
+      const po_id = $(this).parents("tr").data("id");
       window.location.href = "po_edit.php?po_id=" + po_id;
     });
-  });
+  
+    $(document).on("click", ".tdMain:has(a)", function (e) {
+      e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
+      const po_id = $(this).parents("tr").data("id");
+      // window.location.href = "po_edit.php?po_id=" + po_id + "&href=inspect.php";
+      window.location.href = "po_edit.php?po_id=" + po_id;
+    });
+  
+  // $(".btnEdit").each(function () {
+  //   // เลือกทุก element ที่มี class 'btnEdit'
+  //   $(this).on("click", function (event) {
+  //     event.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
+  //     const po_id = $(this).data("id"); // อ่านค่า data-id จากลิงก์ที่คลิก
+  //     const po_no = $(this).parents("tr").find("a:first").data("id");
+
+  //     window.location.href = "po_edit.php?po_id=" + po_id;
+  //   });
+
+
+  // });
+
 });
 
 $(document).ready(function () {
-  // Click ที่รายการใดๆ
-  $(document).on("click", ".tdMain:not(.action)", function (e) {
+  $(document).on("click", ".tdMain:not(:has(a),.action)", function (e) {
+    //, (comma) ภายใน :not(...): ใช้เพื่อรวมเงื่อนไขหลายอย่าง ในที่นี้คือ :has(a), :has(.action)
+    // หมายความว่า :not() จะกรอง <td> ที่ ไม่มีทั้ง <a> และ ไม่มีทั้ง .action
     e.preventDefault();
     $(".content-period").removeClass("d-none");
     // หรือ

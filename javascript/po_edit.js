@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+
   $("#myForm").on("submit", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
     // console.log('submit');
@@ -42,9 +44,7 @@ $(document).ready(function () {
       });
     }
   });
-});
 
-$(document).ready(function () {
   // $('.btnDelete').on('click', function() { // แบบนี้ -> ไม่สามารถใช้งานได้เมื่อสร้างปุ่มขึ้นมาที่หลัง
   $(document).on("click", ".btnDelete", function (e) {
     e.preventDefault();
@@ -125,9 +125,7 @@ $(document).ready(function () {
       }
     });
   });
-});
 
-$(document).ready(function () {
   // Click ที่รายการใดๆ
   $(document).on("click", ".tdMain", function (e) {
     e.preventDefault();
@@ -157,7 +155,7 @@ $(document).ready(function () {
       },
     });
   });
-});
+
 // document.getElementById("opt_event_id").addEventListener("change", complete_selection);
 // document
 //   .getElementById("building_id")
@@ -181,10 +179,10 @@ $(document).ready(function () {
 //   }
 // }
 
-$(document).ready(function () {
-  let period;
+
 
   $("#btnAdd").click(function () {
+  let period;
     // console.log($(".firstTr:last").find(".period:last").val());
         // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
     // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
@@ -271,10 +269,9 @@ $(document).ready(function () {
   });
 
   $("#btnCancel").click(function () {
-    // history.go(-1);
-    // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
-    // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
-    window.location.href = "po.php";
+    window.history.back();
+    // window.history.go(-1);
+    // window.location.href = "po.php";
   });
 
 });

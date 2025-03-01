@@ -33,7 +33,6 @@ function createPOTable($obj){
 
 }
 
-
 function createPeriodTable($getRs)
 {
     try {

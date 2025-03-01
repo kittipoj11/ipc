@@ -1,20 +1,16 @@
 $(document).ready(function () {
 
-  $(".btnEdit").each(function () {
-    // เลือกทุก element ที่มี class 'btnEdit'
-    $(this).on("click", function (event) {
-      event.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
-      const po_id = $(this).data("id"); // อ่านค่า data-id จากลิงก์ที่คลิก
-      const po_no = $(this).parents("tr").find("a:first").data("id");
-
+  $(document).on("click", ".tdMain:has(a)", function (e) {
+      e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
+      const po_id = $(this).parents("tr").data("id");
+      // window.location.href = "po_edit.php?po_id=" + po_id + "&href=inspect.php";
       window.location.href = "po_edit.php?po_id=" + po_id;
-    });
   });
 });
 
 $(document).ready(function () {
   // Click ที่รายการใดๆ
-  $(document).on("click", ".tdMain:not(.action)", function (e) {
+  $(document).on("click", ".tdMain:not(:has(a))", function (e) {
     e.preventDefault();
     $(".content-period").removeClass("d-none");
     // หรือ

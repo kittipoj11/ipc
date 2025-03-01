@@ -2,7 +2,6 @@
 @session_start();
 require_once 'config.php';
 require_once 'auth.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -30,14 +29,12 @@ require_once 'auth.php';
   <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
 
   <style>
-    #tbody tr, #tbody-period tr td a{
+    #tbody tr,
+    #tbody-period tr td a {
       cursor: pointer;
     }
   </style>
-
 </head>
-
-
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 
@@ -103,7 +100,7 @@ require_once 'auth.php';
                         $html = <<<EOD
                                         <tr data-id='{$row['po_id']}'>
                                             <td class="tdMain p-0 d-none">{$row['po_id']}</td>
-                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto' title='View' style='margin: 0px 5px 5px 5px' data-id='{$row['po_no']}'>{$row['po_no']}</a></td>
+                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto' title='View' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>{$row['po_no']}</a></td>
                                             <td class="tdMain p-0">{$row['project_name']}</td>
                                             <td class="tdMain p-0">{$row['supplier_name']}</td>
                                             <td class="tdMain p-0">{$row['location_name']}</td>
@@ -149,24 +146,24 @@ require_once 'auth.php';
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body p-0" id="card-body">
-                <table class="table table-bordered justify-content-center text-center" id="period">
-                          <thead>
-                            <tr>
-                              <th class="text-center align-content-center p-1" width="5%" rowspan="2">งวดงาน</th>
-                              <th class="text-center p-1" colspan="3">ปริมาณงาน</th>
-                              <th class="text-center p-1" colspan="3">ยอดเบิกเงินงวด</th>
-                              <th class="text-center align-content-center p-1" rowspan="2">หมายเหตุ</th>
-                            </tr>
-                            <tr>
-                              <!-- <th class="text-center p-1" width="5%">งวดงาน</th> -->
-                              <th class="text-center p-1" width="10%">ตามแผนงาน(%)</th>
-                              <th class="text-center p-1" width="10%">ที่แล้วเสร็จจริง(%)</th>
-                              <th class="text-center p-1" width="10%">คงเหลือ(%)</th>
-                              <th class="text-center p-1" width="10%">ยอดปัจจุบัน</th>
-                              <th class="text-center p-1" width="10%">ยอดสะสมถึงปัจจุบัน</th>
-                              <th class="text-center p-1" width="10%">ยอดคงเหลือ</th>
-                            </tr>
-                          </thead>
+                  <table class="table table-bordered justify-content-center text-center" id="period">
+                    <thead>
+                      <tr>
+                        <th class="text-center align-content-center p-1" width="5%" rowspan="2">งวดงาน</th>
+                        <th class="text-center p-1" colspan="3">ปริมาณงาน</th>
+                        <th class="text-center p-1" colspan="3">ยอดเบิกเงินงวด</th>
+                        <th class="text-center align-content-center p-1" rowspan="2">หมายเหตุ</th>
+                      </tr>
+                      <tr>
+                        <!-- <th class="text-center p-1" width="5%">งวดงาน</th> -->
+                        <th class="text-center p-1" width="10%">ตามแผนงาน(%)</th>
+                        <th class="text-center p-1" width="10%">ที่แล้วเสร็จจริง(%)</th>
+                        <th class="text-center p-1" width="10%">คงเหลือ(%)</th>
+                        <th class="text-center p-1" width="10%">ยอดปัจจุบัน</th>
+                        <th class="text-center p-1" width="10%">ยอดสะสมถึงปัจจุบัน</th>
+                        <th class="text-center p-1" width="10%">ยอดคงเหลือ</th>
+                      </tr>
+                    </thead>
                     <tbody id="tbody-period">
                       <!-- < ?php foreach ($rsPeriod as $row) {
                         $html = <<<EOD
