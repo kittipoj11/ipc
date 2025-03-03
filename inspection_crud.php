@@ -6,6 +6,7 @@ require_once 'class/inspection_class.php';
 
 $_SESSION['_REQUEST'] = $_REQUEST;
 // if (isset($_REQUEST['submit'])) {
+
 $obj = new Inspection();
 // print_r($_REQUEST);
 // exit;

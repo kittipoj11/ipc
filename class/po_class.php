@@ -10,7 +10,7 @@ class Po extends Connection
                 SELECT `po_id`, `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`
                 , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
                 , `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`
-                , `remain_value_interim_payment`, `total_retention_value`, `create_by`, `create_date`, `number_of_period`
+                , `create_by`, `create_date`, `number_of_period`
                 , `suppliers`.`supplier_name`
                 , `locations`.`location_name`
                 FROM `po_main`
@@ -32,7 +32,7 @@ class Po extends Connection
                 SELECT `po_id`, `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`
                 , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
                 , `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`
-                , `remain_value_interim_payment`, `total_retention_value`, `create_by`, `create_date`, `number_of_period`
+                , `create_by`, `create_date`, `number_of_period`
                 , `suppliers`.`supplier_name`
                 , `locations`.`location_name`
                 FROM `po_main`

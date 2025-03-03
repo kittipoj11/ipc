@@ -7,7 +7,6 @@ require_once 'auth.php';
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
     <?php include 'header_main.php'; ?>
