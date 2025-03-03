@@ -2,6 +2,7 @@
 @session_start();
 require_once 'config.php';
 require_once 'auth.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -34,7 +35,10 @@ require_once 'auth.php';
       cursor: pointer;
     }
   </style>
+
 </head>
+
+
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 
@@ -48,10 +52,10 @@ require_once 'auth.php';
     <!-- Main Content Start -->
     <?php
     require_once  'class/inspection_class.php';
-    require_once  'class/po_class.php';
+    // require_once  'class/po_class.php';
 
     $inspection = new Inspection;
-    $rsInspection = $inspection->getAllRecord();
+    $rsInspection = $inspection->getMainAll();
 
     ?>
 
@@ -100,7 +104,7 @@ require_once 'auth.php';
                         $html = <<<EOD
                                         <tr data-id='{$row['po_id']}'>
                                             <td class="tdMain p-0 d-none">{$row['po_id']}</td>
-                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto' title='View' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>{$row['po_no']}</a></td>
+                                            <td class="tdMain p-0"><a class="link-opacity-100 pe-auto po_no" title="View" style="margin: 0px 5px 5px 5px" data-id="{$row['po_no']}">{$row['po_no']}</a></td>
                                             <td class="tdMain p-0">{$row['project_name']}</td>
                                             <td class="tdMain p-0">{$row['supplier_name']}</td>
                                             <td class="tdMain p-0">{$row['location_name']}</td>
@@ -149,13 +153,14 @@ require_once 'auth.php';
                   <table class="table table-bordered justify-content-center text-center" id="period">
                     <thead>
                       <tr>
-                        <th class="text-center align-content-center p-1" width="5%" rowspan="2">งวดงาน</th>
+                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po-id</th>
+                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po-period-id</th>
+                        <th class="text-center align-content-center p-1" rowspan="2" width="5%">งวดงาน</th>
                         <th class="text-center p-1" colspan="3">ปริมาณงาน</th>
                         <th class="text-center p-1" colspan="3">ยอดเบิกเงินงวด</th>
                         <th class="text-center align-content-center p-1" rowspan="2">หมายเหตุ</th>
                       </tr>
                       <tr>
-                        <!-- <th class="text-center p-1" width="5%">งวดงาน</th> -->
                         <th class="text-center p-1" width="10%">ตามแผนงาน(%)</th>
                         <th class="text-center p-1" width="10%">ที่แล้วเสร็จจริง(%)</th>
                         <th class="text-center p-1" width="10%">คงเหลือ(%)</th>
@@ -165,18 +170,18 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody-period">
-                      <!-- < ?php foreach ($rsPeriod as $row) {
-                        $html = <<<EOD
-                                        <tr>
-                                            <td class="tdPeriod p-0 d-none">{$row['po_period_id']}</td>
-                                            <td class="tdPeriod text-left py-0 px-1">{$row['period']}</td>
-                                            <td class="tdPeriod text-left py-0 px-1">{$row['interim_payment']}</td>
-                                            <td class="tdPeriod text-left py-0 px-1">{$row['interim_payment_percent']}</td>
-                                            <td class="tdPeriod text-left py-0 px-1">{$row['remark']}</td>
-                                        </tr>
-                                    EOD;
-                        echo $html;
-                      } ?> -->
+                      <!-- <tr>
+                        <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_id" value="{$row['po_id']}" readonly></td>
+                        <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_period_id" value="{$row['po_period_id']}" readonly></td>
+                        <td class="tdPeriod text-right py-0 px-1"><a class='link-opacity-100 pe-auto' style='margin: 0px 5px 5px 5px'>{$row['period']}</a></td>
+                        <td class="tdPeriod text-right py-0 px-1">{$row['workload_planned_percent']}</td>
+                        <td class="tdPeriod text-right py-0 px-1">{$row['workload_actual_completed_percent']}</td>
+                        <td class="tdPeriod text-right py-0 px-1">{$row['workload_remaining_percent']}</td>
+                        <td class="tdPeriod text-right py-0 px-1">{$row['interim_payment']}</td>
+                        <td class="tdPeriod text-right py-0 px-1">{$row['interim_payment_less_previous']}</td>
+                        <td class="tdPeriod text-right py-0 px-1">{$row['interim_payment_remain']}</td>
+                        <td class="tdPeriod text-left py-0 px-1">{$row['remark']}</td>
+                      </tr> -->
                     </tbody>
                   </table>
                 </div>
@@ -226,4 +231,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/inspect.js"></script>
+    <script src="javascript/inspection.js"></script>

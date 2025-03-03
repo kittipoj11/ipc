@@ -1,8 +1,8 @@
 $(document).ready(function () {
 
-  $(document).on("click", ".tdMain:has(a)", function (e) {
+  $(document).on("click", "a.po_no", function (e) {
       e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
-      const po_id = $(this).parents("tr").data("id");
+      const po_id = $(this).closest("tr").data("id");
       // window.location.href = "po_edit.php?po_id=" + po_id + "&href=inspect.php";
       window.location.href = "po_edit.php?po_id=" + po_id;
   });
@@ -16,13 +16,13 @@ $(document).ready(function () {
     // หรือ
     // $(".content-period").removeClass('d-none').addClass('d-flex');
 
-    let po_id = $(this).parents("tr").data("id"); //$(this).closest("tr")
-    let po_no = $(this).parents("tr").find("a:first").html();
+    let po_id = $(this).closest("tr").data("id"); //$(this).closest("tr")
+    let po_no = $(this).closest("tr").find("a:first").html();
     // let po_id = $(this).closest('tr').attr('po-id');
     $(".card-title").html(po_no);
 
     $.ajax({
-      url: "inspect_crud.php",
+      url: "inspection_crud.php",
       type: "POST",
       data: {
         po_id: po_id,
@@ -38,7 +38,33 @@ $(document).ready(function () {
       },
     });
   });
+
+  $(document).on("click", ".period", function (e) {
+    e.preventDefault();
+// การใช้ตัวแปรในการเก็บค่า
+// // ค้นหา tr ที่ปุ่ม a.period อยู่
+// let row = $(this).closest('tr');
+// // ค้น input ที่มี class po_id
+// let inputPoId = row.find('input.po_id');
+// // ดึงค่าจาก inputPoId
+// let po_id = inputPoId.val();
+// // ค้น input ที่มี class po_period_id
+// let inputPoPeriodId = row.find('input.po_period_id');
+// // ดึงค่าจาก inputPoPeriodId
+// let po_period_id = inputPoPeriodId.val();
+
+const po_id = $(this).closest("tr").find("input.po_id").val();
+// console.log(`po_id = ${po_id}`);
+const po_period_id = $(this).closest("tr").find("input.po_period_id").val();
+// console.log(`po_period_id = ${po_period_id}`);
+// let po_id=1;
+// let po_period_id=1;
+console.log(`po_id = ${po_id}`);
+console.log(`po_period_id = ${po_period_id}`);
+    window.location.href = `inspection_edit.php?po_id=${po_id}&po_period_id=${po_period_id}`;
+  });
 });
+
 // document.getElementById("opt_event_id").addEventListener("change", complete_selection);
 // document
 //   .getElementById("building_id")

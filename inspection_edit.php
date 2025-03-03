@@ -46,14 +46,16 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/po_class.php';
+    // require_once  'class/po_class.php';
+    require_once  'class/inspection_class.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
 
-    $po_id=$_GET['po_id'];
-    $po = new Po;
-    $rs = $po->getRecordById($po_id);
-    $rsPeriod = $po->getPeriodByPoId($po_id);
+    $po_id=$_REQUEST['po_id'];
+    $po_period_id=$_REQUEST['po_period_id'];
+    $inspection = new Inspection;
+    $rsInspection = $inspection->getMainByPoId($po_id);
+    $rsInspectionPeriod = $inspection->getPeriodOneLine($po_id,$po_period_id);
 
     $supplier = new Supplier;
     $supplier_rs = $supplier->getAllRecord();
@@ -68,7 +70,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-6 d-flex">
-          <h6 class="m-1 fw-bold"><?= $rs['po_no'] ." : " . $rs['supplier_id'] . " - " . $rs['supplier_name']?></h6>
+          <h6 class="m-1 fw-bold"><?= $rsInspection['po_no'] ." : " . $rsInspection['supplier_id'] . " - " . $rsInspection['supplier_name']?></h6>
         </div>
         <!-- /.container-fluid -->
       </section>
@@ -82,109 +84,114 @@ require_once 'auth.php';
               <div class="card">
                 <div class="card-body m-0 p-0">
                   <form name="myForm" id="myForm" action="" method="post">
-                    <input type="text" class="d-none" name="po_id" id="po_id" value=<?= $po_id ?>>
+                    <input type="text" class="form-control d-none" name="inspect_id" id="inspect_id" value=<?= $rsInspection['inspect_id'] ?>>
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
-                        <label for="po_no" class="input-group-text">เลขที่ PO</label>
-                        <input type="text" class="form-control" name="po_no" id="po_no" value=<?= $rs['po_no'] ?>>
+                        <label for="supplier_name" class="input-group-text">ผู้รับเหมา</label>
+                        <input type="text" class="form-control" name="supplier_name" id="supplier_name" value=<?= $rsInspection['supplier_name'] ?>>
                       </div>
                     </div>
 
                     <div class="row m-1">
-                      <div class="col-4 input-group input-group-sm">
-                        <label for="project_name" class="input-group-text">ชื่อโครงการ</label>
-                        <input type="text" class="form-control" name="project_name" id="project_name" value="<?= $rs['project_name'] ?>">
+                      <div class="col-6 input-group input-group-sm">
+                        <label for="project_name" class="input-group-text">โครงการ</label>
+                        <input type="text" class="form-control" name="project_name" id="project_name" value="<?= $rsInspection['project_name'] ?>">
                       </div>
 
-                      <div class="col-4 input-group input-group-sm">
-                        <label for="supplier_id" class="input-group-text">ผู้รับเหมา</label>
-                        <select class="form-select form-control" name="supplier_id" id="supplier_id" value=<?= $rs['supplier_id'] ?>>
-                          <option value="">...</option>
-                          <?php
-                          foreach ($supplier_rs as $row) :
-                            $selected_attr = ($rs['supplier_id'] == $row['supplier_id']) ? " selected" : "";
-                            echo "<option value='{$row['supplier_id']}' {$selected_attr}>{$row['supplier_name']}</option>";
-                            // echo "<option value='" . $row['supplier_id'] . "'" . ($rs['supplier_id'] == $row['supplier_id'] ? " selected" : "") . ">" . htmlspecialchars($row['supplier_name']) . "</option>";
-                          endforeach ?>
-                        </select>
-                      </div>
-
-                      <div class="col-3 input-group input-group-sm">
-                        <label for="location_id" class="input-group-text">สถานที่</label>
-                        <select class="form-select form-control" name="location_id" id="location_id">
-                          <option value="">...</option>
-                          <?php
-                          foreach ($location_rs as $row) :
-                            $selected_attr = ($rs['location_id'] == $row['location_id']) ? " selected" : "";
-                            echo "<option value='{$row['location_id']}' {$selected_attr}>{$row['location_name']}</option>";
-                          endforeach ?>
-                        </select>
+                      <div class="col-6 input-group input-group-sm">
+                        <label for="location_name" class="input-group-text">สถานที่</label>
+                        <input type="text" class="form-control" name="location_name" id="location_name" value="<?= $rsInspection['location_name'] ?>">
                       </div>
                     </div>
 
                     <div class="row m-1">
-                      <div class="col-4 input-group input-group-sm">
-                        <label for="working_name_th" class="input-group-text">ชื่องาน(ภาษาไทย)</label>
-                        <input type="text" class="form-control" name="working_name_th" id="working_name_th" value="<?= $rs['working_name_th'] ?>">
+                      <div class="col-6 input-group input-group-sm">
+                        <label for="working_name_th" class="input-group-text">งาน</label>
+                        <input type="text" class="form-control" name="working_name_th" id="working_name_th" value="<?= $rsInspection['working_name_th'] ?> (<?= $rsInspection['working_name_en'] ?>)">
                       </div>
 
-                      <div class="col-4 input-group input-group-sm">
-                        <label for="working_name_en" class="input-group-text">ชื่องาน(ภาษาอังกฤษ)</label>
-                        <input type="text" class="form-control" name="working_name_en" id="working_name_en" value="<?= $rs['working_name_en'] ?>"">
-                      </div>
-                    </div>
-                    <hr>
-
-                    <div class="row m-1">
-                      <div class="col-4 input-group input-group-sm">
-                        <label for="contract_value_before" class="input-group-text">PO ไม่รวม VAT</label>
-                        <input type="text" class="form-control" name="contract_value_before" id="contract_value_before" value=<?= $rs['contract_value_before'] ?>>
-                      </div>
-
-                      <div class="col-4 input-group input-group-sm">
-                        <label for="contract_value" class="input-group-text">PO รวม VAT</label>
-                        <input type="number" class="form-control" name="contract_value" id="contract_value" value=<?= $rs['contract_value'] ?>>
-                      </div>
-
-                      <div class="col-2 input-group input-group-sm">
-                        <label for="vat" class="input-group-text">VAT</label>
-                        <input type="text" class="form-control" name="vat" id="vat" value=<?= $rs['vat'] ?>>
-                      </div>
-
-                      <div class="col-2 input-group input-group-sm">
-                        <div class="form-check">
-                          <?php 
-                            $checked_attr = $rs['is_deposit'] ? "checked" : "";
-                          ?>
-                          <input class="form-check-input" type="checkbox" name="is_deposit" id="is_deposit" <?= $checked_attr ?>>
-                        </div>
-                        <label class="form-check-label" for="deposit_percent">เงินมัดจำ</label>
-                        <input type="number" class="form-control" name="deposit_percent" id="deposit_percent" value=<?= $rs['deposit_percent'] ?>>%
+                      <div class="col-6 input-group input-group-sm d-none">
+                        <label for="working_name_en" class="input-group-text">งาน</label>
+                        <input type="text" class="form-control" name="working_name_en" id="working_name_en" value="<?= $rsInspection['working_name_en'] ?>">
                       </div>
                     </div>
-                    <hr>
-
+                    
                     <div class="row m-1">
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="working_date_from" class="input-group-text ">ระยะเวลาดำเนินการ</label>
-                          <input type="date" class="form-control " name="working_date_from" id="working_date_from" value="<?php echo isset($rs['working_date_from']) ? htmlspecialchars($rs['working_date_from']) : ''; ?>">
+                          <input type="date" class="form-control " name="working_date_from" id="working_date_from" value="<?php echo isset($rsInspection['working_date_from']) ? htmlspecialchars($rsInspection['working_date_from']) : ''; ?>">
 
                         </div>
                       </div>
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="working_date_to" class="input-group-text "> ถึง </label>
-                          <input type="date" class="form-control " name="working_date_to" id="working_date_to" value="<?php echo isset($rs['working_date_to']) ? htmlspecialchars($rs['working_date_to']) : ''; ?>">
+                          <input type="date" class="form-control " name="working_date_to" id="working_date_to" value="<?php echo isset($rsInspection['working_date_to']) ? htmlspecialchars($rsInspection['working_date_to']) : ''; ?>">
                         </div>
                       </div>
 
                       <div class="col-2 input-group input-group-sm">
                         <label for="working_day" class="input-group-text">รวม</label>
-                        <input type="number" class="form-control" name="working_day" id="working_day"  value="<?php echo isset($rs['working_day']) ? htmlspecialchars($rs['working_day']) : ''; ?>" readonly>
+                        <input type="number" class="form-control" name="working_day" id="working_day"  value="<?php echo isset($rsInspection['working_day']) ? htmlspecialchars($rsInspection['working_day']) : ''; ?>" readonly>
                       </div>
                     </div>
+
+                    <hr>
+
+                    <div class="row m-1">
+                      <div class="col-4 input-group input-group-sm">
+                        <label for="po_no" class="input-group-text">เลขที่ PO</label>
+                        <input type="text" class="form-control" name="po_no" id="po_no" value=<?= $rsInspection['po_no'] ?>>
+                      </div>
+
+                      <div class="col-4 input-group input-group-sm">
+                        <label for="contract_value" class="input-group-text">มูลค่างานตาม PO</label>
+                        <input type="number" class="form-control" name="contract_value" id="contract_value" value=<?= $rsInspection['contract_value'] ?>>
+                      </div>
+
+                      <div class="col-2 input-group input-group-sm">
+                        <?php 
+                          $display_include_vat = $rsInspection['is_include_vat'] ? "(Including VAT 7% )": "";
+                        ?>
+                        <label for="vat" class="input-group-text d-none">(Includeing VAT</label>
+                        <input type="text" class="form-control border border-0" name="vat" id="vat" value= "<?= $display_include_vat ?>">
+                      </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row m-1">
+
+                      <div class="col-2 input-group input-group-sm">
+                        <div class="form-check">
+                          <?php 
+                            $checked_attr = $rsInspection['is_deposit'] ? "checked" : "";
+                          ?>
+                          <input class="form-check-input" type="checkbox" name="is_deposit" id="is_deposit" <?= $checked_attr ?>>
+                        </div>
+                        <label class="form-check-label" for="deposit_percent">เงินมัดจำ</label>
+                        <input type="number" class="form-control" name="deposit_percent" id="deposit_percent" value=<?= $rsInspection['deposit_percent'] ?>>%
+                      </div>
+                      <div class="col-4 input-group input-group-sm">
+                        <label for="contract_value_before" class="input-group-text">PO ไม่รวม VAT</label>
+                        <input type="text" class="form-control" name="contract_value_before" id="contract_value_before" value=<?= $rsInspection['contract_value_before'] ?>>
+                      </div>
+
+                      <div class="col-4 input-group input-group-sm">
+                        <label for="contract_value" class="input-group-text">PO รวม VAT</label>
+                        <input type="number" class="form-control" name="contract_value" id="contract_value" value=<?= $rsInspection['contract_value'] ?>>
+                      </div>
+
+                      <div class="col-2 input-group input-group-sm">
+                        <label for="vat" class="input-group-text">VAT</label>
+                        <input type="text" class="form-control" name="vat" id="vat" value=<?= $rsInspection['vat'] ?>>
+                      </div>
+                    </div>
+                    
+                    <hr>
+
 
                     <hr>
 
@@ -219,7 +226,7 @@ require_once 'auth.php';
                           </thead>
                           
                           <tbody id="tableBody">
-                            <?php foreach ($rsPeriod as $row) { ?>
+                            <?php foreach ($rsInspectionPeriod as $row) { ?>
                                 
 
                             <tr class="firstTr" crud="s">
@@ -292,4 +299,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/inspect_edit.js"></script>
+    <script src="javascript/inspection_edit.js"></script>

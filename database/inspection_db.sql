@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 28, 2025 at 10:27 AM
+-- Generation Time: Mar 03, 2025 at 11:51 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -130,9 +130,6 @@ CREATE TABLE `inspect_approvals` (
 CREATE TABLE `inspect_main` (
   `inspect_id` int(10) UNSIGNED NOT NULL,
   `po_id` int(10) UNSIGNED DEFAULT NULL,
-  `working_date_from` date DEFAULT NULL,
-  `working_date_to` date DEFAULT NULL,
-  `working_day` int(11) DEFAULT NULL,
   `remain_value_interim_payment` decimal(19,2) DEFAULT NULL,
   `total_retention_value` decimal(19,2) DEFAULT NULL,
   `inspect_status` int(10) UNSIGNED DEFAULT NULL,
@@ -144,9 +141,9 @@ CREATE TABLE `inspect_main` (
 -- Dumping data for table `inspect_main`
 --
 
-INSERT INTO `inspect_main` (`inspect_id`, `po_id`, `working_date_from`, `working_date_to`, `working_day`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `create_by`, `create_date`) VALUES
-(1, 1, NULL, NULL, NULL, 869161.00, NULL, 1, NULL, NULL),
-(2, 2, NULL, NULL, NULL, 107000.00, NULL, 1, 5389, NULL);
+INSERT INTO `inspect_main` (`inspect_id`, `po_id`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `create_by`, `create_date`) VALUES
+(1, 1, 869161.00, NULL, 1, NULL, NULL),
+(2, 2, 107000.00, NULL, 1, 5389, NULL);
 
 -- --------------------------------------------------------
 
@@ -300,8 +297,6 @@ CREATE TABLE `po_main` (
   `working_date_from` date DEFAULT NULL,
   `working_date_to` date DEFAULT NULL,
   `working_day` int(11) DEFAULT NULL,
-  `remain_value_interim_payment` decimal(19,2) DEFAULT NULL,
-  `total_retention_value` decimal(19,2) DEFAULT NULL,
   `create_by` varchar(255) DEFAULT NULL,
   `create_date` datetime DEFAULT NULL,
   `number_of_period` int(11) NOT NULL DEFAULT 0
@@ -311,9 +306,9 @@ CREATE TABLE `po_main` (
 -- Dumping data for table `po_main`
 --
 
-INSERT INTO `po_main` (`po_id`, `po_no`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `remain_value_interim_payment`, `total_retention_value`, `create_by`, `create_date`, `number_of_period`) VALUES
-(1, 'IMPO23020769', 'Statue of Load Indra Riding on Erawan Elephant', 1, 3, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 869161.00, 812300.00, 86861.00, NULL, 0.00, 0.00, '2025-02-01', '2025-02-08', 8, NULL, NULL, 'nathapats', '2025-01-15 10:03:35', 3),
-(2, 'IMP002', 'ข่าวช่องวันเสาร์-อาทิตย์', 1, 3, 'ซันเซต ๑', 'Sunset 1', 1, 107000.00, 100000.00, 7000.00, NULL, 10.00, 10700.00, '2025-02-01', '2025-02-08', 8, NULL, NULL, '05389', NULL, 2);
+INSERT INTO `po_main` (`po_id`, `po_no`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`) VALUES
+(1, 'IMPO23020769', 'Statue of Load Indra Riding on Erawan Elephant', 1, 3, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 869161.00, 812300.00, 86861.00, NULL, 0.00, 0.00, '2025-02-01', '2025-02-08', 8, 'nathapats', '2025-01-15 10:03:35', 3),
+(2, 'IMP002', 'ข่าวช่องวันเสาร์-อาทิตย์', 1, 3, 'ซันเซต ๑', 'Sunset 1', 1, 107000.00, 100000.00, 7000.00, NULL, 10.00, 10700.00, '2025-02-01', '2025-02-08', 8, '05389', NULL, 2);
 
 -- --------------------------------------------------------
 
