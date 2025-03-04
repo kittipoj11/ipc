@@ -4,11 +4,11 @@ $(document).ready(function () {
     e.preventDefault();
     // const po_id = $(this).data("id");
     const po_id = $(this).parents("tr").data("id");
-    const po_no = $(this).parents("tr").find("a:first").data("id");
+    const po_number = $(this).parents("tr").find("a:first").data("id");
 
     Swal.fire({
       title: "Are you sure?",
-      text: `You want to delete PO NO: ${po_no}!`,
+      text: `You want to delete PO NO: ${po_number}!`,
       icon: "warning",
       showCancelButton: true,
       cancelButtonColor: "gray",
@@ -93,7 +93,8 @@ $(document).ready(function () {
       window.location.href = "po_edit.php?po_id=" + po_id;
     });
   
-    $(document).on("click", ".tdMain:has(a)", function (e) {
+    // $(document).on("click", ".tdMain:has(a)", function (e) {
+    $(document).on("click", "a.po_number", function (e) {
       e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
       const po_id = $(this).parents("tr").data("id");
       // window.location.href = "po_edit.php?po_id=" + po_id + "&href=inspect.php";
@@ -105,7 +106,7 @@ $(document).ready(function () {
   //   $(this).on("click", function (event) {
   //     event.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
   //     const po_id = $(this).data("id"); // อ่านค่า data-id จากลิงก์ที่คลิก
-  //     const po_no = $(this).parents("tr").find("a:first").data("id");
+  //     const po_number = $(this).parents("tr").find("a:first").data("id");
 
   //     window.location.href = "po_edit.php?po_id=" + po_id;
   //   });
@@ -125,9 +126,9 @@ $(document).ready(function () {
     // $(".content-period").removeClass('d-none').addClass('d-flex');
 
     let po_id = $(this).parents("tr").data("id"); //$(this).closest("tr")
-    let po_no = $(this).parents("tr").find("a:first").html();
+    let po_number = $(this).parents("tr").find("a:first").data("id");
     // let po_id = $(this).closest('tr').attr('po-id');
-    $(".card-title").html(po_no);
+    $(".card-title").html(po_number);
 
     $.ajax({
       url: "po_crud.php",

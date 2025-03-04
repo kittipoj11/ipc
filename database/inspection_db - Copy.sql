@@ -297,9 +297,6 @@ CREATE TABLE `po_main` (
   `working_date_from` date DEFAULT NULL,
   `working_date_to` date DEFAULT NULL,
   `working_day` int(11) DEFAULT NULL,
-  `remain_value_interim_payment` decimal(19,2) DEFAULT NULL,
-  `total_retention_value` decimal(19,2) DEFAULT NULL,
-  `inspect_status` int(10) UNSIGNED DEFAULT NULL,
   `create_by` varchar(255) DEFAULT NULL,
   `create_date` datetime DEFAULT NULL,
   `number_of_period` int(11) NOT NULL DEFAULT 0

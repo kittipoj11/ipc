@@ -7,7 +7,7 @@ class Po extends Connection
     public function getAllRecord()
     {
         $sql = <<<EOD
-                SELECT `po_id`, `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`
+                SELECT `po_id`, `po_number`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`
                 , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
                 , `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`
                 , `create_by`, `create_date`, `number_of_period`
@@ -29,7 +29,7 @@ class Po extends Connection
     {
         $po_id = $getPoId;
         $sql = <<<EOD
-                SELECT `po_id`, `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`
+                SELECT `po_id`, `po_number`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`
                 , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
                 , `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`
                 , `create_by`, `create_date`, `number_of_period`
@@ -53,10 +53,10 @@ class Po extends Connection
     public function getPeriodByPoId($getPoId)
     {
         $sql = <<<EOD
-                SELECT `po_period_id`, `po_id`, `period`, `interim_payment`, `interim_payment_percent`, `remark`
+                SELECT `period_id`, `po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `remark`
                 FROM `po_period`
                 WHERE `po_id` = :po_id
-                ORDER BY `po_id`, `period`
+                ORDER BY `po_id`, `period_number`
                 EOD;
         $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
@@ -70,6 +70,7 @@ class Po extends Connection
         @session_start();
 
         // $_SESSION['getData'] = $getData;
+        // exit;
         try {
             // $this->myConnect->beginTransaction();
             // สร้าง id มี prefix ในที่นี่ให้ prefix เป็น PO 
@@ -78,15 +79,16 @@ class Po extends Connection
             // $po_id = $pdo->lastInsertId();
 
             // parameters ในส่วน po_main
-            $po_no = $getData['po_no'];
+            // po_id=auto incremental
+            $po_number = $getData['po_number'];
             $project_name = $getData['project_name'];
             $supplier_id = $getData['supplier_id'];
             $location_id = $getData['location_id'];
             $working_name_th = $getData['working_name_th'];
             $working_name_en = $getData['working_name_en'];
             $is_include_vat = 1;
-            $contract_value_before = $getData['contract_value_before'];
             $contract_value = $getData['contract_value'];
+            $contract_value_before = $getData['contract_value_before'];
             $vat = $getData['vat'];
             $is_deposit = $getData['is_deposit'];
             $deposit_percent = $getData['deposit_percent'];
@@ -103,22 +105,23 @@ class Po extends Connection
             // $is_active = isset($getData['is_active']) ? 1 : 0;
 
             // parameters ในส่วน po_period
-            $periods = $getData['period'];
-            $number_of_period = count($periods);
-            $interim_payments = $getData['interim_payment'];
-            $interim_payment_percents = $getData['interim_payment_percent'];
-            $remarks = $getData['remark'];
+            $period_numbers = $getData['period_numbers'];
+            $number_of_period = count($period_numbers);
+            $interim_payments = $getData['interim_payments'];
+            $interim_payment_percents = $getData['interim_payment_percents'];
+            $remarks = $getData['remarks'];
+
             $sql = <<<EOD
-                        INSERT INTO `po_main`(`po_no`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`
+                        INSERT INTO `po_main`(`po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`
                         , `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`
                         , `working_date_from`, `working_date_to`, `working_day`, `create_by`, `number_of_period`) 
-                        VALUES(:po_no, :project_name, :supplier_id, :location_id, :working_name_th, :working_name_en
+                        VALUES(:po_number, :project_name, :supplier_id, :location_id, :working_name_th, :working_name_en
                         , :is_include_vat, :contract_value, :contract_value_before, :vat, :is_deposit, :deposit_percent, :deposit_value
                         , :working_date_from, :working_date_to, :working_day, :create_by, :number_of_period)
                     EOD;
             $stmt = $this->myConnect->prepare($sql);
             // $stmt->bindParam(':id', $headerId, PDO::PARAM_STR);
-            $stmt->bindParam(':po_no', $po_no, PDO::PARAM_STR);
+            $stmt->bindParam(':po_number', $po_number, PDO::PARAM_STR);
             $stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
             $stmt->bindParam(':supplier_id', $supplier_id,  PDO::PARAM_INT);
             $stmt->bindParam(':location_id', $location_id, PDO::PARAM_INT);
@@ -139,50 +142,32 @@ class Po extends Connection
             // $stmt->bindParam(':is_active', $is_active, PDO::PARAM_BOOL);
             // $affected = $stmt->execute();
             // $_SESSION['getData'] = $getData;
-            // $_SESSION['sqldump'] = $stmt->debugDumpParams();
+            $_SESSION['sql'] = $sql;
             // $stmt->debugDumpParams();
             // exit;
             if ($stmt->execute()) {
                 $stmt->closeCursor();
                 $po_id = $this->myConnect->lastInsertId();
 
-                // INSERT INTO inspect_main
-                $remain_value_interim_payment = $contract_value;
-                $inspect_status = 1; //1:รอตรวจ
-                $sql = <<<EOD
-                        INSERT INTO `inspect_main`(`po_id`, `remain_value_interim_payment`, `inspect_status`, `create_by`) 
-                        VALUES(:po_id, :remain_value_interim_payment, :inspect_status, :create_by)
-                    EOD;
-                $stmtInspectMain = $this->myConnect->prepare($sql);
-                // $stmtInspectMain->bindParam(':id', $headerId, PDO::PARAM_STR);
-                $stmtInspectMain->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                $stmtInspectMain->bindParam(':remain_value_interim_payment', $remain_value_interim_payment, PDO::PARAM_STR);
-                $stmtInspectMain->bindParam(':inspect_status', $inspect_status, PDO::PARAM_INT);
-                $stmtInspectMain->bindParam(':create_by', $create_by, PDO::PARAM_STR);
-
-                $stmtInspectMain->execute();
-                $stmtInspectMain->closeCursor();
-
-                // $inspect_id = $this->myConnect->lastInsertId();//ไม่ใช้แล้ว  ให้เปลี่ยนไปใช้ po_id แทนทั้งหมด
-
                 // INSERT INTO po_period
                 $sql = <<<EOD
-                        INSERT INTO `po_period`(`po_id`, `period`, `interim_payment`, `interim_payment_percent`, `remark`) 
-                        VALUES (:po_id, :period, :interim_payment, :interim_payment_percent, :remark)
+                        INSERT INTO `po_period`(`period_id`, `po_id`,`period_number`, `interim_payment`, `interim_payment_percent`, `remark`) 
+                        VALUES (:period_id, :po_id, :period_number, :interim_payment, :interim_payment_percent, :remark)
                     EOD;
                 $stmtPoPeriod = $this->myConnect->prepare($sql);
 
-                // INSERT INTO inspect_period
+                // INSERT INTO inspection_periods
                 $sql = <<<EOD
-                        INSERT INTO `inspect_period`(`po_id`,`po_period_id`, `period`, `plan_status`, `is_paid`, `is_retention`, `workflow_id`, `current_status`, `current_level`) 
-                        VALUES (:po_id, :po_period_id, :period, :plan_status, :is_paid, :is_retention, :workflow_id, :current_status, :current_level)
+                        INSERT INTO `inspection_periods`(`period_id`, `plan_status`, `is_paid`, `is_retention`, `workflow_id`, `current_status`, `current_level`) 
+                        VALUES (:period_id, :plan_status, :is_paid, :is_retention, :workflow_id, :current_status, :current_level)
                     EOD;
                 $stmtInspectPeriod = $this->myConnect->prepare($sql);
 
                 // $stmtPoPeriod->bindParam(':id', $headerId, PDO::PARAM_STR);
                 for ($i = 0; $i < $number_of_period; $i++) {
+                    $stmtPoPeriod->bindParam(':period_id', $period_id, PDO::PARAM_INT);
                     $stmtPoPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                    $stmtPoPeriod->bindParam(':period', $periods[$i], PDO::PARAM_STR);
+                    $stmtPoPeriod->bindParam(':period_number', $period_numbers[$i], PDO::PARAM_STR);
                     $stmtPoPeriod->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
                     $stmtPoPeriod->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
                     $stmtPoPeriod->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
@@ -190,7 +175,7 @@ class Po extends Connection
                     $stmtPoPeriod->execute();
                     $stmtPoPeriod->closeCursor();
 
-                    $po_period_id = $this->myConnect->lastInsertId();
+                    $period_id = $this->myConnect->lastInsertId();
 
                     $plan_status = 1;
                     $is_paid = 0;
@@ -199,9 +184,7 @@ class Po extends Connection
                     $current_status = 1;
                     $current_level = 1; //จะใช้เป็นอะไร: level_order หรือ level_id
 
-                    $stmtInspectPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                    $stmtInspectPeriod->bindParam(':po_period_id', $po_period_id, PDO::PARAM_INT);
-                    $stmtInspectPeriod->bindParam(':period', $periods[$i], PDO::PARAM_STR);
+                    $stmtInspectPeriod->bindParam(':period_id', $period_id, PDO::PARAM_INT);
                     $stmtInspectPeriod->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
                     $stmtInspectPeriod->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
                     $stmtInspectPeriod->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
@@ -243,15 +226,15 @@ class Po extends Connection
 
             // parameters ในส่วน po_main
             $po_id = $getData['po_id'];
-            $po_no = $getData['po_no'];
+            $po_number = $getData['po_number'];
             $project_name = $getData['project_name'];
             $supplier_id = $getData['supplier_id'];
             $location_id = $getData['location_id'];
             $working_name_th = $getData['working_name_th'];
             $working_name_en = $getData['working_name_en'];
             $is_include_vat = 1;
-            $contract_value_before = $getData['contract_value_before'];
             $contract_value = $getData['contract_value'];
+            $contract_value_before = $getData['contract_value_before'];
             $vat = $getData['vat'];
             $is_deposit = $getData['is_deposit'];
             $deposit_percent = $getData['deposit_percent'];
@@ -266,14 +249,17 @@ class Po extends Connection
             $working_day =  $interval->days + 1;
             $create_by = $_SESSION['user_code'];
 
+            $remain_value_interim_payment = $contract_value;
+            $inspect_status = 1; //1:รอตรวจ
+
             // parameters ในส่วน po_period
-            $periods = $getData['period'];
+            $periods = $getData['period_number'];
             $numberOfRows = count($periods); //นับจำนวนแถวทั้งหมดที่มีการเพิ่มหรือลบ
             $interim_payments = $getData['interim_payment'];
             $interim_payment_percents = $getData['interim_payment_percent'];
             $remarks = $getData['remark'];
             $cruds = $getData['crud'];
-            $po_period_ids = $getData['po_period_id'];
+            $period_id = $getData['period_id'];
 
             //ตัวแปร array สำหรับเก็บค่า index ของ element(class crud) แยกตาม value ของ crud ลงในแต่ละ array
             $insert_indexs = [];
@@ -318,7 +304,7 @@ class Po extends Connection
                         WHERE `po_id` = :po_id
                     EOD;
             $stmt = $this->myConnect->prepare($sql);
-            // $stmt->bindParam(':po_no', $po_no, PDO::PARAM_STR);
+            // $stmt->bindParam(':po_number', $po_number, PDO::PARAM_STR);
             $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
             $stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
             $stmt->bindParam(':supplier_id', $supplier_id,  PDO::PARAM_INT);
@@ -336,42 +322,28 @@ class Po extends Connection
             $stmt->bindParam(':working_date_to', $working_date_to, PDO::PARAM_STR);
             $stmt->bindParam(':working_day', $working_day, PDO::PARAM_INT);
             $stmt->bindParam(':number_of_period', $number_of_period, PDO::PARAM_INT);
+            $stmt->bindParam(':remain_value_interim_payment', $remain_value_interim_payment, PDO::PARAM_STR);
+            $stmt->bindParam(':inspect_status', $inspect_status, PDO::PARAM_INT);
 
             if ($stmt->execute()) {
                 $stmt->closeCursor();
 
-                // UPDATE inspect_main
-                $remain_value_interim_payment = $contract_value;
-                $inspect_status = 1; //1:รอตรวจ
-                $sql = <<<EOD
-                        UPDATE `inspect_main`
-                        SET `remain_value_interim_payment` = :remain_value_interim_payment
-                        , `inspect_status` = :inspect_status
-                        WHERE `po_id` = :po_id 
-                    EOD;
-                $stmtInspectMain = $this->myConnect->prepare($sql);
-                $stmtInspectMain->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                $stmtInspectMain->bindParam(':remain_value_interim_payment', $remain_value_interim_payment, PDO::PARAM_STR);
-                $stmtInspectMain->bindParam(':inspect_status', $inspect_status, PDO::PARAM_INT);
-
-                $stmtInspectMain->execute();
-                $stmtInspectMain->closeCursor();
-
                 // INSERT po_period
                 $sql = <<<EOD
-                            INSERT INTO `po_period`(`po_id`, `period`, `interim_payment`, `interim_payment_percent`, `remark`) 
-                            VALUES (:po_id, :period, :interim_payment, :interim_payment_percent, :remark)
+                            INSERT INTO `po_period`(`period_id`, `po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `period_status`, `remark`) 
+                            VALUES (:period_id, :po_id, :period_number, :interim_payment, :interim_payment_percent, :period_status, :remark)
                         EOD;
                 $stmtPoPeriod = $this->myConnect->prepare($sql);
 
-                // INSERT inspect_period
+                // INSERT inspection_periods
                 $sql = <<<EOD
-                            INSERT INTO `inspect_period`(`po_id`,`po_period_id`, `period`, `plan_status`, `is_paid`, `is_retention`, `workflow_id`, `current_status`, `current_level`) 
-                            VALUES (:po_id, :po_period_id, :period, :plan_status, :is_paid, :is_retention, :workflow_id, :current_status, :current_level)
+                            INSERT INTO `inspection_periods`(`period_id`, `plan_status`, `is_paid`, `is_retention`, `workflow_id`, `current_status`, `current_level`) 
+                            VALUES (:period_id, :plan_status, :is_paid, :is_retention, :workflow_id, :current_status, :current_level)
                         EOD;
                 $stmtInspectPeriod = $this->myConnect->prepare($sql);
 
                 $plan_status = 1;
+                $period_status = 1;
                 $is_paid = 0;
                 $is_retention = 0;
                 $workflow_id = 1;
@@ -383,15 +355,16 @@ class Po extends Connection
                     $stmtPoPeriod->bindParam(':period', $periods[$i], PDO::PARAM_STR);
                     $stmtPoPeriod->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
                     $stmtPoPeriod->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
+                    $stmtPoPeriod->bindParam(':period_status', $period_status, PDO::PARAM_INT);
                     $stmtPoPeriod->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
 
                     $stmtPoPeriod->execute();
                     $stmtPoPeriod->closeCursor();
 
-                    $po_period_id = $this->myConnect->lastInsertId();
+                    $inspection_id = $this->myConnect->lastInsertId();
 
                     $stmtInspectPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                    $stmtInspectPeriod->bindParam(':po_period_id', $po_period_id, PDO::PARAM_INT);
+                    $stmtInspectPeriod->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
                     $stmtInspectPeriod->bindParam(':period', $periods[$i], PDO::PARAM_STR);
                     $stmtInspectPeriod->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
                     $stmtInspectPeriod->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
@@ -411,7 +384,7 @@ class Po extends Connection
                             , `interim_payment_percent` = :interim_payment_percent
                             , `remark` = :remark
                             WHERE `po_id` = :po_id
-                                AND `po_period_id` = :po_period_id
+                                AND `period_id` = :period_id
                         EOD;
                 $stmtPoPeriod = $this->myConnect->prepare($sql);
 
@@ -424,7 +397,7 @@ class Po extends Connection
                             , `current_status` = :current_status
                             , `current_level` = :current_level
                             WHERE `po_id` = :po_id
-                                AND `po_period_id` = :po_period_id
+                                AND `period_id` = :period_id
                         EOD;
                 $stmtInspectPeriod = $this->myConnect->prepare($sql);
 
@@ -433,13 +406,13 @@ class Po extends Connection
                     $stmtPoPeriod->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
                     $stmtPoPeriod->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
                     $stmtPoPeriod->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
-                    $stmtPoPeriod->bindParam(':po_period_id', $po_period_ids[$i], PDO::PARAM_INT);
+                    $stmtPoPeriod->bindParam(':period_id', $period_id[$i], PDO::PARAM_INT);
 
                     $stmtPoPeriod->execute();
                     $stmtPoPeriod->closeCursor();
 
                     $stmtInspectPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                    $stmtInspectPeriod->bindParam(':po_period_id', $po_period_ids[$i], PDO::PARAM_INT);
+                    $stmtInspectPeriod->bindParam(':period_id', $period_id[$i], PDO::PARAM_INT);
                     $stmtInspectPeriod->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
                     $stmtInspectPeriod->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
                     $stmtInspectPeriod->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
@@ -455,26 +428,26 @@ class Po extends Connection
                 $sql = <<<EOD
                             DELETE FROM `po_period`
                             WHERE `po_id` = :po_id
-                                AND `po_period_id` = :po_period_id
+                                AND `period_id` = :period_id
                         EOD;
                 $stmtPoPeriod = $this->myConnect->prepare($sql);
 
                 $sql = <<<EOD
                             DELETE FROM `inspect_period`
                             WHERE `po_id` = :po_id
-                                AND `po_period_id` = :po_period_id
+                                AND `period_id` = :period_id
                         EOD;
                 $stmtInspectPeriod = $this->myConnect->prepare($sql);
 
                 foreach ($delete_indexs as $i) {
                     $stmtPoPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                    $stmtPoPeriod->bindParam(':po_period_id', $po_period_ids[$i], PDO::PARAM_STR);
+                    $stmtPoPeriod->bindParam(':period_id', $period_id[$i], PDO::PARAM_STR);
 
                     $stmtPoPeriod->execute();
                     $stmtPoPeriod->closeCursor();
 
                     $stmtInspectPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                    $stmtInspectPeriod->bindParam(':po_period_id', $po_period_ids[$i], PDO::PARAM_STR);
+                    $stmtInspectPeriod->bindParam(':period_id', $period_id[$i], PDO::PARAM_STR);
 
                     $stmtInspectPeriod->execute();
                     $stmtInspectPeriod->closeCursor();
@@ -517,7 +490,7 @@ class Po extends Connection
             $stmt = $this->myConnect->prepare($sql);
             $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             $sql = <<<EOD
                     DELETE FROM `po_main` 
                     WHERE po_id = :po_id;
@@ -525,9 +498,6 @@ class Po extends Connection
             $stmt = $this->myConnect->prepare($sql);
             $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
             $stmt->execute();
-
-
-
         } catch (PDOException $e) {
             echo 'error';
         }

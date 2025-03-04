@@ -49,11 +49,11 @@ $(document).ready(function () {
   $(document).on("click", ".btnDelete", function (e) {
     e.preventDefault();
     const po_id = $(this).data("id");
-    const po_no = $(this).parents("tr").find("a:first").data("id");
+    const po_number = $(this).parents("tr").find("a:first").data("id");
 
     Swal.fire({
       title: "Are you sure?",
-      text: `You want to delete PO NO: ${po_no}!`,
+      text: `You want to delete PO NO: ${po_number}!`,
       icon: "warning",
       showCancelButton: true,
       cancelButtonColor: "gray",
@@ -134,9 +134,9 @@ $(document).ready(function () {
     // $(".content-period").removeClass('d-none').addClass('d-flex');
 
     let po_id = $(this).parents("tr").attr("po-id"); //$(this).closest("tr")
-    let po_no = $(this).parents("tr").find("a:first").html();
+    let po_number = $(this).parents("tr").find("a:first").html();
     // let po_id = $(this).closest('tr').attr('po-id');
-    $(".card-title").html(po_no);
+    $(".card-title").html(po_number);
 
     $.ajax({
       url: "po_crud.php",
@@ -186,14 +186,14 @@ $(document).ready(function () {
     // console.log($(".firstTr:last").find(".period:last").val());
         // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
     // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
-    period = $(".firstTr[crud!='d']:last").find(".period:last").val();
+    period = $(".firstTr[crud!='d']:last").find(".period_number:last").val();
     period++;
     $(".firstTr[crud!='d']:last")
       .clone(false)
       .attr("crud", "i")
       .removeClass("d-none")
 
-      .find(".period:last")
+      .find(".period_number:last")
       .val(period)
       .end()
 
@@ -209,7 +209,7 @@ $(document).ready(function () {
       .val("")
       .end()
 
-      .find(".po_period_id:last")
+      .find(".period_id:last")
       .val("")
       .end()
 

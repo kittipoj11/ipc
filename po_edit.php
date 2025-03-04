@@ -68,7 +68,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-6 d-flex">
-          <h6 class="m-1 fw-bold"><?= $rs['po_no'] ." : " . $rs['supplier_id'] . " - " . $rs['supplier_name']?></h6>
+          <h6 class="m-1 fw-bold"><?= $rs['po_number'] ." : " . $rs['supplier_id'] . " - " . $rs['supplier_name']?></h6>
         </div>
         <!-- /.container-fluid -->
       </section>
@@ -86,8 +86,8 @@ require_once 'auth.php';
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
-                        <label for="po_no" class="input-group-text">เลขที่ PO</label>
-                        <input type="text" class="form-control" name="po_no" id="po_no" value=<?= $rs['po_no'] ?>>
+                        <label for="po_number" class="input-group-text">เลขที่ PO</label>
+                        <input type="text" class="form-control" name="po_number" id="po_number" value=<?= $rs['po_number'] ?>>
                       </div>
                     </div>
 
@@ -214,7 +214,7 @@ require_once 'auth.php';
                               <th class="p-1" width="10%">คิดเป็น(%)</th>
                               <th class="p-1">เงื่อนไขการจ่ายเงิน</th>
                               <th class="p-1" width="5%">Crud</th>
-                              <th class="p-1 d-nonex" width="5%">po_period_id</th> 
+                              <th class="p-1 d-nonex" width="5%">period_id</th> 
                             </tr>
                           </thead>
                           
@@ -224,7 +224,7 @@ require_once 'auth.php';
 
                             <tr class="firstTr" crud="s">
                               <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                              <td class="input-group-sm p-0"><input type="number" name="period[]" class="form-control period" value="<?php echo isset($row['period']) ? htmlspecialchars($row['period']) : ''; ?>" readonly>
+                              <td class="input-group-sm p-0"><input type="number" name="period_number[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>
                               </td>
                               <td class="input-group-sm p-0"><input type="number" name="interim_payment[]" class="form-control interim_payment" value="<?php echo isset($row['interim_payment']) ? htmlspecialchars($row['interim_payment']) : ''; ?>">
                               </td>
@@ -236,7 +236,7 @@ require_once 'auth.php';
                               <td class="input-group-sm p-0">
                               <input type="text" name="crud[]" class="form-control crud" value="s">
                               </td>
-                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="po_period_id[]" class="form-control po_period_id" value="<?php echo isset($row['po_period_id']) ? htmlspecialchars($row['po_period_id']) : ''; ?>" readonly></td>
+                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="period_id[]" class="form-control period_id" value="<?php echo isset($row['period_id']) ? htmlspecialchars($row['period_id']) : ''; ?>" readonly></td>
                             </tr>
                             <?php } ?>
                           </tbody>

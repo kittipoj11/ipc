@@ -50,7 +50,6 @@ require_once 'auth.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
     $po = new Po;
-    $rs = $po->getAllRecord();
 
     $supplier = new Supplier;
     $supplier_rs = $supplier->getAllRecord();
@@ -82,8 +81,8 @@ require_once 'auth.php';
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
-                        <label for="po_no" class="input-group-text">เลขที่ PO</label>
-                        <input type="text" class="form-control" name="po_no" id="po_no">
+                        <label for="po_number" class="input-group-text">เลขที่ PO</label>
+                        <input type="text" class="form-control" name="po_number" id="po_number">
                       </div>
                     </div>
 
@@ -132,7 +131,7 @@ require_once 'auth.php';
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
                         <label for="contract_value_before" class="input-group-text">PO ไม่รวม VAT</label>
-                        <input type="text" class="form-control" name="contract_value_before" id="contract_value_before">
+                        <input type="number" class="form-control" name="contract_value_before" id="contract_value_before">
                       </div>
 
                       <div class="col-4 input-group input-group-sm">
@@ -142,7 +141,7 @@ require_once 'auth.php';
 
                       <div class="col-2 input-group input-group-sm">
                         <label for="vat" class="input-group-text">VAT</label>
-                        <input type="text" class="form-control" name="vat" id="vat">
+                        <input type="number" class="form-control" name="vat" id="vat">
                       </div>
 
                       <div class="col-2 input-group input-group-sm">
@@ -210,20 +209,20 @@ require_once 'auth.php';
                           <tbody id="tableBody">
                             <tr class="firstTr">
                               <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                              <td class="input-group-sm p-0"><input type="number" name="period[]" class="form-control period" value="1" readonly>
+                              <td class="input-group-sm p-0"><input type="number" name="period_numbers[]" class="form-control period_number" value="1" readonly>
                               </td>
-                              <td class="input-group-sm p-0"><input type="number" name="interim_payment[]" class="form-control interim_payment" require>
+                              <td class="input-group-sm p-0"><input type="number" name="interim_payments[]" class="form-control interim_payment" require>
                               </td>
-                              <td class="input-group-sm p-0"><input type="number" name="interim_payment_percent[]" class="form-control interim_payment_percent">
+                              <td class="input-group-sm p-0"><input type="number" name="interim_payment_percents[]" class="form-control interim_payment_percent">
                               </td>
                               <td class="input-group-sm p-0">
-                                <input type="text" name="remark[]" class="form-control remark">
+                                <input type="text" name="remarks[]" class="form-control remark">
                               </td>
                               <td class="p-1 align-content-center d-none">
                                 <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-trash"></i></a>
                                 <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-cross-circle"></i></a>
                               </td>
-                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="po_period_id[]" class="form-control po_period_id" readonly></td>
+                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="period_id[]" class="form-control period_id" readonly></td>
                             </tr>
                           </tbody>
                         </table>

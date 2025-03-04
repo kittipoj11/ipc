@@ -50,8 +50,8 @@ require_once 'auth.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
     $po = new Po;
-    $rs = $po->getAllRecord();
-    $rsPeriod = $po->getPeriodByPoId(0);
+    $rsPoMain = $po->getAllRecord();
+    $rsPoPeriod = $po->getPeriodByPoId(0);
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -96,11 +96,11 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody">
-                      <?php foreach ($rs as $row) {
+                      <?php foreach ($rsPoMain as $row) {
                         $html = <<<EOD
                                         <tr data-id='{$row['po_id']}'>
                                             <td class="tdMain p-0 d-none">{$row['po_id']}</td>
-                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto' title='Edit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_no']}'>{$row['po_no']}</a></td>
+                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='Edit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_number']}'>{$row['po_number']}</a></td>
                                             <td class="tdMain p-0">{$row['project_name']}</td>
                                             <td class="tdMain p-0">{$row['supplier_name']}</td>
                                             <td class="tdMain p-0">{$row['location_name']}</td>
@@ -157,7 +157,7 @@ require_once 'auth.php';
                             </tr>
                           </thead>
                     <tbody id="tbody-period">
-                      <!-- < ?php foreach ($rsPeriod as $row) {
+                      <!-- < ?php foreach ($rsPoPeriod as $row) {
                         $html = <<<EOD
                                         <tr>
                                             <td class="p-0 d-none">{$row['po_period_id']}</td>

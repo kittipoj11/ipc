@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
   $(document).on("click", "a.po_no", function (e) {
       e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
       const po_id = $(this).closest("tr").data("id");

@@ -45,15 +45,15 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
-  let period;
+  let period_number;
   $("#btnAdd").click(function () {
-    // console.log($(".firstTr:last").find(".period:last").val());
-    period = $(".firstTr:last").find(".period:last").val();
-    period++;
+    // console.log($(".firstTr:last").find(".period_number:last").val());
+    period_number = $(".firstTr:last").find(".period_number:last").val();
+    period_number++;
     $(".firstTr:last")
       .clone(false)
-      .find(".period:last")
-      .val(period)
+      .find(".period_number:last")
+      .val(period_number)
       // .attr("id", "row" + i + "")
       .end()
 
@@ -96,13 +96,14 @@ $(document).ready(function () {
   });
 
   $("#btnDeleteLast").click(function () {
-    let period;
+    let period_number;
     // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tableBody
     // $("#tableBody").find("tr:not(:first):last").remove();
     $("#tableBody tr:not(:first):last").remove();
   });
 
   // $(".btnDeleteThis").click(function() {
+  // สำหรับใช้กับปุ่มที่อยู่ภายใน <td>
   $(document).on("click", ".btnDeleteThis", function () {
     // ส่วนสำหรับการลบ
     // let row_id = $(this).attr("iid");

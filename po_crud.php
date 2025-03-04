@@ -4,7 +4,7 @@
 require_once 'config.php';
 require_once 'class/po_class.php';
 
-// $_SESSION['_POST'] = $_POST;
+$_SESSION['_POST'] = $_POST;
 // if (isset($_REQUEST['submit'])) {
     $obj = new Po();
     // print_r($_REQUEST);
@@ -56,8 +56,8 @@ function createPeriodTable($getRs)
         foreach ($rs as $row) {
             $html .= <<<EOD
                             <tr>
-                                <td class="p-0 d-none">{$row['po_period_id']}</td>
-                                <td class="text-center py-0 px-1"><a class='link-opacity-100 pe-auto' style='margin: 0px 5px 5px 5px'>{$row['period']}</a></td>
+                                <td class="p-0 d-none">{$row['period_id']}</td>
+                                <td class="text-center py-0 px-1"><a class='link-opacity-100 pe-auto' style='margin: 0px 5px 5px 5px'>{$row['period_number']}</a></td>
                                 <td class="text-right py-0 px-1">{$row['interim_payment']}</td>
                                 <td class="text-right py-0 px-1">{$row['interim_payment_percent']}</td>
                                 <td class="text-left py-0 px-1">{$row['remark']}</td>

@@ -256,13 +256,12 @@ require_once 'auth.php';
                       </div>
                     </div>
 
-
                   </div>
 
                 </div>
 
                 <div class="card border border-1 border-dark m-1" id="div_open_area_schedule">
-                  <h6 class="m-1 fw-bold">รายการงวดงาน</h6>
+                  <h6 class="m-1 fw-bold">รายการรายละเอียดการตรวจสอบ</h6>
                   <!-- <div class="card-header" style="display: flex;"> -->
                   <div class="m-1">
                     <a id="btnAdd" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="right" title="เพิ่มงวดงาน">
@@ -282,10 +281,9 @@ require_once 'auth.php';
                     <table class="table table-bordered justify-content-center text-center">
                       <thead>
                         <tr>
-                          <th class="p-1" width="5%">งวดงาน</th>
-                          <th class="p-1" width="20%">จำนวนเงิน</th>
-                          <th class="p-1" width="10%">คิดเป็น(%)</th>
-                          <th class="p-1">เงื่อนไขการจ่ายเงิน</th>
+                          <th class="p-1" width="5%">ลำดับที่</th>
+                          <th class="p-1" width="20%">รายละเอียดการตรวจสอบ</th>
+                          <th class="p-1">หมายเหตุ</th>
                           <th class="p-1" width="5%">Crud</th>
                           <th class="p-1 d-nonex" width="5%">po_period_id</th>
                         </tr>
