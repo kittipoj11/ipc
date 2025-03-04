@@ -87,7 +87,7 @@ require_once 'auth.php';
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
                         <label for="po_number" class="input-group-text">เลขที่ PO</label>
-                        <input type="text" class="form-control" name="po_number" id="po_number" value=<?= $rs['po_number'] ?>>
+                        <input type="text" class="form-control" name="po_number" id="po_number" value=<?= $rs['po_number'] ?> disabled>
                       </div>
                     </div>
 
@@ -224,19 +224,19 @@ require_once 'auth.php';
 
                             <tr class="firstTr" crud="s">
                               <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                              <td class="input-group-sm p-0"><input type="number" name="period_number[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>
+                              <td class="input-group-sm p-0"><input type="number" name="period_numbers[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>
                               </td>
-                              <td class="input-group-sm p-0"><input type="number" name="interim_payment[]" class="form-control interim_payment" value="<?php echo isset($row['interim_payment']) ? htmlspecialchars($row['interim_payment']) : ''; ?>">
+                              <td class="input-group-sm p-0"><input type="number" name="interim_payments[]" class="form-control interim_payment" value="<?php echo isset($row['interim_payment']) ? htmlspecialchars($row['interim_payment']) : ''; ?>">
                               </td>
-                              <td class="input-group-sm p-0"><input type="number" name="interim_payment_percent[]" class="form-control interim_payment_percent" value="<?php echo isset($row['interim_payment_percent']) ? htmlspecialchars($row['interim_payment_percent']) : ''; ?>">
-                              </td>
-                              <td class="input-group-sm p-0">
-                                <input type="text" name="remark[]" class="form-control remark" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">
+                              <td class="input-group-sm p-0"><input type="number" name="interim_payment_percents[]" class="form-control interim_payment_percent" value="<?php echo isset($row['interim_payment_percent']) ? htmlspecialchars($row['interim_payment_percent']) : ''; ?>">
                               </td>
                               <td class="input-group-sm p-0">
-                              <input type="text" name="crud[]" class="form-control crud" value="s">
+                                <input type="text" name="remarks[]" class="form-control remark" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">
                               </td>
-                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="period_id[]" class="form-control period_id" value="<?php echo isset($row['period_id']) ? htmlspecialchars($row['period_id']) : ''; ?>" readonly></td>
+                              <td class="input-group-sm p-0">
+                              <input type="text" name="cruds[]" class="form-control crud" value="s">
+                              </td>
+                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="period_ids[]" class="form-control period_id" value="<?php echo isset($row['period_id']) ? htmlspecialchars($row['period_id']) : ''; ?>" readonly></td>
                             </tr>
                             <?php } ?>
                           </tbody>

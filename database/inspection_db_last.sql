@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 03, 2025 at 11:51 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.1.17
+-- Generation Time: Mar 04, 2025 at 05:00 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -107,54 +107,12 @@ INSERT INTO `departments` (`department_id`, `department_name`, `is_deleted`) VAL
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inspect_approvals`
+-- Table structure for table `inspection_periods`
 --
 
-CREATE TABLE `inspect_approvals` (
-  `approval_id` int(10) UNSIGNED NOT NULL,
-  `inspect_id` int(10) UNSIGNED DEFAULT NULL,
-  `period` int(11) DEFAULT NULL,
-  `level_id` int(10) UNSIGNED DEFAULT NULL,
-  `approver_id` int(10) UNSIGNED DEFAULT NULL,
-  `approval_status_id` int(10) UNSIGNED DEFAULT NULL,
-  `approval_date` datetime DEFAULT NULL,
-  `comments` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `inspect_main`
---
-
-CREATE TABLE `inspect_main` (
-  `inspect_id` int(10) UNSIGNED NOT NULL,
-  `po_id` int(10) UNSIGNED DEFAULT NULL,
-  `remain_value_interim_payment` decimal(19,2) DEFAULT NULL,
-  `total_retention_value` decimal(19,2) DEFAULT NULL,
-  `inspect_status` int(10) UNSIGNED DEFAULT NULL,
-  `create_by` int(10) UNSIGNED DEFAULT NULL,
-  `create_date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `inspect_main`
---
-
-INSERT INTO `inspect_main` (`inspect_id`, `po_id`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `create_by`, `create_date`) VALUES
-(1, 1, 869161.00, NULL, 1, NULL, NULL),
-(2, 2, 107000.00, NULL, 1, 5389, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `inspect_period`
---
-
-CREATE TABLE `inspect_period` (
-  `po_period_id` int(10) UNSIGNED NOT NULL,
-  `po_id` int(10) UNSIGNED DEFAULT NULL,
-  `period` int(11) DEFAULT NULL,
+CREATE TABLE `inspection_periods` (
+  `inspection_id` int(10) UNSIGNED NOT NULL,
+  `period_id` int(11) DEFAULT NULL,
   `workload_planned_percent` decimal(5,2) DEFAULT NULL,
   `workload_actual_completed_percent` decimal(5,2) DEFAULT NULL,
   `workload_remaining_percent` decimal(5,2) DEFAULT NULL,
@@ -176,38 +134,44 @@ CREATE TABLE `inspect_period` (
   `current_level` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
---
--- Dumping data for table `inspect_period`
---
-
-INSERT INTO `inspect_period` (`po_period_id`, `po_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_level`) VALUES
-(1, 1, 1, 30.00, 30.00, 70.00, 1.00, NULL, 1.00, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
-(17, 2, 1, NULL, NULL, NULL, 1.00, NULL, 2.00, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
-(20, 1, 2, 60.00, 60.00, 40.00, 3.00, NULL, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
-(21, 1, 3, 100.00, 100.00, 0.00, 4.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
-(22, 2, 2, NULL, NULL, NULL, 5.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1);
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inspect_period_detail`
+-- Table structure for table `inspection_period_details`
 --
 
-CREATE TABLE `inspect_period_detail` (
-  `inspect_period_detail_id` int(10) UNSIGNED NOT NULL,
-  `inspect_period_id` int(10) UNSIGNED DEFAULT NULL,
+CREATE TABLE `inspection_period_details` (
+  `rec_id` int(10) UNSIGNED NOT NULL,
+  `inspection_id` int(10) UNSIGNED DEFAULT NULL,
   `order_no` int(11) DEFAULT NULL,
   `details` text DEFAULT NULL,
   `remark` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Dumping data for table `inspect_period_detail`
+-- Dumping data for table `inspection_period_details`
 --
 
-INSERT INTO `inspect_period_detail` (`inspect_period_detail_id`, `inspect_period_id`, `order_no`, `details`, `remark`) VALUES
+INSERT INTO `inspection_period_details` (`rec_id`, `inspection_id`, `order_no`, `details`, `remark`) VALUES
 (1, 1, 1, 'งานเดินท่อ', NULL),
 (2, 1, 2, 'งานติดตั้งโคมไฟ LED', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inspect_approvals`
+--
+
+CREATE TABLE `inspect_approvals` (
+  `approval_id` int(10) UNSIGNED NOT NULL,
+  `inspect_id` int(10) UNSIGNED DEFAULT NULL,
+  `period` int(11) DEFAULT NULL,
+  `level_id` int(10) UNSIGNED DEFAULT NULL,
+  `approver_id` int(10) UNSIGNED DEFAULT NULL,
+  `approval_status_id` int(10) UNSIGNED DEFAULT NULL,
+  `approval_date` datetime DEFAULT NULL,
+  `comments` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -281,7 +245,7 @@ INSERT INTO `plan_status` (`plan_status_id`, `plan_status_name`, `is_deleted`) V
 
 CREATE TABLE `po_main` (
   `po_id` int(10) UNSIGNED NOT NULL,
-  `po_no` varchar(255) DEFAULT NULL,
+  `po_number` varchar(255) DEFAULT NULL,
   `project_name` varchar(255) DEFAULT NULL,
   `supplier_id` int(10) UNSIGNED DEFAULT NULL,
   `location_id` int(10) UNSIGNED DEFAULT NULL,
@@ -297,21 +261,13 @@ CREATE TABLE `po_main` (
   `working_date_from` date DEFAULT NULL,
   `working_date_to` date DEFAULT NULL,
   `working_day` int(11) DEFAULT NULL,
-  `remain_value_interim_payment` decimal(19,2) DEFAULT NULL,
-  `total_retention_value` decimal(19,2) DEFAULT NULL,
-  `inspect_status` int(10) UNSIGNED DEFAULT NULL,
   `create_by` varchar(255) DEFAULT NULL,
   `create_date` datetime DEFAULT NULL,
-  `number_of_period` int(11) NOT NULL DEFAULT 0
+  `number_of_period` int(11) NOT NULL DEFAULT 0,
+  `remain_value_interim_payment` decimal(9,2) NOT NULL,
+  `total_retention_value` decimal(9,2) NOT NULL,
+  `inspect_status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `po_main`
---
-
-INSERT INTO `po_main` (`po_id`, `po_no`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`) VALUES
-(1, 'IMPO23020769', 'Statue of Load Indra Riding on Erawan Elephant', 1, 3, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 869161.00, 812300.00, 86861.00, NULL, 0.00, 0.00, '2025-02-01', '2025-02-08', 8, 'nathapats', '2025-01-15 10:03:35', 3),
-(2, 'IMP002', 'ข่าวช่องวันเสาร์-อาทิตย์', 1, 3, 'ซันเซต ๑', 'Sunset 1', 1, 107000.00, 100000.00, 7000.00, NULL, 10.00, 10700.00, '2025-02-01', '2025-02-08', 8, '05389', NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -320,56 +276,14 @@ INSERT INTO `po_main` (`po_id`, `po_no`, `project_name`, `supplier_id`, `locatio
 --
 
 CREATE TABLE `po_period` (
-  `po_period_id` int(10) UNSIGNED NOT NULL,
+  `period_id` int(10) UNSIGNED NOT NULL,
   `po_id` int(10) UNSIGNED DEFAULT NULL,
-  `period` int(11) DEFAULT NULL,
-  `workload_planned_percent` decimal(5,2) DEFAULT NULL,
-  `workload_actual_completed_percent` decimal(5,2) DEFAULT NULL,
-  `workload_remaining_percent` decimal(5,2) DEFAULT NULL,
+  `period_number` int(11) DEFAULT NULL,
   `interim_payment` decimal(19,2) DEFAULT NULL,
-  `interim_payment_percent` decimal(5,2) DEFAULT NULL,
-  `interim_payment_less_previous` decimal(19,2) DEFAULT NULL,
-  `interim_payment_less_previous_percent` decimal(5,2) DEFAULT NULL,
-  `interim_payment_accumulated` decimal(19,2) DEFAULT NULL,
-  `interim_payment_accumulated_percent` decimal(5,2) DEFAULT NULL,
-  `interim_payment_remain` decimal(19,2) DEFAULT NULL,
-  `interim_payment_remain_percent` decimal(5,2) DEFAULT NULL,
-  `retention_value` decimal(19,2) DEFAULT NULL,
+  `interim_payment_percent` decimal(4,2) NOT NULL,
+  `period_status` int(11) DEFAULT NULL,
   `remark` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `po_period`
---
-
-INSERT INTO `po_period` (`po_period_id`, `po_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `remark`) VALUES
-(1, 1, 1, NULL, NULL, NULL, 1.00, 1.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1'),
-(17, 2, 1, NULL, NULL, NULL, 10.00, 1.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'จ่าย QR'),
-(20, 1, 2, NULL, NULL, NULL, 2.00, 2.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'จ่าย QR'),
-(21, 1, 3, NULL, NULL, NULL, 3.00, 3.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'จ่าย QR'),
-(22, 2, 2, NULL, NULL, NULL, 20.00, 2.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'จ่าย QR');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `po_period_detail`
---
-
-CREATE TABLE `po_period_detail` (
-  `po_period_detail_id` int(10) UNSIGNED NOT NULL,
-  `po_period_id` int(10) UNSIGNED DEFAULT NULL,
-  `order_no` int(11) DEFAULT NULL,
-  `details` text DEFAULT NULL,
-  `remark` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `po_period_detail`
---
-
-INSERT INTO `po_period_detail` (`po_period_detail_id`, `po_period_id`, `order_no`, `details`, `remark`) VALUES
-(1, 1, 1, 'งานเดินท่อ', NULL),
-(2, 1, 2, 'งานติดตั้งโคมไฟ LED', NULL);
 
 -- --------------------------------------------------------
 
@@ -473,6 +387,20 @@ ALTER TABLE `departments`
   ADD PRIMARY KEY (`department_id`);
 
 --
+-- Indexes for table `inspection_periods`
+--
+ALTER TABLE `inspection_periods`
+  ADD PRIMARY KEY (`inspection_id`),
+  ADD KEY `plan_status` (`plan_status`);
+
+--
+-- Indexes for table `inspection_period_details`
+--
+ALTER TABLE `inspection_period_details`
+  ADD PRIMARY KEY (`rec_id`),
+  ADD KEY `inspect_period_id` (`inspection_id`);
+
+--
 -- Indexes for table `inspect_approvals`
 --
 ALTER TABLE `inspect_approvals`
@@ -481,29 +409,6 @@ ALTER TABLE `inspect_approvals`
   ADD KEY `level_id` (`level_id`),
   ADD KEY `approver_id` (`approver_id`),
   ADD KEY `approval_status_id` (`approval_status_id`);
-
---
--- Indexes for table `inspect_main`
---
-ALTER TABLE `inspect_main`
-  ADD PRIMARY KEY (`inspect_id`),
-  ADD KEY `po_id` (`po_id`),
-  ADD KEY `inspect_status` (`inspect_status`);
-
---
--- Indexes for table `inspect_period`
---
-ALTER TABLE `inspect_period`
-  ADD PRIMARY KEY (`po_period_id`),
-  ADD KEY `inspect_id` (`po_id`),
-  ADD KEY `plan_status` (`plan_status`);
-
---
--- Indexes for table `inspect_period_detail`
---
-ALTER TABLE `inspect_period_detail`
-  ADD PRIMARY KEY (`inspect_period_detail_id`),
-  ADD KEY `inspect_period_id` (`inspect_period_id`);
 
 --
 -- Indexes for table `inspect_status`
@@ -535,15 +440,8 @@ ALTER TABLE `po_main`
 -- Indexes for table `po_period`
 --
 ALTER TABLE `po_period`
-  ADD PRIMARY KEY (`po_period_id`),
+  ADD PRIMARY KEY (`period_id`),
   ADD KEY `po_id` (`po_id`);
-
---
--- Indexes for table `po_period_detail`
---
-ALTER TABLE `po_period_detail`
-  ADD PRIMARY KEY (`po_period_detail_id`),
-  ADD KEY `po_period_id` (`po_period_id`);
 
 --
 -- Indexes for table `roles`
@@ -588,22 +486,22 @@ ALTER TABLE `departments`
   MODIFY `department_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `inspection_periods`
+--
+ALTER TABLE `inspection_periods`
+  MODIFY `inspection_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
+-- AUTO_INCREMENT for table `inspection_period_details`
+--
+ALTER TABLE `inspection_period_details`
+  MODIFY `rec_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
 -- AUTO_INCREMENT for table `inspect_approvals`
 --
 ALTER TABLE `inspect_approvals`
   MODIFY `approval_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `inspect_main`
---
-ALTER TABLE `inspect_main`
-  MODIFY `inspect_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `inspect_period_detail`
---
-ALTER TABLE `inspect_period_detail`
-  MODIFY `inspect_period_detail_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `locations`
@@ -615,19 +513,13 @@ ALTER TABLE `locations`
 -- AUTO_INCREMENT for table `po_main`
 --
 ALTER TABLE `po_main`
-  MODIFY `po_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `po_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `po_period`
 --
 ALTER TABLE `po_period`
-  MODIFY `po_period_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
-
---
--- AUTO_INCREMENT for table `po_period_detail`
---
-ALTER TABLE `po_period_detail`
-  MODIFY `po_period_detail_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `period_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- Constraints for dumped tables

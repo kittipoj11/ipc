@@ -3,6 +3,7 @@ $(document).ready(function () {
   $(document).on("click", ".btnDelete", function (e) {
     e.preventDefault();
     // const po_id = $(this).data("id");
+    const tr = $(this).parents("tr");
     const po_id = $(this).parents("tr").data("id");
     const po_number = $(this).parents("tr").find("a:first").data("id");
 
@@ -51,8 +52,10 @@ $(document).ready(function () {
                 //                 `,
               }).then((result) => {
                 if (result.isConfirmed) {
-                  // window.location.href = "201open_area_schedule.php";
-                  window.location.reload(); //เปลี่ยนเป็นโหลด Table Body ใหม่เพื่อไม่ให้หน้าเพจกระพริบ
+                  tr.remove();
+                  $("#tbody-period").addClass('d-none');
+
+                  // window.location.reload(); //เปลี่ยนเป็นโหลด Table Body ใหม่เพื่อไม่ให้หน้าเพจกระพริบ
                 }
               });
             } else {
