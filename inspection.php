@@ -53,11 +53,11 @@ require_once 'auth.php';
     <!-- Main Content Start -->
     <?php
     require_once  'class/inspection_class.php';
-    // require_once  'class/po_class.php';
+    require_once  'class/po_class.php';
 
-    $inspection = new Inspection;
-    $rsInspection = $inspection->getMainAll();
-
+    $po = new Po;
+    $rsPoMain = $po->getAllRecord();
+    $rsInspectionPeriod = $po->getInspectionPeriod(0);
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -82,11 +82,11 @@ require_once 'auth.php';
 
               <div class="card">
                 <!-- <div class="card-header">
-                               <h3 class="card-title">po</h3>
+                               <h3 class="card-title">supplier</h3>
                            </div> -->
                 <!-- /.card-header -->
                 <div class="card-body p-0" id="card-body">
-                  <table id="main" class="table table-bordered table-striped table-sm">
+                  <table id="example1" class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
                         <th class="text-center p-1 d-none">#</th>
@@ -101,23 +101,23 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody">
-                      <?php foreach ($rsInspection as $row) {
+                      <?php foreach ($rsPoMain as $row) {
                         $html = <<<EOD
                                         <tr data-id='{$row['po_id']}'>
                                             <td class="tdMain p-0 d-none">{$row['po_id']}</td>
-                                            <td class="tdMain p-0"><a class="link-opacity-100 pe-auto po_no" title="View" style="margin: 0px 5px 5px 5px" data-id="{$row['po_no']}">{$row['po_no']}</a></td>
+                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='Edit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_number']}'>{$row['po_number']}</a></td>
                                             <td class="tdMain p-0">{$row['project_name']}</td>
                                             <td class="tdMain p-0">{$row['supplier_name']}</td>
                                             <td class="tdMain p-0">{$row['location_name']}</td>
                                             <td class="tdMain p-0">{$row['working_name_th']}</td>
-                                            <td class="tdMain p-0">{$row['contract_value']}</td>
-                                            <td class="tdMain p-0">{$row['number_of_period']}</td>
-                                            <td class="tdMain p-0 d-none" align='center'>
+                                            <td class="tdMain p-0 text-right">{$row['contract_value']}</td>
+                                            <td class="tdMain p-0 text-right">{$row['number_of_period']}</td>
+                                            <td class="tdMain p-0 action d-none" align='center'>
                                                 <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' data-toggle='modal'  data-placement='right' title='Edit' data-target='#editModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>
                                                         <i class='fa-regular fa-pen-to-square'></i>
                                                     </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' data-toggle='modal'  data-placement='right' title='Delete' data-target='#deleteModal' iid='{$row['po_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>
                                                         <i class='fa-regular fa-trash-can'></i>
                                                     </a>
                                                 </div>
@@ -154,8 +154,9 @@ require_once 'auth.php';
                   <table class="table table-bordered justify-content-center text-center" id="period">
                     <thead>
                       <tr>
-                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po-id</th>
-                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po-period-id</th>
+                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po_id</th>
+                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">period_id</th>
+                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">inspection_id</th>
                         <th class="text-center align-content-center p-1" rowspan="2" width="5%">งวดงาน</th>
                         <th class="text-center p-1" colspan="3">ปริมาณงาน</th>
                         <th class="text-center p-1" colspan="3">ยอดเบิกเงินงวด</th>

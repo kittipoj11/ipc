@@ -4,7 +4,7 @@
 require_once 'config.php';
 require_once 'class/po_class.php';
 
-$_SESSION['_POST'] = $_POST;
+// $_SESSION['_POST'] = $_POST;
 // if (isset($_REQUEST['submit'])) {
     $obj = new Po();
     // print_r($_REQUEST);
@@ -21,9 +21,12 @@ $_SESSION['_POST'] = $_POST;
     } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
         $rs = $obj->getRecordById($_REQUEST['plan_status_id']);
         echo json_encode($rs);
-    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
-        $rs = $obj->getPeriodByPoId($_REQUEST['po_id']);
+    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updateInspectionPeriod') {
+        $rs = $obj->updateInspectionPeriod($_REQUEST);
         createPeriodTable($rs);
+    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
+        $obj->updateData($_REQUEST);
+        // getAllRecord($obj);
     } else {
         // getAllRecord($obj);
     }

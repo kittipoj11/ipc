@@ -51,6 +51,7 @@ require_once 'auth.php';
     require_once  'class/location_class.php';
 
     $po_id=$_GET['po_id'];
+    
     $po = new Po;
     $rs = $po->getRecordById($po_id);
     $rsPeriod = $po->getPeriodByPoId($po_id);
@@ -220,8 +221,6 @@ require_once 'auth.php';
                           
                           <tbody id="tableBody">
                             <?php foreach ($rsPeriod as $row) { ?>
-                                
-
                             <tr class="firstTr" crud="s">
                               <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
                               <td class="input-group-sm p-0"><input type="number" name="period_numbers[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>

@@ -1,29 +1,21 @@
 <?php
+
 @session_start();
 
 require_once 'config.php';
-require_once 'class/inspection_class.php';
+require_once 'class/po_class.php';
 
-$_SESSION['_REQUEST'] = $_REQUEST;
+// $_SESSION['_REQUEST'] = $_REQUEST;
 // if (isset($_REQUEST['submit'])) {
 
-$obj = new Inspection();
+$obj = new Po();
 // print_r($_REQUEST);
 // exit;
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
-    $obj->insertData($_REQUEST);
-    // getAllRecord($obj);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
     $obj->updateData($_REQUEST);
     // getAllRecord($obj);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
-    $obj->deleteData($_REQUEST);
-    // getAllRecord($obj);
-// } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-//     $rs = $obj->getRecordById($_REQUEST['plan_status_id']);
-//     echo json_encode($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
-    $rs = $obj->getPeriodAll($_REQUEST['po_id']);
+    $rs = $obj->getInspectionPeriod($_REQUEST['po_id']);
     createPeriodTable($rs);
 } else {
     // getAllRecord($obj);
@@ -53,7 +45,7 @@ function createPeriodTable($getRs)
         // ส่วนของ #tbody-period
         // foreach ($rs as $row) {
         //     $html .= <<<EOD
-        //                     <tr data-id='{$row['po_period_id']}'>
+        //                     <tr data-id='{$row['period_id']}'>
         //                         <td class="tdPeriod text-center py-0 px-1"><a class='link-opacity-100 pe-auto' style='margin: 0px 5px 5px 5px'>{$row['period']}</a></td>
         //                         <td class="tdPeriod text-right py-0 px-1">{$row['workload_planned_percent']}</td>
         //                         <td class="tdPeriod text-right py-0 px-1">{$row['workload_actual_completed_percent']}</td>
@@ -68,10 +60,11 @@ function createPeriodTable($getRs)
 
         foreach ($rs as $row) {
             $html .= <<<EOD
-                      <tr data-id={$row['po_period_id']}>
+                      <tr data-id={$row['inspection_id']}>
                         <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_id" value="{$row['po_id']}" readonly></td>
-                        <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_period_id" value="{$row['po_period_id']}" readonly></td>
-                        <td class="tdPeriod text-right py-0 px-1"><a class="link-opacity-100 pe-auto period" style="margin: 0px 5px 5px 5px">{$row['period']}</a></td>
+                        <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right period_id" value="{$row['period_id']}" readonly></td>
+                        <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right inspection_id" value="{$row['inspection_id']}" readonly></td>
+                        <td class="tdPeriod text-right py-0 px-1"><a class="link-opacity-100 pe-auto period_number" style="margin: 0px 5px 5px 5px">{$row['period_number']}</a></td>
                         <td class="tdPeriod text-right py-0 px-1">{$row['workload_planned_percent']}</td>
                         <td class="tdPeriod text-right py-0 px-1">{$row['workload_actual_completed_percent']}</td>
                         <td class="tdPeriod text-right py-0 px-1">{$row['workload_remaining_percent']}</td>

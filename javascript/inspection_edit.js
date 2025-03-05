@@ -8,7 +8,7 @@ $(document).ready(function () {
       let data_sent = $("#myForm").serializeArray();
       data_sent.push({
         name: "action",
-        value: "update",
+        value: "updateInspectionPeriod",
       });
       // console.log(data_sent);
       // return;
@@ -33,7 +33,7 @@ $(document).ready(function () {
             // timer: 15000
           }).then((result) => {
             if (result.isConfirmed) {
-              window.location.href = "po.php";
+              window.location.href = "inspection.php";
               // window.location.reload();
             }
           });
@@ -75,52 +75,26 @@ $(document).ready(function () {
     });
   });
 });
-// document.getElementById("opt_event_id").addEventListener("change", complete_selection);
-// document
-//   .getElementById("building_id")
-//   .addEventListener("change", complete_selection);
-// document
-//   .getElementById("hall_id")
-//   .addEventListener("change", complete_selection);
-// document
-//   .getElementById("event_name")
-//   .addEventListener("keyup", complete_selection);
-
-// function complete_selection() {
-//   if (
-//     $("#event_name").val().trim().length === 0 ||
-//     $("#building_id option:selected").text() == "..." ||
-//     $("#hall_id option:selected").text() == "..."
-//   ) {
-//     $("#div_open_area_schedule").hide();
-//   } else {
-//     $("#div_open_area_schedule").show();
-//   }
-// }
 
 $(document).ready(function () {
-  let period;
+  let order_no;
 
   $("#btnAdd").click(function () {
-    // console.log($(".firstTr:last").find(".period:last").val());
+    // console.log($(".firstTr:last").find(".order_no:last").val());
         // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
     // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
-    period = $(".firstTr[crud!='d']:last").find(".period:last").val();
-    period++;
+    order_no = $(".firstTr[crud!='d']:last").find(".order_no:last").val();
+    order_no++;
     $(".firstTr[crud!='d']:last")
       .clone(false)
       .attr("crud", "i")
       .removeClass("d-none")
 
-      .find(".period:last")
-      .val(period)
+      .find(".order_no:last")
+      .val(order_no)
       .end()
 
-      .find(".interim_payment:last")
-      .val("")
-      .end()
-
-      .find(".interim_payment_percent:last")
+      .find(".detail:last")
       .val("")
       .end()
 
@@ -128,7 +102,7 @@ $(document).ready(function () {
       .val("")
       .end()
 
-      .find(".po_period_id:last")
+      .find(".rec_id:last")
       .val("")
       .end()
 
@@ -191,7 +165,7 @@ $(document).ready(function () {
     // history.go(-1);
     // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
     // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
-    window.location.href = "po.php";
+    window.location.href = "inspection.php";
   });
 
 });
