@@ -449,8 +449,8 @@ class Po extends Connection
 
                 // INSERT inspection_period_details
                 $sql = <<<EOD
-                            INSERT INTO `inspection_period_details`(`inspection_id`, `order_no`, `details`, `remark`) 
-                            VALUES (:inspection_id, :order_no, :details, :remark)
+                            INSERT INTO `inspection_period_details`(`inspection_id`) 
+                            VALUES (:inspection_id)
                         EOD;
                 $stmtInspectPeriodDetail = $this->myConnect->prepare($sql);
 
@@ -488,9 +488,9 @@ class Po extends Connection
                     $inspection_id = $this->myConnect->lastInsertId();
 
                     $stmtInspectPeriodDetail->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
-                    $stmtInspectPeriodDetail->bindParam(':order_no', $order_no,  PDO::PARAM_INT);
-                    $stmtInspectPeriodDetail->bindParam(':details', $details,  PDO::PARAM_STR);
-                    $stmtInspectPeriodDetail->bindParam(':remark', $remark,  PDO::PARAM_STR);
+                    // $stmtInspectPeriodDetail->bindParam(':order_no', $order_no,  PDO::PARAM_INT);
+                    // $stmtInspectPeriodDetail->bindParam(':details', $details,  PDO::PARAM_STR);
+                    // $stmtInspectPeriodDetail->bindParam(':remark', $remark,  PDO::PARAM_STR);
 
                     $stmtInspectPeriodDetail->execute();
                     $stmtInspectPeriodDetail->closeCursor();

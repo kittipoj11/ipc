@@ -6,42 +6,40 @@ require_once 'class/po_class.php';
 
 // $_SESSION['_POST'] = $_POST;
 // if (isset($_REQUEST['submit'])) {
-    $obj = new Po();
-    // print_r($_REQUEST);
-    // exit;
-    if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
-        $obj->insertData($_REQUEST);
-        // getAllRecord($obj);
-    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
-        $obj->updateData($_REQUEST);
-        // getAllRecord($obj);
-    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
-        $obj->deleteData($_REQUEST);
-        // getAllRecord($obj);
-    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-        $rs = $obj->getRecordById($_REQUEST['plan_status_id']);
-        echo json_encode($rs);
-    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updateInspectionPeriod') {
-        $rs = $obj->updateInspectionPeriod($_REQUEST);
-        createPeriodTable($rs);
-    } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
-        $obj->updateData($_REQUEST);
-        // getAllRecord($obj);
-    } else {
-        // getAllRecord($obj);
-    }
+$obj = new Po();
+// print_r($_REQUEST);
+// exit;
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
+    $obj->insertData($_REQUEST);
+    // getAllRecord($obj);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
+    $obj->updateData($_REQUEST);
+    // getAllRecord($obj);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
+    $obj->deleteData($_REQUEST);
+    // getAllRecord($obj);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
+    $rs = $obj->getRecordById($_REQUEST['plan_status_id']);
+    echo json_encode($rs);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updateInspectionPeriod') {
+    $rs = $obj->updateInspectionPeriod($_REQUEST);
+    // createPeriodTable($rs);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
+    $rs = $obj->getPeriodByPoId($_REQUEST['po_id']);
+    createPeriodTable($rs);
+} else {
+    // getAllRecord($obj);
+}
 // }
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function createPOTable($obj){
-
-}
+function createPOTable($obj) {}
 
 
 function createPeriodTable($getRs)
 {
     try {
-        $rs=$getRs;
-        $html='';
+        $rs = $getRs;
+        $html = '';
         // ถ้าต้องการให้ refresh Table ใหม่ทั้งหมด ให้ยกเลิก comment ส่วนนี้
         // $html .= <<<EOD
         //             <table id="example1" class="table table-bordered table-striped table-sm">
@@ -54,7 +52,7 @@ function createPeriodTable($getRs)
         //                 </thead>
         //                 <tbody id="tbody-period">
         //     EOD;
-        
+
         // ส่วนของ #tbody-period
         foreach ($rs as $row) {
             $html .= <<<EOD

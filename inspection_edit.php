@@ -11,7 +11,7 @@ require_once 'auth.php';
 
 <head>
 
-  <!-- < ?php include 'header_main.php'; ?> -->
+  <?php include 'header_main.php'; ?>
 
   <!-- Bootstrap 5.3.3 add by Poj-->
   <link rel="stylesheet" href="plugins/bootstrap-5.3.3/dist/css/bootstrap.min.css">
@@ -42,8 +42,8 @@ require_once 'auth.php';
   <!-- Page Wrapper -->
   <div class="wrapper">
 
-    <!-- < ?php include 'sidebar.php'; ?>
-    < ?php include 'navbar.php'; ?> -->
+    <?php include 'sidebar.php'; ?>
+    <?php include 'navbar.php'; ?>
 
     <!-- Main Content Start -->
     <?php

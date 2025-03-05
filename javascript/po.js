@@ -53,7 +53,7 @@ $(document).ready(function () {
               }).then((result) => {
                 if (result.isConfirmed) {
                   tr.remove();
-                  $("#tbody-period").addClass('d-none');
+                  $("#tbody-period").addClass("d-none");
 
                   // window.location.reload(); //เปลี่ยนเป็นโหลด Table Body ใหม่เพื่อไม่ให้หน้าเพจกระพริบ
                 }
@@ -91,19 +91,19 @@ $(document).ready(function () {
   //         window.location.href = "po_edit.php?id=" + po_id;
   //     });
   // });
-    $(document).on("click", ".btnEdit", function (e) {
-      const po_id = $(this).parents("tr").data("id");
-      window.location.href = "po_edit.php?po_id=" + po_id;
-    });
-  
-    // $(document).on("click", ".tdMain:has(a)", function (e) {
-    $(document).on("click", "a.po_number", function (e) {
-      e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
-      const po_id = $(this).parents("tr").data("id");
-      // window.location.href = "po_edit.php?po_id=" + po_id + "&href=inspect.php";
-      window.location.href = "po_edit.php?po_id=" + po_id;
-    });
-  
+  $(document).on("click", ".btnEdit", function (e) {
+    const po_id = $(this).parents("tr").data("id");
+    window.location.href = "po_edit.php?po_id=" + po_id;
+  });
+
+  // $(document).on("click", ".tdMain:has(a)", function (e) {
+  $(document).on("click", "a.po_number", function (e) {
+    e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
+    const po_id = $(this).parents("tr").data("id");
+    // window.location.href = "po_edit.php?po_id=" + po_id + "&href=inspect.php";
+    window.location.href = "po_edit.php?po_id=" + po_id;
+  });
+
   // $(".btnEdit").each(function () {
   //   // เลือกทุก element ที่มี class 'btnEdit'
   //   $(this).on("click", function (event) {
@@ -114,9 +114,7 @@ $(document).ready(function () {
   //     window.location.href = "po_edit.php?po_id=" + po_id;
   //   });
 
-
   // });
-
 });
 
 $(document).ready(function () {
