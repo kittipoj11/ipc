@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/supplier_class.php';
     $supplier = new Supplier;
-    $rs = $supplier->getAllRecord();
+    $rs = $supplier->getRecordAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

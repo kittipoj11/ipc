@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/location_class.php';
     $location = new Location;
-    $rs = $location->getAllRecord();
+    $rs = $location->getRecordAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/approval_workflow_class.php';
     $approval_workflow = new Approval_workflow;
-    $rs = $approval_workflow->getAllRecord();
+    $rs = $approval_workflow->getRecordAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

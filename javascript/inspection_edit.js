@@ -162,124 +162,12 @@ $(document).ready(function () {
   });
 
   $("#btnCancel").click(function () {
-    // history.go(-1);
+    window.history.back();
+    // window.location.href = "inspection_view.php";
+    // window.history.go(-1);
     // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
     // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
-    window.location.href = "inspection.php";
   });
 
 });
 
-
-// $(function () {
-  // Event: on change
-  // eventObject.on('change', function () {
-  //     console.log('eventObject');
-  //     let strEventId = $(this).val();
-  //     $.get('get_event.php?event_id=' + strEventId, function (data) {
-  //         let result = JSON.parse(data);
-  //         startDateObject.val(result[0].date_start_booking);
-  //         endDateObject.val(result[0].date_end_booking);
-
-  //         $(".date_start").val(startDateObject.val());
-  //         $(".date_start").attr("min", startDateObject.val());
-  //         $(".date_start").attr("max", endDateObject.val());
-
-  //         $(".date_end").val(endDateObject.val());
-  //         $(".date_end").attr("min", startDateObject.val());
-  //         $(".date_end").attr("max", endDateObject.val());
-  //     });
-  // });
-
-  // Building: on change
-  // $("#building_id").on("change", function () {
-  //   let building_id = $(this).val();
-  //   // console.log(building_id);
-  //   // console.log(`building_id = ${building_id}`);
-  //   // hallObject.html('<option value="">-- เลือกพื้นที่ --</option>');
-  //   $("#hall_id").html('<option value="">...</option>');
-  //   $("#time_start_header").val("");
-  //   $("#time_end_header").val("");
-  //   $("#total_slots").val("");
-  //   // $('#reservable_slots').val("");
-
-  //   $.get("get_hall.php", { building_id: building_id }, function (data) {
-  //     let result = JSON.parse(data);
-  //     $.each(result, function (index, item) {
-  //       $("#hall_id").append(
-  //         $("<option></option>").val(item.hall_id).html(item.hall_name)
-  //       );
-  //     });
-  //   });
-  // });
-
-  // Hall: on change
-//   $("#hall_id").on("change", function () {
-//     let building_id = $("#building_id").val();
-//     let hall_id = $(this).val();
-//     var d = new Date();
-//     var day = d.getDate();
-
-//     $.get(
-//       "get_hall_time.php",
-//       { building_id: building_id, hall_id: hall_id },
-//       function (data) {
-//         let result = JSON.parse(data);
-//         // console.log(data);
-//         // console.log(result[4]);
-//         // $(".date_start_header").text(Date.now());
-//         // // $(".date_start").attr("min", startDateObject.val());
-//         // // $(".date_start").attr("max", endDateObject.val());
-
-//         // $(".date_end_header").text(Date.now());
-//         // // $(".date_end").attr("min", startDateObject.val());
-//         // // $(".date_end").attr("max", endDateObject.val());
-//         $("#total_slots").val(result[4]);
-//         $("#time_start_header").val(result[5]);
-//         $("#time_end_header").val(result[6]);
-//         // $('#reservable_slots').val(result[0].reservable_slots);
-
-//         $(".time_start").timepicker({
-//           // minTime: $("#time_start_header").val(),
-//           // maxTime: $("#time_end_header").val(),
-//           minTime: "00:00",
-//           maxTime: "23:30",
-//           timeFormat: "H:i",
-//           show2400: true,
-//           step: 30,
-//           closeOnScroll: true,
-//           scrollDefault: $("#time_start_header").val(),
-//           // orientation: 'c',
-//           listWidth: 1,
-//           disableTextInput: true,
-//         });
-//         $(".time_end").timepicker({
-//           // minTime: $("#time_start_header").val(),
-//           // maxTime: $("#time_end_header").val(),
-//           minTime: "00:00",
-//           maxTime: "23:30",
-//           timeFormat: "H:i",
-//           show2400: true,
-//           step: 30,
-//           closeOnScroll: true,
-//           scrollDefault: $("#time_end_header").val(),
-//           // orientation: 'c',
-//           listWidth: 1,
-//           disableTextInput: true,
-//         });
-
-//         // $(".time_start").attr("min", $('#time_start_header').val());
-//         // $(".time_start").attr("max", $('#time_end_header').val());
-//         $(".time_start").val($("#time_start_header").val());
-
-//         // $(".time_end").attr("min", $('#time_start_header').val());
-//         // $(".time_end").attr("max", $('#time_end_header').val());
-//         $(".time_end").val($("#time_end_header").val());
-
-//         $(".reservable_slots").attr("min", 0);
-//         $(".reservable_slots").attr("max", $("#total_slots").val());
-//         $(".reservable_slots").val($("#total_slots").val());
-//       }
-//     );
-//   });
-// });

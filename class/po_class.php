@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Po extends Connection
 {
-    public function getAllRecord()
+    public function getRecordAll()
     {
         $sql = <<<EOD
                 SELECT `po_id`, `po_number`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`
@@ -26,7 +26,7 @@ class Po extends Connection
         return $rs;
     }
 
-    public function getRecordById($getPoId)
+    public function getRecordByPoId($getPoId)
     {
         $po_id = $getPoId;
         $sql = <<<EOD
@@ -89,7 +89,7 @@ class Po extends Connection
         return $rs;
     }
 
-    public function getPeriodOneLine($getPoId, $getPeriodId, $getInspectionPeriodId)
+    public function getInspectionPeriodOneLine($getPoId, $getPeriodId)
     {
         $sql = <<<EOD
                     SELECT `inspection_id`, `inspection_periods`.`period_id`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`
@@ -124,7 +124,7 @@ class Po extends Connection
         return $rs;
     }
 
-    public function getInspectionPeriodDetail($getPoId, $getPeriodId, $getInspectionPeriodId)
+    public function getInspectionPeriodDetail($getPoId, $getPeriodId)
     {
         $sql = <<<EOD
                     SELECT `rec_id`, `inspection_period_details`.`inspection_id`, `order_no`, `details`, `inspection_period_details`.`remark`

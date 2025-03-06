@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 05, 2025 at 11:50 AM
+-- Generation Time: Mar 06, 2025 at 10:34 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -164,7 +164,7 @@ CREATE TABLE `inspection_period_details` (
 --
 
 INSERT INTO `inspection_period_details` (`rec_id`, `inspection_id`, `order_no`, `details`, `remark`) VALUES
-(1, 1, 1, 'งานเดินท่อx', 'x'),
+(1, 1, 1, 'งานเดินท่อx', 'aaa'),
 (3, 11, 1, 'Test', 'Test'),
 (4, 20, 1, ' ', ' '),
 (5, 21, 1, ' ', ' '),
@@ -172,10 +172,11 @@ INSERT INTO `inspection_period_details` (`rec_id`, `inspection_id`, `order_no`, 
 (7, 24, 1, NULL, NULL),
 (8, 25, 1, NULL, NULL),
 (9, 26, 1, NULL, NULL),
-(10, 1, 2, 'งานติดตั้งโคมไฟ LED2', 'xxx'),
-(11, 1, 3, 'งานติดตั้งโคมไฟ LED2x', 'xxxx'),
-(14, 1, 4, 'งานเดินท่อ4', 'xxx4'),
-(15, 1, 5, 'งานเดินท่อ5', 'xxx5');
+(10, 1, 2, 'งานติดตั้งโคมไฟ LED2', 'bbb'),
+(11, 1, 3, 'งานติดตั้งโคมไฟ LED2x', 'ccc'),
+(14, 1, 4, 'งานเดินท่อ4', 'ddd'),
+(15, 1, 5, 'งานเดินท่อ5', 'eee'),
+(16, 27, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -529,13 +530,13 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `inspection_periods`
 --
 ALTER TABLE `inspection_periods`
-  MODIFY `inspection_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `inspection_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `inspection_period_details`
 --
 ALTER TABLE `inspection_period_details`
-  MODIFY `rec_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `rec_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `inspect_approvals`
@@ -559,7 +560,7 @@ ALTER TABLE `po_main`
 -- AUTO_INCREMENT for table `po_period`
 --
 ALTER TABLE `po_period`
-  MODIFY `period_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `period_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Constraints for dumped tables

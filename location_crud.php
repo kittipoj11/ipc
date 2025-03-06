@@ -9,25 +9,25 @@ $obj = new Location();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $obj->insertData($_REQUEST);
-    getAllRecord($obj);
+    getRecordAll($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $obj->updateData($_REQUEST);
-    getAllRecord($obj);
+    getRecordAll($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $obj->deleteData($_REQUEST);
-    getAllRecord($obj);
+    getRecordAll($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
     $rs = $obj->getRecordById($_REQUEST['location_id']);
     echo json_encode($rs);
 } else {
-    getAllRecord($obj);
+    getRecordAll($obj);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getAllRecord($getObj)
+function getRecordAll($getObj)
 {
     try {
-        $rs = $getObj->getAllRecord();
+        $rs = $getObj->getRecordAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

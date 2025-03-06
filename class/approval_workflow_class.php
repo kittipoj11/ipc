@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Approval_workflow extends Connection
 {
-    public function getAllRecord()
+    public function getRecordAll()
     {
         $sql = <<<EOD
                 select workflow_id, workflow_name, is_deleted 

@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/inspect_status_class.php';
     $inspect_status = new Inspect_status;
-    $rs = $inspect_status->getAllRecord();
+    $rs = $inspect_status->getRecordAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

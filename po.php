@@ -29,7 +29,8 @@ require_once 'auth.php';
   <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
 
   <style>
-    #tbody tr, #tbody-period tr td a {
+    #tbody tr,
+    #tbody-period tr td a {
       cursor: pointer;
     }
   </style>
@@ -50,7 +51,7 @@ require_once 'auth.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
     $po = new Po;
-    $rsPoMain = $po->getAllRecord();
+    $rsPoMain = $po->getRecordAll();
     $rsPoPeriod = $po->getPeriodByPoId(0);
     ?>
 
@@ -59,10 +60,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-6 d-flex">
-          <h6 class="m-1 fw-bold">All Purchase Order</h6>
-          <a href="po_create.php" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
-            <i class="fa-solid fa-plus"></i>
-          </a>
+        <h6 class="m-1 fw-bold text-uppercase">Purchase Order</h6>
         </div>
         <!-- /.container-fluid -->
       </section>
@@ -75,10 +73,13 @@ require_once 'auth.php';
             <div class="col-12">
 
               <div class="card">
-                <!-- <div class="card-header">
-                               <h3 class="card-title">supplier</h3>
-                           </div> -->
-                <!-- /.card-header -->
+                <div class="card-header d-flex">
+                  <h6 class="m-1 fw-bold">All Purchase Order</h6>
+                  <a href="po_create.php" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
+                    <i class="fa-solid fa-plus"></i>
+                  </a>
+                </div>
+
                 <div class="card-body p-0" id="card-body">
                   <table id="example1" class="table table-bordered table-striped table-sm">
                     <thead>
@@ -147,15 +148,15 @@ require_once 'auth.php';
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body p-0" id="card-body">
-                <table class="table table-bordered justify-content-center text-center">
-                          <thead>
-                            <tr>
-                              <th class="text-center p-1" width="5%">งวดงาน</th>
-                              <th class="text-center p-1" width="20%">จำนวนเงิน</th>
-                              <th class="text-center p-1" width="10%">คิดเป็น(%)</th>
-                              <th class="text-center p-1">เงื่อนไขการจ่ายเงิน</th>
-                            </tr>
-                          </thead>
+                  <table class="table table-bordered justify-content-center text-center">
+                    <thead>
+                      <tr>
+                        <th class="text-center p-1" width="5%">งวดงาน</th>
+                        <th class="text-center p-1" width="20%">จำนวนเงิน</th>
+                        <th class="text-center p-1" width="10%">คิดเป็น(%)</th>
+                        <th class="text-center p-1">เงื่อนไขการจ่ายเงิน</th>
+                      </tr>
+                    </thead>
                     <tbody id="tbody-period">
                       <!-- < ?php foreach ($rsPoPeriod as $row) {
                         $html = <<<EOD

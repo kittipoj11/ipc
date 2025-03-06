@@ -52,7 +52,7 @@ class User extends Connection
         }
     }
 
-    public function getAllRecord()
+    public function getRecordAll()
     {
         $sql = <<<EOD
                 select * 

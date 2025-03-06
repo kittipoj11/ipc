@@ -47,7 +47,7 @@ require_once 'auth.php';
         require_once  'class/po_class.php';
 
         $inspection = new Inspection;
-        // $rs = $inspection->getAllRecord();
+        // $rs = $inspection->getRecordAll();
 
         $rs = [0 => 'งวดที่ 1', 1 => 'งวดที่ 2', 2 => 'งวดที่ 3'];
 

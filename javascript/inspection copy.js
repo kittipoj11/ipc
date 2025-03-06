@@ -3,7 +3,7 @@ $(document).ready(function () {
       e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
       const po_id = $(this).closest("tr").data("id");
       // window.location.href = "po_edit.php?po_id=" + po_id + "&href=inspect.php";
-      window.location.href = "inspection_view.php?po_id=" + po_id;
+      window.location.href = "po_edit.php?po_id=" + po_id;
   });
 });
 

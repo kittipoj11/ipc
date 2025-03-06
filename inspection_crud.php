@@ -13,12 +13,12 @@ $obj = new Po();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
     $obj->updateData($_REQUEST);
-    // getAllRecord($obj);
+    // getRecordAll($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
     $rs = $obj->getInspectionPeriod($_REQUEST['po_id']);
     createPeriodTable($rs);
 } else {
-    // getAllRecord($obj);
+    // getRecordAll($obj);
 }
 // }
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่

@@ -47,10 +47,10 @@ require_once 'auth.php';
         require_once  'class/plan_status_class.php';
 
         $inspection = new Inspection;
-        // $rs = $inspection->getAllRecord();
+        // $rs = $inspection->getRecordAll();
 
         $plan_status = new Plan_status;
-        $plan_status_rs = $plan_status->getAllRecord();
+        $plan_status_rs = $plan_status->getRecordAll();
 
         $rs = ['1' => 'งานเดินท่อ', '2' => 'งานติดตั้ง1', '3' => 'งานติดตั้ง2'];
 

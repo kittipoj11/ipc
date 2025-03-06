@@ -50,7 +50,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/example_class.php';
     $department = new Department;
-    $rs = $department->getAllRecord();
+    $rs = $department->getRecordAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

@@ -56,8 +56,8 @@ require_once 'auth.php';
     require_once  'class/po_class.php';
 
     $po = new Po;
-    $rsPoMain = $po->getAllRecord();
-    $rsInspectionPeriod = $po->getInspectionPeriod(0);
+    $rsPoMain = $po->getRecordAll();
+    $rsInspectionPeriod = $po->getInspectionPeriod(1);
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -65,10 +65,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-6 d-flex">
-          <h6 class="m-1 fw-bold">All Inspection</h6>
-          <!-- <a href="po_create.php" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
-            <i class="fa-solid fa-plus"></i>
-          </a> -->
+          <h6 class="m-1 fw-bold text-uppercase">Inspection</h6>
         </div>
         <!-- /.container-fluid -->
       </section>
@@ -81,10 +78,13 @@ require_once 'auth.php';
             <div class="col-12">
 
               <div class="card">
-                <!-- <div class="card-header">
-                               <h3 class="card-title">supplier</h3>
-                           </div> -->
-                <!-- /.card-header -->
+                <div class="card-header d-flex">
+                  <h6 class="m-1 fw-bold">All Inspection</h6>
+                  <a href="po_create.php" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
+                    <i class="fa-solid fa-plus"></i>
+                  </a>
+                </div>
+
                 <div class="card-body p-0" id="card-body">
                   <table id="example1" class="table table-bordered table-striped table-sm">
                     <thead>

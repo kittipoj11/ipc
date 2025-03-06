@@ -4,7 +4,7 @@
     require_once  '../class/car_type.class.php';
     // // include APP_PATH . '/connect.php';
     $car_type = new Car_type;
-    $rs = $car_type->getAllRecord();
+    $rs = $car_type->getRecordAll();
 
     ?>
 
