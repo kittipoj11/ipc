@@ -31,9 +31,15 @@ require_once 'auth.php';
   <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
 
   <style>
-    #tbody tr,
+    #tbody,
     #tbody-period tr td a {
       cursor: pointer;
+    }
+
+    #tableMain thead,
+    #tablePeriod thead,
+    #tablePeriod tr {
+      cursor: default;
     }
   </style>
 
@@ -86,7 +92,7 @@ require_once 'auth.php';
                 </div>
 
                 <div class="card-body p-0" id="card-body">
-                  <table id="example1" class="table table-bordered table-striped table-sm">
+                  <table id="tableMain" class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
                         <th class="text-center p-1 d-none">#</th>
@@ -151,7 +157,7 @@ require_once 'auth.php';
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body p-0" id="card-body">
-                  <table class="table table-bordered justify-content-center text-center" id="period">
+                  <table class="table table-bordered justify-content-center text-center" id="tablePeriod">
                     <thead>
                       <tr>
                         <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po_id</th>

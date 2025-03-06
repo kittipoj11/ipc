@@ -29,9 +29,13 @@ require_once 'auth.php';
   <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
 
   <style>
-    #tbody tr,
-    #tbody-period tr td a {
+    #tbody tr {
       cursor: pointer;
+    }
+
+    #tableMain thead,
+    #tablePeriod {
+      cursor: default;
     }
   </style>
 </head>
@@ -60,7 +64,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-6 d-flex">
-        <h6 class="m-1 fw-bold text-uppercase">Purchase Order</h6>
+          <h6 class="m-1 fw-bold text-uppercase">Purchase Order</h6>
         </div>
         <!-- /.container-fluid -->
       </section>
@@ -81,7 +85,7 @@ require_once 'auth.php';
                 </div>
 
                 <div class="card-body p-0" id="card-body">
-                  <table id="example1" class="table table-bordered table-striped table-sm">
+                  <table id="tableMain" class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
                         <th class="text-center p-1 d-none">#</th>
@@ -148,7 +152,7 @@ require_once 'auth.php';
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body p-0" id="card-body">
-                  <table class="table table-bordered justify-content-center text-center">
+                  <table class="table table-bordered justify-content-center text-center" id="tablePeriod">
                     <thead>
                       <tr>
                         <th class="text-center p-1" width="5%">งวดงาน</th>

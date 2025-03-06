@@ -202,6 +202,7 @@ require_once 'auth.php';
                               <th class="p-1" width="10%">คิดเป็น(%)</th>
                               <th class="p-1">เงื่อนไขการจ่ายเงิน</th>
                               <th class="p-1 d-none" width="5%">Action</th>
+                              <th class="p-1" width="5%">Crud</th>
                               <th class="p-1 d-nonex" width="5%">period_id</th>
                             </tr>
                           </thead>
@@ -221,6 +222,9 @@ require_once 'auth.php';
                               <td class="p-1 align-content-center d-none">
                                 <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-trash"></i></a>
                                 <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-cross-circle"></i></a>
+                              </td>
+                              <td class="input-group-sm p-0">
+                                <input type="text" name="cruds[]" class="form-control crud" value="i">
                               </td>
                               <td class="input-group-sm p-0 d-nonex"><input type="text" name="period_id[]" class="form-control period_id" readonly></td>
                             </tr>

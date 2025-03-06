@@ -100,7 +100,7 @@ class Po extends Connection
                     , `retention_value`, `plan_status`, `is_paid`, `is_retention`, `inspection_periods`.`remark`, `workflow_id`, `current_status`, `current_level` 
                     , `po_period`.`period_id`, `po_period`.`po_id`, `period_number`, `po_period`.`interim_payment`, `po_period`.`interim_payment_percent`, `period_status`, `po_period`.`remark` as po_period_remark
                     , `po_number`, `project_name`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
-                    , `is_deposit`, `deposit_percent`, `deposit_value`
+                    , `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`
                     , `po_main`.`supplier_id`, `suppliers`.`supplier_name`
                     , `po_main`.`location_id`, `locations`.`location_name`
                     FROM `inspection_periods`
@@ -656,9 +656,9 @@ class Po extends Connection
             }
             $number_of_order = count($insert_indexs) + count($update_indexs);
 
-            // $_SESSION['insert']=$insert_indexs;
-            // $_SESSION['update']=$update_indexs;
-            // $_SESSION['delete']=$delete_indexs;
+            $_SESSION['insert']=$insert_indexs;
+            $_SESSION['update']=$update_indexs;
+            $_SESSION['delete']=$delete_indexs;
 
             //UPDATE po_main
             $sql = <<<EOD

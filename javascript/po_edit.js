@@ -46,64 +46,78 @@ $(document).ready(function () {
   });
 
   $("#btnAdd").click(function () {
-  let period;
+    let period;
     // console.log($(".firstTr:last").find(".period:last").val());
-        // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
+    // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
     // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
-    period = $(".firstTr[crud!='d']:last").find(".period_number:last").val();
-    period++;
-    $(".firstTr[crud!='d']:last")
-      .clone(false)
-      .attr("crud", "i")
-      .removeClass("d-none")
+    if ($("#tbody-period").has("tr.firstTr").length > 0) {
+      period = $(".firstTr[crud!='d']:last").find(".period_number:last").val();
+      period++;
+      $(".firstTr[crud!='d']:last")
+        .clone(false)
+        .attr("crud", "i")
+        .removeClass("d-none")
 
-      .find(".period_number:last")
-      .val(period)
-      .end()
+        .find(".period_number:last")
+        .val(period)
+        .end()
 
-      .find(".interim_payment:last")
-      .val("")
-      .end()
+        .find(".interim_payment:last")
+        .val("")
+        .end()
 
-      .find(".interim_payment_percent:last")
-      .val("")
-      .end()
+        .find(".interim_payment_percent:last")
+        .val("")
+        .end()
 
-      .find(".remark:last")
-      .val("")
-      .end()
+        .find(".remark:last")
+        .val("")
+        .end()
 
-      .find(".period_id:last")
-      .val("")
-      .end()
+        .find(".period_id:last")
+        .val("")
+        .end()
 
-      .find(".crud")
-      .val("i")
-      .end()
+        .find(".crud")
+        .val("i")
+        .end()
 
-      // .find("a:first")
-      // .css("display", "inline")
-      // .css("color", "red")
-      // .end()
+        // .find("a:first")
+        // .css("display", "inline")
+        // .css("color", "red")
+        // .end()
 
-      // .find("a:last")
-      // .css("display", "inline")
-      // .css("color", "red")
-      // .end()
+        // .find("a:last")
+        // .css("display", "inline")
+        // .css("color", "red")
+        // .end()
 
-      // .find("a:first")
-      // .attr("iid", "" + i + "")
-      // .end()
+        // .find("a:first")
+        // .attr("iid", "" + i + "")
+        // .end()
 
-      .appendTo("#tableBody");
+        .appendTo("#tbody-period");
+    }
+    else {
+      // Create the new tr element using jQuery
+      const firstTr = $("<tr class='firstTr'>" +
+        "<td class='input-group-sm p-0'><input type='number' name='period_numbers[]' class='form-control period_number' value='1' readonly></td>" +
+        "<td class='input-group-sm p-0'><input type='number' name='interim_payments[]' class='form-control interim_payment' required></td>" +
+        "<td class='input-group-sm p-0'><input type='number' name='interim_payment_percents[]' class='form-control interim_payment_percent'></td>" +
+        "<td class='input-group-sm p-0'><input type='text' name='remarks[]' class='form-control remark'></td>" +
+        "<td class='input-group-sm p-0'><input type='text' name='cruds[]' class='form-control crud' value='s'></td>"+
+        "<td class='input-group-sm p-0 d-nonex'><input type='text' name='period_id[]' class='form-control period_id' readonly></td>" +
+        "</tr>");
+      $("#tbody-period").append(firstTr);
+    }
   });
 
     $("#btnDeleteLast").click(function () {
       let period;
-      // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tableBody
-      // $("#tableBody").find("tr:not(:first):last").remove();
-      // $("#tableBody tr:not(:first):last").remove();
-      $("#tableBody tr:not(:first)[crud!='d']:last")
+      // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-period
+      // $("#tbody-period").find("tr:not(:first):last").remove();
+      // $("#tbody-period tr:not(:first):last").remove();
+      $("#tbody-period tr:not(:first)[crud!='d']:last")
         .attr("crud", "d")
         .addClass("d-none")
 
@@ -113,12 +127,12 @@ $(document).ready(function () {
     });
 
   $("#btnClear").click(function () {
-    // ลบ tr ทั้งหมดที่ไม่ใช่ตัวแรกใน #tableBody
-    // $("#tableBody tr:gt(0)").remove();
+    // ลบ tr ทั้งหมดที่ไม่ใช่ตัวแรกใน #tbody-period
+    // $("#tbody-period tr:gt(0)").remove();
     // หรือ
-    // $("#tableBody").find("tr:not(:first)").remove();
+    // $("#tbody-period").find("tr:not(:first)").remove();
     // หรือ
-    $("#tableBody").find("tr:gt(0)").remove();
+    $("#tbody-period").find("tr:gt(0)").remove();
   });
   
   $("#btnCancel").click(function () {

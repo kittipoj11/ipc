@@ -31,8 +31,8 @@ require_once 'auth.php';
   <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
 
   <style>
-    table tr {
-      cursor: pointer;
+    table tr th {
+      cursor: default;
     }
   </style>
 </head>
@@ -86,8 +86,9 @@ require_once 'auth.php';
             <div class="col-12">
               <form name="myForm" id="myForm" action="" method="post">
                 <div class="card">
-                  <div class="card-header">
+                  <div class="card-header d-flex">
                     <h6 class="m-1 fw-bold"><?= $rsInspectionPeriod['po_number'] . " : " . $rsInspectionPeriod['supplier_id'] . " - " . $rsInspectionPeriod['supplier_name'] ?></h6>
+                    <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspectionPeriod['period_number'] . "]" ?></h6>
                   </div>
 
                   <div class="card-body m-0 p-0">
@@ -264,7 +265,7 @@ require_once 'auth.php';
                   </div>
                   <!-- /.card-body -->
 
-                  <div class="card border border-1 border-dark m-1" id="div_open_area_schedule">
+                  <div class="card border border-1 border-dark m-1">
                     <h6 class="m-1 fw-bold">รายการรายละเอียดการตรวจสอบ</h6>
                     <!-- <div class="card-header" style="display: flex;"> -->
                     <div class="m-1">
@@ -282,7 +283,7 @@ require_once 'auth.php';
 
                     <div class="card-body p-0">
                       <!-- สร้าง Table ตามปกติ -->
-                      <table class="table table-bordered justify-content-center text-center">
+                      <table class="table table-bordered justify-content-center text-center" id="tablePeriod">
                         <thead>
                           <tr>
                             <th class="p-1" width="5%">ลำดับที่</th>
@@ -293,9 +294,9 @@ require_once 'auth.php';
                           </tr>
                         </thead>
 
-                        <tbody id="tableBody">
+                        <tbody id="tbody-period">
                           <?php foreach ($rsInspectionPeriodDetail as $row) { ?>
-                            <tr class="firstTr" crud="s">
+                            <tr class="firstTr">
                               <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
                               <td class="input-group-sm p-0"><input type="number" name="order_nos[]" class="form-control order_no" value="<?php echo isset($row['order_no']) ? htmlspecialchars($row['order_no']) : ''; ?>" readonly>
                               </td>

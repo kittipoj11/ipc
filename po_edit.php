@@ -31,8 +31,8 @@ require_once 'auth.php';
   <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
 
   <style>
-    table tr {
-      cursor: pointer;
+    #tablePeriod thead {
+      cursor: default;
     }
   </style>
 </head>
@@ -212,7 +212,7 @@ require_once 'auth.php';
 
                         <div class="card-body p-0">
                           <!-- สร้าง Table ตามปกติ -->
-                          <table class="table table-bordered justify-content-center text-center">
+                          <table class="table table-bordered justify-content-center text-center" id="tablePeriod">
                             <thead>
                               <tr>
                                 <th class="p-1" width="5%">งวดงาน</th>
@@ -224,9 +224,9 @@ require_once 'auth.php';
                               </tr>
                             </thead>
 
-                            <tbody id="tableBody">
+                            <tbody id="tbody-period">
                               <?php foreach ($rsPeriod as $row) { ?>
-                                <tr class="firstTr" crud="s">
+                                <tr class="firstTr">
                                   <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
                                   <td class="input-group-sm p-0"><input type="number" name="period_numbers[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>
                                   </td>
