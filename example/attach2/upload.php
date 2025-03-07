@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['record_name'])) {
                 }
             }
 
-            $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+            $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
             foreach ($_FILES['files']['tmp_name'] as $key => $tmp_name) {
                 $fileType = $_FILES['files']['type'][$key];
                 if (!in_array($fileType, $allowedTypes)) {
