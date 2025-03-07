@@ -183,6 +183,11 @@ $(document).ready(function () {
     // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
     // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
   });
+  
+  $("#btnAttach").click(function () {
+
+  });
+  
 
 });
 

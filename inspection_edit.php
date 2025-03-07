@@ -74,7 +74,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-6 d-flex">
-          <h6 class="m-1 fw-bold text-uppercase">Inspection</h6>
+          <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
         </div>
       </section>
       <!-- /.container-fluid content-header-->
@@ -86,9 +86,10 @@ require_once 'auth.php';
             <div class="col-12">
               <form name="myForm" id="myForm" action="" method="post">
                 <div class="card">
-                  <div class="card-header d-flex">
+                  <div class="card-header d-flex align-items-center">
                     <h6 class="m-1 fw-bold"><?= $rsInspectionPeriod['po_number'] . " : " . $rsInspectionPeriod['supplier_id'] . " - " . $rsInspectionPeriod['supplier_name'] ?></h6>
                     <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspectionPeriod['period_number'] . "]" ?></h6>
+                    <button type="button" name="btnAttach" id="btnAttach" class="btn btn-primary btn-sm m-1"> <i class="fi fi-rr-clip"></i> </button>
                   </div>
 
                   <div class="card-body m-0 p-0">

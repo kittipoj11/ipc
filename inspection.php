@@ -71,7 +71,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-6 d-flex">
-          <h6 class="m-1 fw-bold text-uppercase">Inspection</h6>
+          <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
         </div>
         <!-- /.container-fluid -->
       </section>

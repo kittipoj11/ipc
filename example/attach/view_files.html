@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Files</title>
+</head>
+<body>
+    <h1>รายการไฟล์ที่อัปโหลด</h1>
+    <div id="fileList">
+        <p>กำลังโหลดรายการไฟล์...</p>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "get_files.php", // PHP Script สำหรับเรียกข้อมูลไฟล์
+                type: "GET",
+                dataType: "json",
+                success: function(response) {
+                    if (response.status === 'success') {
+                        var files = response.files;
+                        var fileListHTML = "<ul>";
+                        if (files.length > 0) {
+                            $.each(files, function(index, file) {
+                                var fileUrl = file.file_path; // พาธไฟล์จากฐานข้อมูล
+                                var fileName = file.file_name;
+                                var fileType = file.file_type;
+
+                                fileListHTML += "<li>";
+                                if (fileType.startsWith('image/')) { // ถ้าเป็นรูปภาพ แสดง thumbnail
+                                    fileListHTML += "<img src='" + fileUrl + "' alt='" + fileName + "' style='max-width: 100px; max-height: 100px;'> ";
+                                }
+                                fileListHTML += "<a href='" + fileUrl + "' target='_blank'>" + fileName + "</a>"; // ลิงก์เรียกดูไฟล์
+                                fileListHTML += " (" + fileType + ")</li>";
+                            });
+                        } else {
+                            fileListHTML += "<li>ไม่มีไฟล์ที่อัปโหลด</li>";
+                        }
+                        fileListHTML += "</ul>";
+                        $("#fileList").html(fileListHTML);
+                    } else {
+                        $("#fileList").html("<p style='color: red;'>เกิดข้อผิดพลาดในการโหลดรายการไฟล์: " + response.message + "</p>");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $("#fileList").html("<p style='color: red;'>เกิดข้อผิดพลาดในการสื่อสารกับ Server: " + error + "</p>");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

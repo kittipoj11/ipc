@@ -74,7 +74,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-6 d-flex">
-          <h6 class="m-1 fw-bold text-uppercase">Inspection</h6>
+          <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
         </div>
         <!-- /.container-fluid -->
       </section>
@@ -228,17 +228,17 @@ require_once 'auth.php';
                 <tbody>
                   <?php foreach ($rsInspectionPeriod as $row) { ?>
                     <tr>
-                      <td class="tdPeriod text-right input-group-sm p-0 po_id d-none" data-id=<?= $row['po_id'] ?>><?= $row['po_id'] ?></td>
-                      <td class="tdPeriod text-right input-group-sm p-0 period_id d-none" data-id=<?= $row['period_id'] ?>><?= $row['period_id'] ?></td>
-                      <td class="tdPeriod text-right py-0 px-1"><?= $row['period_number'] ?></td>
+                      <td class="tdPeriod text-right text-primary input-group-sm p-0 po_id d-none" data-id=<?= $row['po_id'] ?>><?= $row['po_id'] ?></td>
+                      <td class="tdPeriod text-right text-primary input-group-sm p-0 period_id d-none" data-id=<?= $row['period_id'] ?>><?= $row['period_id'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['period_number'] ?></td>
 
-                      <td class="tdPeriod text-right py-0 px-1"><?= $row['workload_planned_percent'] ?></td>
-                      <td class="tdPeriod text-right py-0 px-1"><?= $row['workload_actual_completed_percent'] ?></td>
-                      <td class="tdPeriod text-right py-0 px-1"><?= $row['workload_remaining_percent'] ?></td>
-                      <td class="tdPeriod text-right py-0 px-1"><?= $row['interim_payment'] ?></td>
-                      <td class="tdPeriod text-right py-0 px-1"><?= $row['interim_payment_less_previous'] ?></td>
-                      <td class="tdPeriod text-right py-0 px-1"><?= $row['interim_payment_remain'] ?></td>
-                      <td class="tdPeriod text-left py-0 px-1"><?= $row['remark'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_planned_percent'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_actual_completed_percent'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_remaining_percent'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['interim_payment'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['interim_payment_less_previous'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['interim_payment_remain'] ?></td>
+                      <td class="tdPeriod text-left text-primary py-0 px-1"><?= $row['remark'] ?></td>
                     </tr>
                   <?php } ?>
                 </tbody>
