@@ -145,6 +145,21 @@ class Po extends Connection
         return $rs;
     }
 
+    public function getInspectionFiles($getPoId, $getPeriodId, $getInspectionId)
+    {
+        $sql = <<<EOD
+                    SELECT * 
+                    FROM files
+                EOD;
+        $stmt = $this->myConnect->prepare($sql);
+        // $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
+        // $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
+        // $stmt->bindParam(':inspection_id', $getInspectionId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs = $stmt->fetchAll();
+        return $rs;
+    }
+    
     public function insertData($getData)
     {
         @session_start();

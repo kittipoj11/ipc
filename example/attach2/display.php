@@ -7,9 +7,9 @@ try {
 
     $data = [];
     foreach ($records as $record) {
-        $recordId = $record['record_id'];
+        $record_id = $record['record_id'];
         $stmtFiles = $pdo->prepare("SELECT * FROM files WHERE record_id = ?");
-        $stmtFiles->execute([$recordId]);
+        $stmtFiles->execute([$record_id]);
         $files = $stmtFiles->fetchAll(PDO::FETCH_ASSOC);
 
         $record['files'] = $files;

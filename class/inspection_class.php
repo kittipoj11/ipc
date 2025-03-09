@@ -70,7 +70,7 @@ class Inspection extends Connection
         return $rs;
     }
 
-    public function getPeriodOneLine($getPoId, $getPoPeriodId)
+    public function getPeriodOneLine($getPoId, $getPeriodId)
     {
         $sql = <<<EOD
                 SELECT `po_period_id`, `inspect_period`.`po_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`
@@ -99,11 +99,28 @@ class Inspection extends Connection
                 EOD;
         $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
-        $stmt->bindParam(':po_period_id', $getPoPeriodId, PDO::PARAM_INT);
+        $stmt->bindParam(':po_period_id', $getPeriodId, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
         return $rs;
     }
+
+    public function getInspectionFiles($getPoId, $getPeriodId, $getInspectionId)
+    {
+        $sql = <<<EOD
+                    SELECT * 
+                    FROM files
+                EOD;
+        $stmt = $this->myConnect->prepare($sql);
+        // $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
+        // $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
+        // $stmt->bindParam(':inspection_id', $getInspectionId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs = $stmt->fetch();
+        return $rs;
+    }
+
+
 
     // อาจจะไม่ใช้
     public function insertData($getData)
