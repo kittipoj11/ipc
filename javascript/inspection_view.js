@@ -52,15 +52,18 @@ $(document).ready(function () {
     // // ดึงค่าจาก inputPoPeriodId
     // let period_id = inputPoPeriodId.val();
 
-    const po_id = $(this).closest("tr").find(".po_id").data("id");
-    // console.log(`po_id = ${po_id}`);
-    const period_id = $(this).closest("tr").find(".period_id").data("id");
-    // console.log(`period_id = ${period_id}`);
+    const po_id = $(this).closest("tr").data("po_id");
+    const period_id = $(this).closest("tr").data("period_id");
+    const inspection_id = $(this).closest("tr").data("inspection_id");
+    // const po_id = $(this).closest("tr").find(".po_id").data("id");
+    // const period_id = $(this).closest("tr").find(".period_id").data("id");
+    // const inspection_id = $(this).closest("tr").find(".inspection_id").val("id");
     // let po_id=1;
     // let period_id=1;
     console.log(`po_id = ${po_id}`);
     console.log(`period_id = ${period_id}`);
-    window.location.href = `inspection_edit.php?po_id=${po_id}&period_id=${period_id}`;
+    console.log(`inspection_id = ${inspection_id}`);
+    window.location.href = `inspection_edit.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
   });
 
   $("#btnCancel").click(function () {

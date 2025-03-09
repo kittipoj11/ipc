@@ -1,4 +1,18 @@
 $(document).ready(function () {
+
+  $(document).on("click", "#btnAttach", function (e) {
+    e.preventDefault();
+
+const po_id = $('#po_id').val();
+const period_id = $('#period_id').val();
+const inspection_id = $('#inspection_id').val();
+
+// console.log(`po_id = ${po_id}`);
+// console.log(`period_id = ${period_id}`);
+// console.log(`inspection_id = ${inspection_id}`);
+    window.location.href = `inspection_attach.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
+  });
+
   $("#myForm").on("submit", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
     // console.log('submit');
@@ -182,10 +196,6 @@ $(document).ready(function () {
     // window.history.go(-1);
     // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
     // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
-  });
-  
-  $("#btnAttach").click(function () {
-
   });
   
 

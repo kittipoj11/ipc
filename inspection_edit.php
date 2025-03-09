@@ -3,7 +3,6 @@
 
 require_once 'config.php';
 require_once 'auth.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +54,8 @@ require_once 'auth.php';
     $_SESSION['Request'] = $_REQUEST;
     $po_id = $_REQUEST['po_id'];
     $period_id = $_REQUEST['period_id'];
-    // $inspection_id = $_REQUEST['inspection_id'];
+    $inspection_id = $_REQUEST['inspection_id'];
+    
 
     $po = new Po;
     $rsInspectionPeriod = $po->getInspectionPeriodOneLine($po_id, $period_id);

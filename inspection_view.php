@@ -208,9 +208,9 @@ require_once 'auth.php';
               <table class="table table-bordered justify-content-center text-center">
                 <thead>
                   <tr>
-                    <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po_id</th>
+                    <!-- <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po_id</th>
                     <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">period_id</th>
-                    <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">inspection_id</th>
+                    <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">inspection_id</th> -->
                     <th class="text-center align-content-center p-1" rowspan="2" width="5%">งวดงาน</th>
                     <th class="text-center p-1" colspan="3">ปริมาณงาน</th>
                     <th class="text-center p-1" colspan="3">ยอดเบิกเงินงวด</th>
@@ -227,11 +227,12 @@ require_once 'auth.php';
                 </thead>
                 <tbody>
                   <?php foreach ($rsInspectionPeriod as $row) { ?>
-                    <tr>
-                      <td class="tdPeriod text-right text-primary input-group-sm p-0 po_id d-none" data-id=<?= $row['po_id'] ?>><?= $row['po_id'] ?></td>
+                    <tr data-po_id=<?= $row['po_id'] ?> data-period_id=<?= $row['period_id'] ?> data-inspection_id=<?= $row['inspection_id'] ?>>
+                      <!-- <td class="tdPeriod text-right text-primary input-group-sm p-0 po_id d-none" data-id=<?= $row['po_id'] ?>><?= $row['po_id'] ?></td>
                       <td class="tdPeriod text-right text-primary input-group-sm p-0 period_id d-none" data-id=<?= $row['period_id'] ?>><?= $row['period_id'] ?></td>
-                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['period_number'] ?></td>
+                      <td class="tdPeriod text-right text-primary input-group-sm p-0 inspection_id d-none" data-id=<?= $row['inspection_id'] ?>><?= $row['inspection_id'] ?></td> -->
 
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['period_number'] ?></td>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_planned_percent'] ?></td>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_actual_completed_percent'] ?></td>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_remaining_percent'] ?></td>
