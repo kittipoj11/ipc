@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2025 at 04:30 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Generation Time: Mar 10, 2025 at 07:54 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.1.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -86,6 +86,42 @@ INSERT INTO `approval_workflow` (`workflow_id`, `workflow_name`, `is_deleted`) V
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `attach_files`
+--
+
+CREATE TABLE `attach_files` (
+  `file_id` int(11) NOT NULL,
+  `attach_id` int(11) DEFAULT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `file_type` varchar(100) NOT NULL,
+  `upload_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `attach_files`
+--
+
+INSERT INTO `attach_files` (`file_id`, `attach_id`, `file_name`, `file_path`, `file_type`, `upload_date`) VALUES
+(1, NULL, 'work flow test.pdf', 'uploads/1741334054_work flow test.pdf', 'application/pdf', '2025-03-07 07:54:14'),
+(2, NULL, 'taxinvoice homepro.pdf', 'uploads/1741334107_taxinvoice homepro.pdf', 'application/pdf', '2025-03-07 07:55:07');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `attach_main`
+--
+
+CREATE TABLE `attach_main` (
+  `attach_id` int(11) NOT NULL,
+  `attach_name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `departments`
 --
 
@@ -119,17 +155,20 @@ CREATE TABLE `files` (
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `files`
+-- Table structure for table `inspection_files`
 --
 
-INSERT INTO `files` (`file_id`, `record_id`, `file_name`, `file_path`, `file_type`, `uploaded_at`) VALUES
-(2, 2, 'Gemini_Generated_Image_yut9dsyut9dsyut9.jpg', 'uploads/67caebe970629.jpg', 'image/jpeg', '2025-03-07 12:51:53'),
-(3, 3, 'Data Tables.pdf', 'uploads/67caec0133378.pdf', 'application/pdf', '2025-03-07 12:52:17'),
-(4, 2, 'Gemini_Generated_Image_b1x3epb1x3epb1x3.jpg', 'uploads/67cafa8b75544.jpg', 'image/jpeg', '2025-03-07 12:51:53'),
-(5, 4, 'Gemini_Generated_Image_b1x3epb1x3epb1x3.jpg', 'uploads/67cafa8b75544.jpg', 'image/jpeg', '2025-03-07 13:54:19'),
-(19, 6, 'ipcdb rev02.xlsx', 'uploads/67cb07a20d1a2.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '2025-03-07 14:50:10'),
-(20, 6, 'ipcdb.xlsx', 'uploads/67cb07a20e620.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '2025-03-07 14:50:10');
+CREATE TABLE `inspection_files` (
+  `file_id` int(11) NOT NULL,
+  `inspection_id` int(10) UNSIGNED NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `file_type` varchar(100) NOT NULL,
+  `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -166,10 +205,12 @@ CREATE TABLE `inspection_periods` (
 --
 
 INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_level`) VALUES
-(1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
-(2, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
-(3, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
-(4, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1);
+(1, 1, 50.00, 50.00, 50.00, 10000.00, 25.00, 10000.00, NULL, NULL, NULL, 30000.00, 75.00, NULL, 1, 0, 0, 'งวดที่ 1', 1, '1', 1),
+(2, 2, 100.00, 99.00, 0.00, 30000.00, 75.00, 40000.00, NULL, NULL, NULL, 0.00, 0.00, NULL, 1, 0, 0, 'งวดสุดท้าย', 1, '1', 1),
+(11, 11, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
+(12, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
+(13, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1),
+(28, 28, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, '1', 1);
 
 -- --------------------------------------------------------
 
@@ -190,12 +231,22 @@ CREATE TABLE `inspection_period_details` (
 --
 
 INSERT INTO `inspection_period_details` (`rec_id`, `inspection_id`, `order_no`, `details`, `remark`) VALUES
-(1, 1, 1, 'งานเดินท่อ', NULL),
-(2, 1, 2, 'งานติดตั้งโคมไฟ LED', NULL),
-(3, 1, 3, 'งานติดตั้งโคมไฟ LED2', NULL),
-(4, 2, 1, NULL, NULL),
-(5, 3, 1, NULL, NULL),
-(6, 4, 1, NULL, NULL);
+(1, 1, 1, 'งานเดินท่อx', 'aaa'),
+(3, 11, 1, 'Test', 'Test'),
+(4, 20, 1, ' ', ' '),
+(5, 21, 1, ' ', ' '),
+(6, 22, 1, ' ', ' '),
+(7, 24, 1, NULL, NULL),
+(8, 25, 1, NULL, NULL),
+(9, 26, 1, NULL, NULL),
+(10, 1, 2, 'งานติดตั้งโคมไฟ LED2', 'bbb'),
+(11, 1, 3, 'งานติดตั้งโคมไฟ LED2x', 'ccc'),
+(14, 1, 4, 'งานเดินท่อ4', 'ddd'),
+(15, 1, 5, 'งานเดินท่อ5', 'eee'),
+(16, 27, 1, NULL, NULL),
+(17, 2, 1, 'งานติดตั้งโคมไฟ LED2', 'xxx3'),
+(18, 2, 2, 'งานเดินท่อ3', 'xxx3'),
+(20, 28, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -315,7 +366,8 @@ CREATE TABLE `po_main` (
 --
 
 INSERT INTO `po_main` (`po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`) VALUES
-(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, '107000.00', '100000.00', '7000.00', 0, '0.00', '0.00', '2025-03-01', '2025-03-09', 9, '05389', NULL, 4, '0.00', '0.00', 0);
+(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 42800.00, 50000.00, 2800.00, NULL, 0.00, 0.00, '2025-03-01', '2025-03-08', 8, '05389', NULL, 3, 0.00, 0.00, 0),
+(2, 'IMPO002', 'ข่าวช่องวันเสาร์-อาทิตย์', 1, 3, 'วัน', 'one', 1, 1070.00, 1000.00, 0.00, 0, 0.00, 0.00, '2025-03-06', '2025-03-07', 2, '05389', NULL, 3, 0.00, 0.00, 0);
 
 -- --------------------------------------------------------
 
@@ -338,10 +390,12 @@ CREATE TABLE `po_period` (
 --
 
 INSERT INTO `po_period` (`period_id`, `po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `period_status`, `remark`) VALUES
-(1, 1, 1, '10000.00', '10.00', NULL, 'QR'),
-(2, 1, 2, '20000.00', '20.00', NULL, 'QR'),
-(3, 1, 3, '30000.00', '30.00', NULL, 'Cash'),
-(4, 1, 4, '40000.00', '40.00', NULL, 'Cash');
+(1, 1, 1, 10000.00, 20.00, NULL, 'QR'),
+(2, 1, 2, 30000.00, 60.00, NULL, 'Cash'),
+(11, 2, 1, 1.00, 1.00, NULL, 'QR'),
+(12, 2, 2, 2.00, 2.00, NULL, 'Cash'),
+(13, 2, 3, 3.00, 3.00, NULL, 'QR'),
+(28, 1, 3, 10000.00, 20.00, NULL, 'Cash');
 
 -- --------------------------------------------------------
 
@@ -354,16 +408,6 @@ CREATE TABLE `records` (
   `record_name` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `records`
---
-
-INSERT INTO `records` (`record_id`, `record_name`, `created_at`) VALUES
-(2, 'test2', '2025-03-07 12:51:53'),
-(3, 'test3', '2025-03-07 12:52:17'),
-(4, 'red car', '2025-03-07 13:54:19'),
-(6, 'DB', '2025-03-07 14:50:10');
 
 -- --------------------------------------------------------
 
@@ -461,6 +505,18 @@ ALTER TABLE `approval_workflow`
   ADD PRIMARY KEY (`workflow_id`);
 
 --
+-- Indexes for table `attach_files`
+--
+ALTER TABLE `attach_files`
+  ADD PRIMARY KEY (`file_id`);
+
+--
+-- Indexes for table `attach_main`
+--
+ALTER TABLE `attach_main`
+  ADD PRIMARY KEY (`attach_id`);
+
+--
 -- Indexes for table `departments`
 --
 ALTER TABLE `departments`
@@ -472,6 +528,13 @@ ALTER TABLE `departments`
 ALTER TABLE `files`
   ADD PRIMARY KEY (`file_id`),
   ADD KEY `record_id` (`record_id`);
+
+--
+-- Indexes for table `inspection_files`
+--
+ALTER TABLE `inspection_files`
+  ADD PRIMARY KEY (`file_id`),
+  ADD KEY `inspection_id` (`inspection_id`);
 
 --
 -- Indexes for table `inspection_periods`
@@ -573,6 +636,18 @@ ALTER TABLE `approval_workflow`
   MODIFY `workflow_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `attach_files`
+--
+ALTER TABLE `attach_files`
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `attach_main`
+--
+ALTER TABLE `attach_main`
+  MODIFY `attach_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
@@ -582,19 +657,25 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `inspection_files`
+--
+ALTER TABLE `inspection_files`
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `inspection_periods`
 --
 ALTER TABLE `inspection_periods`
-  MODIFY `inspection_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `inspection_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `inspection_period_details`
 --
 ALTER TABLE `inspection_period_details`
-  MODIFY `rec_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `rec_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `inspect_approvals`
@@ -612,19 +693,19 @@ ALTER TABLE `locations`
 -- AUTO_INCREMENT for table `po_main`
 --
 ALTER TABLE `po_main`
-  MODIFY `po_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `po_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `po_period`
 --
 ALTER TABLE `po_period`
-  MODIFY `period_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `period_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `records`
 --
 ALTER TABLE `records`
-  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables
@@ -635,6 +716,12 @@ ALTER TABLE `records`
 --
 ALTER TABLE `files`
   ADD CONSTRAINT `files_ibfk_1` FOREIGN KEY (`record_id`) REFERENCES `records` (`record_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `inspection_files`
+--
+ALTER TABLE `inspection_files`
+  ADD CONSTRAINT `inspection_files_ibfk_1` FOREIGN KEY (`inspection_id`) REFERENCES `inspection_periods` (`inspection_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `po_main`

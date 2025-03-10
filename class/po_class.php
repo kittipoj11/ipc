@@ -66,7 +66,7 @@ class Po extends Connection
         return $rs;
     }
 
-    public function getInspectionPeriod($getPoId)
+    public function getInspectionAllPeriod($getPoId)
     {
         $sql = <<<EOD
                     SELECT `inspection_id`, `inspection_periods`.`period_id`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`
@@ -89,7 +89,7 @@ class Po extends Connection
         return $rs;
     }
 
-    public function getInspectionPeriodOneLine($getPoId, $getPeriodId)
+    public function getInspectionOnePeriod($getPoId, $getPeriodId)
     {
         $sql = <<<EOD
                     SELECT `inspection_id`, `inspection_periods`.`period_id`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`
@@ -148,13 +148,20 @@ class Po extends Connection
     public function getInspectionFiles($getPoId, $getPeriodId, $getInspectionId)
     {
         $sql = <<<EOD
-                    SELECT * 
-                    FROM files
-                EOD;
+                    SELECT `file_id`, `record_id`, `file_name`, `file_path`, `file_type`, `uploaded_at` 
+                    FROM `files` 
+                    INNER JOIN `inspection_periods`
+                        ON `inspection_periods`.`inspection_id` = `files`.`record_id`
+                    INNER JOIN `po_period`
+                        ON `po_period`.`period_id` = `inspection_periods`.`period_id`
+                    WHERE `inspection_periods`.`inspection_id` = :inspection_id
+                        AND `inspection_periods`.`period_id` = :period_id
+                        AND `po_period`.`po_id` = :po_id
+                    EOD;
         $stmt = $this->myConnect->prepare($sql);
-        // $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
-        // $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
-        // $stmt->bindParam(':inspection_id', $getInspectionId, PDO::PARAM_INT);
+        $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
+        $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
+        $stmt->bindParam(':inspection_id', $getInspectionId, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetchAll();
         return $rs;

@@ -9,9 +9,8 @@ try {
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
 }
-?>
 
-<!-- คำแนะนำ:
+/* คำแนะนำ:
 
 สำหรับข้อมูลผู้ใช้ (เช่น username, user ID, สิทธิ์การใช้งาน): Sessions เป็นตัวเลือกที่ดีที่สุด
 ตัวอย่างการใช้งาน Session:
@@ -74,4 +73,6 @@ echo "Site URL: " . SITE_URL;
 echo "<br>Database Host: " . DB_HOST;
 ?>
 
-สำหรับข้อมูลที่ต้องแชร์ระหว่างผู้ใช้ หรือข้อมูลจำนวนมากที่ต้องการ persistence: Database เป็นสิ่งที่หลีกเลี่ยงไม่ได้ -->
+สำหรับข้อมูลที่ต้องแชร์ระหว่างผู้ใช้ หรือข้อมูลจำนวนมากที่ต้องการ persistence: Database เป็นสิ่งที่หลีกเลี่ยงไม่ได้ */
+
+?>

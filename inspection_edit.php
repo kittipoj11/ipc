@@ -58,7 +58,7 @@ require_once 'auth.php';
     
 
     $po = new Po;
-    $rsInspectionPeriod = $po->getInspectionPeriodOneLine($po_id, $period_id);
+    $rsInspectionPeriod = $po->getInspectionOnePeriod($po_id, $period_id);
     $rsInspectionPeriodDetail = $po->getInspectionPeriodDetail($po_id, $period_id);
 
     $supplier = new Supplier;

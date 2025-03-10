@@ -63,7 +63,7 @@ require_once 'auth.php';
 
     $po = new Po;
     $rsPoMain = $po->getRecordAll();
-    $rsInspectionPeriod = $po->getInspectionPeriod(1);
+    $rsInspectionPeriod = $po->getInspectionAllPeriod(1);
     ?>
 
     <!-- Content Wrapper. Contains page content -->

@@ -6,19 +6,26 @@
     <style>
         body { padding-top: 20px; }
         .file-link { display: block; margin-bottom: 5px; }
-        .file-display {
-            margin-bottom: 20px; /* เพิ่มระยะห่างระหว่างไฟล์ */
-            border: 1px solid #ddd; /* เพิ่มเส้นขอบ */
+        .file-list-item {
+            cursor: pointer; /* เปลี่ยน cursor เป็น pointer เมื่อ hover */
+            color: blue; /* กำหนดสีของลิงก์ชื่อไฟล์ */
+            text-decoration: underline; /* ขีดเส้นใต้ลิงก์ชื่อไฟล์ */
+        }
+        .file-display-area {
+            margin-top: 20px;
+            border: 1px solid #ddd;
             padding: 10px;
             border-radius: 5px;
         }
-        .file-display img {
-            display: block; /* ให้รูปภาพแสดงเต็มบรรทัด */
-            margin-bottom: 10px; /* เพิ่มระยะห่างใต้รูปภาพ */
+        .file-display-area img {
+            max-width: 100%;
+            max-height: 400px; /* ปรับขนาดรูปภาพแสดงผล */
+            display: block;
+            margin: 0 auto; /* จัดรูปภาพไว้ตรงกลาง */
         }
-        .file-link {
-            display: block; /* ให้ลิงก์แสดงเต็มบรรทัด */
-            margin-top: 10px; /* เพิ่มระยะห่างเหนือลิงก์ */
+        .file-display-area embed {
+            width: 100%;
+            height: 600px; /* ปรับขนาด PDF viewer */
         }
     </style>
 </head>
@@ -55,13 +62,19 @@
         <div class="card-body" id="recordsDisplay">
             </div>
     </div>
+
+    <div id="fileDisplayArea" class="card mt-4 file-display-area">
+        <div class="card-header">
+            File Preview
+        </div>
+        <div class="card-body">
+            <p>No file selected.</p>
+        </div>
+    </div>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="script.js">
-
-</script>
-
-</body>
+<script src="script2.js"></script> </body>
 </html>

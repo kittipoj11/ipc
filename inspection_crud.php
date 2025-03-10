@@ -15,8 +15,11 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
     $obj->updateData($_REQUEST);
     // getRecordAll($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
-    $rs = $obj->getInspectionPeriod($_REQUEST['po_id']);
+    $rs = $obj->getInspectionAllPeriod($_REQUEST['po_id']);
     createPeriodTable($rs);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectfile') {
+    $rsInspectionFiles = $obj->getInspectionFiles($_REQUEST['po_id'] ,$_REQUEST['period_id'],$_REQUEST['inspection_id']);
+    echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
 } else {
     // getRecordAll($obj);
 }

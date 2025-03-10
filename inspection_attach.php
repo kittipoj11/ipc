@@ -34,6 +34,46 @@ require_once 'auth.php';
     table tr th {
       cursor: default;
     }
+
+    body {
+      padding-top: 20px;
+    }
+
+    .file-link {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .file-list-item {
+      cursor: pointer;
+      /* เปลี่ยน cursor เป็น pointer เมื่อ hover */
+      color: blue;
+      /* กำหนดสีของลิงก์ชื่อไฟล์ */
+      text-decoration: underline;
+      /* ขีดเส้นใต้ลิงก์ชื่อไฟล์ */
+    }
+
+    .file-display-area {
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .file-display-area img {
+      max-width: 100%;
+      max-height: 400px;
+      /* ปรับขนาดรูปภาพแสดงผล */
+      display: block;
+      margin: 0 auto;
+      /* จัดรูปภาพไว้ตรงกลาง */
+    }
+
+    .file-display-area embed {
+      width: 100%;
+      height: 600px;
+      /* ปรับขนาด PDF viewer */
+    }
   </style>
 </head>
 
@@ -57,8 +97,7 @@ require_once 'auth.php';
     $inspection_id = $_REQUEST['inspection_id'];
 
     $po = new Po;
-    $rsInspectionPeriod = $po->getInspectionPeriodOneLine($po_id, $period_id);
-    $rsInspectionPeriodDetail = $po->getInspectionPeriodDetail($po_id, $period_id);
+    $rsInspectionPeriod = $po->getInspectionOnePeriod($po_id, $period_id);
     $rsInspectionFiles = $po->getInspectionFiles($po_id, $period_id, $inspection_id);
 
     $supplier = new Supplier;
@@ -97,38 +136,23 @@ require_once 'auth.php';
                 <div class="card-header d-flex">
                   <h6 class="m-1 fw-bold">รายการไฟล์</h6>
                   <!-- เรียก Modal -->
-                  <a href="" class="btn btn-success btn-sm btnAdd" title="Add" style="margin: 0px 5px 5px 5px;">
+                  <a href="" class="btn btn-success btn-sm btnAdd" title="Add" style="margin: 0px 5px 5px 5px;" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                     <i class="fa-solid fa-plus"></i>
                   </a>
                 </div>
                 <!-- <div class="card-body" id="recordsDisplay">
                 </div> -->
+                <!-- ส่วนของตารางแสดงรายชื่อไฟล์ -->
                 <div class="card-body p-0" id="recordsDisplay">
                   <table id="tableMain" class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
                         <th class="text-center p-1">#</th>
-                        <th class="text-center p-1" >ชื่อไฟล์</th>
-                        <th class="text-center p-1" style="width: 120px;">Action</th>
+                        <th class="text-center p-1">ชื่อไฟล์</th>
+                        <th class="text-center p-1" style="width: 120px;"></th>
                       </tr>
                     </thead>
                     <tbody id="tbody">
-                      <!-- < ?php foreach ($rsInspectionFiles as $row) {
-                        $html = <<<EOD
-                                        <tr data-file_id='{$row['file_id']}' data-record_id='{$row['record_id']}'>
-                                            <td class="tdMain p-0">{$row['file_id']}</td>
-                                            <td class="tdMain p-0"><span class="file-list-item" data-fileurl="{$row['file_path']}" data-filetype="{$row['file_type']}" data-filename="{$row['file_name']}">{$row['file_name']}</span></td>
-                                            <td class="tdMain p-0 action" align='center'>
-                                                <div class='btn-group-sm'>
-                                                    <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-id='{$row['record_id']}'>
-                                                        <i class='fa-regular fa-trash-can'></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        EOD;
-                        echo $html;
-                      } ?> -->
                     </tbody>
                   </table>
                 </div>
@@ -149,29 +173,56 @@ require_once 'auth.php';
             </div>
             <!-- /.card -->
 
-            <!-- ทำเป็น Modal -->
-            <div class="card border border-1 border-dark m-1">
-              <div class="card-body m-0 p-0">
-                <form id="uploadForm" enctype="multipart/form-data">
-                  <div class="form-group d-none">
-                    <label for="recordName">Record Name:</label>
-                    <input type="text" class="form-control" id="recordName" name="record_name" value="test">
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Attach Files</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                  <div class="form-group">
-                    <label for="files">Upload Files (PDF or Images):</label>
-                    <input type="file" class="form-control-file" id="files" name="files[]" multiple accept="image/*,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required>
-                    <small class="form-text text-muted">อนุญาตเฉพาะไฟล์ PDF, JPG, PNG, Excel (.xls, .xlsx) และขนาดไม่เกิน 2MB ต่อไฟล์</small>
+                  <div class="modal-body">
+
+
+
+
+                    <form id="uploadForm" enctype="multipart/form-data">
+                      <div class="card border border-1 border-dark m-1">
+                        <div class="card-body m-0 p-0">
+                          <div class="form-group">
+                            <label for="recordName">Record Name:</label>
+                            <input type="text" class="form-control" id="recordName" name="record_name" value="test">
+                          </div>
+                          <div class="form-group">
+                            <label for="files">Upload Files (PDF or Images):</label>
+                            <input type="file" class="form-control-file" id="files" name="files[]" multiple accept="image/*,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" required>
+                            <small class="form-text text-muted">อนุญาตเฉพาะไฟล์ PDF, JPG, PNG, Word (.doc, .docx), Excel (.xls, .xlsx), PowerPoint (.ppt, .pptx) และขนาดไม่เกิน 2MB ต่อไฟล์</small>
+                          </div>
+                          <div id="uploadStatus" class="mt-3"></div>
+                        </div>
+                        <!-- /.card-body -->
+                      </div>
+                      <!-- /.card -->
+                    </form>
+                    <!-- /.uploadForm -->
+
+
+
+
+
+
                   </div>
-                  <button type="submit" class="btn btn-primary">Upload Record and Files</button>
-                </form>
-                <!-- /.uploadForm -->
-                <div id="uploadStatus" class="mt-3"></div>
+                  <!-- /.modal-body -->
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Upload Files</button>
+                  </div>
+                </div>
+                <!-- /.modal-content -->
               </div>
-              <!-- /.card-body -->
+              <!-- /.modal-dialog -->
             </div>
-            <!-- /.card -->
-
-
+            <!-- /.modal -->
 
           </div>
           <!-- /.container-fluid -->
