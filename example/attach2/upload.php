@@ -1,6 +1,7 @@
 <?php
+@session_start();
 require_once 'db_config.php';
-
+$_SESSION['_REQUEST'] = $_REQUEST;
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['record_name'])) {
     $recordName = $_POST['record_name'];
 

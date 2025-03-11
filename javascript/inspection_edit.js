@@ -59,38 +59,6 @@ const inspection_id = $('#inspection_id').val();
 });
 
 $(document).ready(function () {
-  // Click ที่รายการใดๆ
-  $(document).on("click", ".tdMain", function (e) {
-    e.preventDefault();
-    $(".content-period").removeClass("d-none");
-    // หรือ
-    // $(".content-period").removeClass('d-none').addClass('d-flex');
-
-    let po_id = $(this).parents("tr").attr("po-id"); //$(this).closest("tr")
-    let po_no = $(this).parents("tr").find("a:first").html();
-    // let po_id = $(this).closest('tr').attr('po-id');
-    $(".card-title").html(po_no);
-
-    $.ajax({
-      url: "inspect_crud.php",
-      type: "POST",
-      data: {
-        po_id: po_id,
-        dataType: "json",
-        action: "selectperiod",
-      },
-      success: function (response) {
-        console.log(`response=${response}`);
-        // data = JSON.parse(response);
-        // console.log(data);
-
-        $("#tbody-period").html(response);
-      },
-    });
-  });
-});
-
-$(document).ready(function () {
   let order_no;
 
   $("#btnAdd").click(function () {
@@ -124,20 +92,6 @@ $(document).ready(function () {
         .find(".crud")
         .val("i")
         .end()
-
-        // .find("a:first")
-        // .css("display", "inline")
-        // .css("color", "red")
-        // .end()
-
-        // .find("a:last")
-        // .css("display", "inline")
-        // .css("color", "red")
-        // .end()
-
-        // .find("a:first")
-        // .attr("iid", "" + i + "")
-        // .end()
 
         .appendTo("#tbody-period");
     } else {
@@ -179,17 +133,6 @@ $(document).ready(function () {
         .end();
     });
   
-  // $(".btnDeleteThis").click(function() {
-  $(document).on("click", ".btnDeleteThis", function () {
-    // ส่วนสำหรับการลบ
-    // let row_id = $(this).attr("iid");
-    // console.log("#row" + row_id + "");
-    // เมื่อปุ่มนี้ถูกกด(this)จะลบ tr ของปุ่มนี้ออกไป
-    // $(this).closest("tr").remove();
-    // หรือใช้
-    $(this).parents("tr").remove();
-  });
-
   $("#btnCancel").click(function () {
     window.history.back();
     // window.location.href = "inspection_view.php";

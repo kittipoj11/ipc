@@ -122,71 +122,68 @@ require_once 'auth.php';
       <section>
         <div class="container-fluid">
           <div class="card">
-            <div class="card-header align-items-center">
-              <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspectionPeriod['inspection_id'] ?>">
-              <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspectionPeriod['period_id'] ?>">
-              <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspectionPeriod['po_id'] ?>">
-              <div class="row">
-                <div class="d-flex">
-                  <h6 class="m-1 fw-bold"><?= $rsInspectionPeriod['po_number'] . " : " . $rsInspectionPeriod['supplier_id'] . " - " . $rsInspectionPeriod['supplier_name'] ?></h6>
-                  <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspectionPeriod['period_number'] . "]" ?></h6>
+            <form id="uploadForm" enctype="multipart/form-data">
+              <div class="card-header align-items-center">
+                <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspectionPeriod['inspection_id'] ?>">
+                <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspectionPeriod['period_id'] ?>">
+                <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspectionPeriod['po_id'] ?>">
+                <div class="row">
+                  <div class="d-flex">
+                    <h6 class="m-1 fw-bold"><?= $rsInspectionPeriod['po_number'] . " : " . $rsInspectionPeriod['supplier_id'] . " - " . $rsInspectionPeriod['supplier_name'] ?></h6>
+                    <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspectionPeriod['period_number'] . "]" ?></h6>
+                  </div>
                 </div>
-              </div>
-              <div class="border border-1 border-dark m-1">
-                <div class="card-header d-flex">
-                  <h6 class="m-1 fw-bold">รายการไฟล์</h6>
-                  <!-- เรียก Modal -->
-                  <a href="" class="btn btn-success btn-sm btnAdd" title="Add" style="margin: 0px 5px 5px 5px;" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                    <i class="fa-solid fa-plus"></i>
-                  </a>
-                </div>
-                <!-- <div class="card-body" id="recordsDisplay">
+                <div class="border border-1 border-dark m-1">
+                  <div class="card-header d-flex">
+                    <h6 class="m-1 fw-bold">รายการไฟล์</h6>
+                    <!-- เรียก Modal -->
+                    <a href="" class="btn btn-success btn-sm btnAdd" title="Add" style="margin: 0px 5px 5px 5px;" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                      <i class="fa-solid fa-plus"></i>
+                    </a>
+                  </div>
+                  <!-- <div class="card-body" id="recordsDisplay">
                 </div> -->
-                <!-- ส่วนของตารางแสดงรายชื่อไฟล์ -->
-                <div class="card-body p-0" id="recordsDisplay">
-                  <table id="tableMain" class="table table-bordered table-striped table-sm">
-                    <thead>
-                      <tr>
-                        <th class="text-center p-1">#</th>
-                        <th class="text-center p-1">ชื่อไฟล์</th>
-                        <th class="text-center p-1" style="width: 120px;"></th>
-                      </tr>
-                    </thead>
-                    <tbody id="tbody">
-                    </tbody>
-                  </table>
+                  <!-- ส่วนของตารางแสดงรายชื่อไฟล์ -->
+                  <div class="card-body p-0" id="recordsDisplay">
+                    <table id="tableMain" class="table table-bordered table-striped table-sm">
+                      <thead>
+                        <tr>
+                          <th class="text-center p-1">#</th>
+                          <th class="text-center p-1">ชื่อไฟล์</th>
+                          <th class="text-center p-1" style="width: 120px;"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="tbody">
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.card-body -->
                 </div>
                 <!-- /.card-body -->
               </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+              <!-- /.card -->
 
-            <div class="card mt-4 file-display-area" id="fileDisplayArea">
-              <div class="card-header">
-                File Preview
+              <div class="card mt-4 file-display-area" id="fileDisplayArea">
+                <div class="card-header">
+                  File Preview
+                </div>
+                <div class="card-body">
+                  <p>No file selected.</p>
+                </div>
+                <!-- /.card-body -->
               </div>
-              <div class="card-body">
-                <p>No file selected.</p>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+              <!-- /.card -->
 
-            <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Attach Files</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
+              <!-- Modal : Upload -->
+              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Attach Files</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
 
-
-
-
-                    <form id="uploadForm" enctype="multipart/form-data">
                       <div class="card border border-1 border-dark m-1">
                         <div class="card-body m-0 p-0">
                           <div class="form-group">
@@ -203,28 +200,23 @@ require_once 'auth.php';
                         <!-- /.card-body -->
                       </div>
                       <!-- /.card -->
-                    </form>
+
+                    </div>
+                    <!-- /.modal-body -->
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Upload Files</button>
+                    </div>
                     <!-- /.uploadForm -->
-
-
-
-
-
-
                   </div>
-                  <!-- /.modal-body -->
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Upload Files</button>
-                  </div>
+                  <!-- /.modal-content -->
                 </div>
-                <!-- /.modal-content -->
+                <!-- /.modal-dialog -->
               </div>
-              <!-- /.modal-dialog -->
-            </div>
-            <!-- /.modal -->
+              <!-- /.modal -->
 
           </div>
+          </form>
           <!-- /.container-fluid -->
       </section>
       <!-- Main Content -->

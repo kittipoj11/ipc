@@ -25,9 +25,9 @@ $(document).ready(function () {
       type: "POST",
       data: {
         po_id: po_id,
-        dataType: "json",
         action: "selectperiod",
       },
+      dataType: "json",
       success: function (response) {
         // console.log(`response=${response}`);
         // data = JSON.parse(response);

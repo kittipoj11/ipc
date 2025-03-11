@@ -166,7 +166,7 @@ class Po extends Connection
         $rs = $stmt->fetchAll();
         return $rs;
     }
-    
+
     public function insertData($getData)
     {
         @session_start();
@@ -294,7 +294,7 @@ class Po extends Connection
 
                     // inspection_periods
                     $period_id = $this->myConnect->lastInsertId();
-                    
+
                     $stmtInspectPeriod->bindParam(':period_id', $period_id, PDO::PARAM_INT);
                     $stmtInspectPeriod->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
                     $stmtInspectPeriod->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
@@ -308,16 +308,16 @@ class Po extends Connection
 
                     // inspection_period_details
                     $inspection_id = $this->myConnect->lastInsertId();
-                    $_SESSION['$inspection_id']=$inspection_id;
+                    $_SESSION['$inspection_id'] = $inspection_id;
                     $stmtInspectPeriodDetail->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
                     // $stmtInspectPeriodDetail->bindParam(':order_no', 1,  PDO::PARAM_INT);
                     // $stmtInspectPeriodDetail->bindParam(':details', "",  PDO::PARAM_STR);
                     // $stmtInspectPeriodDetail->bindParam(':remark', "",  PDO::PARAM_STR);
-                    $_SESSION['message2']=2;
+                    $_SESSION['message2'] = 2;
 
                     $stmtInspectPeriodDetail->execute();
                     $stmtInspectPeriodDetail->closeCursor();
-                    $_SESSION['message3']=3;
+                    $_SESSION['message3'] = 3;
                 }
 
                 $_SESSION['message'] =  'data has been created successfully.';
@@ -384,7 +384,7 @@ class Po extends Connection
             $remarks = $getData['remarks'];
             $cruds = $getData['cruds'];
             $period_ids = $getData['period_ids'];
-            
+
             $number_of_rows = count($period_numbers);
 
             //ตัวแปร array สำหรับเก็บค่า index ของ element(class crud) แยกตาม value ของ crud ลงในแต่ละ array
@@ -596,7 +596,7 @@ class Po extends Connection
             $_SESSION['message'] =  $e->getCode() + ' : ' + $e->getMessage();
         }
     }
-    
+
     public function deleteData($getData)
     {
         try {
@@ -678,9 +678,9 @@ class Po extends Connection
             }
             $number_of_order = count($insert_indexs) + count($update_indexs);
 
-            $_SESSION['insert']=$insert_indexs;
-            $_SESSION['update']=$update_indexs;
-            $_SESSION['delete']=$delete_indexs;
+            $_SESSION['insert'] = $insert_indexs;
+            $_SESSION['update'] = $update_indexs;
+            $_SESSION['delete'] = $delete_indexs;
 
             //UPDATE po_main
             $sql = <<<EOD
@@ -761,6 +761,98 @@ class Po extends Connection
             $_SESSION['message'] =  $e->getCode() + ' : ' + $e->getMessage();
         }
     }
+
+    public function insertInspectionFile($getData)
+    {
+        @session_start();
+
+        $_SESSION['getData in po_class'] = $getData;
+        return;
+        try {
+            // เริ่ม transaction
+            $this->myConnect->beginTransaction();
+
+            $recordName = $getData['inspection_id'];
+            $po_id = $getData['po_id'];
+            $period_id = $getData['period_id'];
+            $inspection_id = $getData['inspection_id'];
+
+            // บันทึก record หลัก
+
+
+            $sql = <<<EOD
+                        INSERT INTO `records`(`record_name`) 
+                        VALUES(:recordName)
+                    EOD;
+
+            $stmt = $this->myConnect->prepare($sql);
+            $stmt->bindParam(':recordName', $recordName, PDO::PARAM_STR);
+            $stmt->execute();
+
+            if (isset($_FILES['files'])) {
+                // โฟลเดอร์สำหรับเก็บไฟล์
+                $uploadDir = 'uploads/';
+
+                // ตรวจสอบว่าโฟลเดอร์ uploads มีอยู่หรือไม่ ถ้าไม่มีให้สร้าง
+                if (!file_exists($uploadDir)) {
+                    if (!mkdir($uploadDir, 0777, true)) { // สร้างโฟลเดอร์และตั้ง permission (0777 คือ read, write, execute สำหรับทุก user)
+                        throw new Exception("Failed to create uploads directory.");
+                    }
+                }
+
+                $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+                foreach ($_FILES['files']['tmp_name'] as $key => $tmp_name) {
+                    $file_type = $_FILES['files']['type'][$key];
+                    if (!in_array($file_type, $allowedTypes)) {
+                        throw new Exception("Invalid file type.");
+                    }
+
+                    $fileSize = $_FILES['files']['size'][$key];
+                    if ($fileSize > 2000000) { // 2MB limit
+                        throw new Exception("File size exceeds 2MB.");
+                    }
+
+                    $file_name = $_FILES['files']['name'][$key];
+                    $fileExtension = pathinfo($file_name, PATHINFO_EXTENSION);
+                    $newFileName = uniqid() . '.' . $fileExtension; //จำเป็นต้องเปลี่ยนชื่อหรือไม่?
+                    $file_path = $uploadDir . $newFileName;
+
+                    if (move_uploaded_file($tmp_name, $file_path)) {
+                        // บันทึกข้อมูลไฟล์ลงฐานข้อมูล
+                        $sql = <<<EOD
+                                    INSERT INTO `files`(`record_id`, `file_name`, `file_path`, `file_type`) 
+                                    VALUES(:recordName, :file_name, :file_path, :file_type)
+                                EOD;
+
+                        $stmt = $this->myConnect->prepare($sql);
+                        $stmt->bindParam(':recordName', $recordName, PDO::PARAM_STR);
+                        $stmt->bindParam(':file_name', $file_name, PDO::PARAM_STR);
+                        $stmt->bindParam(':file_path', $file_path, PDO::PARAM_STR);
+                        $stmt->bindParam(':file_type', $file_type, PDO::PARAM_STR);
+                        $stmt->execute();
+                    } else {
+                        throw new Exception("Failed to upload file.");
+                    }
+                }
+            }
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $_SESSION['message'] =  'This item could not be added.Because the data has duplicate values!!!';
+            } else {
+                $_SESSION['message'] =  $e->getCode() + ' ' + $e->getMessage();
+            }
+            // $this->myConnect->rollBack();
+        } catch (Exception $e) {
+            $_SESSION['message'] =  $e->getCode() + ' ' + $e->getMessage();
+        } finally {
+            // $stmt->closeCursor();
+            // $stmtPoPeriod->closeCursor();
+            // $stmtSubs->closeCursor();
+            // unset($stmt);
+            // unset($stmtPoPeriod);
+        }
+    }
+
     public function getHtmlData()
     {
         $sql = "select po_id, po_name, is_deleted 

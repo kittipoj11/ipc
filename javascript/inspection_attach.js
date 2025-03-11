@@ -2,10 +2,10 @@ $(document).ready(function () {
   // ฟังก์ชันสำหรับอัปโหลดไฟล์
   $("#uploadForm").on("submit", function (e) {
     e.preventDefault();
-    var formData = new FormData(this);
-
+    let formData = new FormData(this);
+    formData.append('action','upload');
     $.ajax({
-      url: "upload.php",
+      url: "po_crud.php",
       type: "POST",
       data: formData,
       contentType: false,

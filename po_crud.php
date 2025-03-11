@@ -27,6 +27,8 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
     $rs = $obj->getPeriodByPoId($_REQUEST['po_id']);
     createPeriodTable($rs);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'upload') {
+    $obj->insertInspectionFile($_REQUEST);
 } else {
     // getRecordAll($obj);
 }

@@ -20,6 +20,9 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectfile') {
     $rsInspectionFiles = $obj->getInspectionFiles($_REQUEST['po_id'] ,$_REQUEST['period_id'],$_REQUEST['inspection_id']);
     echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'upload') {
+    $_SESSION['_REQUEST'] = $_REQUEST;
+    print_r($_REQUEST);
 } else {
     // getRecordAll($obj);
 }
