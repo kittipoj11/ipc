@@ -50,7 +50,7 @@ $(document).ready(function () {
     // console.log($(".firstTr:last").find(".period:last").val());
     // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
     // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
-    if ($("#tbody-period").has("tr.firstTr").length > 0) {
+    if ($("#tbody-period").has(".firstTr[crud!='d']").length > 0) {
       period = $(".firstTr[crud!='d']:last").find(".period_number:last").val();
       period++;
       $(".firstTr[crud!='d']:last")
@@ -78,7 +78,7 @@ $(document).ready(function () {
         .val("")
         .end()
 
-        .find(".crud")
+        .find("td input.crud")
         .val("i")
         .end()
 
@@ -100,14 +100,15 @@ $(document).ready(function () {
     }
     else {
       // Create the new tr element using jQuery
-      const firstTr = $("<tr class='firstTr'>" +
-        "<td class='input-group-sm p-0'><input type='number' name='period_numbers[]' class='form-control period_number' value='1' readonly></td>" +
-        "<td class='input-group-sm p-0'><input type='number' name='interim_payments[]' class='form-control interim_payment' required></td>" +
-        "<td class='input-group-sm p-0'><input type='number' name='interim_payment_percents[]' class='form-control interim_payment_percent'></td>" +
-        "<td class='input-group-sm p-0'><input type='text' name='remarks[]' class='form-control remark'></td>" +
-        "<td class='input-group-sm p-0'><input type='text' name='cruds[]' class='form-control crud' value='s'></td>"+
-        "<td class='input-group-sm p-0 d-nonex'><input type='text' name='period_id[]' class='form-control period_id' readonly></td>" +
-        "</tr>");
+      const firstTr =`<tr class='firstTr' crud='i'>
+                            <td class='input-group-sm p-0'><input type='number' name='period_numbers[]' class='form-control period_number' value='1' readonly></td>
+                            <td class='input-group-sm p-0'><input type='number' name='interim_payments[]' class='form-control interim_payment'></td>
+                            <td class='input-group-sm p-0'><input type='number' name='interim_payment_percents[]' class='form-control interim_payment_percent'></td>
+                            <td class='input-group-sm p-0'><input type='text' name='remarks[]' class='form-control remark'></td>
+                            <td class='input-group-sm p-0'><input type='text' name='cruds[]' class='form-control crud' value='i'></td>
+                            <td class='input-group-sm p-0 d-nonex'><input type='text' name='period_id[]' class='form-control period_id' readonly></td>
+                          </tr>`;
+                        
       $("#tbody-period").append(firstTr);
     }
   });
@@ -116,12 +117,12 @@ $(document).ready(function () {
       let period;
       // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-period
       // $("#tbody-period").find("tr:not(:first):last").remove();
-      // $("#tbody-period tr:not(:first):last").remove();
-      $("#tbody-period tr:not(:first)[crud!='d']:last")
+      $("#tbody-period .firstTr[crud!='d']:last")
+      // $("#tbody-period tr:not(:first)[crud!='d']:last")
         .attr("crud", "d")
         .addClass("d-none")
 
-        .find(".crud")
+        .find("td input.crud")
         .val("d")
         .end();
     });

@@ -21,14 +21,10 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
     $rs = $obj->getRecordById($_REQUEST['plan_status_id']);
     echo json_encode($rs);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updateInspectionPeriod') {
-    $rs = $obj->updateInspectionPeriod($_REQUEST);
-    // createPeriodTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
     $rs = $obj->getPeriodByPoId($_REQUEST['po_id']);
     createPeriodTable($rs);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'upload') {
-    $obj->insertInspectionFile($_REQUEST);
+
 } else {
     // getRecordAll($obj);
 }

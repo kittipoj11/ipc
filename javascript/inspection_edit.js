@@ -28,7 +28,7 @@ const inspection_id = $('#inspection_id').val();
       // return;
       $.ajax({
         type: "POST",
-        url: "po_crud.php",
+        url: "inspection_crud.php",
         // data: $(this).serialize(),
         data: data_sent,
         success: function (response) {
@@ -65,7 +65,7 @@ $(document).ready(function () {
     // console.log($(".firstTr:last").find(".order_no:last").val());
         // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
     // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
-    if ($("#tbody-period").has("tr.firstTr").length > 0) {
+    if ($("#tbody-order").has(".firstTr[crud!='d']").length > 0) {
       order_no = $(".firstTr[crud!='d']:last").find(".order_no:last").val();
       order_no++;
       $(".firstTr[crud!='d']:last")
@@ -89,46 +89,44 @@ $(document).ready(function () {
         .val("")
         .end()
 
-        .find(".crud")
+        .find("td input.crud")
         .val("i")
         .end()
 
-        .appendTo("#tbody-period");
+        .appendTo("#tbody-order");
     } else {
       // Create the new tr element using jQuery
-      const firstTr = $(
-        "<tr class='firstTr'>" +
-          "<td class='input-group-sm p-0'><input type='number' name='order_nos[]' class='form-control order_no' value='1' readonly></td>" +
-          "<td class='input-group-sm p-0'><input type='text' name='details[]' class='form-control detail' required></td>" +
-          "<td class='input-group-sm p-0'><input type='text' name='remarks[]' class='form-control remark'></td>" +
-          "<td class='input-group-sm p-0'><input type='text' name='cruds[]' class='form-control crud' value='i'></td>" +
-          "<td class='input-group-sm p-0 d-nonex'><input type='text' name='rec_id[]' class='form-control rec_id' readonly></td>" +
-          "</tr>"
-      );
+      const firstTr = `<tr class='firstTr' crud='i'>
+                        <td class='input-group-sm p-0'><input type='number' name='order_nos[]' class='form-control order_no' value='1' readonly></td>
+                        <td class='input-group-sm p-0'><input type='text' name='details[]' class='form-control detail'></td>
+                        <td class='input-group-sm p-0'><input type='text' name='remarks[]' class='form-control remark'></td>
+                        <td class='input-group-sm p-0'><input type='text' name='cruds[]' class='form-control crud' value='i'></td>
+                        <td class='input-group-sm p-0 d-nonex'><input type='text' name='rec_id[]' class='form-control rec_id' readonly></td>
+                      </tr>`;
 
-      $("#tbody-period").append(firstTr);
+      $("#tbody-order").append(firstTr);
     }
   });
 
   $("#btnClear").click(function () {
-    // ลบ tr ทั้งหมดที่ไม่ใช่ตัวแรกใน #tbody-period
-    // $("#tbody-period tr:gt(0)").remove();
+    // ลบ tr ทั้งหมดที่ไม่ใช่ตัวแรกใน #tbody-order
+    // $("#tbody-order tr:gt(0)").remove();
     // หรือ
-    // $("#tbody-period").find("tr:not(:first)").remove();
+    // $("#tbody-order").find("tr:not(:first)").remove();
     // หรือ
-    $("#tbody-period").find("tr:gt(0)").remove();
+    $("#tbody-order").find("tr:gt(0)").remove();
   });
 
     $("#btnDeleteLast").click(function () {
-      let period;
-      // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-period
-      // $("#tbody-period").find("tr:not(:first):last").remove();
-      // $("#tbody-period tr:not(:first):last").remove();
-      $("#tbody-period tr:not(:first)[crud!='d']:last")
+      let order;
+      // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-order
+      // $("#tbody-order").find("tr:not(:first):last").remove();
+      // $("#tbody-order tr:not(:first):last").remove();
+      $("#tbody-order .firstTr[crud!='d']:last")
         .attr("crud", "d")
         .addClass("d-none")
 
-        .find(".crud")
+        .find("td input.crud")
         .val("d")
         .end();
     });

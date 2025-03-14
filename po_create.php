@@ -207,9 +207,8 @@ require_once 'auth.php';
                             </tr>
                           </thead>
 
-                          <tbody id="tableBody">
-                            <tr class="firstTr">
-                              <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
+                          <tbody id="tbody-period">
+                            <!-- <tr class="firstTr">
                               <td class="input-group-sm p-0"><input type="number" name="period_numbers[]" class="form-control period_number" value="1" readonly>
                               </td>
                               <td class="input-group-sm p-0"><input type="number" name="interim_payments[]" class="form-control interim_payment" require>
@@ -227,7 +226,7 @@ require_once 'auth.php';
                                 <input type="text" name="cruds[]" class="form-control crud" value="i">
                               </td>
                               <td class="input-group-sm p-0 d-nonex"><input type="text" name="period_id[]" class="form-control period_id" readonly></td>
-                            </tr>
+                            </tr> -->
                           </tbody>
                         </table>
                       </div>

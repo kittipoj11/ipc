@@ -25,7 +25,7 @@ $(document).ready(function () {
       type: "POST",
       data: {
         po_id: po_id,
-        action: "selectperiod",
+        action: "selectInspectionAllPeriod",
       },
       dataType: "json",
       success: function (response) {

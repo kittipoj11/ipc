@@ -284,7 +284,7 @@ require_once 'auth.php';
 
                     <div class="card-body p-0">
                       <!-- สร้าง Table ตามปกติ -->
-                      <table class="table table-bordered justify-content-center text-center" id="tablePeriod">
+                      <table class="table table-bordered justify-content-center text-center" id="tableOrder">
                         <thead>
                           <tr>
                             <th class="p-1" width="5%">ลำดับที่</th>
@@ -295,7 +295,7 @@ require_once 'auth.php';
                           </tr>
                         </thead>
 
-                        <tbody id="tbody-period">
+                        <tbody id="tbody-order">
                           <?php foreach ($rsInspectionPeriodDetail as $row) { ?>
                             <tr class="firstTr">
                               <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->

@@ -226,7 +226,7 @@ require_once 'auth.php';
 
                             <tbody id="tbody-period">
                               <?php foreach ($rsPeriod as $row) { ?>
-                                <tr class="firstTr">
+                                <tr class="firstTr" crud='s'>
                                   <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
                                   <td class="input-group-sm p-0"><input type="number" name="period_numbers[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>
                                   </td>

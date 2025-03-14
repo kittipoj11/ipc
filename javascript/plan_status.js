@@ -123,7 +123,7 @@ $(document).ready(function () {
     } else {
       action = 'updatedata';
     }
-    console.log(`action={$action}`);
+    console.log(`action=${action}`);
     $.ajax({
       url: "plan_status_crud.php",
       type: "POST",

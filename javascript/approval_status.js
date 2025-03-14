@@ -18,7 +18,7 @@ $(document).ready(function () {
         action: 'selectdata'
       },
       success: function (response) {
-        console.log(`response={$response}`);
+        console.log(`response=${response}`);
         data = JSON.parse(response);
         // console.log(data);
         $("#approval_status_id").val(data.approval_status_id);
@@ -123,7 +123,7 @@ $(document).ready(function () {
     } else {
       action = 'updatedata';
     }
-    console.log(`action={$action}`);
+    console.log(`action=${action}`);
     $.ajax({
       url: "approval_status_crud.php",
       type: "POST",
