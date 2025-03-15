@@ -89,6 +89,7 @@ function createPeriodTable($getRs)
         //     </table>
         // EOD;
         echo $html;
+        $_SESSION['html'] = $html;
         // print_r($rs);
     } catch (PDOException $e) {
         echo 'Data not found!';

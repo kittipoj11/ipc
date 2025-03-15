@@ -109,9 +109,9 @@ require_once 'auth.php';
                     <tbody id="tbody">
                       <?php foreach ($rsPoMain as $row) {
                         $html = <<<EOD
-                                        <tr data-id='{$row['po_id']}'>
+                                        <tr data-po_id='{$row['po_id']}'>
                                             <td class="tdMain p-0 d-none">{$row['po_id']}</td>
-                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='Edit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_number']}'>{$row['po_number']}</a></td>
+                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='Edit' style='margin: 0px 5px 5px 5px' data-po_number='{$row['po_number']}'>{$row['po_number']}</a></td>
                                             <td class="tdMain p-0">{$row['project_name']}</td>
                                             <td class="tdMain p-0">{$row['supplier_name']}</td>
                                             <td class="tdMain p-0">{$row['location_name']}</td>
@@ -120,10 +120,10 @@ require_once 'auth.php';
                                             <td class="tdMain p-0 text-right">{$row['number_of_period']}</td>
                                             <td class="tdMain p-0 action d-none" align='center'>
                                                 <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>
+                                                    <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-po_id='{$row['po_id']}'>
                                                         <i class='fa-regular fa-pen-to-square'></i>
                                                     </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>
+                                                    <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-po_id='{$row['po_id']}'>
                                                         <i class='fa-regular fa-trash-can'></i>
                                                     </a>
                                                 </div>

@@ -1,11 +1,12 @@
 $(document).ready(function () {
   $(document).on("click", "a.po_number", function (e) {
       e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
-      const po_id = $(this).closest("tr").data("id");
+      const po_id = $(this).closest("tr").data("po_id");
       // window.location.href = "po_edit.php?po_id=" + po_id + "&href=inspect.php";
       window.location.href = "inspection_view.php?po_id=" + po_id;
   });
 });
+
 
 $(document).ready(function () {
   // Click ที่รายการใดๆ
@@ -15,8 +16,10 @@ $(document).ready(function () {
     // หรือ
     // $(".content-period").removeClass('d-none').addClass('d-flex');
 
-    let po_id = $(this).closest("tr").data("id"); //$(this).closest("tr")
-    let po_number = $(this).closest("tr").find("a:first").html();
+    let po_id = $(this).closest("tr").data("po_id"); //$(this).closest("tr")
+    let po_number = $(this).closest("tr").find("a:first").data("po_number");
+    console.log(`po_id = ${po_id}` );
+    console.log(`po_number = ${po_number}` );
     // let po_id = $(this).closest('tr').attr('po-id');
     $(".card-title").html(po_number);
 
@@ -25,16 +28,19 @@ $(document).ready(function () {
       type: "POST",
       data: {
         po_id: po_id,
-        action: "selectperiod",
+        action: "selectInspectionAllPeriod",
       },
-      dataType: "json",
+      // dataType: "json",
       success: function (response) {
-        // console.log(`response=${response}`);
+        console.log(`response=${response}`);
         // data = JSON.parse(response);
         // console.log(data);
 
         $("#tbody-period").html(response);
       },
+      error:function(){
+        console.log(`Error!!!`);
+      }
     });
   });
 
