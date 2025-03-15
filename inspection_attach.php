@@ -220,7 +220,7 @@ require_once 'auth.php';
 
               </form>
               <!-- /.uploadForm -->
-              
+
             </div>
             <!-- /.col-12 -->
           </div>
