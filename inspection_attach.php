@@ -3,7 +3,6 @@
 
 require_once 'config.php';
 require_once 'auth.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -62,7 +61,7 @@ require_once 'auth.php';
 
     .file-display-area img {
       max-width: 100%;
-      max-height: 400px;
+      max-height: 600px;
       /* ปรับขนาดรูปภาพแสดงผล */
       display: block;
       margin: 0 auto;
@@ -121,19 +120,19 @@ require_once 'auth.php';
       <!-- Main content -->
       <section>
         <div class="container-fluid">
-          <div class="card">
-            <form id="uploadForm" enctype="multipart/form-data">
-              <div class="card-header align-items-center">
-                <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspectionPeriod['inspection_id'] ?>">
-                <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspectionPeriod['period_id'] ?>">
-                <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspectionPeriod['po_id'] ?>">
-                <div class="row">
-                  <div class="d-flex">
+          <div class="row">
+            <div class="col-12">
+              <form id="uploadForm" enctype="multipart/form-data">
+                <div class="card">
+                  <div class="card-header d-flex align-items-center">
+                    <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspectionPeriod['inspection_id'] ?>">
+                    <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspectionPeriod['period_id'] ?>">
+                    <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspectionPeriod['po_id'] ?>">
+
                     <h6 class="m-1 fw-bold"><?= $rsInspectionPeriod['po_number'] . " : " . $rsInspectionPeriod['supplier_id'] . " - " . $rsInspectionPeriod['supplier_name'] ?></h6>
                     <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspectionPeriod['period_number'] . "]" ?></h6>
                   </div>
-                </div>
-                <div class="border border-1 border-dark m-1">
+
                   <div class="card-header d-flex">
                     <h6 class="m-1 fw-bold">รายการไฟล์</h6>
                     <!-- เรียก Modal -->
@@ -141,10 +140,9 @@ require_once 'auth.php';
                       <i class="fa-solid fa-plus"></i>
                     </a>
                   </div>
-                  <!-- <div class="card-body" id="recordsDisplay">
-                </div> -->
+
                   <!-- ส่วนของตารางแสดงรายชื่อไฟล์ -->
-                  <div class="card-body p-0" id="recordsDisplay">
+                  <div class="card-body m-0 p-0" id="recordsDisplay">
                     <table id="tableMain" class="table table-bordered table-striped table-sm">
                       <thead>
                         <tr>
@@ -159,67 +157,78 @@ require_once 'auth.php';
                   </div>
                   <!-- /.card-body -->
                 </div>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card -->
+                <!-- /.card -->
 
-              <div class="card mt-4 file-display-area" id="fileDisplayArea">
-                <div class="card-header">
-                  File Preview
-                </div>
-                <div class="card-body">
-                  <p>No file selected.</p>
-                </div>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card -->
-
-              <!-- Modal : Upload -->
-              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Attach Files</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-
-                      <div class="card border border-1 border-dark m-1">
-                        <div class="card-body m-0 p-0">
-                          <div class="form-group">
-                            <label for="recordName">Record Name:</label>
-                            <input type="text" class="form-control" id="recordName" name="record_name" value="test">
-                          </div>
-                          <div class="form-group">
-                            <label for="files">Upload Files (PDF or Images):</label>
-                            <input type="file" class="form-control-file" id="files" name="files[]" multiple accept="image/*,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" required>
-                            <small class="form-text text-muted">อนุญาตเฉพาะไฟล์ PDF, JPG, PNG, Word (.doc, .docx), Excel (.xls, .xlsx), PowerPoint (.ppt, .pptx) และขนาดไม่เกิน 2MB ต่อไฟล์</small>
-                          </div>
-                          <div id="uploadStatus" class="mt-3"></div>
-                        </div>
-                        <!-- /.card-body -->
-                      </div>
-                      <!-- /.card -->
-
-                    </div>
-                    <!-- /.modal-body -->
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Upload Files</button>
-                    </div>
-                    <!-- /.uploadForm -->
+                <div class="card mt-4 file-display-area" id="fileDisplayArea">
+                  <div class="card-header">
+                    File Preview
                   </div>
-                  <!-- /.modal-content -->
+                  <div class="card-body">
+                    <p>No file selected.</p>
+                  </div>
+                  <!-- /.card-body -->
                 </div>
-                <!-- /.modal-dialog -->
-              </div>
-              <!-- /.modal -->
+                <!-- /.card -->
 
+                <!-- Modal : Upload -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Attach Files</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+
+                        <div class="card border border-1 border-dark m-1">
+                          <div class="card-body m-0 p-0">
+                            <div class="form-group">
+                              <label for="recordName">Record Name:</label>
+                              <input type="text" class="form-control" id="recordName" name="record_name" value="test">
+                            </div>
+                            <div class="form-group">
+                              <label for="files">Upload Files (PDF or Images):</label>
+                              <input type="file" class="form-control-file" id="files" name="files[]" multiple accept="image/*,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" required>
+                              <small class="form-text text-muted">อนุญาตเฉพาะไฟล์ PDF, JPG, PNG, Word (.doc, .docx), Excel (.xls, .xlsx), PowerPoint (.ppt, .pptx) และขนาดไม่เกิน 2MB ต่อไฟล์</small>
+                            </div>
+                            <div id="uploadStatus" class="mt-3">
+
+                            </div>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+
+                      </div>
+                      <!-- /.modal-body -->
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                        <!-- วิธีที่ 1. เป็นวิธีที่ง่ายและสะดวกที่สุด หากเพียงต้องการให้ Modal ปิดเมื่อปุ่มถูกคลิก -->
+                        <!-- <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Upload Files</button> -->
+
+                        <!-- วิธีที่ 2. ไม่ได้กำหนด data-bs-dismiss="modal" เพราะต้องการให้สั่งการทำงานจาก javascript -->
+                        <button type="submit" class="btn btn-primary">Upload Files</button>
+                      </div>
+                      <!-- /.uploadForm -->
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+
+              </form>
+              <!-- /.uploadForm -->
+              
+            </div>
+            <!-- /.col-12 -->
           </div>
-          </form>
-          <!-- /.container-fluid -->
+          <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
       </section>
-      <!-- Main Content -->
+      <!-- /Main Content -->
     </div>
     <!-- /.Content Wrapper -->
 

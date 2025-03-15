@@ -4,6 +4,11 @@ $(document).ready(function () {
     e.preventDefault();
     let formData = new FormData(this);
     formData.append("action", "insertInspectionFile");
+
+    // ลบ <div> ทั้งหมดที่เป็นลูก,หลานของ #uploadStatus
+    $("#uploadStatus > div").remove();
+    // หรือใช้ $("#uploadStatus").empty();
+    
     $.ajax({
       url: "inspection_crud.php",
       type: "POST",
@@ -13,45 +18,44 @@ $(document).ready(function () {
       processData: false,
       dataType: "json",
       success: function (response) {
-        console.log(response);
+        `<div class="alert alert-success">${response.message}</div>`;
         if (response.status === "success") {
-          $("#uploadStatus").html(
-            `<div class="alert alert-success">${response.message}</div>`
-          );
-          // $("#uploadForm")[0].reset();
-          // displayRecords(); // รีเฟรชรายการ records
-          // clearFileDisplay(); // เคลียร์พื้นที่แสดงไฟล์เมื่ออัปโหลดสำเร็จ
+          const modal = document.getElementById("staticBackdrop");
+          const modalInstance = bootstrap.Modal.getInstance(modal);
+          modalInstance.hide();
+
+          $("#uploadForm")[0].reset();
+          displayRecords(); // รีเฟรชรายการ records
+          clearFileDisplay(); // เคลียร์พื้นที่แสดงไฟล์เมื่ออัปโหลดสำเร็จ
         } else {
-          $("#uploadStatus").html(
-            `<div class="alert alert-danger">${response.message}</div>`
-          );
+          // $("#uploadStatus").html(
+          //   `<div class="alert alert-danger">${response.message}</div>`
+          // );
         }
-        $("#uploadForm")[0].reset();
-        displayRecords(); // รีเฟรชรายการ records
-        clearFileDisplay(); // เคลียร์พื้นที่แสดงไฟล์เมื่ออัปโหลดสำเร็จ
       },
-      // error: function () {
-      //   $("#uploadStatus").html(
-      //     '<div class="alert alert-danger">เกิดข้อผิดพลาดในการอัปโหลด</div>'
-      //   );
-      // },
-      error: function (jqXHR, textStatus, errorThrown) {
-        console.error("AJAX Error!", textStatus, errorThrown);
+      error: function () {
         $("#uploadStatus").html(
-          `<div class="alert alert-danger">${textStatus} - ${errorThrown}</div>`
+          '<div class="alert alert-danger">เกิดข้อผิดพลาดในการอัปโหลด</div>'
         );
-        $("#uploadForm")[0].reset();
-        displayRecords(); // รีเฟรชรายการ records
-        clearFileDisplay(); // เคลียร์พื้นที่แสดงไฟล์เมื่ออัปโหลดสำเร็จ
       },
+      // error: function (jqXHR, textStatus, errorThrown) {
+      //   console.error("AJAX Error!", textStatus, errorThrown);
+      //   $("#uploadStatus").html(
+      //     `<div class="alert alert-danger">${textStatus} - ${errorThrown}</div>`
+      //   );
+
+      // },
     });
+    // $("#uploadForm")[0].reset();
+    // displayRecords(); // รีเฟรชรายการ records
+    // clearFileDisplay(); // เคลียร์พื้นที่แสดงไฟล์เมื่ออัปโหลดสำเร็จ
   });
 
-  // ฟังก์ชันสำหรับแสดง records และรายชื่อไฟล์ 
-    function displayRecords() {
-      let po_id = $("#po_id").val();
-      let period_id = $("#period_id").val();
-      let inspection_id = $("#inspection_id").val();
+  // ฟังก์ชันสำหรับแสดง records และรายชื่อไฟล์
+  function displayRecords() {
+    let po_id = $("#po_id").val();
+    let period_id = $("#period_id").val();
+    let inspection_id = $("#inspection_id").val();
 
     $.ajax({
       url: "inspection_crud.php",
@@ -115,33 +119,50 @@ $(document).ready(function () {
     if (fileType.startsWith("image/")) {
       // แสดงรูปภาพ
       fileDisplayArea.html(`<img src="${fileUrl}" alt="${fileName}">`);
-
     } else if (fileType === "application/pdf") {
       // แสดง PDF
-      fileDisplayArea.html(`<embed src="${fileUrl}"#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf">`);
-
-    } else if (fileType === "application/vnd.ms-msword" || fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+      fileDisplayArea.html(
+        `<embed src="${fileUrl}"#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf">`
+      );
+    } else if (
+      fileType === "application/vnd.ms-msword" ||
+      fileType ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
       // แสดงลิงก์ดาวน์โหลดสำหรับ Word
-      fileDisplayArea.html(`<p>File Type: MS Word</p><a href="${fileUrl}" target="_blank">Download ${fileName}</a>`);
-
-    } else if (fileType === "application/vnd.ms-excel" || fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+      fileDisplayArea.html(
+        `<p>File Type: MS Word</p><a href="${fileUrl}" target="_blank">Download ${fileName}</a>`
+      );
+    } else if (
+      fileType === "application/vnd.ms-excel" ||
+      fileType ===
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ) {
       // แสดงลิงก์ดาวน์โหลดสำหรับ Excel
-      fileDisplayArea.html(`<p>File Type: MS Excel</p><a href="${fileUrl}" target="_blank">Download ${fileName}</a>`);
-
-    } else if (fileType === "application/vnd.ms-powerpoint" || fileType === "application/vnd.openxmlformats-officedocument.presentationml.presentation") {
+      fileDisplayArea.html(
+        `<p>File Type: MS Excel</p><a href="${fileUrl}" target="_blank">Download ${fileName}</a>`
+      );
+    } else if (
+      fileType === "application/vnd.ms-powerpoint" ||
+      fileType ===
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    ) {
       // แสดงลิงก์ดาวน์โหลดสำหรับ PowerPoint
-      fileDisplayArea.html(`<p>File Type: MS PowerPoint</p><a href="${fileUrl}" target="_blank">Download ${fileName}</a>`);
-
+      fileDisplayArea.html(
+        `<p>File Type: MS PowerPoint</p><a href="${fileUrl}" target="_blank">Download ${fileName}</a>`
+      );
     } else {
       // ประเภทไฟล์อื่น ๆ
-      fileDisplayArea.html(`<p>Cannot display this file type: "${fileUrl}"</p>`);
+      fileDisplayArea.html(
+        `<p>Cannot display this file type: "${fileUrl}"</p>`
+      );
     }
 
     // อัปเดต header ของ fileDisplayArea ให้แสดงชื่อไฟล์
     $("#fileDisplayArea .card-header").text("File Preview: " + fileName);
   }
 
-  // ฟังก์ชันสำหรับเคลียร์พื้นที่แสดงไฟล์ 
+  // ฟังก์ชันสำหรับเคลียร์พื้นที่แสดงไฟล์
   function clearFileDisplay() {
     var fileDisplayArea = $("#fileDisplayArea .card-body");
     fileDisplayArea.html("<p>No file selected.</p>");
@@ -182,7 +203,7 @@ $(document).ready(function () {
     }
   });
 
-  // Event delegation สำหรับ click ที่ .file-list-item 
+  // Event delegation สำหรับ click ที่ .file-list-item
   $(document).on("click", ".file-list-item", function () {
     var fileUrl = $(this).data("fileurl");
     var fileType = $(this).data("filetype");
@@ -192,7 +213,7 @@ $(document).ready(function () {
 
   // เรียกฟังก์ชัน displayRecords เมื่อหน้าเว็บโหลด
   displayRecords();
-  
-//     // เคลียร์พื้นที่แสดงไฟล์เริ่มต้น
+
+  //     // เคลียร์พื้นที่แสดงไฟล์เริ่มต้น
   clearFileDisplay();
 });

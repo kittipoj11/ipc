@@ -47,15 +47,13 @@ require_once 'auth.php';
     <!-- Main Content Start -->
     <?php
     require_once  'class/po_class.php';
-    // require_once  'class/inspection_class.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
 
-    $_SESSION['Request'] = $_REQUEST;
+    // $_SESSION['Request'] = $_REQUEST;
     $po_id = $_REQUEST['po_id'];
     $period_id = $_REQUEST['period_id'];
     $inspection_id = $_REQUEST['inspection_id'];
-    
 
     $po = new Po;
     $rsInspectionPeriod = $po->getInspectionOnePeriod($po_id, $period_id);
@@ -87,16 +85,16 @@ require_once 'auth.php';
               <form name="myForm" id="myForm" action="" method="post">
                 <div class="card">
                   <div class="card-header d-flex align-items-center">
+                    <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspectionPeriod['inspection_id'] ?>">
+                    <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspectionPeriod['period_id'] ?>">
+                    <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspectionPeriod['po_id'] ?>">
+
                     <h6 class="m-1 fw-bold"><?= $rsInspectionPeriod['po_number'] . " : " . $rsInspectionPeriod['supplier_id'] . " - " . $rsInspectionPeriod['supplier_name'] ?></h6>
                     <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspectionPeriod['period_number'] . "]" ?></h6>
                     <button type="button" name="btnAttach" id="btnAttach" class="btn btn-primary btn-sm m-1"> <i class="fi fi-rr-clip"></i> </button>
                   </div>
 
                   <div class="card-body m-0 p-0">
-
-                    <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspectionPeriod['inspection_id'] ?>">
-                    <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspectionPeriod['period_id'] ?>">
-                    <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspectionPeriod['po_id'] ?>">
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
@@ -315,56 +313,56 @@ require_once 'auth.php';
                       </table>
                     </div>
                   </div>
+
+                  <div class="card">
+                    <div class="card-header d-none">
+                    </div>
+
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-4">
+                          <div class="row-1 input-group input-group-sm">
+                            <label for="workload_planned_percent" class="input-group-text ">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</label>
+                            <input type="number" class="form-control " name="workload_planned_percent" id="workload_planned_percent" disabled value="<?php echo isset($rsInspectionPeriod['workload_planned_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_planned_percent']) : ''; ?>">
+                            <label for="workload_planned_percent" class="input-group-text ">%</label>
+                          </div>
+                        </div>
+                        <div class="col-4">
+                          <div class="row-1 input-group input-group-sm">
+                            <label for="workload_actual_completed_percent" class="input-group-text ">ปริมาณที่แล้วเสร็จจริง</label>
+                            <input type="number" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsInspectionPeriod['workload_actual_completed_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_actual_completed_percent']) : ''; ?>">
+                            <label for="workload_actual_completed_percent" class="input-group-text ">%</label>
+                          </div>
+                        </div>
+
+                        <div class="col-4">
+                          <div class="row-1 input-group input-group-sm">
+                            <label for="workload_remaining_percent" class="input-group-text">ปริมาณงานคงเหลือ</label>
+                            <input type="number" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsInspectionPeriod['workload_remaining_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_remaining_percent']) : ''; ?>">
+                            <label for="workload_remaining_percent" class="input-group-text ">%</label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here"></textarea>
+                        <label for="floatingTextarea">หมายเหตุ:</label>
+                      </div>
+
+                      ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร
+                    </div>
+                    <!-- /.card-body -->
+
+                  </div>
+
+
+                  <div class="card-footer p-0 d-flex justify-content-end">
+                    <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก">
+                    <!-- <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary btn-sm m-1">บันทึก</button> -->
+                    <button type="button" name="btnCancel" id="btnCancel" class="btn btn-secondary btn-sm m-1">ยกเลิก</button>
+                  </div>
                 </div>
                 <!-- /.card -->
-
-                <div class="card">
-                  <div class="card-header d-none">
-                  </div>
-
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-4">
-                        <div class="row-1 input-group input-group-sm">
-                          <label for="workload_planned_percent" class="input-group-text ">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</label>
-                          <input type="number" class="form-control " name="workload_planned_percent" id="workload_planned_percent" disabled value="<?php echo isset($rsInspectionPeriod['workload_planned_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_planned_percent']) : ''; ?>">
-                          <label for="workload_planned_percent" class="input-group-text ">%</label>
-                        </div>
-                      </div>
-                      <div class="col-4">
-                        <div class="row-1 input-group input-group-sm">
-                          <label for="workload_actual_completed_percent" class="input-group-text ">ปริมาณที่แล้วเสร็จจริง</label>
-                          <input type="number" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsInspectionPeriod['workload_actual_completed_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_actual_completed_percent']) : ''; ?>">
-                          <label for="workload_actual_completed_percent" class="input-group-text ">%</label>
-                        </div>
-                      </div>
-
-                      <div class="col-4">
-                        <div class="row-1 input-group input-group-sm">
-                          <label for="workload_remaining_percent" class="input-group-text">ปริมาณงานคงเหลือ</label>
-                          <input type="number" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsInspectionPeriod['workload_remaining_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_remaining_percent']) : ''; ?>">
-                          <label for="workload_remaining_percent" class="input-group-text ">%</label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="form-floating">
-                      <textarea class="form-control" placeholder="Leave a comment here"></textarea>
-                      <label for="floatingTextarea">หมายเหตุ:</label>
-                    </div>
-
-                    ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร
-                  </div>
-                  <!-- /.card-body -->
-
-                </div>
-
-
-                <div class="card-footer p-0 d-flex justify-content-end">
-                  <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก">
-                  <!-- <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary btn-sm m-1">บันทึก</button> -->
-                  <button type="button" name="btnCancel" id="btnCancel" class="btn btn-secondary btn-sm m-1">ยกเลิก</button>
-                </div>
 
               </form>
               <!-- /.myForm -->

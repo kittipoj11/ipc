@@ -21,12 +21,13 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectInspectionAllPer
     echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertInspectionFile') {
     $obj->insertInspectionFile($_REQUEST);
-    echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
+    // echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deleteInspectionFile') {
     $obj->deleteInspectionFile($_REQUEST['file_id']);
 } else {
     // getRecordAll($obj);
 }
+
 
 // }
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
