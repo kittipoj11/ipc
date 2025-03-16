@@ -41,9 +41,9 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/inspect_status_class.php';
-    $inspect_status = new Inspect_status;
-    $rs = $inspect_status->getRecordAll();
+    require_once  'class/inspection_status_class.php';
+    $inspection_status = new inspection_status;
+    $rs = $inspection_status->getRecordAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -53,7 +53,7 @@ require_once 'auth.php';
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6 d-flex">
-              <h4>Inspect_status</h4>
+              <h4>inspection_status</h4>
               <a class="btn btn-success btn-sm btnNew" data-bs-toggle="modal" data-bs-placement="right" title="New" data-bs-target="#openModal" style="margin: 0px 5px 5px 5px;">
                 <i class="fa-solid fa-plus"></i>
               </a>
@@ -71,7 +71,7 @@ require_once 'auth.php';
 
               <div class="card">
                 <!-- <div class="card-header">
-                               <h3 class="card-title">inspect_status</h3>
+                               <h3 class="card-title">inspection_status</h3>
                            </div> -->
                 <!-- /.card-header -->
                 <div class="card-body" id="card-body">
@@ -79,22 +79,22 @@ require_once 'auth.php';
                     <thead>
                       <tr>
                         <th class="text-center" style="width: 100px;">#</th>
-                        <th class="text-center">Inspect_status name</th>
+                        <th class="text-center">inspection_status name</th>
                         <th class="text-center" style="width: 120px;">Action</th>
                       </tr>
                     </thead>
                     <tbody id="tbody">
                       <?php foreach ($rs as $row) {
                         $html = <<<EOD
-                                        <tr id="{$row['inspect_status_id']}">
-                                            <td>{$row['inspect_status_id']}</td>
-                                            <td>{$row['inspect_status_name']}</td>
+                                        <tr id="{$row['inspection_status_id']}">
+                                            <td>{$row['inspection_status_id']}</td>
+                                            <td>{$row['inspection_status_name']}</td>
                                             <td align='center'>
                                                 <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' iid='{$row['inspect_status_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' iid='{$row['inspection_status_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-pen-to-square'></i>
                                                     </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' iid='{$row['inspect_status_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' iid='{$row['inspection_status_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-trash-can'></i>
                                                     </a>
                                                 </div>
@@ -141,17 +141,17 @@ require_once 'auth.php';
             <!-- <input type="text" name="action" id="action"> -->
             <div class="modal-body">
               <div class="row m-3">
-                <label for="inspect_status_id" class="col-sm-6 col-form-label">#</label>
+                <label for="inspection_status_id" class="col-sm-6 col-form-label">#</label>
                 <div class="col-sm-6">
-                  <!-- <input type="hidden" class="inspect_status_id" name="inspect_status_id"> -->
-                  <input type="input" class="form-control form-control-sm fst-italic inspect_status_id" id="inspect_status_id" readonly name="inspect_status_id">
+                  <!-- <input type="hidden" class="inspection_status_id" name="inspection_status_id"> -->
+                  <input type="input" class="form-control form-control-sm fst-italic inspection_status_id" id="inspection_status_id" readonly name="inspection_status_id">
                 </div>
               </div>
 
               <div class="row m-3">
-                <label for="inspect_status_name" class="col-sm-6 col-form-label">inspect_status name</label>
+                <label for="inspection_status_name" class="col-sm-6 col-form-label">inspection_status name</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm" name="inspect_status_name" id="inspect_status_name">
+                  <input type="input" class="form-control form-control-sm" name="inspection_status_name" id="inspection_status_name">
                 </div>
               </div>
             </div>
@@ -192,7 +192,7 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- DataTable -->
     <!-- My JavaScript  -->
-    <script src="javascript/inspect_status.js"></script>
+    <script src="javascript/inspection_status.js"></script>
 
 </body>
 

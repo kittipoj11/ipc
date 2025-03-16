@@ -5,6 +5,16 @@ require_once 'connection_class.php';
 
 class Po extends Connection
 {
+    public function getExampleRecord()
+    {
+        $sql = <<<EOD
+                    SELECT * FROM your_table_name
+                EOD;
+        $stmt = $this->myConnect->prepare($sql);
+        $stmt->execute();
+        $rs = $stmt->fetchAll();
+        return $rs;
+    }
     public function getRecordAll()
     {
         $sql = <<<EOD

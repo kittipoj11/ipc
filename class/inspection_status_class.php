@@ -2,13 +2,13 @@
 // require_once 'config.php';
 require_once 'connection_class.php';
 
-class Inspect_status extends Connection
+class Inspection_status extends Connection
 {
     public function getRecordAll()
     {
         $sql = <<<EOD
-                select inspect_status_id, inspect_status_name, is_deleted 
-                from inspect_status 
+                select inspection_status_id, inspection_status_name, is_deleted 
+                from inspection_status 
                 where is_deleted = false
                 EOD;
         $stmt = $this->myConnect->prepare($sql);
@@ -28,10 +28,10 @@ class Inspect_status extends Connection
     public function getRecordById($id)
     {
         $sql = <<<EOD
-                select inspect_status_id, inspect_status_name, is_deleted 
-                from inspect_status
+                select inspection_status_id, inspection_status_name, is_deleted 
+                from inspection_status
                 where is_deleted = false
-                and inspect_status_id = :id
+                and inspection_status_id = :id
                 EOD;
 
         $stmt = $this->myConnect->prepare($sql);
@@ -43,12 +43,12 @@ class Inspect_status extends Connection
 
     public function insertData($getData)
     {
-        $inspect_status_name = $getData['inspect_status_name'];
+        $inspection_status_name = $getData['inspection_status_name'];
 
-        $sql = "insert into inspect_status(inspect_status_name) 
-                values(:inspect_status_name)";
+        $sql = "insert into inspection_status(inspection_status_name) 
+                values(:inspection_status_name)";
         $stmt = $this->myConnect->prepare($sql);
-        $stmt->bindParam(':inspect_status_name', $inspect_status_name, PDO::PARAM_STR);
+        $stmt->bindParam(':inspection_status_name', $inspection_status_name, PDO::PARAM_STR);
 
         try {
             if ($stmt->execute()) {
@@ -64,15 +64,15 @@ class Inspect_status extends Connection
     }
     public function updateData($getData)
     {
-        $inspect_status_id = $getData['inspect_status_id'];
-        $inspect_status_name = $getData['inspect_status_name'];
-        $sql = "update inspect_status 
-                set inspect_status_name = :inspect_status_name
-                where inspect_status_id = :inspect_status_id";
+        $inspection_status_id = $getData['inspection_status_id'];
+        $inspection_status_name = $getData['inspection_status_name'];
+        $sql = "update inspection_status 
+                set inspection_status_name = :inspection_status_name
+                where inspection_status_id = :inspection_status_id";
         // , update_datetime = CURRENT_TIMESTAMP()
         $stmt = $this->myConnect->prepare($sql);
-        $stmt->bindParam(':inspect_status_id', $inspect_status_id, PDO::PARAM_INT);
-        $stmt->bindParam(':inspect_status_name', $inspect_status_name, PDO::PARAM_STR);
+        $stmt->bindParam(':inspection_status_id', $inspection_status_id, PDO::PARAM_INT);
+        $stmt->bindParam(':inspection_status_name', $inspection_status_name, PDO::PARAM_STR);
 
         try {
             if ($stmt->execute()) {
@@ -88,13 +88,13 @@ class Inspect_status extends Connection
     }
     public function deleteData($getData)
     {
-        $inspect_status_id = $getData['inspect_status_id'];
+        $inspection_status_id = $getData['inspection_status_id'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
-        $sql = "update inspect_status 
+        $sql = "update inspection_status 
                 set is_deleted = 1
-                where inspect_status_id = :inspect_status_id";
+                where inspection_status_id = :inspection_status_id";
         $stmt = $this->myConnect->prepare($sql);
-        $stmt->bindParam(':inspect_status_id', $inspect_status_id, PDO::PARAM_INT);
+        $stmt->bindParam(':inspection_status_id', $inspection_status_id, PDO::PARAM_INT);
 
         try {
             if ($stmt->execute()) {
@@ -111,8 +111,8 @@ class Inspect_status extends Connection
 
     public function getHtmlData()
     {
-        $sql = "select inspect_status_id, inspect_status_name, is_deleted 
-                from inspect_status 
+        $sql = "select inspection_status_id, inspection_status_name, is_deleted 
+                from inspection_status 
                 where is_deleted = false";
 
         $stmt = $this->myConnect->prepare($sql);
@@ -136,8 +136,8 @@ class Inspect_status extends Connection
         $html .= "</tr>";
         foreach ($rs as $row) :
             $html .=  "<tr bgcolor='#c7c7c7'>";
-            $html .=  "<td>{$row['inspect_status_id']}</td>";
-            $html .=  "<td>{$row['inspect_status_name']}</td>";
+            $html .=  "<td>{$row['inspection_status_id']}</td>";
+            $html .=  "<td>{$row['inspection_status_name']}</td>";
             $html .=  "</tr>";
         endforeach;
 

@@ -2,9 +2,9 @@
 // @session_start();
 
 require_once 'config.php';
-require_once 'class/inspect_status_class.php';
+require_once 'class/inspection_status_class.php';
 
-$obj = new Inspect_status();
+$obj = new inspection_status();
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
@@ -17,7 +17,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $obj->deleteData($_REQUEST);
     getRecordAll($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $obj->getRecordById($_REQUEST['inspect_status_id']);
+    $rs = $obj->getRecordById($_REQUEST['inspection_status_id']);
     echo json_encode($rs);
 } else {
     getRecordAll($obj);
@@ -35,7 +35,7 @@ function getRecordAll($getObj)
                         <thead>
                             <tr>
                                 <th class="text-center" style="width: 100px;">#</th>
-                                <th class="text-center">Inspect_status name</th>
+                                <th class="text-center">inspection_status name</th>
                                 <th class="text-center" style="width: 120px;">Action</th>
                             </tr>
                         </thead>
@@ -44,9 +44,9 @@ function getRecordAll($getObj)
         echo $html;
         foreach ($rs as $row) {
             $html = <<<EOD
-                        <tr id="{$row['inspect_status_id']}">
-                            <td>{$row['inspect_status_id']}</td>
-                            <td>{$row['inspect_status_name']}</td>
+                        <tr id="{$row['inspection_status_id']}">
+                            <td>{$row['inspection_status_id']}</td>
+                            <td>{$row['inspection_status_name']}</td>
                             <td align='center'>
                                 <div class='btn-group-sm'>
                                     <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' style='margin: 0px 5px 5px 5px'>

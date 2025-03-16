@@ -97,7 +97,7 @@ require_once 'auth.php';
 
     $po = new Po;
     $rsInspectionPeriod = $po->getInspectionOnePeriod($po_id, $period_id);
-    $rsInspectionFiles = $po->getInspectionFiles($po_id, $period_id, $inspection_id);
+    $rsInspectionPeriodDetail = $po->getInspectionPeriodDetail($po_id, $period_id);
 
     $supplier = new Supplier;
     $supplier_rs = $supplier->getRecordAll();
@@ -228,7 +228,7 @@ require_once 'auth.php';
         </div>
         <!-- /.container-fluid -->
       </section>
-      <!-- /Main Content -->
+      <!-- Main Content -->
     </div>
     <!-- /.Content Wrapper -->
 

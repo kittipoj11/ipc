@@ -2,27 +2,27 @@ $(document).ready(function () {
   // $('#myForm').submit(function (e) {
 
   $(document).on("click", ".btnNew", function (e) {
-    $("#inspect_status_id").val('[Autonumber]');
-    $("#inspect_status_name").val('');
+    $("#inspection_status_id").val('[Autonumber]');
+    $("#inspection_status_name").val('');
   });
 
   $(document).on("click", ".btnEdit", function (e) {
     e.preventDefault();
-    let inspect_status_id = $(this).closest("tr").attr("id");
-  // console.log(`inspect_status_id = ${inspect_status_id} `);
+    let inspection_status_id = $(this).closest("tr").attr("id");
+  // console.log(`inspection_status_id = ${inspection_status_id} `);
     $.ajax({
-      url: "inspect_status_crud.php",
+      url: "inspection_status_crud.php",
       type: "POST",
       data: {
-        inspect_status_id: inspect_status_id,
+        inspection_status_id: inspection_status_id,
         action: 'selectdata'
       },
       success: function (response) {
         console.log(`response=${response}`);
         data = JSON.parse(response);
         // console.log(data);
-        $("#inspect_status_id").val(data.inspect_status_id);
-        $("#inspect_status_name").val(data["inspect_status_name"]);
+        $("#inspection_status_id").val(data.inspection_status_id);
+        $("#inspection_status_name").val(data["inspection_status_name"]);
       },
     });
   });
@@ -30,21 +30,21 @@ $(document).ready(function () {
   $(document).on("click", ".btnDelete", function (e) {
     e.preventDefault();
     // let id = $(this).attr("id").slice("delete".length);
-    let inspect_status_id = $(this).closest("tr").attr("id");
+    let inspection_status_id = $(this).closest("tr").attr("id");
     $.ajax({
-      url: "inspect_status_crud.php",
+      url: "inspection_status_crud.php",
       type: "POST",
       data: {
-        inspect_status_id: inspect_status_id,
+        inspection_status_id: inspection_status_id,
         action: 'selectdata'
       },
       success: function (response) {
         data = JSON.parse(response);
-        let inspect_status_name = data.inspect_status_name;
+        let inspection_status_name = data.inspection_status_name;
         Swal.fire({
           title: "Are you sure?",
-          // text: `You want to delete this item!:${inspect_status_name}`,
-          text: `You want to delete ${inspect_status_name} inspect_status`,
+          // text: `You want to delete this item!:${inspection_status_name}`,
+          text: `You want to delete ${inspection_status_name} inspection_status`,
           icon: "warning",
           showCancelButton: true,
           // cancelButtonColor: '#00ff00',
@@ -58,10 +58,10 @@ $(document).ready(function () {
         }).then((result) => {
           if (result.isConfirmed) {
             $.ajax({
-              url: "inspect_status_crud.php",
+              url: "inspection_status_crud.php",
               type: "POST",
               data: {
-                inspect_status_id: inspect_status_id,
+                inspection_status_id: inspection_status_id,
                 action: 'deletedata'
               },
               success: function (response) {
@@ -97,8 +97,8 @@ $(document).ready(function () {
                     // $("#tbody").html(response);
 
                     // // Load ใหม่ทั้งหน้า
-                    // // window.inspect_status.href = "103hall.php";
-                    // window.inspect_status.reload();
+                    // // window.inspection_status.href = "103hall.php";
+                    // window.inspection_status.reload();
                   }
                 });
               },
@@ -115,22 +115,22 @@ $(document).ready(function () {
   $(document).on("click", "#btnSaveData", function (e) {
     e.preventDefault();
 
-    let inspect_status_id = $("#inspect_status_id").val();
-    let inspect_status_name = $("#inspect_status_name").val();
+    let inspection_status_id = $("#inspection_status_id").val();
+    let inspection_status_name = $("#inspection_status_name").val();
     let action = '';
-    if (inspect_status_id == '[Autonumber]') {
+    if (inspection_status_id == '[Autonumber]') {
       action = 'insertdata';
     } else {
       action = 'updatedata';
     }
     console.log(`action=${action}`);
     $.ajax({
-      url: "inspect_status_crud.php",
+      url: "inspection_status_crud.php",
       type: "POST",
       // data: $(this).serialize(),
       data: {
-        inspect_status_id: inspect_status_id,
-        inspect_status_name: inspect_status_name,
+        inspection_status_id: inspection_status_id,
+        inspection_status_name: inspection_status_name,
         action: action
       },
       success: function (response) {
@@ -179,8 +179,8 @@ $(document).ready(function () {
             // $("#tbody").html(response);
 
             // // Load ใหม่ทั้งหน้า
-            // // window.inspect_status.href = "103hall.php";
-            // window.inspect_status.reload();
+            // // window.inspection_status.href = "103hall.php";
+            // window.inspection_status.reload();
           }
         });
       },

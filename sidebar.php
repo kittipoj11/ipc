@@ -50,7 +50,7 @@
                     </a>
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
-                            <a href="inspect_status.php" class="nav-link text-dark">
+                            <a href="inspection_status.php" class="nav-link text-dark">
                                 <i class="nav-icon fa-solid fa-truck d-none"></i>
                                 <p>Inspection status(สถานะการตรวจสอบ) ***system only</p>
                             </a>
