@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 13, 2025 at 01:28 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Generation Time: Mar 16, 2025 at 06:29 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.1.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -130,6 +130,23 @@ INSERT INTO `files` (`file_id`, `record_id`, `file_name`, `file_path`, `file_typ
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `inspection_approvals`
+--
+
+CREATE TABLE `inspection_approvals` (
+  `approval_id` int(11) UNSIGNED NOT NULL,
+  `inspection_id` int(11) UNSIGNED DEFAULT NULL,
+  `period` int(11) DEFAULT NULL,
+  `level_id` int(11) UNSIGNED DEFAULT NULL,
+  `approver_id` int(11) UNSIGNED DEFAULT NULL,
+  `approval_status_id` int(11) UNSIGNED DEFAULT NULL,
+  `approval_date` datetime DEFAULT NULL,
+  `comments` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `inspection_files`
 --
 
@@ -189,37 +206,20 @@ CREATE TABLE `inspection_period_details` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inspect_approvals`
+-- Table structure for table `inspection_status`
 --
 
-CREATE TABLE `inspect_approvals` (
-  `approval_id` int(11) UNSIGNED NOT NULL,
-  `inspect_id` int(11) UNSIGNED DEFAULT NULL,
-  `period` int(11) DEFAULT NULL,
-  `level_id` int(11) UNSIGNED DEFAULT NULL,
-  `approver_id` int(11) UNSIGNED DEFAULT NULL,
-  `approval_status_id` int(11) UNSIGNED DEFAULT NULL,
-  `approval_date` datetime DEFAULT NULL,
-  `comments` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `inspect_status`
---
-
-CREATE TABLE `inspect_status` (
-  `inspect_status_id` int(11) UNSIGNED NOT NULL,
-  `inspect_status_name` varchar(255) DEFAULT NULL,
+CREATE TABLE `inspection_status` (
+  `inspection_status_id` int(11) UNSIGNED NOT NULL,
+  `inspection_status_name` varchar(255) DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Dumping data for table `inspect_status`
+-- Dumping data for table `inspection_status`
 --
 
-INSERT INTO `inspect_status` (`inspect_status_id`, `inspect_status_name`, `is_deleted`) VALUES
+INSERT INTO `inspection_status` (`inspection_status_id`, `inspection_status_name`, `is_deleted`) VALUES
 (0, 'ไม่ผ่าน', 0),
 (1, 'รอตรวจ', 0),
 (2, 'ตรวจแล้ว', 0),
@@ -405,6 +405,33 @@ INSERT INTO `users` (`user_id`, `user_code`, `username`, `password`, `full_name`
 (7, '00004', 'A00004', '1111', 'DD D', 4, 1),
 (8, '00005', 'A00005', '1111', 'EE MD', 5, 1);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `your_table_name`
+--
+
+CREATE TABLE `your_table_name` (
+  `id` int(11) NOT NULL,
+  `category` varchar(50) DEFAULT NULL,
+  `column1` varchar(255) DEFAULT NULL,
+  `column2` varchar(255) DEFAULT NULL,
+  `column3` text DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `your_table_name`
+--
+
+INSERT INTO `your_table_name` (`id`, `category`, `column1`, `column2`, `column3`, `status`) VALUES
+(1, 'A', 'ข้อมูล A1', 'ข้อมูล A2', 'รายละเอียดเพิ่มเติมเกี่ยวกับ A', 1),
+(2, 'B', 'ข้อมูล B1', 'ข้อมูล B2', 'รายละเอียดเพิ่มเติมเกี่ยวกับ B', 0),
+(3, 'A', 'ข้อมูล A3', 'ข้อมูล A4', 'รายละเอียดเพิ่มเติมของ A อีกรายการ', 1),
+(4, 'C', 'ข้อมูล C1', 'ข้อมูล C2', 'รายละเอียดเพิ่มเติมเกี่ยวกับ C', 1),
+(5, 'B', 'ข้อมูล B3', 'ข้อมูล B4', 'รายละเอียดเพิ่มเติมของ B อีกรายการ', 1),
+(6, 'A', 'ข้อมูล A5', 'ข้อมูล A6', 'รายละเอียดเพิ่มเติม A ล่าสุด', 0);
+
 --
 -- Indexes for dumped tables
 --
@@ -443,6 +470,16 @@ ALTER TABLE `files`
   ADD KEY `record_id` (`record_id`);
 
 --
+-- Indexes for table `inspection_approvals`
+--
+ALTER TABLE `inspection_approvals`
+  ADD PRIMARY KEY (`approval_id`),
+  ADD KEY `inspect_id` (`inspection_id`),
+  ADD KEY `level_id` (`level_id`),
+  ADD KEY `approver_id` (`approver_id`),
+  ADD KEY `approval_status_id` (`approval_status_id`);
+
+--
 -- Indexes for table `inspection_files`
 --
 ALTER TABLE `inspection_files`
@@ -465,20 +502,10 @@ ALTER TABLE `inspection_period_details`
   ADD KEY `inspect_period_id` (`inspection_id`);
 
 --
--- Indexes for table `inspect_approvals`
+-- Indexes for table `inspection_status`
 --
-ALTER TABLE `inspect_approvals`
-  ADD PRIMARY KEY (`approval_id`),
-  ADD KEY `inspect_id` (`inspect_id`),
-  ADD KEY `level_id` (`level_id`),
-  ADD KEY `approver_id` (`approver_id`),
-  ADD KEY `approval_status_id` (`approval_status_id`);
-
---
--- Indexes for table `inspect_status`
---
-ALTER TABLE `inspect_status`
-  ADD PRIMARY KEY (`inspect_status_id`);
+ALTER TABLE `inspection_status`
+  ADD PRIMARY KEY (`inspection_status_id`);
 
 --
 -- Indexes for table `locations`
@@ -534,6 +561,12 @@ ALTER TABLE `users`
   ADD KEY `department_id` (`department_id`);
 
 --
+-- Indexes for table `your_table_name`
+--
+ALTER TABLE `your_table_name`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -559,31 +592,31 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
+-- AUTO_INCREMENT for table `inspection_approvals`
+--
+ALTER TABLE `inspection_approvals`
+  MODIFY `approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `inspection_files`
 --
 ALTER TABLE `inspection_files`
-  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `inspection_periods`
 --
 ALTER TABLE `inspection_periods`
-  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `inspection_period_details`
 --
 ALTER TABLE `inspection_period_details`
-  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `inspect_approvals`
---
-ALTER TABLE `inspect_approvals`
-  MODIFY `approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `locations`
@@ -595,25 +628,31 @@ ALTER TABLE `locations`
 -- AUTO_INCREMENT for table `po_main`
 --
 ALTER TABLE `po_main`
-  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `po_period`
 --
 ALTER TABLE `po_period`
-  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `records`
 --
 ALTER TABLE `records`
-  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
   MODIFY `supplier_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `your_table_name`
+--
+ALTER TABLE `your_table_name`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
