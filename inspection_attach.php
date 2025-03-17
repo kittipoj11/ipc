@@ -34,10 +34,6 @@ require_once 'auth.php';
       cursor: default;
     }
 
-    body {
-      padding-top: 20px;
-    }
-
     .file-link {
       display: block;
       margin-bottom: 5px;
