@@ -85,7 +85,7 @@ class Po extends Connection
                     , `interim_payment_less_previous`, `interim_payment_less_previous_percent`
                     , `interim_payment_accumulated`, `interim_payment_accumulated_percent`
                     , `interim_payment_remain`, `interim_payment_remain_percent`
-                    , `retention_value`, `plan_status`, `is_paid`, `is_retention`, `inspection_periods`.`remark`, `workflow_id`, `current_status`, `current_level` 
+                    , `retention_value`, `plan_status`, `is_paid`, `is_retention`, `inspection_periods`.`remark`, `workflow_id`, `current_status`, `current_approval_level` 
                     , `po_period`.`period_id`, `po_id`, `period_number`, `po_period`.`interim_payment`, `po_period`.`interim_payment_percent`, `period_status`, `po_period`.`remark` as po_period_remark
                     FROM `inspection_periods`
                     INNER JOIN `po_period`
@@ -108,7 +108,7 @@ class Po extends Connection
                     , `interim_payment_less_previous`, `interim_payment_less_previous_percent`
                     , `interim_payment_accumulated`, `interim_payment_accumulated_percent`
                     , `interim_payment_remain`, `interim_payment_remain_percent`
-                    , `retention_value`, `plan_status`, `is_paid`, `is_retention`, `inspection_periods`.`remark`, `workflow_id`, `current_status`, `current_level` 
+                    , `retention_value`, `plan_status`, `is_paid`, `is_retention`, `inspection_periods`.`remark`, `workflow_id`, `current_status`, `current_approval_level` 
                     , `po_period`.`period_id`, `po_period`.`po_id`, `period_number`, `po_period`.`interim_payment`, `po_period`.`interim_payment_percent`, `period_status`, `po_period`.`remark` as po_period_remark
                     , `po_number`, `project_name`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
                     , `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`
@@ -277,8 +277,8 @@ class Po extends Connection
 
                 // INSERT INTO inspection_periods
                 $sql = <<<EOD
-                        INSERT INTO `inspection_periods`(`period_id`, `plan_status`, `is_paid`, `is_retention`, `workflow_id`, `current_status`, `current_level`) 
-                        VALUES (:period_id, :plan_status, :is_paid, :is_retention, :workflow_id, :current_status, :current_level)
+                        INSERT INTO `inspection_periods`(`period_id`, `plan_status`, `is_paid`, `is_retention`, `workflow_id`, `current_status`, `current_approval_level`) 
+                        VALUES (:period_id, :plan_status, :is_paid, :is_retention, :workflow_id, :current_status, :current_approval_level)
                     EOD;
                 $stmtInspectPeriod = $this->myConnect->prepare($sql);
 
@@ -294,7 +294,7 @@ class Po extends Connection
                 $is_retention = 0;
                 $workflow_id = 1;
                 $current_status = 1;
-                $current_level = 1; //จะใช้เป็นอะไร: level_order หรือ level_id
+                $current_approval_level = 1; //จะใช้เป็นอะไร: approved_level หรือ workflow_step_id
                 for ($i = 0; $i < $number_of_period; $i++) {
                     // po_period
                     $stmtPoPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
@@ -315,7 +315,7 @@ class Po extends Connection
                     $stmtInspectPeriod->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
                     $stmtInspectPeriod->bindParam(':workflow_id', $workflow_id,  PDO::PARAM_INT);
                     $stmtInspectPeriod->bindParam(':current_status', $current_status,  PDO::PARAM_INT);
-                    $stmtInspectPeriod->bindParam(':current_level', $current_level,  PDO::PARAM_INT);
+                    $stmtInspectPeriod->bindParam(':current_approval_level', $current_approval_level,  PDO::PARAM_INT);
 
                     $stmtInspectPeriod->execute();
                     $stmtInspectPeriod->closeCursor();
@@ -481,8 +481,8 @@ class Po extends Connection
 
                 // INSERT inspection_periods
                 $sql = <<<EOD
-                            INSERT INTO `inspection_periods`(`period_id`, `plan_status`, `is_paid`, `is_retention`, `workflow_id`, `current_status`, `current_level`) 
-                            VALUES (:period_id, :plan_status, :is_paid, :is_retention, :workflow_id, :current_status, :current_level)
+                            INSERT INTO `inspection_periods`(`period_id`, `plan_status`, `is_paid`, `is_retention`, `workflow_id`, `current_status`, `current_approval_level`) 
+                            VALUES (:period_id, :plan_status, :is_paid, :is_retention, :workflow_id, :current_status, :current_approval_level)
                         EOD;
                 $stmtInspectPeriodInsert = $this->myConnect->prepare($sql);
 
@@ -499,7 +499,7 @@ class Po extends Connection
                 $is_retention = 0;
                 $workflow_id = 1;
                 $current_status = 1;
-                $current_level = 1; //จะใช้เป็นอะไร: level_order หรือ level_id
+                $current_approval_level = 1; //จะใช้เป็นอะไร: approved_level หรือ workflow_step_id
 
                 foreach ($insert_indexs as $i) { //ถ้าต้องการใช้ค่าของ key ให้เขียนแบบนี้ foreach($insert_indexs as $key=> $value){
                     $stmtPoPeriodInsert->bindParam(':po_id', $po_id, PDO::PARAM_INT);
@@ -519,7 +519,7 @@ class Po extends Connection
                     $stmtInspectPeriodInsert->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
                     $stmtInspectPeriodInsert->bindParam(':workflow_id', $workflow_id,  PDO::PARAM_INT);
                     $stmtInspectPeriodInsert->bindParam(':current_status', $current_status,  PDO::PARAM_INT);
-                    $stmtInspectPeriodInsert->bindParam(':current_level', $current_level,  PDO::PARAM_INT);
+                    $stmtInspectPeriodInsert->bindParam(':current_approval_level', $current_approval_level,  PDO::PARAM_INT);
 
                     $stmtInspectPeriodInsert->execute();
                     $stmtInspectPeriodInsert->closeCursor();
@@ -553,7 +553,7 @@ class Po extends Connection
                             , `is_retention` = :is_retention
                             , `workflow_id` = :workflow_id
                             , `current_status` = :current_status
-                            , `current_level` = :current_level
+                            , `current_approval_level` = :current_approval_level
                             WHERE `period_id` = :period_id
                         EOD;
                 $stmtInspectPeriodUpdate = $this->myConnect->prepare($sql);
@@ -574,7 +574,7 @@ class Po extends Connection
                     $stmtInspectPeriodUpdate->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
                     $stmtInspectPeriodUpdate->bindParam(':workflow_id', $workflow_id,  PDO::PARAM_INT);
                     $stmtInspectPeriodUpdate->bindParam(':current_status', $current_status,  PDO::PARAM_INT);
-                    $stmtInspectPeriodUpdate->bindParam(':current_level', $current_level,  PDO::PARAM_INT);
+                    $stmtInspectPeriodUpdate->bindParam(':current_approval_level', $current_approval_level,  PDO::PARAM_INT);
 
                     $stmtInspectPeriodUpdate->execute();
                     $stmtInspectPeriodUpdate->closeCursor();

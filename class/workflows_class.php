@@ -2,13 +2,13 @@
 // require_once 'config.php';
 require_once 'connection_class.php';
 
-class Approval_workflow extends Connection
+class Workflows extends Connection
 {
     public function getRecordAll()
     {
         $sql = <<<EOD
                 select workflow_id, workflow_name, is_deleted 
-                from approval_workflow 
+                from workflows 
                 where is_deleted = false
                 EOD;
         $stmt = $this->myConnect->prepare($sql);
@@ -29,7 +29,7 @@ class Approval_workflow extends Connection
     {
         $sql = <<<EOD
                 select workflow_id, workflow_name, is_deleted 
-                from approval_workflow
+                from workflows
                 where is_deleted = false
                 and workflow_id = :id
                 EOD;
@@ -45,7 +45,7 @@ class Approval_workflow extends Connection
     {
         $workflow_name = $getData['workflow_name'];
 
-        $sql = "insert into approval_workflow(workflow_name) 
+        $sql = "insert into workflows(workflow_name) 
                 values(:workflow_name)";
         $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':workflow_name', $workflow_name, PDO::PARAM_STR);
@@ -66,7 +66,7 @@ class Approval_workflow extends Connection
     {
         $workflow_id = $getData['workflow_id'];
         $workflow_name = $getData['workflow_name'];
-        $sql = "update approval_workflow 
+        $sql = "update workflows 
                 set workflow_name = :workflow_name
                 where workflow_id = :workflow_id";
         // , update_datetime = CURRENT_TIMESTAMP()
@@ -90,7 +90,7 @@ class Approval_workflow extends Connection
     {
         $workflow_id = $getData['workflow_id'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
-        $sql = "update approval_workflow 
+        $sql = "update workflows 
                 set is_deleted = 1
                 where workflow_id = :workflow_id";
         $stmt = $this->myConnect->prepare($sql);
@@ -112,14 +112,14 @@ class Approval_workflow extends Connection
     public function getHtmlData()
     {
         $sql = "select workflow_id, workflow_name, is_deleted 
-                from approval_workflow 
+                from workflows 
                 where is_deleted = false";
 
         $stmt = $this->myConnect->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
 
-        $html = "<p>รายงาน Location ทั้งหมด</p>";
+        $html = "<p>รายงาน Workflow ทั้งหมด</p>";
 
         // เรียกใช้งาน ฟังก์ชั่นดึงข้อมูลไฟล์มาใช้งาน
         $html .= "<style>";
@@ -131,8 +131,8 @@ class Approval_workflow extends Connection
         $html .= "</style>";
         $html .= "<table cellspacing='0' cellpadding='1' style='width:1100px;'>";
         $html .= "<tr>";
-        $html .= "<th align='center' bgcolor='F2F2F2'>รหัส Location </th>";
-        $html .= "<th align='center' bgcolor='F2F2F2'> Location </th>";
+        $html .= "<th align='center' bgcolor='F2F2F2'>รหัส Workflow </th>";
+        $html .= "<th align='center' bgcolor='F2F2F2'> Workflow </th>";
         $html .= "</tr>";
         foreach ($rs as $row) :
             $html .=  "<tr bgcolor='#c7c7c7'>";

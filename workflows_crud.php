@@ -2,9 +2,9 @@
 // @session_start();
 
 require_once 'config.php';
-require_once 'class/approval_workflow_class.php';
+require_once 'class/workflows_class.php';
 
-$obj = new Approval_workflow();
+$obj = new Workflows();
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
@@ -35,7 +35,7 @@ function getRecordAll($getObj)
                         <thead>
                             <tr>
                                 <th class="text-center" style="width: 100px;">#</th>
-                                <th class="text-center">Approval_workflow name</th>
+                                <th class="text-center">Workflows name</th>
                                 <th class="text-center" style="width: 120px;">Action</th>
                             </tr>
                         </thead>

@@ -14,7 +14,6 @@ if (!isset($_SESSION['user_id'])) {
 
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>สร้างงานใหม่</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

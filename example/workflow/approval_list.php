@@ -17,7 +17,7 @@ try {
                            FROM work_item_approvals wia
                            JOIN work_items wi ON wia.work_item_id = wi.id
                            WHERE wia.approver_id = :user_id AND wia.approval_status = 'Pending'
-                           AND wi.current_approval_level = wia.approval_level");
+                           AND wi.current_approver_id = wia.approver_id");
     $stmt->bindParam(':user_id', $current_user_id);
     $stmt->execute();
     $pending_approvals = $stmt->fetchAll(PDO::FETCH_ASSOC);

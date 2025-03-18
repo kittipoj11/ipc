@@ -15,11 +15,11 @@ $current_user_id = $_SESSION['user_id'];
 
 try {
     // ดึงข้อมูลงานและสถานะการอนุมัติปัจจุบันสำหรับผู้ใช้คนนี้
-    $stmt = $pdo->prepare("SELECT wi.*, wia.approval_level, wia.approval_status
+    $stmt = $pdo->prepare("SELECT wi.*, wia.approver_id, wia.approval_status
                            FROM work_items wi
                            JOIN work_item_approvals wia ON wi.id = wia.work_item_id
                            WHERE wi.id = :work_item_id AND wia.approver_id = :user_id
-                           AND wi.current_approval_level = wia.approval_level AND wia.approval_status = 'Pending'");
+                           AND wi.current_approver_id = wia.approver_id AND wia.approval_status = 'Pending'");
     $stmt->bindParam(':work_item_id', $work_item_id);
     $stmt->bindParam(':user_id', $current_user_id);
     $stmt->execute();

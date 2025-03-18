@@ -2,27 +2,27 @@ $(document).ready(function () {
   // $('#myForm').submit(function (e) {
 
   $(document).on("click", ".btnNew", function (e) {
-    $("#approval_status_id").val('[Autonumber]');
-    $("#approval_status_name").val('');
+    $("#approved_status_id").val('[Autonumber]');
+    $("#approved_status_name").val('');
   });
 
   $(document).on("click", ".btnEdit", function (e) {
     e.preventDefault();
-    let approval_status_id = $(this).closest("tr").attr("id");
-  // console.log(`approval_status_id = ${approval_status_id} `);
+    let approved_status_id = $(this).closest("tr").attr("id");
+  // console.log(`approved_status_id = ${approved_status_id} `);
     $.ajax({
       url: "approval_status_crud.php",
       type: "POST",
       data: {
-        approval_status_id: approval_status_id,
+        approved_status_id: approved_status_id,
         action: 'selectdata'
       },
       success: function (response) {
         console.log(`response=${response}`);
         data = JSON.parse(response);
         // console.log(data);
-        $("#approval_status_id").val(data.approval_status_id);
-        $("#approval_status_name").val(data["approval_status_name"]);
+        $("#approved_status_id").val(data.approved_status_id);
+        $("#approved_status_name").val(data["approved_status_name"]);
       },
     });
   });
@@ -30,21 +30,21 @@ $(document).ready(function () {
   $(document).on("click", ".btnDelete", function (e) {
     e.preventDefault();
     // let id = $(this).attr("id").slice("delete".length);
-    let approval_status_id = $(this).closest("tr").attr("id");
+    let approved_status_id = $(this).closest("tr").attr("id");
     $.ajax({
       url: "approval_status_crud.php",
       type: "POST",
       data: {
-        approval_status_id: approval_status_id,
+        approved_status_id: approved_status_id,
         action: 'selectdata'
       },
       success: function (response) {
         data = JSON.parse(response);
-        let approval_status_name = data.approval_status_name;
+        let approved_status_name = data.approved_status_name;
         Swal.fire({
           title: "Are you sure?",
-          // text: `You want to delete this item!:${approval_status_name}`,
-          text: `You want to delete ${approval_status_name} approval_status`,
+          // text: `You want to delete this item!:${approved_status_name}`,
+          text: `You want to delete ${approved_status_name} approval_status`,
           icon: "warning",
           showCancelButton: true,
           // cancelButtonColor: '#00ff00',
@@ -61,7 +61,7 @@ $(document).ready(function () {
               url: "approval_status_crud.php",
               type: "POST",
               data: {
-                approval_status_id: approval_status_id,
+                approved_status_id: approved_status_id,
                 action: 'deletedata'
               },
               success: function (response) {
@@ -115,10 +115,10 @@ $(document).ready(function () {
   $(document).on("click", "#btnSaveData", function (e) {
     e.preventDefault();
 
-    let approval_status_id = $("#approval_status_id").val();
-    let approval_status_name = $("#approval_status_name").val();
+    let approved_status_id = $("#approved_status_id").val();
+    let approved_status_name = $("#approved_status_name").val();
     let action = '';
-    if (approval_status_id == '[Autonumber]') {
+    if (approved_status_id == '[Autonumber]') {
       action = 'insertdata';
     } else {
       action = 'updatedata';
@@ -129,8 +129,8 @@ $(document).ready(function () {
       type: "POST",
       // data: $(this).serialize(),
       data: {
-        approval_status_id: approval_status_id,
-        approval_status_name: approval_status_name,
+        approved_status_id: approved_status_id,
+        approved_status_name: approved_status_name,
         action: action
       },
       success: function (response) {

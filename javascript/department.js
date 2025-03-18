@@ -1,6 +1,6 @@
 $(document).ready(function () {
   // $('#myForm').submit(function (e) {
-  
+
   $(document).on("click", ".btnNew", function (e) {
     $("#department_id").val('[Autonumber]');
     $("#department_name").val('');
@@ -18,7 +18,7 @@ $(document).ready(function () {
         action: 'selectdata'
       },
       success: function (response) {
-        console.log(`response={$response}`);
+        console.log(`response=${response}`);
         data = JSON.parse(response);
         // console.log(data);
         $("#department_id").val(data.department_id);
@@ -76,7 +76,7 @@ $(document).ready(function () {
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
-                    // Load เฉพาะ card-body
+                  // Load เฉพาะ card-body
                     $("#frmOpen")[0].reset();
                     $("#card-body").empty();
                     $("#card-body").html(response);
@@ -108,10 +108,10 @@ $(document).ready(function () {
       },
     });
 
-    
+
   });
-  
-  
+
+
   $(document).on("click", "#btnSaveData", function (e) {
     e.preventDefault();
 
@@ -134,7 +134,7 @@ $(document).ready(function () {
         action: action
       },
       success: function (response) {
-        // Swal.fire({
+      // Swal.fire({
         //     icon: 'success',
         //     title: 'Data updated successfully'
         //     // showConfirmButton: false,
@@ -158,7 +158,7 @@ $(document).ready(function () {
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            // Load เฉพาะ card-body
+          // Load เฉพาะ card-body
             $("#frmOpen")[0].reset();
             $("#card-body").empty();
             $("#card-body").html(response);
@@ -187,5 +187,5 @@ $(document).ready(function () {
     });
   });
 
-  
+
 });

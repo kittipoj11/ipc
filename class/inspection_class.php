@@ -29,7 +29,7 @@ class Inspection extends Connection
     public function getMainByPoId($getPoId)
     {
         $sql = <<<EOD
-                SELECT `po_period_id`, `inspect_period`.`po_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_level` ,
+                SELECT `po_period_id`, `inspect_period`.`po_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_approval_level` ,
                 `inspect_id`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`,
                 `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `number_of_period`
                 , `supplier_name`, `location_name`
@@ -58,7 +58,7 @@ class Inspection extends Connection
                 SELECT `po_period_id`, `po_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`
                 , `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`
                 , `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`
-                , `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_level` 
+                , `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_approval_level` 
                 FROM `inspect_period` 
                 WHERE `po_id` = :po_id
                 ORDER BY `po_id`, `period`
@@ -78,7 +78,7 @@ class Inspection extends Connection
                 , `interim_payment_less_previous`, `interim_payment_less_previous_percent`
                 , `interim_payment_accumulated`, `interim_payment_accumulated_percent`
                 , `interim_payment_remain`, `interim_payment_remain_percent`
-                , `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_level` 
+                , `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_approval_level` 
                 , `inspect_id`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`
                 , `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`, `working_name_th`, `working_name_en`, `is_include_vat`
                 , `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`

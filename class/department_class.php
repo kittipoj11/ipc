@@ -119,7 +119,7 @@ class Department extends Connection
         $stmt->execute();
         $rs = $stmt->fetchAll();
 
-        $html = "<p>รายงาน Location ทั้งหมด</p>";
+        $html = "<p>รายงาน Department ทั้งหมด</p>";
 
         // เรียกใช้งาน ฟังก์ชั่นดึงข้อมูลไฟล์มาใช้งาน
         $html .= "<style>";
@@ -131,8 +131,8 @@ class Department extends Connection
         $html .= "</style>";
         $html .= "<table cellspacing='0' cellpadding='1' style='width:1100px;'>";
         $html .= "<tr>";
-        $html .= "<th align='center' bgcolor='F2F2F2'>รหัส Location </th>";
-        $html .= "<th align='center' bgcolor='F2F2F2'> Location </th>";
+        $html .= "<th align='center' bgcolor='F2F2F2'>รหัส Department </th>";
+        $html .= "<th align='center' bgcolor='F2F2F2'> Department </th>";
         $html .= "</tr>";
         foreach ($rs as $row) :
             $html .=  "<tr bgcolor='#c7c7c7'>";

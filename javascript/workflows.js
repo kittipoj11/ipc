@@ -9,9 +9,9 @@ $(document).ready(function () {
   $(document).on("click", ".btnEdit", function (e) {
     e.preventDefault();
     let workflow_id = $(this).closest("tr").attr("id");
-  // console.log(`workflow_id = ${workflow_id} `);
+    // console.log(`workflow_id = ${workflow_id} `);
     $.ajax({
-      url: "approval_workflow_crud.php",
+      url: "workflows_crud.php",
       type: "POST",
       data: {
         workflow_id: workflow_id,
@@ -32,7 +32,7 @@ $(document).ready(function () {
     // let id = $(this).attr("id").slice("delete".length);
     let workflow_id = $(this).closest("tr").attr("id");
     $.ajax({
-      url: "approval_workflow_crud.php",
+      url: "workflows_crud.php",
       type: "POST",
       data: {
         workflow_id: workflow_id,
@@ -44,7 +44,7 @@ $(document).ready(function () {
         Swal.fire({
           title: "Are you sure?",
           // text: `You want to delete this item!:${workflow_name}`,
-          text: `You want to delete ${workflow_name} approval_workflow`,
+          text: `You want to delete ${workflow_name} workflow`,
           icon: "warning",
           showCancelButton: true,
           // cancelButtonColor: '#00ff00',
@@ -58,7 +58,7 @@ $(document).ready(function () {
         }).then((result) => {
           if (result.isConfirmed) {
             $.ajax({
-              url: "approval_workflow_crud.php",
+              url: "workflows_crud.php",
               type: "POST",
               data: {
                 workflow_id: workflow_id,
@@ -97,8 +97,8 @@ $(document).ready(function () {
                     // $("#tbody").html(response);
 
                     // // Load ใหม่ทั้งหน้า
-                    // // window.approval_workflow.href = "103hall.php";
-                    // window.approval_workflow.reload();
+                    // // window.workflow.href = "103hall.php";
+                    // window.workflow.reload();
                   }
                 });
               },
@@ -125,7 +125,7 @@ $(document).ready(function () {
     }
     console.log(`action=${action}`);
     $.ajax({
-      url: "approval_workflow_crud.php",
+      url: "workflows_crud.php",
       type: "POST",
       // data: $(this).serialize(),
       data: {
@@ -179,8 +179,8 @@ $(document).ready(function () {
             // $("#tbody").html(response);
 
             // // Load ใหม่ทั้งหน้า
-            // // window.approval_workflow.href = "103hall.php";
-            // window.approval_workflow.reload();
+            // // window.workflow.href = "103hall.php";
+            // window.workflow.reload();
           }
         });
       },

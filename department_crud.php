@@ -27,7 +27,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
 function getRecordAll($getObj)
 {
     try {
-        $rs = $getObj->getAllRecord();
+        $rs = $getObj->getRecordAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD
@@ -58,7 +58,7 @@ function getRecordAll($getObj)
                                 </div>
                             </td>
                         </tr>
-                        EOD;                    
+                        EOD;
             echo $html;
         }
         $html = <<<EOD
