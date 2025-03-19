@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 16, 2025 at 06:29 PM
+-- Generation Time: Mar 19, 2025 at 06:05 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -20,28 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `inspection_db`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `workflow_steps`
---
-
-CREATE TABLE `workflow_steps` (
-  `workflow_step_id` int(11) UNSIGNED NOT NULL,
-  `workflow_id` int(11) UNSIGNED DEFAULT NULL,
-  `approved_level` int(11) DEFAULT NULL,
-  `approver_id` int(11) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `workflow_steps`
---
-
-INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approved_level`, `approver_id`) VALUES
-(1, 1, 1, 2),
-(2, 1, 2, 3),
-(3, 1, 3, 4);
 
 -- --------------------------------------------------------
 
@@ -67,25 +45,6 @@ INSERT INTO `approval_status` (`approved_status_id`, `approved_status_name`, `is
 -- --------------------------------------------------------
 
 --
--- Table structure for table `workflows`
---
-
-CREATE TABLE `workflows` (
-  `workflow_id` int(11) UNSIGNED NOT NULL,
-  `workflow_name` varchar(255) DEFAULT NULL,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `workflows`
---
-
-INSERT INTO `workflows` (`workflow_id`, `workflow_name`, `is_deleted`) VALUES
-(1, 'การอนุมัติแบบปกติ', 0);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `departments`
 --
 
@@ -102,7 +61,8 @@ CREATE TABLE `departments` (
 INSERT INTO `departments` (`department_id`, `department_name`, `is_deleted`) VALUES
 (1, 'IT', 0),
 (2, 'FM', 0),
-(3, 'FA', 0);
+(3, 'FA', 0),
+(4, 'CITY', 1);
 
 -- --------------------------------------------------------
 
@@ -123,10 +83,6 @@ CREATE TABLE `files` (
 -- Dumping data for table `files`
 --
 
-INSERT INTO `files` (`file_id`, `record_id`, `file_name`, `file_path`, `file_type`, `uploaded_at`) VALUES
-(1, 1, '1741334107_taxinvoice homepro.pdf', 'uploads/67cef01fc31c1.pdf', 'application/pdf', '2025-03-10 13:58:55'),
-(2, 1, '1741515237_Gemini_Generated_Image_yut9dsyut9dsyut9.jpg', 'uploads/67cef01fc3aee.jpg', 'image/jpeg', '2025-03-10 13:58:55');
-
 -- --------------------------------------------------------
 
 --
@@ -136,7 +92,6 @@ INSERT INTO `files` (`file_id`, `record_id`, `file_name`, `file_path`, `file_typ
 CREATE TABLE `inspection_approvals` (
   `inspection_approved_id` int(11) UNSIGNED NOT NULL,
   `inspection_id` int(11) UNSIGNED DEFAULT NULL,
-  `period` int(11) DEFAULT NULL,
   `approved_level` int(11) UNSIGNED DEFAULT NULL,
   `approver_id` int(11) UNSIGNED DEFAULT NULL,
   `approved_status_id` int(11) UNSIGNED DEFAULT NULL,
@@ -158,6 +113,10 @@ CREATE TABLE `inspection_files` (
   `file_type` varchar(100) NOT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `inspection_files`
+--
 
 -- --------------------------------------------------------
 
@@ -183,11 +142,12 @@ CREATE TABLE `inspection_periods` (
   `plan_status` int(11) UNSIGNED DEFAULT NULL,
   `is_paid` tinyint(1) DEFAULT NULL,
   `is_retention` tinyint(1) DEFAULT NULL,
-  `remark` text DEFAULT NULL,
-  `workflow_id` int(11) UNSIGNED DEFAULT NULL,
-  `current_status` varchar(255) DEFAULT NULL,
-  `current_approval_level` int(11) DEFAULT NULL
+  `remark` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `inspection_periods`
+--
 
 -- --------------------------------------------------------
 
@@ -202,6 +162,10 @@ CREATE TABLE `inspection_period_details` (
   `details` text DEFAULT NULL,
   `remark` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `inspection_period_details`
+--
 
 -- --------------------------------------------------------
 
@@ -296,8 +260,13 @@ CREATE TABLE `po_main` (
   `number_of_period` int(11) NOT NULL DEFAULT 0,
   `remain_value_interim_payment` decimal(9,2) NOT NULL,
   `total_retention_value` decimal(9,2) NOT NULL,
-  `inspect_status` int(11) NOT NULL
+  `inspect_status` int(11) NOT NULL,
+  `workflow_id` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `po_main`
+--
 
 -- --------------------------------------------------------
 
@@ -315,6 +284,10 @@ CREATE TABLE `po_period` (
   `remark` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Dumping data for table `po_period`
+--
+
 -- --------------------------------------------------------
 
 --
@@ -330,9 +303,6 @@ CREATE TABLE `records` (
 --
 -- Dumping data for table `records`
 --
-
-INSERT INTO `records` (`record_id`, `record_name`, `created_at`) VALUES
-(1, 'IMPO0001', '2025-03-10 13:58:55');
 
 -- --------------------------------------------------------
 
@@ -374,7 +344,8 @@ CREATE TABLE `suppliers` (
 
 INSERT INTO `suppliers` (`supplier_id`, `supplier_name`, `is_deleted`) VALUES
 (1, 'บริษัทวินสตาร์คอร์ปจำกัด', 0),
-(2, 'บริษัทไมโครซอฟต์จำกัด', 0);
+(2, 'บริษัทไมโครซอฟต์จำกัด', 0),
+(3, 'Jasmeen', 0);
 
 -- --------------------------------------------------------
 
@@ -408,6 +379,48 @@ INSERT INTO `users` (`user_id`, `user_code`, `username`, `password`, `full_name`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `workflows`
+--
+
+CREATE TABLE `workflows` (
+  `workflow_id` int(11) UNSIGNED NOT NULL,
+  `workflow_name` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `workflows`
+--
+
+INSERT INTO `workflows` (`workflow_id`, `workflow_name`, `is_deleted`) VALUES
+(1, 'การอนุมัติแบบทั่วไป', 0),
+(2, 'การอนุมัติพิเศษ', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `workflow_steps`
+--
+
+CREATE TABLE `workflow_steps` (
+  `workflow_step_id` int(11) UNSIGNED NOT NULL,
+  `workflow_id` int(11) UNSIGNED DEFAULT NULL,
+  `approved_level` int(11) DEFAULT NULL,
+  `approver_id` int(11) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `workflow_steps`
+--
+
+INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approved_level`, `approver_id`) VALUES
+(1, 1, 1, 2),
+(2, 1, 2, 3),
+(3, 1, 3, 4);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `your_table_name`
 --
 
@@ -437,24 +450,10 @@ INSERT INTO `your_table_name` (`id`, `category`, `column1`, `column2`, `column3`
 --
 
 --
--- Indexes for table `workflow_steps`
---
-ALTER TABLE `workflow_steps`
-  ADD PRIMARY KEY (`workflow_step_id`),
-  ADD KEY `workflow_id` (`workflow_id`),
-  ADD KEY `approver_id` (`approver_id`);
-
---
 -- Indexes for table `approval_status`
 --
 ALTER TABLE `approval_status`
   ADD PRIMARY KEY (`approved_status_id`);
-
---
--- Indexes for table `workflows`
---
-ALTER TABLE `workflows`
-  ADD PRIMARY KEY (`workflow_id`);
 
 --
 -- Indexes for table `departments`
@@ -561,6 +560,20 @@ ALTER TABLE `users`
   ADD KEY `department_id` (`department_id`);
 
 --
+-- Indexes for table `workflows`
+--
+ALTER TABLE `workflows`
+  ADD PRIMARY KEY (`workflow_id`);
+
+--
+-- Indexes for table `workflow_steps`
+--
+ALTER TABLE `workflow_steps`
+  ADD PRIMARY KEY (`workflow_step_id`),
+  ADD KEY `workflow_id` (`workflow_id`),
+  ADD KEY `approver_id` (`approver_id`);
+
+--
 -- Indexes for table `your_table_name`
 --
 ALTER TABLE `your_table_name`
@@ -571,22 +584,10 @@ ALTER TABLE `your_table_name`
 --
 
 --
--- AUTO_INCREMENT for table `workflow_steps`
---
-ALTER TABLE `workflow_steps`
-  MODIFY `workflow_step_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `workflows`
---
-ALTER TABLE `workflows`
-  MODIFY `workflow_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `department_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `department_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `files`
@@ -598,7 +599,7 @@ ALTER TABLE `files`
 -- AUTO_INCREMENT for table `inspection_approvals`
 --
 ALTER TABLE `inspection_approvals`
-  MODIFY `inspection_approved_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `inspection_approved_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `inspection_files`
@@ -646,7 +647,19 @@ ALTER TABLE `records`
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `supplier_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `supplier_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `workflows`
+--
+ALTER TABLE `workflows`
+  MODIFY `workflow_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `workflow_steps`
+--
+ALTER TABLE `workflow_steps`
+  MODIFY `workflow_step_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `your_table_name`

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2025 at 12:00 PM
+-- Generation Time: Mar 19, 2025 at 06:05 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -83,10 +83,6 @@ CREATE TABLE `files` (
 -- Dumping data for table `files`
 --
 
-INSERT INTO `files` (`file_id`, `record_id`, `file_name`, `file_path`, `file_type`, `uploaded_at`) VALUES
-(1, 1, '1741334107_taxinvoice homepro.pdf', 'uploads/67cef01fc31c1.pdf', 'application/pdf', '2025-03-10 13:58:55'),
-(2, 1, '1741515237_Gemini_Generated_Image_yut9dsyut9dsyut9.jpg', 'uploads/67cef01fc3aee.jpg', 'image/jpeg', '2025-03-10 13:58:55');
-
 -- --------------------------------------------------------
 
 --
@@ -96,7 +92,6 @@ INSERT INTO `files` (`file_id`, `record_id`, `file_name`, `file_path`, `file_typ
 CREATE TABLE `inspection_approvals` (
   `inspection_approved_id` int(11) UNSIGNED NOT NULL,
   `inspection_id` int(11) UNSIGNED DEFAULT NULL,
-  `period` int(11) DEFAULT NULL,
   `approved_level` int(11) UNSIGNED DEFAULT NULL,
   `approver_id` int(11) UNSIGNED DEFAULT NULL,
   `approved_status_id` int(11) UNSIGNED DEFAULT NULL,
@@ -118,6 +113,10 @@ CREATE TABLE `inspection_files` (
   `file_type` varchar(100) NOT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `inspection_files`
+--
 
 -- --------------------------------------------------------
 
@@ -143,11 +142,12 @@ CREATE TABLE `inspection_periods` (
   `plan_status` int(11) UNSIGNED DEFAULT NULL,
   `is_paid` tinyint(1) DEFAULT NULL,
   `is_retention` tinyint(1) DEFAULT NULL,
-  `remark` text DEFAULT NULL,
-  `workflow_id` int(11) UNSIGNED DEFAULT NULL,
-  `current_status` varchar(255) DEFAULT NULL,
-  `current_level` int(11) DEFAULT NULL
+  `remark` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `inspection_periods`
+--
 
 -- --------------------------------------------------------
 
@@ -162,6 +162,10 @@ CREATE TABLE `inspection_period_details` (
   `details` text DEFAULT NULL,
   `remark` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `inspection_period_details`
+--
 
 -- --------------------------------------------------------
 
@@ -256,8 +260,13 @@ CREATE TABLE `po_main` (
   `number_of_period` int(11) NOT NULL DEFAULT 0,
   `remain_value_interim_payment` decimal(9,2) NOT NULL,
   `total_retention_value` decimal(9,2) NOT NULL,
-  `inspect_status` int(11) NOT NULL
+  `inspect_status` int(11) NOT NULL,
+  `workflow_id` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `po_main`
+--
 
 -- --------------------------------------------------------
 
@@ -275,6 +284,10 @@ CREATE TABLE `po_period` (
   `remark` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Dumping data for table `po_period`
+--
+
 -- --------------------------------------------------------
 
 --
@@ -290,9 +303,6 @@ CREATE TABLE `records` (
 --
 -- Dumping data for table `records`
 --
-
-INSERT INTO `records` (`record_id`, `record_name`, `created_at`) VALUES
-(1, 'IMPO0001', '2025-03-10 13:58:55');
 
 -- --------------------------------------------------------
 
@@ -335,7 +345,7 @@ CREATE TABLE `suppliers` (
 INSERT INTO `suppliers` (`supplier_id`, `supplier_name`, `is_deleted`) VALUES
 (1, 'บริษัทวินสตาร์คอร์ปจำกัด', 0),
 (2, 'บริษัทไมโครซอฟต์จำกัด', 0),
-(3, 'Jasmeen', 1);
+(3, 'Jasmeen', 0);
 
 -- --------------------------------------------------------
 
@@ -384,7 +394,7 @@ CREATE TABLE `workflows` (
 
 INSERT INTO `workflows` (`workflow_id`, `workflow_name`, `is_deleted`) VALUES
 (1, 'การอนุมัติแบบทั่วไป', 0),
-(2, 'การอนุมัติพิเศษ', 0);
+(2, 'การอนุมัติพิเศษ', 1);
 
 -- --------------------------------------------------------
 
@@ -583,31 +593,31 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `inspection_approvals`
 --
 ALTER TABLE `inspection_approvals`
-  MODIFY `inspection_approved_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `inspection_approved_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `inspection_files`
 --
 ALTER TABLE `inspection_files`
-  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `inspection_periods`
 --
 ALTER TABLE `inspection_periods`
-  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `inspection_period_details`
 --
 ALTER TABLE `inspection_period_details`
-  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `locations`
@@ -619,19 +629,19 @@ ALTER TABLE `locations`
 -- AUTO_INCREMENT for table `po_main`
 --
 ALTER TABLE `po_main`
-  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `po_period`
 --
 ALTER TABLE `po_period`
-  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `records`
 --
 ALTER TABLE `records`
-  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `suppliers`

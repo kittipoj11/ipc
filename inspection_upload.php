@@ -4,7 +4,7 @@
 require_once 'config.php';
 require_once 'class/po_class.php';
 
-$_SESSION['_REQUEST'] = $_REQUEST;
+//$_SESSION['_REQUEST'] = $_REQUEST;
 
 $po = new Po();
 

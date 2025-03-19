@@ -7,7 +7,7 @@ class Connection
     private $port = '3306';
     private $username = 'root';
     private $password = '';
-    private $dbname = 'inspection_db';
+    private $dbname = 'ipc_db';
 
     public $myConnect;
 

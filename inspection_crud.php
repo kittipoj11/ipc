@@ -5,7 +5,7 @@
 require_once 'config.php';
 require_once 'class/po_class.php';
 
-$_SESSION['_REQUEST'] = $_REQUEST;
+//$_SESSION['_REQUEST'] = $_REQUEST;
 // if (isset($_REQUEST['submit'])) {
 
 $obj = new Po();
