@@ -425,7 +425,6 @@ class Inspection extends Connection
     }
 }
 
-
 // $stmt = $conn->prepare('select ...where :');
 // $stmt->bindParam(':building_id', $building_id, PDO::PARAM_STR);
 // $stmt->bindParam(':building_name', $building_name, PDO::PARAM_STR);

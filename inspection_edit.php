@@ -33,6 +33,10 @@ require_once 'auth.php';
     table tr th {
       cursor: default;
     }
+
+    /* .dropdown-menu {
+      width: fit-content;
+    } */
   </style>
 </head>
 
@@ -74,8 +78,18 @@ require_once 'auth.php';
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
-        <div class="col-sm-6 d-flex">
+        <div class="col-sm-12  d-flex justify-content-between">
           <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
+          <div class="dropdown">
+            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Action
+            </button>
+            <ul class="dropdown-menu p-0">
+              <li><a class="dropdown-item p-1" href="#">Confirm</a></li>
+              <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
+              <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+            </ul>
+          </div>
         </div>
       </section>
       <!-- /.container-fluid content-header-->
