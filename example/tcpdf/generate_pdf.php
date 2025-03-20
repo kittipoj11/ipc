@@ -10,8 +10,8 @@
 
     $po = new Po;
     $results = $po->getExampleRecord();
-    // $rsInspectionPeriod = $po->getInspectionOnePeriod($po_id, $period_id);
-    // $rsInspectionFiles = $po->getInspectionFiles($po_id, $period_id, $inspection_id);
+    // $rsInspectionPeriod = $po->getInspectionPeriodByPeriodId($po_id, $period_id);
+    // $rsInspectionFiles = $po->getInspectionFilesByInspectionId($po_id, $period_id, $inspection_id);
 
     // $supplier = new Supplier;
     // $supplier_rs = $supplier->getRecordAll();

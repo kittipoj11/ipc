@@ -3,9 +3,10 @@ $(document).ready(function () {
       e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
       const po_id = $(this).closest("tr").data("po_id");
       // window.location.href = "po_edit.php?po_id=" + po_id + "&href=inspect.php";
-      window.location.href = "inspection_view.php?po_id=" + po_id;
+      window.location.href = "ipc_view.php?po_id=" + po_id;
   });
 });
+
 
 $(document).ready(function () {
   // Click ที่รายการใดๆ
@@ -23,7 +24,7 @@ $(document).ready(function () {
     $(".card-title").html(po_number);
 
     $.ajax({
-      url: "inspection_crud.php",
+      url: "ipc_crud.php",
       type: "POST",
       data: {
         po_id: po_id,

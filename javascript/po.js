@@ -149,6 +149,7 @@ $(document).ready(function () {
     });
   });
 });
+
 // document.getElementById("opt_event_id").addEventListener("change", complete_selection);
 // document
 //   .getElementById("building_id")

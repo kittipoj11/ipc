@@ -48,7 +48,7 @@ require_once 'auth.php';
     <!-- Main Content Start -->
     <?php
     require_once  'class/po_class.php';
-    require_once  'class/inspection_class.php';
+    // require_once  'class/inspection_class.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
 
@@ -58,10 +58,8 @@ require_once 'auth.php';
     // $inspection_id = $_REQUEST['inspection_id'];
 
     $po = new Po;
-    $rsPoMainByPoId = $po->getPoMainByPoId($po_id);
-
-    $inspection = new Inspection;
-    $rsInspectionPeriod =$inspection->getInspectionPeriodAllByPoId($po_id );
+    $rsPo = $po->getPoMainByPoId($po_id);
+    $rsInspectionPeriod = $po->getInspectionAllPeriod($po_id);
 
     $supplier = new Supplier;
     $supplier_rs = $supplier->getRecordAll();
@@ -76,7 +74,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-6 d-flex">
-          <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
+          <h6 class="m-1 fw-bold text-uppercase">IPC</h6>
         </div>
         <!-- /.container-fluid -->
       </section>
@@ -87,36 +85,36 @@ require_once 'auth.php';
           <form name="myForm" id="myForm" action="" method="post">
             <div class="card">
               <div class="card-header">
-                <h6 class="m-1 fw-bold"><?= $rsPoMainByPoId['po_number'] . " : " . $rsPoMainByPoId['supplier_id'] . " - " . $rsPoMainByPoId['supplier_name'] ?></h6>
+                <h6 class="m-1 fw-bold"><?= $rsPo['po_number'] . " : " . $rsPo['supplier_id'] . " - " . $rsPo['supplier_name'] ?></h6>
               </div>
 
               <div class="card-body m-0 p-0">
 
-                <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsPoMainByPoId['po_id'] ?>">
+                <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsPo['po_id'] ?>">
 
                 <div class="row m-1">
                   <div class="col-4 input-group input-group-sm">
                     <label for="supplier_name" class="input-group-text">ผู้รับเหมา</label>
-                    <input type="text" class="form-control" name="supplier_name" id="supplier_name" value="<?= $rsPoMainByPoId['supplier_name'] ?>" disabled>
+                    <input type="text" class="form-control" name="supplier_name" id="supplier_name" value="<?= $rsPo['supplier_name'] ?>" disabled>
                   </div>
                 </div>
 
                 <div class="row m-1">
                   <div class="col-6 input-group input-group-sm">
                     <label for="project_name" class="input-group-text">โครงการ</label>
-                    <input type="text" class="form-control" name="project_name" id="project_name" disabled value="<?= $rsPoMainByPoId['project_name'] ?>">
+                    <input type="text" class="form-control" name="project_name" id="project_name" disabled value="<?= $rsPo['project_name'] ?>">
                   </div>
 
                   <div class="col-6 input-group input-group-sm">
                     <label for="location_name" class="input-group-text">สถานที่</label>
-                    <input type="text" class="form-control" name="location_name" id="location_name" disabled value="<?= $rsPoMainByPoId['location_name'] ?>">
+                    <input type="text" class="form-control" name="location_name" id="location_name" disabled value="<?= $rsPo['location_name'] ?>">
                   </div>
                 </div>
 
                 <div class="row m-1">
                   <div class="col-6 input-group input-group-sm">
                     <label for="working_name_th" class="input-group-text">งาน</label>
-                    <input type="text" class="form-control" name="working_name_th" id="working_name_th" disabled value="<?= $rsPoMainByPoId['working_name_th'] ?> (<?= $rsPoMainByPoId['working_name_en'] ?>)">
+                    <input type="text" class="form-control" name="working_name_th" id="working_name_th" disabled value="<?= $rsPo['working_name_th'] ?> (<?= $rsPo['working_name_en'] ?>)">
                   </div>
 
                 </div>
@@ -125,20 +123,20 @@ require_once 'auth.php';
                   <div class="col-4">
                     <div class="row-1 input-group input-group-sm">
                       <label for="working_date_from" class="input-group-text">ระยะเวลาดำเนินการ</label>
-                      <input type="date" class="form-control" name="working_date_from" id="working_date_from" disabled value="<?php echo isset($rsPoMainByPoId['working_date_from']) ? htmlspecialchars($rsPoMainByPoId['working_date_from']) : ''; ?>">
+                      <input type="date" class="form-control" name="working_date_from" id="working_date_from" disabled value="<?php echo isset($rsPo['working_date_from']) ? htmlspecialchars($rsPo['working_date_from']) : ''; ?>">
 
                     </div>
                   </div>
                   <div class="col-4">
                     <div class="row-1 input-group input-group-sm">
                       <label for="working_date_to" class="input-group-text "> ถึง </label>
-                      <input type="date" class="form-control" name="working_date_to" id="working_date_to" disabled value="<?php echo isset($rsPoMainByPoId['working_date_to']) ? htmlspecialchars($rsPoMainByPoId['working_date_to']) : ''; ?>">
+                      <input type="date" class="form-control" name="working_date_to" id="working_date_to" disabled value="<?php echo isset($rsPo['working_date_to']) ? htmlspecialchars($rsPo['working_date_to']) : ''; ?>">
                     </div>
                   </div>
 
                   <div class="col-2 input-group input-group-sm">
                     <label for="working_day" class="input-group-text">รวม</label>
-                    <input type="number" class="form-control" name="working_day" id="working_day" disabled value="<?php echo isset($rsPoMainByPoId['working_day']) ? htmlspecialchars($rsPoMainByPoId['working_day']) : ''; ?>">
+                    <input type="number" class="form-control" name="working_day" id="working_day" disabled value="<?php echo isset($rsPo['working_day']) ? htmlspecialchars($rsPo['working_day']) : ''; ?>">
                   </div>
                 </div>
 
@@ -147,17 +145,17 @@ require_once 'auth.php';
                 <div class="row m-1">
                   <div class="col-4 input-group input-group-sm">
                     <label for="po_number" class="input-group-text">เลขที่ PO</label>
-                    <input type="text" class="form-control" name="po_number" id="po_number" value=<?= $rsPoMainByPoId['po_number'] ?> readonly>
+                    <input type="text" class="form-control" name="po_number" id="po_number" value=<?= $rsPo['po_number'] ?> readonly>
                   </div>
 
                   <div class="col-4 input-group input-group-sm">
                     <label for="contract_value" class="input-group-text">มูลค่างานตาม PO</label>
-                    <input type="number" class="form-control" name="contract_value" id="contract_value" disabled value=<?= $rsPoMainByPoId['contract_value'] ?>>
+                    <input type="number" class="form-control" name="contract_value" id="contract_value" disabled value=<?= $rsPo['contract_value'] ?>>
                   </div>
 
                   <div class="col-2 input-group input-group-sm">
                     <?php
-                    $display_include_vat = $rsPoMainByPoId['is_include_vat'] ? "(Including VAT 7% )" : "";
+                    $display_include_vat = $rsPo['is_include_vat'] ? "(Including VAT 7% )" : "";
                     ?>
                     <label for="vat" class="input-group-text d-none">(Includeing VAT</label>
                     <input type="text" class="form-control border border-0" name="vat" id="vat" disabled value="<?= $display_include_vat ?>">
@@ -170,14 +168,14 @@ require_once 'auth.php';
                   <div class="col-4">
                     <div class="row-1 input-group input-group-sm">
                       <label for="workload_planned_percent" class="input-group-text ">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</label>
-                      <input type="number" class="form-control " name="workload_planned_percent" id="workload_planned_percent" disabled value="<?php echo isset($rsPoMainByPoId['workload_planned_percent']) ? htmlspecialchars($rsPoMainByPoId['workload_planned_percent']) : ''; ?>">
+                      <input type="number" class="form-control " name="workload_planned_percent" id="workload_planned_percent" disabled value="<?php echo isset($rsPo['workload_planned_percent']) ? htmlspecialchars($rsPo['workload_planned_percent']) : ''; ?>">
                       <label for="workload_planned_percent" class="input-group-text ">%</label>
                     </div>
                   </div>
                   <div class="col-4">
                     <div class="row-1 input-group input-group-sm">
                       <label for="workload_actual_completed_percent" class="input-group-text ">ปริมาณที่แล้วเสร็จจริง</label>
-                      <input type="number" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsPoMainByPoId['workload_actual_completed_percent']) ? htmlspecialchars($rsPoMainByPoId['workload_actual_completed_percent']) : ''; ?>">
+                      <input type="number" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsPo['workload_actual_completed_percent']) ? htmlspecialchars($rsPo['workload_actual_completed_percent']) : ''; ?>">
                       <label for="workload_actual_completed_percent" class="input-group-text ">%</label>
                     </div>
                   </div>
@@ -185,7 +183,7 @@ require_once 'auth.php';
                   <div class="col-4">
                     <div class="row-1 input-group input-group-sm">
                       <label for="workload_remaining_percent" class="input-group-text">ปริมาณงานคงเหลือ</label>
-                      <input type="number" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsPoMainByPoId['workload_remaining_percent']) ? htmlspecialchars($rsPoMainByPoId['workload_remaining_percent']) : ''; ?>">
+                      <input type="number" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsPo['workload_remaining_percent']) ? htmlspecialchars($rsPo['workload_remaining_percent']) : ''; ?>">
                       <label for="workload_remaining_percent" class="input-group-text ">%</label>
                     </div>
                   </div>
@@ -288,4 +286,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/inspection_view.js"></script>
+    <script src="javascript/ipc_view.js"></script>

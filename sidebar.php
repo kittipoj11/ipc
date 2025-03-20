@@ -155,6 +155,12 @@
                                 <p>All Inspection</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="ipc.php" class="nav-link text-dark">
+                                <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
+                                <p>All IPC</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

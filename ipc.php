@@ -60,7 +60,9 @@ require_once 'auth.php';
     <?php
     require_once  'class/inspection_class.php';
     require_once  'class/po_class.php';
+    require_once  'class/ipc_class.php';
 
+    $ipc = new Ipc;
     $po = new Po;
     $rsPoMainAll = $po->getPoMainAll();
     ?>
@@ -70,7 +72,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-6 d-flex">
-          <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
+          <h6 class="m-1 fw-bold text-uppercase">IPC</h6>
         </div>
         <!-- /.container-fluid -->
       </section>
@@ -84,7 +86,7 @@ require_once 'auth.php';
 
               <div class="card">
                 <div class="card-header d-flex">
-                  <h6 class="m-1 fw-bold">All Inspection</h6>
+                  <h6 class="m-1 fw-bold">All IPC</h6>
                   <a href="po_create.php" class="btn btn-success btn-sm btnNew d-none" title="New" style="margin: 0px 5px 5px 5px;">
                     <i class="fa-solid fa-plus"></i>
                   </a>
@@ -94,7 +96,7 @@ require_once 'auth.php';
                   <table id="tableMain" class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
-                        <th class="text-center p-1 d-none">#</th>
+                        <th class="text-center p-1 d-none">po_id</th>
                         <th class="text-center p-1" style="width: 150px;">เลขที่ PO</th>
                         <th class="text-center p-1">โครงการ</th>
                         <th class="text-center p-1">ผู้รับเหมา</th>
@@ -159,36 +161,34 @@ require_once 'auth.php';
                   <table class="table table-bordered justify-content-center text-center" id="tablePeriod">
                     <thead>
                       <tr>
-                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po_id</th>
-                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">period_id</th>
-                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">inspection_id</th>
-                        <th class="text-center align-content-center p-1" rowspan="2" width="5%">งวดงาน</th>
-                        <th class="text-center p-1" colspan="3">ปริมาณงาน</th>
-                        <th class="text-center p-1" colspan="3">ยอดเบิกเงินงวด</th>
-                        <th class="text-center align-content-center p-1" rowspan="2">หมายเหตุ</th>
-                      </tr>
-                      <tr>
-                        <th class="text-center p-1" width="10%">ตามแผนงาน(%)</th>
-                        <th class="text-center p-1" width="10%">ที่แล้วเสร็จจริง(%)</th>
-                        <th class="text-center p-1" width="10%">คงเหลือ(%)</th>
-                        <th class="text-center p-1" width="10%">ยอดปัจจุบัน</th>
-                        <th class="text-center p-1" width="10%">ยอดสะสมถึงปัจจุบัน</th>
-                        <th class="text-center p-1" width="10%">ยอดคงเหลือ</th>
-                      </tr>
+                        <th class="text-center align-content-center p-1 d-none">po_id</th>
+                        <th class="text-center align-content-center p-1 d-none">period_id</th>
+                        <th class="text-center align-content-center p-1 d-none">ipc_id</th>
+                        <th class="text-center align-content-center p-1" width="5%">no.</th>
+                        <th class="text-center p-1">ยอดเบิกในงวด(บาท)</th>
+                        <th class="text-center p-1">retention ในงวด(บาท)</th>
+                        <th class="text-center p-1">retention สะสม(บาท)</th>
+                        <th class="text-center p-1">ยอดเงินจ่ายจริง(บาท)</th>
+                        <th class="text-center p-1">ยอดเงินจ่ายจริงสะสม(บาท)</th>
+                        <th class="text-center p-1">paid</th>
+                        <th class="text-center p-1">paid date</th>
+                        <th class="text-center align-content-center p-1">หมายเหตุ</th>
                     </thead>
                     <tbody id="tbody-period">
-                      <!-- <tr>
-                        <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_id" value="{$row['po_id']}" readonly></td>
-                        <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_period_id" value="{$row['po_period_id']}" readonly></td>
-                        <td class="tdPeriod text-right py-0 px-1"><a class='link-opacity-100 pe-auto' style='margin: 0px 5px 5px 5px'>{$row['period']}</a></td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['workload_planned_percent']}</td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['workload_actual_completed_percent']}</td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['workload_remaining_percent']}</td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['interim_payment']}</td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['interim_payment_less_previous']}</td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['interim_payment_remain']}</td>
-                        <td class="tdPeriod text-left py-0 px-1">{$row['remark']}</td>
-                      </tr> -->
+                      <tr>
+                      <th class="text-center align-content-center p-1 d-none">po_id</th>
+                        <td class="text-center align-content-center p-1 d-none">period_id</td>
+                        <td class="text-center align-content-center p-1 d-none">ipc_id</td>
+                        <td class="text-center align-content-center p-1" width="5%">no.</td>
+                        <td class="text-center p-1">ยอดเบิกในงวด(บาท)</td>
+                        <td class="text-center p-1">retention ในงวด(บาท)</td>
+                        <td class="text-center p-1">retention สะสม(บาท)</td>
+                        <td class="text-center p-1">ยอดเงินจ่ายจริง(บาท)</td>
+                        <td class="text-center p-1">ยอดเงินจ่ายจริงสะสม(บาท)</td>
+                        <td class="text-center p-1">paid</td>
+                        <td class="text-center p-1">paid date</td>
+                        <td class="text-center align-content-center p-1">หมายเหตุ</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -238,4 +238,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/inspection.js"></script>
+    <script src="javascript/ipc.js"></script>

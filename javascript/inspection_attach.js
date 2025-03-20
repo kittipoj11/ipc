@@ -3,7 +3,7 @@ $(document).ready(function () {
   $("#uploadForm").on("submit", function (e) {
     e.preventDefault();
     let formData = new FormData(this);
-    formData.append("action", "insertInspectionFile");
+    formData.append("action", "insertInspectionFiles");
 
     // ลบ <div> ทั้งหมดที่เป็นลูก,หลานของ #uploadStatus
     $("#uploadStatus > div").remove();
@@ -178,14 +178,14 @@ $(document).ready(function () {
         "Are you sure you want to delete this record and all associated files?"
       )
     ) {
-      // deleteInspectionFile
+      // deleteInspectionFiles
       $.ajax({
         url: "inspection_crud.php",
         type: "POST",
         dataType: "json",
         data: {
           file_id: file_id,
-          action: "deleteInspectionFile",
+          action: "deleteInspectionFiles",
         },
         success: function (response) {
           if (response.status === "success") {

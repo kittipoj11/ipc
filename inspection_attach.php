@@ -83,6 +83,7 @@ require_once 'auth.php';
     <!-- Main Content Start -->
     <?php
     require_once  'class/po_class.php';
+    require_once  'class/inspection_class.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
 
@@ -92,8 +93,10 @@ require_once 'auth.php';
     $inspection_id = $_REQUEST['inspection_id'];
 
     $po = new Po;
-    $rsInspectionPeriod = $po->getInspectionOnePeriod($po_id, $period_id);
-    $rsInspectionPeriodDetail = $po->getInspectionPeriodDetail($po_id, $period_id);
+
+    $inspection = new Inspection;
+    $rsInspectionPeriod = $inspection->getInspectionPeriodByPeriodId($po_id, $period_id);
+    $rsInspectionPeriodDetail = $inspection->getInspectionPeriodDetailByPeriodId($po_id, $period_id);
 
     $supplier = new Supplier;
     $supplier_rs = $supplier->getRecordAll();

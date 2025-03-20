@@ -21,7 +21,7 @@ $(document).ready(function () {
     $(".card-title").html(po_number);
 
     $.ajax({
-      url: "inspection_crud.php",
+      url: "ipc_crud.php",
       type: "POST",
       data: {
         po_id: po_id,

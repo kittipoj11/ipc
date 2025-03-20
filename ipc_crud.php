@@ -4,36 +4,34 @@
 
 require_once 'config.php';
 require_once 'class/po_class.php';
-require_once 'class/inspection_class.php';
 
 //$_SESSION['_REQUEST'] = $_REQUEST;
 // if (isset($_REQUEST['submit'])) {
 
-$po = new Po();
-$inspection = new Inspection();
+$obj = new Po();
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectInspectionPeriodAll') {
-    $rs = $inspection->getInspectionPeriodAllByPoId($_REQUEST['po_id']);
+    $rs = $obj->getInspectionAllPeriod($_REQUEST['po_id']);
     createPeriodTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updateInspectionPeriod') {
-    $rs = $inspection->updateInspectionPeriod($_REQUEST);
+    $rs = $obj->updateInspectionPeriod($_REQUEST);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectInspectionFiles') {
-    $rsInspectionFiles = $inspection->getInspectionFilesByInspectionId($_REQUEST['po_id'] ,$_REQUEST['period_id'],$_REQUEST['inspection_id']);
+    $rsInspectionFiles = $obj->getInspectionFilesByInspectionId($_REQUEST['po_id'] ,$_REQUEST['period_id'],$_REQUEST['inspection_id']);
     echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertInspectionFiles') {
-    $inspection->insertInspectionFiles($_REQUEST);
+    $obj->insertInspectionFiles($_REQUEST);
     // echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deleteInspectionFiles') {
-    $inspection->deleteInspectionFiles($_REQUEST['file_id']);
+    $obj->deleteInspectionFiles($_REQUEST['file_id']);
 } else {
-    // getRecordAll($inspection);
+    // getRecordAll($obj);
 }
 
 
 // }
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function createPOTable($inspection) {}
+function createPOTable($obj) {}
 
 function createPeriodTable($getRs)
 {

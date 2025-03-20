@@ -47,7 +47,6 @@ require_once 'auth.php';
     <!-- Main Content Start -->
     <?php
     require_once  'class/po_class.php';
-    require_once  'class/inspection_class.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
 
@@ -57,10 +56,8 @@ require_once 'auth.php';
     $inspection_id = $_REQUEST['inspection_id'];
 
     $po = new Po;
-
-    $inspection = new Inspection;
-    $rsInspectionPeriod = $inspection->getInspectionPeriodByPeriodId($po_id, $period_id);
-    $rsInspectionPeriodDetail = $inspection->getInspectionPeriodDetailByPeriodId($po_id, $period_id);
+    $rsInspectionPeriod = $po->getInspectionPeriodByPeriodId($po_id, $period_id);
+    $rsInspectionPeriodDetail = $po->getInspectionPeriodDetailByPeriodId($po_id, $period_id);
 
     $supplier = new Supplier;
     $supplier_rs = $supplier->getRecordAll();
@@ -75,7 +72,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-6 d-flex">
-          <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
+          <h6 class="m-1 fw-bold text-uppercase">IPC</h6>
         </div>
       </section>
       <!-- /.container-fluid content-header-->
@@ -404,4 +401,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/inspection_edit.js"></script>
+    <script src="javascript/ipc_edit.js"></script>

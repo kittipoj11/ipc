@@ -6,31 +6,31 @@ require_once 'class/po_class.php';
 
 // $_SESSION['_POST'] = $_POST;
 // if (isset($_REQUEST['submit'])) {
-$obj = new Po();
+$po = new Po();
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
-    $obj->insertData($_REQUEST);
-    // getRecordAll($obj);
+    $po->insertData($_REQUEST);
+    // getPoMainAll($po);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
-    $obj->updateData($_REQUEST);
-    // getRecordAll($obj);
+    $po->updateData($_REQUEST);
+    // getPoMainAll($po);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
-    $obj->deleteData($_REQUEST);
-    // getRecordAll($obj);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $obj->getRecordById($_REQUEST['plan_status_id']);
-    echo json_encode($rs);
+    $po->deleteData($_REQUEST);
+    // getPoMainAll($po);
+// } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
+//     $rs = $po->getRecordById($_REQUEST['plan_status_id']);
+//     echo json_encode($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
-    $rs = $obj->getPeriodByPoId($_REQUEST['po_id']);
+    $rs = $po->getPoPeriodByPoId($_REQUEST['po_id']);
     createPeriodTable($rs);
 
 } else {
-    // getRecordAll($obj);
+    // getPoMainAll($po);
 }
 // }
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function createPOTable($obj) {}
+function createPOTable($po) {}
 
 
 function createPeriodTable($getRs)
