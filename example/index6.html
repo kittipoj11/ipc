@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HTML Image Map Example</title>
+      <!-- Bootstrap 5.3.3 add by Poj-->
+      <link rel="stylesheet" href="../plugins/bootstrap-5.3.3/dist/css/bootstrap.min.css">
+
+  <style>
+    .border{
+      border: 1px solid red;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="btn-group" role="group">
+    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Action
+    </button>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#" id="confirm-item">Confirm</a></li>
+        <li><a class="dropdown-item" href="#" id="submit-item">Submit</a></li>
+        <li><a class="dropdown-item" href="#" id="approve-item">Approve</a></li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li><a class="dropdown-item" href="#" id="reject-item">Reject</a></li>
+    </ul>
+</div>
+
+<!-- Bootstrap 5.3.3 add by Poj-->
+<script src="../plugins/bootstrap-5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // สมมติว่าคุณมีตัวแปร userid ที่เก็บค่า ID ของผู้ใช้
+    const userId = 1; /* ค่า userid ของผู้ใช้ */
+
+    // อ้างอิงไปยัง dropdown items
+    const confirmItem = document.getElementById('confirm-item');
+    const submitItem = document.getElementById('submit-item');
+    const approveItem = document.getElementById('approve-item');
+    const rejectItem = document.getElementById('reject-item');
+    const divider = document.querySelector('.dropdown-divider'); // อ้างอิง divider
+
+    // ฟังก์ชันสำหรับแสดงหรือซ่อน element
+    function toggleElement(element, shouldShow) {
+        if (element) {
+            element.style.display = shouldShow ? '' : 'none'; // '' คือค่า display default ของ <a> และ <hr>
+        }
+    }
+
+    // ตรวจสอบ userid และแสดง/ซ่อน dropdown items
+    switch (userId) {
+        case 1:
+            toggleElement(confirmItem, true);
+            toggleElement(submitItem, false);
+            toggleElement(approveItem, false);
+            toggleElement(rejectItem, false);
+            toggleElement(divider, false);
+            break;
+        case 2:
+            toggleElement(confirmItem, false);
+            toggleElement(submitItem, false);
+            toggleElement(approveItem, true);
+            toggleElement(rejectItem, true);
+            toggleElement(divider, true);
+            break;
+        case 3:
+            toggleElement(confirmItem, false);
+            toggleElement(submitItem, true);
+            toggleElement(approveItem, false);
+            toggleElement(rejectItem, true);
+            toggleElement(divider, true);
+            break;
+        case 4:
+            toggleElement(confirmItem, true);
+            toggleElement(submitItem, true);
+            toggleElement(approveItem, true);
+            toggleElement(rejectItem, true);
+            toggleElement(divider, true);
+            break;
+        default:
+            // กรณีอื่นๆ หรือแสดงทั้งหมดเป็นค่าเริ่มต้น
+            toggleElement(confirmItem, true);
+            toggleElement(submitItem, true);
+            toggleElement(approveItem, true);
+            toggleElement(rejectItem, true);
+            toggleElement(divider, true);
+            break;
+    }
+</script>
+
+</body>
+</html>

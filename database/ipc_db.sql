@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 20, 2025 at 05:28 AM
+-- Generation Time: Mar 21, 2025 at 10:16 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -94,21 +94,6 @@ CREATE TABLE `inspection_approvals` (
   `approved_date` datetime DEFAULT NULL,
   `approved_comment` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `inspection_approvals`
---
-
-INSERT INTO `inspection_approvals` (`inspection_approved_id`, `inspection_id`, `approved_level`, `approver_id`, `approved_status_id`, `approved_date`, `approved_comment`) VALUES
-(1, 1, 1, 2, 1, NULL, NULL),
-(2, 1, 2, 3, 1, NULL, NULL),
-(3, 1, 3, 4, 1, NULL, NULL),
-(4, 2, 1, 2, 1, NULL, NULL),
-(5, 2, 2, 3, 1, NULL, NULL),
-(6, 2, 3, 4, 1, NULL, NULL),
-(7, 3, 1, 2, 1, NULL, NULL),
-(8, 3, 2, 3, 1, NULL, NULL),
-(9, 3, 3, 4, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -448,6 +433,33 @@ INSERT INTO `workflows` (`workflow_id`, `workflow_name`, `is_deleted`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `workflow_status`
+--
+
+CREATE TABLE `workflow_status` (
+  `workflow_status_id` int(11) NOT NULL,
+  `workflow_status_name` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `workflow_status`
+--
+
+INSERT INTO `workflow_status` (`workflow_status_id`, `workflow_status_name`, `is_deleted`) VALUES
+(-2, 'Cancelled', 0),
+(-1, 'Rejected', 0),
+(0, 'Pending', 0),
+(1, 'Submitted', 0),
+(2, 'In progress', 0),
+(3, 'Verified', 0),
+(4, 'Approved', 0),
+(5, 'Completed', 0),
+(6, 'Closed', 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `workflow_steps`
 --
 
@@ -463,9 +475,14 @@ CREATE TABLE `workflow_steps` (
 --
 
 INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approved_level`, `approver_id`) VALUES
-(1, 1, 1, 2),
+(1, 1, 1, 1),
 (2, 1, 2, 3),
-(3, 1, 3, 4);
+(3, 1, 3, 4),
+(4, 1, 4, 1),
+(5, 1, 5, 5),
+(6, 1, 6, 3),
+(7, 1, 7, 6),
+(8, 1, 8, 7);
 
 -- --------------------------------------------------------
 
@@ -655,7 +672,7 @@ ALTER TABLE `files`
 -- AUTO_INCREMENT for table `inspection_approvals`
 --
 ALTER TABLE `inspection_approvals`
-  MODIFY `inspection_approved_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `inspection_approved_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `inspection_files`
@@ -721,7 +738,7 @@ ALTER TABLE `workflows`
 -- AUTO_INCREMENT for table `workflow_steps`
 --
 ALTER TABLE `workflow_steps`
-  MODIFY `workflow_step_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `workflow_step_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `your_table_name`

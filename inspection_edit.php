@@ -30,6 +30,13 @@ require_once 'auth.php';
   <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
 
   <style>
+    :root {
+  --my-gold-color: gold; 
+  --my-primary-color:var(--bs-primary); /* สีเทา */
+  --my-greenyellow-color:greenyellow; /* สีเหลือง */
+  --my-text-color: #333; /* สีดำ */
+  --my-background-color: #f8f9fa; /* สีเทาอ่อน */
+}
     table tr th {
       cursor: default;
     }
@@ -37,6 +44,12 @@ require_once 'auth.php';
     /* .dropdown-menu {
       width: fit-content;
     } */
+    .dropdown-item:hover {
+      /* background-color: var(--bs-primary); */
+      background-color: var(--my-primary-color);
+      color: white;
+      /* เพิ่มสีข้อความให้เป็นสีขาวเพื่อให้ตัดกับพื้นหลัง */
+    }
   </style>
 </head>
 
@@ -80,16 +93,25 @@ require_once 'auth.php';
       <section class="container-fluid content-header">
         <div class="col-sm-12  d-flex justify-content-between">
           <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
-          <div class="dropdown">
+
+          <!-- <div class="dropdown"> -->
+          <div class="btn-group" role="group">
             <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               Action
             </button>
-            <ul class="dropdown-menu p-0">
-              <li><a class="dropdown-item p-1" href="#">Confirm</a></li>
+            <ul class="dropdown-menu py-0">
+              <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
+              <li><a class="dropdown-item" href="#">Submit</a></li>
+              <li><a class="dropdown-item" href="#">Approve</a></li>
+              <li>
+                <hr class="dropdown-divider  my-0">
+              </li>
+              <li><a class="dropdown-item" href="#">Reject</a></li>
               <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
               <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
             </ul>
           </div>
+
         </div>
       </section>
       <!-- /.container-fluid content-header-->

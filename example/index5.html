@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HTML Image Map Example</title>
+  <style>
+    .border{
+      border: 1px solid red;
+    }
+  </style>
+</head>
+<body>
+
+  <img class="border" src="world.jpg" alt="World Map" usemap="#worldmap" width="500px" height="500px" style="position: absolute;top: 10px;left:10px">
+
+  <map name="worldmap">
+    <area shape="rect" coords="400,400,500,500" href="https://www.impact.co.th/" alt="IMPACT Muang Thong Thani" title="IMPACT Muang Thong Thani">
+    <area shape="circle" coords="100,400,50" href="south_america.htm" alt="South America">
+    <area shape="poly" coords="124,58,124,39,165,31,216,22,274,26,311,48,352,70,377,86,336,91,276,92,273,93,238,87,205,76,174,58,124,58" href="asia.htm" alt="Asia">
+  </map>
+
+</body>
+</html>
