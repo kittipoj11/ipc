@@ -88,10 +88,10 @@ class Po extends Connection
             // $workflow_id=$getData['workflow_id'];
             $workflow_id=1;
             $sql = <<<EOD
-                        SELECT `workflow_step_id`, `workflow_id`, `approved_level`, `approver_id`, `action_type`
+                        SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `action_type_id`, `first_status_id`
                         FROM `workflow_steps`
                         WHERE `workflow_id` = :workflow_id
-                        ORDER BY approved_level asc
+                        ORDER BY approval_level asc
                     EOD;
             $stmtWorkflowSteps = $this->myConnect->prepare($sql);
             $stmtWorkflowSteps->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
@@ -206,12 +206,12 @@ class Po extends Connection
 
                 // INSERT inspection_approvals
                 $sql = <<<EOD
-                            INSERT INTO `inspection_approvals`(`inspection_id`, `approved_level`, `approver_id`, `approved_status_id`) 
-                            VALUES (:inspection_id, :approved_level, :approver_id, :approved_status_id)
+                            INSERT INTO `inspection_approvals`(`inspection_id`, `approval_level`, `approver_id`, `approval_status_id`) 
+                            VALUES (:inspection_id, :approval_level, :approver_id, :approval_status_id)
                         EOD;
                 $stmtInspectApprovals = $this->myConnect->prepare($sql);
 
-                $_SESSION['number_of_period'] = $number_of_period;
+                // $_SESSION['number_of_period'] = $number_of_period;
                 for ($i = 0; $i < $number_of_period; $i++) {
                     // po_period
                     $stmtPoPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
@@ -247,33 +247,33 @@ class Po extends Connection
 
 
                     // inspection_approvals
-                    $approved_status_id=1;
+                    $approval_status_id=1;
                     foreach ($rsWorkflowSteps as $row) {
                             $approverId = $row['approver_id'];
                             $approvalLevel = $row['approval_level'];
                             $actionType = $row['action_type']; // สมมติว่ามี action_type เช่น 'approval', 'submit', 'confirm', 'verify'
 
-                            $approved_status_id = null;
-                            if ($actionType === 'approval') {
-                                $approved_status_id = 11;
-                            } elseif ($actionType === 'submit') {
-                                $approved_status_id = 21;
-                            } elseif ($actionType === 'confirm') {
-                                $approved_status_id = 31;
-                            } elseif ($actionType === 'verify') {
-                                $approved_status_id = 41;
-                            }
+                            $approval_status_id = $row['first_status_id'];
+                            // if ($actionType === 'approval') {
+                            //     $approval_status_id = 11;
+                            // } elseif ($actionType === 'submit') {
+                            //     $approval_status_id = 21;
+                            // } elseif ($actionType === 'confirm') {
+                            //     $approval_status_id = 31;
+                            // } elseif ($actionType === 'verify') {
+                            //     $approval_status_id = 41;
+                            // }
 
-                            $_SESSION['Before param Loop'] = 'Before';
+                            // $_SESSION['Before param Loop'] = 'Before';
                         $stmtInspectApprovals->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
-                        $stmtInspectApprovals->bindParam(':approved_level', $approvalLevel,  PDO::PARAM_INT);
+                        $stmtInspectApprovals->bindParam(':approval_level', $approvalLevel,  PDO::PARAM_INT);
                         $stmtInspectApprovals->bindParam(':approver_id', $approverId, PDO::PARAM_INT);
-                        $stmtInspectApprovals->bindParam(':approved_status_id', $approved_status_id, PDO::PARAM_INT);
+                        $stmtInspectApprovals->bindParam(':approval_status_id', $approval_status_id, PDO::PARAM_INT);
 
-                        // $_SESSION['Loop'] = 'inspection_id='+$inspection_id+'approved_level='+$row['approved_level']+'approver_id='+$row['approver_id'];
-                        $_SESSION['After param Loop'] = 'After';
+                        // $_SESSION['Loop'] = 'inspection_id='+$inspection_id+'approval_level='+$row['approval_level']+'approver_id='+$row['approver_id'];
+                        // $_SESSION['After param Loop'] = 'After';
                         $stmtInspectApprovals->execute();
-                        $_SESSION['Execute Loop'] = 'Execute';
+                        // $_SESSION['Execute Loop'] = 'Execute';
     
                     }
                     $stmtInspectApprovals->closeCursor();
@@ -448,7 +448,7 @@ class Po extends Connection
                 $is_retention = 0;
                 $workflow_id = 1;
                 $current_status = 1;
-                $current_approval_level = 1; //จะใช้เป็นอะไร: approved_level หรือ workflow_step_id
+                $current_approval_level = 1; //จะใช้เป็นอะไร: approval_level หรือ workflow_step_id
 
                 foreach ($insert_indexs as $i) { //ถ้าต้องการใช้ค่าของ key ให้เขียนแบบนี้ foreach($insert_indexs as $key=> $value){
                     $stmtPoPeriodInsert->bindParam(':po_id', $po_id, PDO::PARAM_INT);

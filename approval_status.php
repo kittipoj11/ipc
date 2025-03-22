@@ -86,15 +86,15 @@ require_once 'auth.php';
                     <tbody id="tbody">
                       <?php foreach ($rs as $row) {
                         $html = <<<EOD
-                                        <tr id="{$row['approved_status_id']}">
-                                            <td>{$row['approved_status_id']}</td>
-                                            <td>{$row['approved_status_name']}</td>
+                                        <tr id="{$row['approval_status_id']}">
+                                            <td>{$row['approval_status_id']}</td>
+                                            <td>{$row['approval_status_name']}</td>
                                             <td align='center'>
                                                 <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' iid='{$row['approved_status_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' iid='{$row['approval_status_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-pen-to-square'></i>
                                                     </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' iid='{$row['approved_status_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' iid='{$row['approval_status_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-trash-can'></i>
                                                     </a>
                                                 </div>
@@ -141,17 +141,17 @@ require_once 'auth.php';
             <!-- <input type="text" name="action" id="action"> -->
             <div class="modal-body">
               <div class="row m-3">
-                <label for="approved_status_id" class="col-sm-6 col-form-label">#</label>
+                <label for="approval_status_id" class="col-sm-6 col-form-label">#</label>
                 <div class="col-sm-6">
-                  <!-- <input type="hidden" class="approved_status_id" name="approved_status_id"> -->
-                  <input type="input" class="form-control form-control-sm fst-italic approved_status_id" id="approved_status_id" readonly name="approved_status_id">
+                  <!-- <input type="hidden" class="approval_status_id" name="approval_status_id"> -->
+                  <input type="input" class="form-control form-control-sm fst-italic approval_status_id" id="approval_status_id" readonly name="approval_status_id">
                 </div>
               </div>
 
               <div class="row m-3">
-                <label for="approved_status_name" class="col-sm-6 col-form-label">approval_status name</label>
+                <label for="approval_status_name" class="col-sm-6 col-form-label">approval_status name</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm" name="approved_status_name" id="approved_status_name">
+                  <input type="input" class="form-control form-control-sm" name="approval_status_name" id="approval_status_name">
                 </div>
               </div>
             </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 21, 2025 at 10:16 AM
+-- Generation Time: Mar 22, 2025 at 04:15 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -24,23 +24,51 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `action_type`
+--
+
+CREATE TABLE `action_type` (
+  `action_type_id` int(11) NOT NULL,
+  `action_type_name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `action_type`
+--
+
+INSERT INTO `action_type` (`action_type_id`, `action_type_name`) VALUES
+(1, 'submit'),
+(2, 'verify'),
+(3, 'confirm'),
+(4, 'approval');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `approval_status`
 --
 
 CREATE TABLE `approval_status` (
-  `approval_status_id` int(11) UNSIGNED NOT NULL,
-  `approval_status_name` varchar(255) DEFAULT NULL,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+  `approval_status_id` int(11) NOT NULL,
+  `action_type_id` int(11) NOT NULL,
+  `approval_status_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `approval_status`
 --
 
-INSERT INTO `approval_status` (`approval_status_id`, `approval_status_name`, `is_deleted`) VALUES
-(0, 'ไม่อนุมัติ', 0),
-(1, 'รออนุมัติ', 0),
-(2, 'อนุมัติ', 0);
+INSERT INTO `approval_status` (`approval_status_id`, `action_type_id`, `approval_status_name`) VALUES
+(1, 1, 'Pending Submission'),
+(2, 1, 'Submitted'),
+(3, 2, 'Pending Verification'),
+(4, 2, 'Verified'),
+(5, 3, 'Pending Confirmation'),
+(6, 3, 'Confirmed'),
+(7, 4, 'Pending Approval'),
+(8, 4, 'Approved'),
+(9, 4, 'Rejected'),
+(10, 4, 'Cancelled');
 
 -- --------------------------------------------------------
 
@@ -95,6 +123,44 @@ CREATE TABLE `inspection_approvals` (
   `approval_comment` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Dumping data for table `inspection_approvals`
+--
+
+INSERT INTO `inspection_approvals` (`inspection_approval_id`, `inspection_id`, `approval_level`, `approver_id`, `approval_status_id`, `approval_date`, `approval_comment`) VALUES
+(1, 4, 1, 1, 1, NULL, NULL),
+(2, 4, 2, 3, 1, NULL, NULL),
+(3, 4, 3, 4, 1, NULL, NULL),
+(4, 4, 4, 1, 1, NULL, NULL),
+(5, 4, 5, 5, 1, NULL, NULL),
+(6, 4, 6, 3, 1, NULL, NULL),
+(7, 4, 7, 6, 1, NULL, NULL),
+(8, 4, 8, 7, 1, NULL, NULL),
+(9, 5, 1, 1, 1, NULL, NULL),
+(10, 5, 2, 3, 1, NULL, NULL),
+(11, 5, 3, 4, 1, NULL, NULL),
+(12, 5, 4, 1, 1, NULL, NULL),
+(13, 5, 5, 5, 1, NULL, NULL),
+(14, 5, 6, 3, 1, NULL, NULL),
+(15, 5, 7, 6, 1, NULL, NULL),
+(16, 5, 8, 7, 1, NULL, NULL),
+(17, 6, NULL, 1, 21, NULL, NULL),
+(18, 6, NULL, 3, 11, NULL, NULL),
+(19, 6, NULL, 4, 21, NULL, NULL),
+(20, 6, NULL, 1, 41, NULL, NULL),
+(21, 6, NULL, 5, 11, NULL, NULL),
+(22, 6, NULL, 3, 11, NULL, NULL),
+(23, 6, NULL, 6, 41, NULL, NULL),
+(24, 6, NULL, 7, 11, NULL, NULL),
+(25, 7, NULL, 1, 21, NULL, NULL),
+(26, 7, NULL, 3, 11, NULL, NULL),
+(27, 7, NULL, 4, 21, NULL, NULL),
+(28, 7, NULL, 1, 41, NULL, NULL),
+(29, 7, NULL, 5, 11, NULL, NULL),
+(30, 7, NULL, 3, 11, NULL, NULL),
+(31, 7, NULL, 6, 41, NULL, NULL),
+(32, 7, NULL, 7, 11, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -144,7 +210,11 @@ CREATE TABLE `inspection_periods` (
 INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`) VALUES
 (1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (2, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(3, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 7, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -167,7 +237,11 @@ CREATE TABLE `inspection_period_details` (
 INSERT INTO `inspection_period_details` (`rec_id`, `inspection_id`, `order_no`, `details`, `remark`) VALUES
 (1, 1, 1, NULL, NULL),
 (2, 2, 1, NULL, NULL),
-(3, 3, 1, NULL, NULL);
+(3, 3, 1, NULL, NULL),
+(4, 4, 1, NULL, NULL),
+(5, 5, 1, NULL, NULL),
+(6, 6, 1, NULL, NULL),
+(7, 7, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -299,7 +373,9 @@ CREATE TABLE `po_main` (
 --
 
 INSERT INTO `po_main` (`po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `workflow_id`) VALUES
-(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephantx', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 0.00, 0.00, 0.00, 0, 0.00, 0.00, '0000-00-00', '0000-00-00', 1, '05389', NULL, 3, 0.00, 0.00, 0, 1);
+(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephantx', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 0.00, 0.00, 0.00, 0, 0.00, 0.00, '0000-00-00', '0000-00-00', 1, '05389', NULL, 3, 0.00, 0.00, 0, 1),
+(2, 'IMPO002', 'Sunset', 1, 1, 'ซันเซต ๑', 'Sunset 1', 1, 0.00, 0.00, 0.00, 0, 0.00, 0.00, '0000-00-00', '0000-00-00', 1, '05389', NULL, 2, 0.00, 0.00, 0, 1),
+(3, 'IMPO003', 'ติดตั้ง LED', 1, 1, '', '', 1, 0.00, 0.00, 0.00, 0, 0.00, 0.00, '0000-00-00', '0000-00-00', 1, '05389', NULL, 2, 0.00, 0.00, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -324,7 +400,11 @@ CREATE TABLE `po_period` (
 INSERT INTO `po_period` (`period_id`, `po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `period_status`, `remark`) VALUES
 (1, 1, 1, 0.00, 0.00, NULL, ''),
 (2, 1, 2, 0.00, 0.00, NULL, ''),
-(3, 1, 3, 0.00, 0.00, NULL, '');
+(3, 1, 3, 0.00, 0.00, NULL, ''),
+(4, 2, 1, 0.00, 0.00, NULL, ''),
+(5, 2, 2, 0.00, 0.00, NULL, ''),
+(6, 3, 1, 0.00, 0.00, NULL, ''),
+(7, 3, 2, 0.00, 0.00, NULL, '');
 
 -- --------------------------------------------------------
 
@@ -467,22 +547,23 @@ CREATE TABLE `workflow_steps` (
   `workflow_step_id` int(11) UNSIGNED NOT NULL,
   `workflow_id` int(11) UNSIGNED DEFAULT NULL,
   `approval_level` int(11) DEFAULT NULL,
-  `approver_id` int(11) UNSIGNED DEFAULT NULL
+  `approver_id` int(11) UNSIGNED DEFAULT NULL,
+  `action_type_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `workflow_steps`
 --
 
-INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`) VALUES
-(1, 1, 1, 1),
-(2, 1, 2, 3),
-(3, 1, 3, 4),
-(4, 1, 4, 1),
-(5, 1, 5, 5),
-(6, 1, 6, 3),
-(7, 1, 7, 6),
-(8, 1, 8, 7);
+INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `action_type_id`) VALUES
+(1, 1, 1, 1, 1),
+(2, 1, 2, 3, 4),
+(3, 1, 3, 4, 1),
+(4, 1, 4, 1, 2),
+(5, 1, 5, 5, 4),
+(6, 1, 6, 3, 4),
+(7, 1, 7, 6, 2),
+(8, 1, 8, 7, 4);
 
 -- --------------------------------------------------------
 
@@ -516,10 +597,19 @@ INSERT INTO `your_table_name` (`id`, `category`, `column1`, `column2`, `column3`
 --
 
 --
+-- Indexes for table `action_type`
+--
+ALTER TABLE `action_type`
+  ADD PRIMARY KEY (`action_type_id`),
+  ADD UNIQUE KEY `action_type_name` (`action_type_name`);
+
+--
 -- Indexes for table `approval_status`
 --
 ALTER TABLE `approval_status`
-  ADD PRIMARY KEY (`approval_status_id`);
+  ADD PRIMARY KEY (`approval_status_id`),
+  ADD UNIQUE KEY `approval_status_name` (`approval_status_name`),
+  ADD KEY `action_type_id` (`action_type_id`);
 
 --
 -- Indexes for table `departments`
@@ -644,7 +734,8 @@ ALTER TABLE `workflows`
 ALTER TABLE `workflow_steps`
   ADD PRIMARY KEY (`workflow_step_id`),
   ADD KEY `workflow_id` (`workflow_id`),
-  ADD KEY `approver_id` (`approver_id`);
+  ADD KEY `approver_id` (`approver_id`),
+  ADD KEY `fk_workflow_step_action_type` (`action_type_id`);
 
 --
 -- Indexes for table `your_table_name`
@@ -655,6 +746,18 @@ ALTER TABLE `your_table_name`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `action_type`
+--
+ALTER TABLE `action_type`
+  MODIFY `action_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `approval_status`
+--
+ALTER TABLE `approval_status`
+  MODIFY `approval_status_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -672,7 +775,7 @@ ALTER TABLE `files`
 -- AUTO_INCREMENT for table `inspection_approvals`
 --
 ALTER TABLE `inspection_approvals`
-  MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `inspection_files`
@@ -684,13 +787,13 @@ ALTER TABLE `inspection_files`
 -- AUTO_INCREMENT for table `inspection_periods`
 --
 ALTER TABLE `inspection_periods`
-  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `inspection_period_details`
 --
 ALTER TABLE `inspection_period_details`
-  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `ipc_period`
@@ -708,13 +811,13 @@ ALTER TABLE `locations`
 -- AUTO_INCREMENT for table `po_main`
 --
 ALTER TABLE `po_main`
-  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `po_period`
 --
 ALTER TABLE `po_period`
-  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `records`
@@ -751,6 +854,12 @@ ALTER TABLE `your_table_name`
 --
 
 --
+-- Constraints for table `approval_status`
+--
+ALTER TABLE `approval_status`
+  ADD CONSTRAINT `approval_status_ibfk_1` FOREIGN KEY (`action_type_id`) REFERENCES `action_type` (`action_type_id`);
+
+--
 -- Constraints for table `files`
 --
 ALTER TABLE `files`
@@ -779,6 +888,12 @@ ALTER TABLE `inspection_period_details`
 --
 ALTER TABLE `po_period`
   ADD CONSTRAINT `po_period_ibfk_1` FOREIGN KEY (`po_id`) REFERENCES `po_main` (`po_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `workflow_steps`
+--
+ALTER TABLE `workflow_steps`
+  ADD CONSTRAINT `fk_workflow_step_action_type` FOREIGN KEY (`action_type_id`) REFERENCES `action_type` (`action_type_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

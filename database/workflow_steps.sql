@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 21, 2025 at 09:13 AM
+-- Generation Time: Mar 22, 2025 at 04:08 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -30,23 +30,24 @@ SET time_zone = "+00:00";
 CREATE TABLE `workflow_steps` (
   `workflow_step_id` int(11) UNSIGNED NOT NULL,
   `workflow_id` int(11) UNSIGNED DEFAULT NULL,
-  `approved_level` int(11) DEFAULT NULL,
-  `approver_id` int(11) UNSIGNED DEFAULT NULL
+  `approval_level` int(11) DEFAULT NULL,
+  `approver_id` int(11) UNSIGNED DEFAULT NULL,
+  `action_type_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `workflow_steps`
 --
 
-INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approved_level`, `approver_id`) VALUES
-(4, 1, 1, 1),
-(5, 1, 2, 3),
-(6, 1, 3, 4),
-(7, 1, 4, 1),
-(8, 1, 5, 5),
-(9, 1, 6, 3),
-(10, 1, 7, 6),
-(11, 1, 8, 7);
+INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `action_type_id`) VALUES
+(1, 1, 1, 1, 2),
+(2, 1, 2, 3, 1),
+(3, 1, 3, 4, 2),
+(4, 1, 4, 1, 4),
+(5, 1, 5, 5, 1),
+(6, 1, 6, 3, 1),
+(7, 1, 7, 6, 4),
+(8, 1, 8, 7, 1);
 
 --
 -- Indexes for dumped tables
@@ -58,7 +59,8 @@ INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approved_level
 ALTER TABLE `workflow_steps`
   ADD PRIMARY KEY (`workflow_step_id`),
   ADD KEY `workflow_id` (`workflow_id`),
-  ADD KEY `approver_id` (`approver_id`);
+  ADD KEY `approver_id` (`approver_id`),
+  ADD KEY `fk_workflow_step_action_type` (`action_type_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -68,7 +70,17 @@ ALTER TABLE `workflow_steps`
 -- AUTO_INCREMENT for table `workflow_steps`
 --
 ALTER TABLE `workflow_steps`
-  MODIFY `workflow_step_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `workflow_step_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `workflow_steps`
+--
+ALTER TABLE `workflow_steps`
+  ADD CONSTRAINT `fk_workflow_step_action_type` FOREIGN KEY (`action_type_id`) REFERENCES `action_types` (`action_type_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

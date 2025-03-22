@@ -28,8 +28,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `approval_status` (
-  `approved_status_id` int(11) UNSIGNED NOT NULL,
-  `approved_status_name` varchar(255) DEFAULT NULL,
+  `approval_status_id` int(11) UNSIGNED NOT NULL,
+  `approval_status_name` varchar(255) DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -37,7 +37,7 @@ CREATE TABLE `approval_status` (
 -- Dumping data for table `approval_status`
 --
 
-INSERT INTO `approval_status` (`approved_status_id`, `approved_status_name`, `is_deleted`) VALUES
+INSERT INTO `approval_status` (`approval_status_id`, `approval_status_name`, `is_deleted`) VALUES
 (0, 'ไม่อนุมัติ', 0),
 (1, 'รออนุมัติ', 0),
 (2, 'อนุมัติ', 0);
@@ -90,13 +90,13 @@ CREATE TABLE `files` (
 --
 
 CREATE TABLE `inspection_approvals` (
-  `inspection_approved_id` int(11) UNSIGNED NOT NULL,
+  `inspection_approval_id` int(11) UNSIGNED NOT NULL,
   `inspection_id` int(11) UNSIGNED DEFAULT NULL,
-  `approved_level` int(11) UNSIGNED DEFAULT NULL,
+  `approval_level` int(11) UNSIGNED DEFAULT NULL,
   `approver_id` int(11) UNSIGNED DEFAULT NULL,
-  `approved_status_id` int(11) UNSIGNED DEFAULT NULL,
-  `approved_date` datetime DEFAULT NULL,
-  `approved_comment` text DEFAULT NULL
+  `approval_status_id` int(11) UNSIGNED DEFAULT NULL,
+  `approval_date` datetime DEFAULT NULL,
+  `approval_comment` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
@@ -405,7 +405,7 @@ INSERT INTO `workflows` (`workflow_id`, `workflow_name`, `is_deleted`) VALUES
 CREATE TABLE `workflow_steps` (
   `workflow_step_id` int(11) UNSIGNED NOT NULL,
   `workflow_id` int(11) UNSIGNED DEFAULT NULL,
-  `approved_level` int(11) DEFAULT NULL,
+  `approval_level` int(11) DEFAULT NULL,
   `approver_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -413,7 +413,7 @@ CREATE TABLE `workflow_steps` (
 -- Dumping data for table `workflow_steps`
 --
 
-INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approved_level`, `approver_id`) VALUES
+INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`) VALUES
 (1, 1, 1, 2),
 (2, 1, 2, 3),
 (3, 1, 3, 4);
@@ -453,7 +453,7 @@ INSERT INTO `your_table_name` (`id`, `category`, `column1`, `column2`, `column3`
 -- Indexes for table `approval_status`
 --
 ALTER TABLE `approval_status`
-  ADD PRIMARY KEY (`approved_status_id`);
+  ADD PRIMARY KEY (`approval_status_id`);
 
 --
 -- Indexes for table `departments`
@@ -472,11 +472,11 @@ ALTER TABLE `files`
 -- Indexes for table `inspection_approvals`
 --
 ALTER TABLE `inspection_approvals`
-  ADD PRIMARY KEY (`inspection_approved_id`),
+  ADD PRIMARY KEY (`inspection_approval_id`),
   ADD KEY `inspect_id` (`inspection_id`),
-  ADD KEY `approved_level` (`approved_level`),
+  ADD KEY `approval_level` (`approval_level`),
   ADD KEY `approver_id` (`approver_id`),
-  ADD KEY `approved_status_id` (`approved_status_id`);
+  ADD KEY `approval_status_id` (`approval_status_id`);
 
 --
 -- Indexes for table `inspection_files`
@@ -599,7 +599,7 @@ ALTER TABLE `files`
 -- AUTO_INCREMENT for table `inspection_approvals`
 --
 ALTER TABLE `inspection_approvals`
-  MODIFY `inspection_approved_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `inspection_files`

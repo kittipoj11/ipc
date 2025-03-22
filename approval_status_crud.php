@@ -17,7 +17,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $obj->deleteData($_REQUEST);
     getRecordAll($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $obj->getRecordById($_REQUEST['approved_status_id']);
+    $rs = $obj->getRecordById($_REQUEST['approval_status_id']);
     echo json_encode($rs);
 } else {
     getRecordAll($obj);
@@ -44,9 +44,9 @@ function getRecordAll($getObj)
         echo $html;
         foreach ($rs as $row) {
             $html = <<<EOD
-                        <tr id="{$row['approved_status_id']}">
-                            <td>{$row['approved_status_id']}</td>
-                            <td>{$row['approved_status_name']}</td>
+                        <tr id="{$row['approval_status_id']}">
+                            <td>{$row['approval_status_id']}</td>
+                            <td>{$row['approval_status_name']}</td>
                             <td align='center'>
                                 <div class='btn-group-sm'>
                                     <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' style='margin: 0px 5px 5px 5px'>

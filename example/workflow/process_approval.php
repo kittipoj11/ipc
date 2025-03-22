@@ -33,7 +33,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'approve' || $_GET['action'] 
 
         if ($action === 'approve') {
             // โค้ดส่วนการอนุมัติ (เหมือนเดิม) ...
-            $stmtUpdateApproval = $pdo->prepare("UPDATE work_item_approvals SET approval_status = 'Approved', approved_at = NOW(), approval_comment = :comment WHERE work_item_id = :work_item_id AND approver_id = :approver_id AND approver_id = :user_id");
+            $stmtUpdateApproval = $pdo->prepare("UPDATE work_item_approvals SET approval_status = 'Approved', approval_at = NOW(), approval_comment = :comment WHERE work_item_id = :work_item_id AND approver_id = :approver_id AND approver_id = :user_id");
             $stmtUpdateApproval->bindParam(':work_item_id', $work_item_id);
             $stmtUpdateApproval->bindParam(':approver_id', $work_item['approver_id']);
             $stmtUpdateApproval->bindParam(':user_id', $current_user_id);
@@ -59,7 +59,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'approve' || $_GET['action'] 
             echo json_encode(['success' => true, 'message' => 'อนุมัติงานสำเร็จ!']);
         } elseif ($action === 'reject') {
             // โค้ดส่วนการปฏิเสธ (เหมือนเดิม) ...
-            $stmtRejectApproval = $pdo->prepare("UPDATE work_item_approvals SET approval_status = 'Rejected', approved_at = NOW(), approval_comment = :comment WHERE work_item_id = :work_item_id AND approver_id = :approver_id AND approver_id = :user_id");
+            $stmtRejectApproval = $pdo->prepare("UPDATE work_item_approvals SET approval_status = 'Rejected', approval_at = NOW(), approval_comment = :comment WHERE work_item_id = :work_item_id AND approver_id = :approver_id AND approver_id = :user_id");
             $stmtRejectApproval->bindParam(':work_item_id', $work_item_id);
             $stmtRejectApproval->bindParam(':approver_id', $work_item['approver_id']);
             $stmtRejectApproval->bindParam(':user_id', $current_user_id);
@@ -83,7 +83,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'approve' || $_GET['action'] 
                 $stmtUpdateWorkItemLevel->bindParam(':work_item_id', $work_item_id);
                 $stmtUpdateWorkItemLevel->execute();
                 $stmtResetPreviousApproval = $pdo->prepare("UPDATE work_item_approvals
-                                                            SET approval_status = 'Pending', approved_at = NULL, approval_comment = NULL
+                                                            SET approval_status = 'Pending', approval_at = NULL, approval_comment = NULL
                                                             WHERE work_item_id = :work_item_id AND approver_id = :previous_level");
                 $stmtResetPreviousApproval->bindParam(':work_item_id', $work_item_id);
                 $stmtResetPreviousApproval->bindParam(':previous_level', $previous_level);

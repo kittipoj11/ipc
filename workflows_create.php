@@ -128,7 +128,7 @@ require_once 'auth.php';
                           <tbody id="tableBody">
                             <tr class="firstTr">
                               <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                              <td class="p-1"><input type="number" name="approved_level[]" class="form-control approved_level">
+                              <td class="p-1"><input type="number" name="approval_level[]" class="form-control approval_level">
                               </td>
                               <td class="p-1"><input type="number" name="approver_id[]" class="form-control approver_id" require>
                               </td>
