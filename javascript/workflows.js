@@ -2,8 +2,8 @@ $(document).ready(function () {
   // $('#myForm').submit(function (e) {
 
   $(document).on("click", ".btnNew", function (e) {
-    $("#workflow_id").val('[Autonumber]');
-    $("#workflow_name").val('');
+    $("#workflow_id").val("[Autonumber]");
+    $("#workflow_name").val("");
   });
 
   $(document).on("click", ".btnEdit", function (e) {
@@ -15,7 +15,7 @@ $(document).ready(function () {
       type: "POST",
       data: {
         workflow_id: workflow_id,
-        action: 'selectdata'
+        action: "selectdata",
       },
       success: function (response) {
         console.log(`response=${response}`);
@@ -36,7 +36,7 @@ $(document).ready(function () {
       type: "POST",
       data: {
         workflow_id: workflow_id,
-        action: 'selectdata'
+        action: "selectdata",
       },
       success: function (response) {
         data = JSON.parse(response);
@@ -46,6 +46,7 @@ $(document).ready(function () {
           // text: `You want to delete this item!:${workflow_name}`,
           text: `You want to delete ${workflow_name} workflow`,
           icon: "warning",
+          allowOutsideClick: false,
           showCancelButton: true,
           // cancelButtonColor: '#00ff00',
           cancelButtonColor: "gray",
@@ -62,7 +63,7 @@ $(document).ready(function () {
               type: "POST",
               data: {
                 workflow_id: workflow_id,
-                action: 'deletedata'
+                action: "deletedata",
               },
               success: function (response) {
                 Swal.fire({
@@ -73,10 +74,11 @@ $(document).ready(function () {
                   // padding: '3em',
                   color: "#716add",
                   background: "black", //display dialog is black
+                  allowOutsideClick: false,
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
-                  // Load เฉพาะ card-body
+                    // Load เฉพาะ card-body
                     $("#frmOpen")[0].reset();
                     $("#card-body").empty();
                     $("#card-body").html(response);
@@ -85,7 +87,14 @@ $(document).ready(function () {
                         responsive: true, //  true=การรองรับอุปกรณ์
                         lengthChange: true, //true ให้เลือกหน้าได้ว่าใน 1 หน้าต้องการให้แสดงกี่ row(มี 10, 25, 50, 100)
                         autoWidth: false, //กำหนดความกว้างอัตโนมัติ
-                        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                        buttons: [
+                          "copy",
+                          "csv",
+                          "excel",
+                          "pdf",
+                          "print",
+                          "colvis",
+                        ],
                       })
                       .buttons()
                       .container()
@@ -107,21 +116,18 @@ $(document).ready(function () {
         });
       },
     });
-
-
   });
-
 
   $(document).on("click", "#btnSaveData", function (e) {
     e.preventDefault();
 
     let workflow_id = $("#workflow_id").val();
     let workflow_name = $("#workflow_name").val();
-    let action = '';
-    if (workflow_id == '[Autonumber]') {
-      action = 'insertdata';
+    let action = "";
+    if (workflow_id == "[Autonumber]") {
+      action = "insertdata";
     } else {
-      action = 'updatedata';
+      action = "updatedata";
     }
     console.log(`action=${action}`);
     $.ajax({
@@ -131,10 +137,10 @@ $(document).ready(function () {
       data: {
         workflow_id: workflow_id,
         workflow_name: workflow_name,
-        action: action
+        action: action,
       },
       success: function (response) {
-      // Swal.fire({
+        // Swal.fire({
         //     icon: 'success',
         //     title: 'Data updated successfully'
         //     // showConfirmButton: false,
@@ -149,6 +155,7 @@ $(document).ready(function () {
           // background: "#fff url(../images/IMPACT_Arena2.jpg)",//display dialog with image
           // background: "000000",//Transparent
           background: "black", //display dialog is black
+          allowOutsideClick: false,
           // backdrop: `
           //                       rgba(0,0,123,0.4)
           //                       url("../images/fireworks.gif")
@@ -158,7 +165,7 @@ $(document).ready(function () {
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-          // Load เฉพาะ card-body
+            // Load เฉพาะ card-body
             $("#frmOpen")[0].reset();
             $("#card-body").empty();
             $("#card-body").html(response);
@@ -186,6 +193,4 @@ $(document).ready(function () {
       },
     });
   });
-
-
 });

@@ -156,7 +156,8 @@ require_once 'auth.php';
                     <thead>
                       <tr>
                         <th class="text-center p-1" width="5%">งวดงาน</th>
-                        <th class="text-center p-1" width="20%">จำนวนเงิน</th>
+                        <th class="text-center p-1" width="15%">งานที่แล้วเสร็จตามแผน(%)</th>
+                        <th class="text-center p-1" width="15%">จำนวนเงิน</th>
                         <th class="text-center p-1" width="10%">คิดเป็น(%)</th>
                         <th class="text-center p-1">เงื่อนไขการจ่ายเงิน</th>
                       </tr>

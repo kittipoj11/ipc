@@ -216,7 +216,8 @@ require_once 'auth.php';
                             <thead>
                               <tr>
                                 <th class="p-1" width="5%">งวดงาน</th>
-                                <th class="p-1" width="20%">จำนวนเงิน</th>
+                                <th class="p-1" width="15%">งานที่แล้วเสร็จตามแผน(%)</th>
+                                <th class="p-1" width="15%">จำนวนเงิน</th>
                                 <th class="p-1" width="10%">คิดเป็น(%)</th>
                                 <th class="p-1">เงื่อนไขการจ่ายเงิน</th>
                                 <th class="p-1" width="5%">Crud</th>
@@ -229,6 +230,8 @@ require_once 'auth.php';
                                 <tr class="firstTr" crud='s'>
                                   <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
                                   <td class="input-group-sm p-0"><input type="number" name="period_numbers[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>
+                                  </td>
+                                  <td class="input-group-sm p-0"><input type="number" name="workload_planned_percents[]" class="form-control workload_planned_percent" value="<?php echo isset($row['workload_planned_percent']) ? htmlspecialchars($row['workload_planned_percent']) : ''; ?>">
                                   </td>
                                   <td class="input-group-sm p-0"><input type="number" name="interim_payments[]" class="form-control interim_payment" value="<?php echo isset($row['interim_payment']) ? htmlspecialchars($row['interim_payment']) : ''; ?>">
                                   </td>

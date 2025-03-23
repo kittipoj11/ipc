@@ -232,9 +232,6 @@ class Po extends Connection
 
                     $stmtInspectPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
                     $stmtInspectPeriods->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
-                    $stmtInspectPeriods->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
-                    $stmtInspectPeriods->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
-                    $stmtInspectPeriods->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
                     $stmtInspectPeriods->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
                     $stmtInspectPeriods->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
 
@@ -346,7 +343,7 @@ class Po extends Connection
 
             // parameters ในส่วน po_period
             $period_numbers = $getData['period_numbers'];
-            $workload_planned_percents = $getData['workload_planned_percents'];
+            $workload_planned_percent = $getData['workload_planned_percent'];
             $interim_payments = $getData['interim_payments'];
             $interim_payment_percents = $getData['interim_payment_percents'];
             $remarks = $getData['remarks'];
@@ -431,15 +428,15 @@ class Po extends Connection
 
                 // INSERT po_period
                 $sql = <<<EOD
-                            INSERT INTO `po_period`(`po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`) 
-                            VALUES (:po_id, :period_number, :workload_planned_percent, :interim_payment, :interim_payment_percent, :remark)
+                            INSERT INTO `po_period`(`po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `remark`) 
+                            VALUES (:po_id, :period_number, :interim_payment, :interim_payment_percent, :remark)
                         EOD;
                 $stmtPoPeriodInsert = $this->myConnect->prepare($sql);
 
                 // INSERT inspection_periods
                 $sql = <<<EOD
-                            INSERT INTO `inspection_periods`(`period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `plan_status`, `is_paid`, `is_retention`) 
-                            VALUES (:period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :plan_status, :is_paid, :is_retention)
+                            INSERT INTO `inspection_periods`(`period_id`, `plan_status`, `is_paid`, `is_retention`) 
+                            VALUES (:period_id, :plan_status, :is_paid, :is_retention)
                         EOD;
                 $stmtInspectPeriodInsert = $this->myConnect->prepare($sql);
 
@@ -461,7 +458,6 @@ class Po extends Connection
                 foreach ($insert_indexs as $i) { //ถ้าต้องการใช้ค่าของ key ให้เขียนแบบนี้ foreach($insert_indexs as $key=> $value){
                     $stmtPoPeriodInsert->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtPoPeriodInsert->bindParam(':period_number', $period_numbers[$i], PDO::PARAM_INT);
-                    $stmtPoPeriodInsert->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
                     $stmtPoPeriodInsert->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
                     $stmtPoPeriodInsert->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
                     $stmtPoPeriodInsert->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
@@ -473,9 +469,6 @@ class Po extends Connection
 
                     $stmtInspectPeriodInsert->bindParam(':period_id', $period_id, PDO::PARAM_INT);
                     $stmtInspectPeriodInsert->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
-                    $stmtInspectPeriodInsert->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
-                    $stmtInspectPeriodInsert->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
-                    $stmtInspectPeriodInsert->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
                     $stmtInspectPeriodInsert->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
                     $stmtInspectPeriodInsert->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
 
@@ -496,8 +489,7 @@ class Po extends Connection
                 // UPDATE po_period
                 $sql = <<<EOD
                             UPDATE `po_period`
-                            SET `workload_planned_percent` = :workload_planned_percent
-                            , `interim_payment` = :interim_payment
+                            SET `interim_payment` = :interim_payment
                             , `interim_payment_percent` = :interim_payment_percent
                             , `remark` = :remark
                             WHERE `po_id` = :po_id
@@ -508,9 +500,6 @@ class Po extends Connection
                 $sql = <<<EOD
                             UPDATE `inspection_periods`
                             SET `plan_status` = :plan_status
-                            , `workload_planned_percent` = :workload_planned_percent
-                            , `interim_payment` = :interim_payment
-                            , `interim_payment_percent` = :interim_payment_percent
                             , `is_paid` = :is_paid
                             , `is_retention` = :is_retention
                             WHERE `period_id` = :period_id
@@ -520,7 +509,6 @@ class Po extends Connection
                 foreach ($update_indexs as $i) {
                     $stmtPoPeriodUpdate->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtPoPeriodUpdate->bindParam(':period_id', $period_ids[$i], PDO::PARAM_INT);
-                    $stmtPoPeriodUpdate->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
                     $stmtPoPeriodUpdate->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
                     $stmtPoPeriodUpdate->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
                     $stmtPoPeriodUpdate->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
@@ -530,9 +518,6 @@ class Po extends Connection
 
                     $stmtInspectPeriodUpdate->bindParam(':period_id', $period_ids[$i], PDO::PARAM_INT);
                     $stmtInspectPeriodUpdate->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
-                    $stmtInspectPeriodUpdate->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
-                    $stmtInspectPeriodUpdate->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
-                    $stmtInspectPeriodUpdate->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
                     $stmtInspectPeriodUpdate->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
                     $stmtInspectPeriodUpdate->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
 

@@ -198,7 +198,8 @@ require_once 'auth.php';
                           <thead>
                             <tr>
                               <th class="p-1" width="5%">งวดงาน</th>
-                              <th class="p-1" width="20%">จำนวนเงิน</th>
+                              <th class="p-1" width="15%">งานที่แล้วเสร็จตามแผน(%)</th>
+                              <th class="p-1" width="15%">จำนวนเงิน</th>
                               <th class="p-1" width="10%">คิดเป็น(%)</th>
                               <th class="p-1">เงื่อนไขการจ่ายเงิน</th>
                               <th class="p-1 d-none" width="5%">Action</th>
@@ -206,7 +207,6 @@ require_once 'auth.php';
                               <th class="p-1 d-nonex" width="5%">period_id</th>
                             </tr>
                           </thead>
-
                           <tbody id="tbody-period">
                             <!-- <tr class="firstTr">
                               <td class="input-group-sm p-0"><input type="number" name="period_numbers[]" class="form-control period_number" value="1" readonly>

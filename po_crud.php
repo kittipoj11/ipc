@@ -57,6 +57,7 @@ function createPeriodTable($getRs)
                             <tr>
                                 <td class="p-0 d-none">{$row['period_id']}</td>
                                 <td class="text-center py-0 px-1">{$row['period_number']}</td>
+                                <td class="text-right py-0 px-1">{$row['workload_planned_percent']}</td>
                                 <td class="text-right py-0 px-1">{$row['interim_payment']}</td>
                                 <td class="text-right py-0 px-1">{$row['interim_payment_percent']}</td>
                                 <td class="text-left py-0 px-1">{$row['remark']}</td>

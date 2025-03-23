@@ -21,6 +21,7 @@ $(document).ready(function () {
             icon: "success",
             title: "Data saved successfully",
             color: "#716add",
+            allowOutsideClick: false,
             background: "black",
             // backdrop: `
             //                     rgba(0,0,123,0.4)
@@ -62,6 +63,10 @@ $(document).ready(function () {
         .val(period)
         .end()
 
+        .find(".workload_planned_percent:last")
+        .val("")
+        .end()
+
         .find(".interim_payment:last")
         .val("")
         .end()
@@ -101,6 +106,7 @@ $(document).ready(function () {
       // Create the new tr element using jQuery
       const firstTr = `<tr class='firstTr' crud='i'>
                             <td class='input-group-sm p-0'><input type='number' name='period_numbers[]' class='form-control period_number' value='1' readonly></td>
+                            <td class='input-group-sm p-0'><input type='number' name='workload_planned_percents[]' class='form-control workload_planned_percent'></td>
                             <td class='input-group-sm p-0'><input type='number' name='interim_payments[]' class='form-control interim_payment'></td>
                             <td class='input-group-sm p-0'><input type='number' name='interim_payment_percents[]' class='form-control interim_payment_percent'></td>
                             <td class='input-group-sm p-0'><input type='text' name='remarks[]' class='form-control remark'></td>

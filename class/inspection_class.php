@@ -7,7 +7,7 @@ class Inspection extends Connection
     public function getInspectionPeriodAllByPoId($getPoId)
     {
         $sql = <<<EOD
-                    SELECT `inspection_id`, `inspection_periods`.`period_id`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`
+                    SELECT `inspection_id`, `inspection_periods`.`period_id`, `inspection_periods`.`workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`
                     , `inspection_periods`.`interim_payment`, `inspection_periods`.`interim_payment_percent`
                     , `interim_payment_less_previous`, `interim_payment_less_previous_percent`
                     , `interim_payment_accumulated`, `interim_payment_accumulated_percent`
@@ -30,17 +30,20 @@ class Inspection extends Connection
     public function getInspectionPeriodByPeriodId($getPoId, $getPeriodId)
     {
         $sql = <<<EOD
-                    SELECT `inspection_id`, `inspection_periods`.`period_id`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`
+                    SELECT `inspection_periods`.`inspection_id`, `inspection_periods`.`period_id`
+                    , `inspection_periods`.`workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`
                     , `inspection_periods`.`interim_payment`, `inspection_periods`.`interim_payment_percent`
                     , `interim_payment_less_previous`, `interim_payment_less_previous_percent`
                     , `interim_payment_accumulated`, `interim_payment_accumulated_percent`
                     , `interim_payment_remain`, `interim_payment_remain_percent`
                     , `retention_value`, `plan_status`, `is_paid`, `is_retention`, `inspection_periods`.`remark` 
+                    , `current_status`, `current_approval_level`
                     , `po_period`.`period_id`, `po_period`.`po_id`, `period_number`, `po_period`.`interim_payment`, `po_period`.`interim_payment_percent`, `period_status`, `po_period`.`remark` as po_period_remark
                     , `po_number`, `project_name`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
                     , `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`
                     , `po_main`.`supplier_id`, `suppliers`.`supplier_name`
                     , `po_main`.`location_id`, `locations`.`location_name`
+                    , `inspection_approvals`.`approval_level` , `approval_status`.`action_type_id`,  `action_type_name`
                     FROM `inspection_periods`
                     INNER JOIN `po_period`
                         ON `inspection_periods`.`period_id` = `po_period`.`period_id`
@@ -50,6 +53,13 @@ class Inspection extends Connection
                         ON `suppliers`.`supplier_id` = `po_main`.`supplier_id`
                     INNER JOIN `locations`
                         ON `locations`.`location_id` = `po_main`.`location_id`
+                    LEFT JOIN `inspection_approvals`
+                        ON `inspection_approvals`.`approval_level` = `inspection_periods`.`current_approval_level`
+                        AND `inspection_approvals`.`inspection_id` = `inspection_periods`.`inspection_id`
+                    LEFT JOIN `approval_status`
+                        ON `approval_status`.`approval_status_id` = `inspection_approvals`.`approval_status_id`
+                    LEFT JOIN `action_type`
+                        ON `action_type`.`action_type_id` = `approval_status`.`action_type_id`  
                     WHERE `po_period`.`po_id` = :po_id
                         AND `inspection_periods`.`period_id` = :period_id
                     ORDER BY `po_id`, `period_number`
@@ -120,6 +130,7 @@ class Inspection extends Connection
             $period_id = $getData['period_id'];
             $inspection_id = $getData['inspection_id'];
             $po_number = $getData['po_number'];
+            $workload_planned_percent = floatval($getData['workload_planned_percent'] ?? 0);
             $interim_payment = floatval($getData['interim_payment'] ?? 0);
             $workload_actual_completed_percent = floatval($getData['workload_actual_completed_percent'] ?? 0);
             $workload_remaining_percent = floatval($getData['workload_remaining_percent'] ?? 0);
@@ -165,6 +176,7 @@ class Inspection extends Connection
             $sql = <<<EOD
                         UPDATE `inspection_periods`
                             SET `interim_payment` = :interim_payment
+                            , `workload_planned_percent` = :workload_planned_percent
                             , `workload_actual_completed_percent` = :workload_actual_completed_percent
                             , `workload_remaining_percent` = :workload_remaining_percent
                             WHERE `period_id` = :period_id
@@ -174,6 +186,7 @@ class Inspection extends Connection
             // $stmtInspectPeriods->bindParam(':po_number', $po_number, PDO::PARAM_STR);
             $stmtInspectPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
             $stmtInspectPeriods->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
+            $stmtInspectPeriods->bindParam(':workload_planned_percent', $workload_planned_percent, PDO::PARAM_STR);
             $stmtInspectPeriods->bindParam(':interim_payment', $interim_payment, PDO::PARAM_STR);
             $stmtInspectPeriods->bindParam(':workload_actual_completed_percent', $workload_actual_completed_percent, PDO::PARAM_STR);
             $stmtInspectPeriods->bindParam(':workload_remaining_percent', $workload_remaining_percent, PDO::PARAM_STR);

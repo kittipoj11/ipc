@@ -31,12 +31,17 @@ require_once 'auth.php';
 
   <style>
     :root {
-  --my-gold-color: gold; 
-  --my-primary-color:var(--bs-primary); /* สีเทา */
-  --my-greenyellow-color:greenyellow; /* สีเหลือง */
-  --my-text-color: #333; /* สีดำ */
-  --my-background-color: #f8f9fa; /* สีเทาอ่อน */
-}
+      --my-gold-color: gold;
+      --my-primary-color: var(--bs-primary);
+      /* สีเทา */
+      --my-greenyellow-color: greenyellow;
+      /* สีเหลือง */
+      --my-text-color: #333;
+      /* สีดำ */
+      --my-background-color: #f8f9fa;
+      /* สีเทาอ่อน */
+    }
+
     table tr th {
       cursor: default;
     }
@@ -99,14 +104,19 @@ require_once 'auth.php';
             <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               Action
             </button>
-            <ul class="dropdown-menu py-0">
+            <ul class="dropdown-menu py-0" id="action_type">
               <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
-              <li><a class="dropdown-item" href="#">Submit</a></li>
-              <li><a class="dropdown-item" href="#">Approve</a></li>
-              <li>
-                <hr class="dropdown-divider  my-0">
-              </li>
-              <li><a class="dropdown-item" href="#">Reject</a></li>
+               <?php if(strtoupper($rsInspectionPeriod['action_type_name'])== strtoupper('submit')){ ?>
+                <li><a class="dropdown-item" href="#">Submit</a></li>
+                <?php }else { ?>
+                <?php if(strtoupper($rsInspectionPeriod['action_type_name'])== strtoupper('verify')){ ?>
+                  <li><a class="dropdown-item" href="#">Verify</a></li>
+                  <?php }elseif(strtoupper($rsInspectionPeriod['action_type_name'])== strtoupper('approval')){ ?>
+                    <li><a class="dropdown-item" href="#">Approve</a></li>
+                    <?php } ?>
+                    <li><hr class="dropdown-divider  my-0"></li>
+                    <li><a class="dropdown-item" href="#">Reject</a></li>
+                    <?php } ?>
               <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
               <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
             </ul>
@@ -362,7 +372,7 @@ require_once 'auth.php';
                         <div class="col-4">
                           <div class="row-1 input-group input-group-sm">
                             <label for="workload_planned_percent" class="input-group-text ">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</label>
-                            <input type="number" class="form-control " name="workload_planned_percent" id="workload_planned_percent" disabled value="<?php echo isset($rsInspectionPeriod['workload_planned_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_planned_percent']) : ''; ?>">
+                            <input type="number" class="form-control " name="workload_planned_percent" id="workload_planned_percent" readonly value="<?php echo isset($rsInspectionPeriod['workload_planned_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_planned_percent']) : ''; ?>">
                             <label for="workload_planned_percent" class="input-group-text ">%</label>
                           </div>
                         </div>
@@ -388,7 +398,7 @@ require_once 'auth.php';
                         <label for="floatingTextarea">หมายเหตุ:</label>
                       </div>
 
-                      ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร
+                      <!-- ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร -->
                     </div>
                     <!-- /.card-body -->
 
@@ -396,7 +406,7 @@ require_once 'auth.php';
 
 
                   <div class="card-footer p-0 d-flex justify-content-end">
-                    <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก">
+                    <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsInspectionPeriod['current_approval_level'] ?>">
                     <!-- <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary btn-sm m-1">บันทึก</button> -->
                     <button type="button" name="btnCancel" id="btnCancel" class="btn btn-secondary btn-sm m-1">ยกเลิก</button>
                   </div>
