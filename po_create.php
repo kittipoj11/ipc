@@ -138,10 +138,10 @@ require_once 'auth.php';
                         <label for="contract_value" class="input-group-text">PO รวม VAT</label>
                         <input type="number" class="form-control" name="contract_value" id="contract_value">
                       </div>
-
+ 
                       <div class="col-2 input-group input-group-sm">
                         <label for="vat" class="input-group-text">VAT</label>
-                        <input type="number" class="form-control" name="vat" id="vat">
+                        <input type="number" class="form-control" name="vat" id="vat"  data-vat_rate=<?= VAT_RATE ?> readonly>
                       </div>
 
                       <div class="col-2 input-group input-group-sm">

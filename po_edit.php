@@ -145,17 +145,17 @@ require_once 'auth.php';
                     <div class=" row m-1">
                         <div class="col-4 input-group input-group-sm">
                           <label for="contract_value_before" class="input-group-text">PO ไม่รวม VAT</label>
-                          <input type="text" class="form-control" name="contract_value_before" id="contract_value_before" value=<?= $rsPoMain['contract_value_before'] ?>>
+                          <input type="number" step="0.01" class="form-control" name="contract_value_before" id="contract_value_before" value=<?= $rsPoMain['contract_value_before'] ?>>
                         </div>
 
                         <div class="col-4 input-group input-group-sm">
                           <label for="contract_value" class="input-group-text">PO รวม VAT</label>
-                          <input type="number" class="form-control" name="contract_value" id="contract_value" value=<?= $rsPoMain['contract_value'] ?>>
+                          <input type="number" step="0.01" class="form-control" name="contract_value" id="contract_value" value=<?= $rsPoMain['contract_value'] ?>>
                         </div>
 
                         <div class="col-2 input-group input-group-sm">
                           <label for="vat" class="input-group-text">VAT</label>
-                          <input type="text" class="form-control" name="vat" id="vat" value=<?= $rsPoMain['vat'] ?>>
+                          <input type="number" step="0.01" class="form-control" name="vat" id="vat" value=<?= $rsPoMain['vat'] ?> data-vat_rate=<?= VAT_RATE ?> readonly>
                         </div>
 
                         <div class="col-2 input-group input-group-sm">
@@ -166,7 +166,7 @@ require_once 'auth.php';
                             <input class="form-check-input" type="checkbox" name="is_deposit" id="is_deposit" <?= $checked_attr ?>>
                           </div>
                           <label class="form-check-label" for="deposit_percent">เงินมัดจำ</label>
-                          <input type="number" class="form-control" name="deposit_percent" id="deposit_percent" value=<?= $rsPoMain['deposit_percent'] ?>>%
+                          <input type="number" step="0.01" class="form-control" name="deposit_percent" id="deposit_percent" value=<?= $rsPoMain['deposit_percent'] ?>>%
                         </div>
                       </div>
                       <hr>
@@ -229,13 +229,13 @@ require_once 'auth.php';
                               <?php foreach ($rsPoPeriod as $row) { ?>
                                 <tr class="firstTr" crud='s'>
                                   <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                                  <td class="input-group-sm p-0"><input type="number" name="period_numbers[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>
+                                  <td class="input-group-sm p-0"><input type="number" step="0.01" name="period_numbers[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>
                                   </td>
-                                  <td class="input-group-sm p-0"><input type="number" name="workload_planned_percents[]" class="form-control workload_planned_percent" value="<?php echo isset($row['workload_planned_percent']) ? htmlspecialchars($row['workload_planned_percent']) : ''; ?>">
+                                  <td class="input-group-sm p-0"><input type="number" step="0.01" name="workload_planned_percents[]" class="form-control workload_planned_percent" value="<?php echo isset($row['workload_planned_percent']) ? htmlspecialchars($row['workload_planned_percent']) : ''; ?>">
                                   </td>
-                                  <td class="input-group-sm p-0"><input type="number" name="interim_payments[]" class="form-control interim_payment" value="<?php echo isset($row['interim_payment']) ? htmlspecialchars($row['interim_payment']) : ''; ?>">
+                                  <td class="input-group-sm p-0"><input type="number" step="0.01" name="interim_payments[]" class="form-control interim_payment" value="<?php echo isset($row['interim_payment']) ? htmlspecialchars($row['interim_payment']) : ''; ?>">
                                   </td>
-                                  <td class="input-group-sm p-0"><input type="number" name="interim_payment_percents[]" class="form-control interim_payment_percent" value="<?php echo isset($row['interim_payment_percent']) ? htmlspecialchars($row['interim_payment_percent']) : ''; ?>">
+                                  <td class="input-group-sm p-0"><input type="number" step="0.01" name="interim_payment_percents[]" class="form-control interim_payment_percent" value="<?php echo isset($row['interim_payment_percent']) ? htmlspecialchars($row['interim_payment_percent']) : ''; ?>">
                                   </td>
                                   <td class="input-group-sm p-0">
                                     <input type="text" name="remarks[]" class="form-control remark" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">

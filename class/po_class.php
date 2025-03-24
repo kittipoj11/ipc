@@ -124,12 +124,14 @@ class Po extends Connection
             $working_date_from = $getData['working_date_from'];
             $working_date_to = $getData['working_date_to'];
             $workflow_id = 1; //$getData['workflow_id'];
-            // Create DateTime objects from the input strings
-            $date1 = new DateTime($working_date_from);
-            $date2 = new DateTime($working_date_to);
-            // Calculate the difference between the two dates
-            $interval = $date1->diff($date2);
-            $working_day =  $interval->days + 1;
+
+            // // Create DateTime objects from the input strings
+            // $date1 = new DateTime($working_date_from);
+            // $date2 = new DateTime($working_date_to);
+            // // Calculate the difference between the two dates
+            // $interval = $date1->diff($date2);
+            // $working_day =  $interval->days + 1;
+            $working_day =  $getData['working_day'];
             $create_by = $_SESSION['user_code'];
 
             // parameters ในส่วน po_period
@@ -333,12 +335,15 @@ class Po extends Connection
             $working_date_from = $getData['working_date_from'];
             $working_date_to = $getData['working_date_to'];
             // $workflow_id = 1; //$getData['workflow_id'];
-            // Create DateTime objects from the input strings
-            $date1 = new DateTime($working_date_from);
-            $date2 = new DateTime($working_date_to);
-            // Calculate the difference between the two dates
-            $interval = $date1->diff($date2);
-            $working_day =  $interval->days + 1;
+
+            // // Create DateTime objects from the input strings
+            // $date1 = new DateTime($working_date_from);
+            // $date2 = new DateTime($working_date_to);
+            // // Calculate the difference between the two dates
+            // $interval = $date1->diff($date2);
+            // $working_day =  $interval->days + 1;
+            $working_day =  $getData['working_day'];
+
             // $update_by = $_SESSION['user_code'];
 
             $remain_value_interim_payment = $contract_value;

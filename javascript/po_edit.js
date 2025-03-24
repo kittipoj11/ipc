@@ -1,6 +1,4 @@
 $(document).ready(function () {
-
-
   $("#myForm").on("submit", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
     // console.log('submit');
@@ -102,10 +100,9 @@ $(document).ready(function () {
         // .end()
 
         .appendTo("#tbody-period");
-    }
-    else {
+    } else {
       // Create the new tr element using jQuery
-      const firstTr =`<tr class='firstTr' crud='i'>
+      const firstTr = `<tr class='firstTr' crud='i'>
                             <td class='input-group-sm p-0'><input type='number' name='period_numbers[]' class='form-control period_number' value='1' readonly></td>
                             <td class='input-group-sm p-0'><input type='number' name='workload_planned_percents[]' class='form-control workload_planned_percent'></td>
                             <td class='input-group-sm p-0'><input type='number' name='interim_payments[]' class='form-control interim_payment'></td>
@@ -114,24 +111,24 @@ $(document).ready(function () {
                             <td class='input-group-sm p-0'><input type='text' name='cruds[]' class='form-control crud' value='i'></td>
                             <td class='input-group-sm p-0 d-nonex'><input type='text' name='period_id[]' class='form-control period_id' readonly></td>
                           </tr>`;
-                        
+
       $("#tbody-period").append(firstTr);
     }
   });
 
-    $("#btnDeleteLast").click(function () {
-      let period;
-      // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-period
-      // $("#tbody-period").find("tr:not(:first):last").remove();
-      $("#tbody-period .firstTr[crud!='d']:last")
+  $("#btnDeleteLast").click(function () {
+    let period;
+    // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-period
+    // $("#tbody-period").find("tr:not(:first):last").remove();
+    $("#tbody-period .firstTr[crud!='d']:last")
       // $("#tbody-period tr:not(:first)[crud!='d']:last")
-        .attr("crud", "d")
-        .addClass("d-none")
+      .attr("crud", "d")
+      .addClass("d-none")
 
-        .find("td input.crud")
-        .val("d")
-        .end();
-    });
+      .find("td input.crud")
+      .val("d")
+      .end();
+  });
 
   $("#btnClear").click(function () {
     // ลบ tr ทั้งหมดที่ไม่ใช่ตัวแรกใน #tbody-period
@@ -141,12 +138,55 @@ $(document).ready(function () {
     // หรือ
     $("#tbody-period").find("tr:gt(0)").remove();
   });
-  
+
   $("#btnCancel").click(function () {
     window.history.back();
     // window.history.go(-1);
     // window.location.href = "po.php";
   });
 
-});
+  $("#contract_value_before").on("change keyup", function () {
+    let contract_value_before = parseFloat($(this).val());
+    let vat_rate = parseFloat($("#vat").data("vat_rate"));
 
+    if (!isNaN(contract_value_before) && !isNaN(vat_rate)) {
+      var vat_amount = contract_value_before * (vat_rate / 100);
+      var contract_value = contract_value_before + vat_amount;
+
+      $("#contract_value").val(contract_value.toFixed(2)); // แสดงผลรวม VAT (ทศนิยม 2 ตำแหน่ง)
+      $("#vat").val(vat_amount.toFixed(2)); // แสดงผลรวม VAT (ทศนิยม 2 ตำแหน่ง)
+    } else {
+      $("#contract_value").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
+      $("#vat").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
+    }
+  });
+
+  $("#contract_value").on("change keyup", function () {
+    let contract_value = parseFloat($(this).val());
+    let vat_rate = parseFloat($("#vat").data("vat_rate"));
+
+    if (!isNaN(contract_value) && !isNaN(vat_rate)) {
+      var contract_value_before = contract_value / (1 + vat_rate / 100);
+      $("#contract_value_before").val(contract_value_before.toFixed(2)); // แสดงผลลัพธ์ (ทศนิยม 2 ตำแหน่ง)
+      $("#vat").val((contract_value - contract_value_before).toFixed(2)); // แสดงผลรวม VAT (ทศนิยม 2 ตำแหน่ง)
+    } else {
+      $("#contract_value_before").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
+      $("#vat").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
+    }
+  });
+
+  $("#working_date_from, #working_date_to").on("change", function() {
+    var working_date_from = $("#working_date_from").val();
+    var working_date_to = $("#working_date_to").val();
+
+    if (working_date_from && working_date_to) {
+      var start = new Date(working_date_from);
+      var end = new Date(working_date_to);
+      var timeDiff = Math.abs(end.getTime() - start.getTime());
+      var working_day = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      $("#working_day").val(working_day+1);
+    } else {
+      $("#working_day").val("");
+    }
+  });
+});

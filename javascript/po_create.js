@@ -42,10 +42,8 @@ $(document).ready(function () {
       });
     }
   });
-});
 
-
-$(document).ready(function () {
+  
   $("#btnAdd").click(function () {
     let period;
     // console.log($(".firstTr:last").find(".period:last").val());
@@ -156,13 +154,56 @@ $(document).ready(function () {
     $(this).parents("tr").remove();
   });
 
-  $(document).ready(function () {
-    $("#btnCancel").click(function () {
-      // history.go(-1);
-      // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
-      // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
-      window.history.back();
-    });
+  $("#btnCancel").click(function () {
+    // history.go(-1);
+    // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
+    // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
+    window.history.back();
+  });
+  
+  $("#contract_value_before").on("change keyup", function () {
+    let contract_value_before = parseFloat($(this).val());
+    let vat_rate = parseFloat($("#vat").data("vat_rate"));
+
+    if (!isNaN(contract_value_before) && !isNaN(vat_rate)) {
+      var vat_amount = contract_value_before * (vat_rate / 100);
+      var contract_value = contract_value_before + vat_amount;
+
+      $("#contract_value").val(contract_value.toFixed(2)); // แสดงผลรวม VAT (ทศนิยม 2 ตำแหน่ง)
+      $("#vat").val(vat_amount.toFixed(2)); // แสดงผลรวม VAT (ทศนิยม 2 ตำแหน่ง)
+    } else {
+      $("#contract_value").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
+      $("#vat").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
+    }
+  });
+
+  $("#contract_value").on("change keyup", function () {
+    let contract_value = parseFloat($(this).val());
+    let vat_rate = parseFloat($("#vat").data("vat_rate"));
+
+    if (!isNaN(contract_value) && !isNaN(vat_rate)) {
+      var contract_value_before = contract_value / (1 + vat_rate / 100);
+      $("#contract_value_before").val(contract_value_before.toFixed(2)); // แสดงผลลัพธ์ (ทศนิยม 2 ตำแหน่ง)
+      $("#vat").val((contract_value - contract_value_before).toFixed(2)); // แสดงผลรวม VAT (ทศนิยม 2 ตำแหน่ง)
+    } else {
+      $("#contract_value_before").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
+      $("#vat").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
+    }
+  });
+
+  $("#working_date_from, #working_date_to").on("change", function() {
+    var working_date_from = $("#working_date_from").val();
+    var working_date_to = $("#working_date_to").val();
+
+    if (working_date_from && working_date_to) {
+      var start = new Date(working_date_from);
+      var end = new Date(working_date_to);
+      var timeDiff = Math.abs(end.getTime() - start.getTime());
+      var working_day = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      $("#working_day").val(working_day+1);
+    } else {
+      $("#working_day").val("");
+    }
   });
 });
 

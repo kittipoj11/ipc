@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HTML Image Map Example</title>
+    <style>
+    .border{
+      border: 1px solid red;
+    }
+  </style>
+  </head>
+  <body>
+
+    <!-- <img class="border" src="world.jpg" alt="World Map" usemap="#worldmap"
+      width="500px" height="500px"
+      style="position: absolute;top: 10px;left:10px">
+
+    <map name="worldmap">
+      <area shape="rect" coords="400,400,500,500"
+        href="https://www.impact.co.th/" alt="IMPACT Muang Thong Thani"
+        title="IMPACT Muang Thong Thani">
+      <area shape="circle" coords="100,400,50" href="south_america.htm"
+        alt="South America">
+      <area shape="poly"
+        coords="124,58,124,39,165,31,216,22,274,26,311,48,352,70,377,86,336,91,276,92,273,93,238,87,205,76,174,58,124,58"
+        href="asia.htm" alt="Asia">
+    </map> -->
+
+    <p>
+      <span>
+        <img width="2537" height="176"
+          alt="Header ESC 2 [impact reit] Booth catering order - click here"
+          src="https://impact.ungerboeck.net/Test/api/ImageServer/GetImage?id=LMSjZmoWH5dNsWCicDzglSaZIj14SaoJ6ovyIct%2bn%2bOldqvEmxbjo8c1RZT3jfcb"
+          style="width: 100%; height: auto; display: block;"
+          usemap="#impact"
+          id="impactImage">
+      </span>
+    </p>
+
+    <map name="impact">
+      <area shape="rect" coords="2350,0,2537,76"
+        href="https://impact.ungerboeck.net/Test/app85.cshtml?aat=754c4179354c6849557170583175364e497038706f486978316f67377132657367663934644a362b5063303d"
+        alt="Booth catering order[impact]"
+        title="Booth catering order[impact] - click here">
+    </map>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const impactImage = document.getElementById('impactImage');
+          const impactMap = document.querySelector('map[name="impact"]');
+          const areas = impactMap.querySelectorAll('area');
+          const originalWidth = 2537;
+          const originalHeight = 176;
+          let resizeTimeout;
+  
+          function resizeImageMap() {
+              requestAnimationFrame(() => {
+                  const currentWidth = impactImage.offsetWidth;
+                  const currentHeight = impactImage.offsetHeight;
+  
+                  const widthRatio = currentWidth / originalWidth;
+                  const heightRatio = currentHeight / originalHeight;
+  
+                  areas.forEach(area => {
+                      const coords = area.dataset.originalCoords.split(',').map(Number);
+                      const newCoords = coords.map((coord, index) => 
+                          index % 2 === 0 ? Math.round(coord * widthRatio) : Math.round(coord * heightRatio)
+                      ).join(',');
+  
+                      area.coords = newCoords;
+                  });
+  
+                  console.log("Updated area coordinates:", areas[0].coords);
+              });
+          }
+  
+          function initImageMap() {
+              areas.forEach(area => {
+                  area.dataset.originalCoords = area.coords; // เก็บค่าพิกัดเริ่มต้น
+              });
+  
+              resizeImageMap();
+          }
+  
+          // รอให้ภาพโหลดเสร็จก่อนคำนวณ
+          impactImage.addEventListener('load', initImageMap);
+  
+          // ใช้ debounce เพื่อป้องกันการเรียกซ้ำ
+          window.addEventListener('resize', () => {
+              clearTimeout(resizeTimeout);
+              resizeTimeout = setTimeout(resizeImageMap, 100);
+          });
+  
+          // เรียกใช้ตอนโหลดหน้า
+          if (impactImage.complete) {
+              initImageMap();
+          }
+      });
+  </script>
+  </body>
+</html>

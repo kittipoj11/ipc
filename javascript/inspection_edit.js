@@ -1,4 +1,13 @@
 $(document).ready(function () {
+  
+  let interim_payment = parseFloat($("#interim_payment").val());
+  let contract_value = isNaN(parseFloat($("#contract_value").val())) ? 0 : parseFloat($("#contract_value").val());
+  let interim_payment_percent = isNaN(parseFloat($("#interim_payment_percent").val())) ? 0 : parseFloat($("#interim_payment_percent").val());
+  let interim_payment_less_previous = isNaN(parseFloat($("#interim_payment_less_previous").val())) ? 0 : parseFloat($("#interim_payment_less_previous").val());
+  let interim_payment_less_previous_percent = isNaN(parseFloat($("#interim_payment_less_previous_percent").val())) ? 0 : parseFloat($("#interim_payment_less_previous_percent").val());
+  let interim_payment_remain = isNaN(parseFloat($("#interim_payment_remain").val())) ? 0 : parseFloat($("#interim_payment_remain").val());
+  let interim_payment_remain_percent = isNaN(parseFloat($("#interim_payment_remain_percent").val())) ? 0 : parseFloat($("#interim_payment_remain_percent").val());
+
   $(document).on("click", "#btnAttach", function (e) {
     e.preventDefault();
 
@@ -57,7 +66,6 @@ $(document).ready(function () {
     }
   });
 
-  
   $("#btnAdd").click(function () {
     let order_no;
     // console.log($(".firstTr:last").find(".order_no:last").val());
@@ -138,23 +146,76 @@ $(document).ready(function () {
   });
 
   function loadPage() {
-            // $.ajax({
-      //   url: "get_files.php",
-      //   type: "GET",
-      //   success: function (response) {
-      //     $("#fileDisplay").html(response);
-      //   },
-      //   error: function () {
-      //     $("#fileDisplay").html("ไม่สามารถโหลดไฟล์ได้.");
-      //   },
+    // $.ajax({
+    //   url: "get_files.php",
+    //   type: "GET",
+    //   success: function (response) {
+    //     $("#fileDisplay").html(response);
+    //   },
+    //   error: function () {
+    //     $("#fileDisplay").html("ไม่สามารถโหลดไฟล์ได้.");
+    //   },
     // });
     if ($("#submit").data("current_approval_level") > 1) {
       $("#submit").addClass("d-none");
     } else {
       $("#submit").removeClass("d-none");
     }
-  }
-  
-  loadPage();
 
+  }
+
+  $("#interim_payment").on("change keyup", function () {
+    // let interim_payment = parseFloat($(this).val());
+    // let contract_value = isNaN(parseFloat($("#contract_value").val())) ? 0 : parseFloat($("#contract_value").val());
+    // let interim_payment_percent = isNaN(parseFloat($("#interim_payment_percent").val())) ? 0 : parseFloat($("#interim_payment_percent").val());
+    // let interim_payment_less_previous = isNaN(parseFloat($("#interim_payment_less_previous").val())) ? 0 : parseFloat($("#interim_payment_less_previous").val());
+    // let interim_payment_less_previous_percent = isNaN(parseFloat($("#interim_payment_less_previous_percent").val())) ? 0 : parseFloat($("#interim_payment_less_previous_percent").val());
+    // let interim_payment_remain = isNaN(parseFloat($("#interim_payment_remain").val())) ? 0 : parseFloat($("#interim_payment_remain").val());
+    // let interim_payment_remain_percent = isNaN(parseFloat($("#interim_payment_remain_percent").val())) ? 0 : parseFloat($("#interim_payment_remain_percent").val());
+
+    console.log(`interim_payment = ${interim_payment}`);
+    console.log(`interim_payment_percent = ${interim_payment_percent}`);
+    console.log(`interim_payment_less_previous = ${interim_payment_less_previous}`);
+    console.log(`interim_payment_less_previous_percent = ${interim_payment_less_previous_percent}`);
+    console.log(`interim_payment_remain = ${interim_payment_remain}`);
+    console.log(`interim_payment_remain_percent = ${interim_payment_remain_percent}`);
+    
+    if (!isNaN(interim_payment) && !isNaN(contract_value)) {
+      interim_payment_percent = (interim_payment * 100) / contract_value;
+      interim_payment_less_previous = interim_payment_less_previous + interim_payment;
+      interim_payment_less_previous_percent = (interim_payment_less_previous * 100) / contract_value;
+      interim_payment_remain = contract_value - interim_payment_less_previous;
+      interim_payment_remain_percent = (interim_payment_remain * 100) / contract_value;
+
+
+
+      $("#interim_payment_percent").val(interim_payment_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_less_previous").val(interim_payment_less_previous.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_less_previous_percent").val(interim_payment_less_previous_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_remain").val(interim_payment_remain.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_remain_percent").val(interim_payment_remain_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+    } else {
+      $("#interim_payment_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_less_previous").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_less_previous_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_remain").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_remain_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+    }
+  });
+
+  // $("#contract_value").on("change keyup", function () {
+  //   let contract_value = parseFloat($(this).val());
+  //   let vat_rate = parseFloat($("#vat").data("vat_rate"));
+
+  //   if (!isNaN(contract_value) && !isNaN(vat_rate)) {
+  //     var contract_value_before = contract_value / (1 + vat_rate / 100);
+  //     $("#contract_value_before").val(contract_value_before.toFixed(2)); // แสดงผลลัพธ์ (ทศนิยม 2 ตำแหน่ง)
+  //     $("#vat").val((contract_value - contract_value_before).toFixed(2)); // แสดงผลรวม VAT (ทศนิยม 2 ตำแหน่ง)
+  //   } else {
+  //     $("#contract_value_before").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
+  //     $("#vat").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
+  //   }
+  // });
+
+  loadPage();
 });
