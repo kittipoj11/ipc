@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2025 at 04:32 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Generation Time: Mar 25, 2025 at 11:31 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.1.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -143,7 +143,23 @@ INSERT INTO `inspection_approvals` (`inspection_approval_id`, `inspection_id`, `
 (13, 2, 5, 5, 7, NULL, NULL),
 (14, 2, 6, 3, 7, NULL, NULL),
 (15, 2, 7, 6, 3, NULL, NULL),
-(16, 2, 8, 7, 7, NULL, NULL);
+(16, 2, 8, 7, 7, NULL, NULL),
+(17, 4, 1, 1, 1, NULL, NULL),
+(18, 4, 2, 3, 7, NULL, NULL),
+(19, 4, 3, 4, 1, NULL, NULL),
+(20, 4, 4, 1, 3, NULL, NULL),
+(21, 4, 5, 5, 7, NULL, NULL),
+(22, 4, 6, 3, 7, NULL, NULL),
+(23, 4, 7, 6, 3, NULL, NULL),
+(24, 4, 8, 7, 7, NULL, NULL),
+(25, 5, 1, 1, 1, NULL, NULL),
+(26, 5, 2, 3, 7, NULL, NULL),
+(27, 5, 3, 4, 1, NULL, NULL),
+(28, 5, 4, 1, 3, NULL, NULL),
+(29, 5, 5, 5, 7, NULL, NULL),
+(30, 5, 6, 3, 7, NULL, NULL),
+(31, 5, 7, 6, 3, NULL, NULL),
+(32, 5, 8, 7, 7, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -179,6 +195,8 @@ INSERT INTO `inspection_files` (`file_id`, `inspection_id`, `file_name`, `file_p
 CREATE TABLE `inspection_periods` (
   `inspection_id` int(11) UNSIGNED NOT NULL,
   `period_id` int(11) DEFAULT NULL,
+  `po_id` int(11) DEFAULT NULL,
+  `period_number` int(11) DEFAULT NULL,
   `workload_planned_percent` decimal(5,2) DEFAULT NULL,
   `workload_actual_completed_percent` decimal(5,2) DEFAULT NULL,
   `workload_remaining_percent` decimal(5,2) DEFAULT NULL,
@@ -203,10 +221,11 @@ CREATE TABLE `inspection_periods` (
 -- Dumping data for table `inspection_periods`
 --
 
-INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `current_status`, `current_approval_level`) VALUES
-(1, 1, '45.00', '0.00', '0.00', '40000.00', '40.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, 1),
-(2, 2, '50.00', NULL, NULL, '50000.00', '50.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, 1),
-(3, 3, '5.00', NULL, NULL, '10000.00', '10.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, NULL, 1, 1);
+INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `current_status`, `current_approval_level`) VALUES
+(1, 1, 1, 1, 30.00, 30.00, 70.00, 132412.50, 15.23, 0.00, 0.00, 132412.50, 15.23, 736748.50, 84.77, 0.00, 1, 0, 0, NULL, 1, 1),
+(2, 2, 1, 2, 70.00, 100.00, 0.00, 736748.50, 84.77, 132412.50, 15.23, 869161.00, 100.00, 0.00, 0.00, 0.00, 1, 0, 0, NULL, 1, 1),
+(4, 4, 2, 1, 50.00, NULL, NULL, 50000.00, 50.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(5, 5, 2, 2, 50.00, NULL, NULL, 50000.00, 50.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -229,7 +248,8 @@ CREATE TABLE `inspection_period_details` (
 INSERT INTO `inspection_period_details` (`rec_id`, `inspection_id`, `order_no`, `details`, `remark`) VALUES
 (1, 1, 1, 'งานเดินท่อx', 'aaa'),
 (2, 2, 1, NULL, NULL),
-(3, 3, 1, NULL, NULL);
+(4, 4, 1, NULL, NULL),
+(5, 5, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -300,7 +320,8 @@ CREATE TABLE `locations` (
 INSERT INTO `locations` (`location_id`, `location_name`, `is_deleted`) VALUES
 (1, 'Sky', 0),
 (2, 'Aktiv', 0),
-(3, 'Challenger', 0);
+(3, 'Challenger', 0),
+(4, 'IMP Exhibition', 1);
 
 -- --------------------------------------------------------
 
@@ -361,7 +382,8 @@ CREATE TABLE `po_main` (
 --
 
 INSERT INTO `po_main` (`po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `workflow_id`) VALUES
-(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, '107000.00', '100000.00', '7000.00', NULL, '10.00', '10700.00', '2025-03-01', '2025-03-31', 31, '05389', NULL, 3, '0.00', '0.00', 0, 1);
+(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 869161.00, 812300.00, 56861.00, NULL, 10.00, 86916.10, '2024-05-19', '2024-07-22', 65, '05389', NULL, 2, 0.00, 0.00, 0, 1),
+(2, 'IMPO002', 'Sunset', 1, 1, 'ซันเซต ๑', 'Sunset 1', 1, 107000.00, 100000.00, 7000.00, 0, 0.00, 0.00, '2025-03-26', '2025-03-27', NULL, '05389', NULL, 2, 0.00, 0.00, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -385,9 +407,10 @@ CREATE TABLE `po_period` (
 --
 
 INSERT INTO `po_period` (`period_id`, `po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `period_status`, `remark`, `workload_planned_percent`) VALUES
-(1, 1, 1, '40000.00', '40.00', NULL, 'QR', '45.00'),
-(2, 1, 2, '50000.00', '50.00', NULL, 'Cash', '50.00'),
-(3, 1, 3, '10000.00', '10.00', NULL, 'Cash', '5.00');
+(1, 1, 1, 132412.50, 15.00, NULL, 'QR', 30.00),
+(2, 1, 2, 736748.50, 85.00, NULL, 'Cash', 70.00),
+(4, 2, 1, 50000.00, 50.00, NULL, 'QR', 50.00),
+(5, 2, 2, 50000.00, 50.00, NULL, 'Cash', 50.00);
 
 -- --------------------------------------------------------
 
@@ -759,7 +782,7 @@ ALTER TABLE `files`
 -- AUTO_INCREMENT for table `inspection_approvals`
 --
 ALTER TABLE `inspection_approvals`
-  MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `inspection_files`
@@ -771,13 +794,13 @@ ALTER TABLE `inspection_files`
 -- AUTO_INCREMENT for table `inspection_periods`
 --
 ALTER TABLE `inspection_periods`
-  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `inspection_period_details`
 --
 ALTER TABLE `inspection_period_details`
-  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `ipc_period`
@@ -789,19 +812,19 @@ ALTER TABLE `ipc_period`
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `location_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `location_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `po_main`
 --
 ALTER TABLE `po_main`
-  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `po_period`
 --
 ALTER TABLE `po_period`
-  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `records`

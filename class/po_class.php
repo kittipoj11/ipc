@@ -197,8 +197,8 @@ class Po extends Connection
 
                 // INSERT INTO inspection_periods
                 $sql = <<<EOD
-                        INSERT INTO `inspection_periods`(`period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `plan_status`, `is_paid`, `is_retention`) 
-                        VALUES (:period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :plan_status, :is_paid, :is_retention)
+                        INSERT INTO `inspection_periods`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `plan_status`, `is_paid`, `is_retention`) 
+                        VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :plan_status, :is_paid, :is_retention)
                     EOD;
                 $stmtInspectPeriods = $this->myConnect->prepare($sql);
 
@@ -233,6 +233,8 @@ class Po extends Connection
                     $period_id = $this->myConnect->lastInsertId();
 
                     $stmtInspectPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
+                    $stmtInspectPeriods->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+                    $stmtInspectPeriods->bindParam(':period_number', $period_numbers[$i], PDO::PARAM_INT);
                     $stmtInspectPeriods->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
                     $stmtInspectPeriods->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
                     $stmtInspectPeriods->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
@@ -443,8 +445,8 @@ class Po extends Connection
 
                 // INSERT inspection_periods
                 $sql = <<<EOD
-                            INSERT INTO `inspection_periods`(`period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `plan_status`, `is_paid`, `is_retention`) 
-                            VALUES (:period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :plan_status, :is_paid, :is_retention)
+                            INSERT INTO `inspection_periods`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `plan_status`, `is_paid`, `is_retention`) 
+                            VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :plan_status, :is_paid, :is_retention)
                         EOD;
                 $stmtInspectPeriodInsert = $this->myConnect->prepare($sql);
 
@@ -477,6 +479,8 @@ class Po extends Connection
                     $period_id = $this->myConnect->lastInsertId();
 
                     $stmtInspectPeriodInsert->bindParam(':period_id', $period_id, PDO::PARAM_INT);
+                    $stmtInspectPeriodInsert->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+                    $stmtInspectPeriodInsert->bindParam(':period_number', $period_numbers[$i], PDO::PARAM_INT);
                     $stmtInspectPeriodInsert->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
                     $stmtInspectPeriodInsert->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
                     $stmtInspectPeriodInsert->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
@@ -518,7 +522,8 @@ class Po extends Connection
                             , `interim_payment_percent` = :interim_payment_percent
                             , `is_paid` = :is_paid
                             , `is_retention` = :is_retention
-                            WHERE `period_id` = :period_id
+                            WHERE `po_id` = :po_id
+                                AND `period_id` = :period_id
                         EOD;
                 $stmtInspectPeriodUpdate = $this->myConnect->prepare($sql);
 
@@ -533,6 +538,7 @@ class Po extends Connection
                     $stmtPoPeriodUpdate->execute();
                     $stmtPoPeriodUpdate->closeCursor();
 
+                    $stmtInspectPeriodUpdate->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtInspectPeriodUpdate->bindParam(':period_id', $period_ids[$i], PDO::PARAM_INT);
                     $stmtInspectPeriodUpdate->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
                     $stmtInspectPeriodUpdate->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);

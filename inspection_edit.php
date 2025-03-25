@@ -255,7 +255,7 @@ require_once 'auth.php';
 
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
-                            <label for="interim_payment_less_previous" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</label>
+                            <label for="interim_payment_less_previous" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</label>
                             <input type="text" class="col-3 form-control" name="interim_payment_less_previous" id="interim_payment_less_previous" readonly value="<?= $rsInspectionPeriod['interim_payment_less_previous'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
@@ -263,6 +263,20 @@ require_once 'auth.php';
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
                             <input type="text" class="col-2 form-control" name="interim_payment_less_previous_percent" id="interim_payment_less_previous_percent" readonly value="<?= $rsInspectionPeriod['interim_payment_less_previous_percent'] ?>">
+                            <label class="input-group-text">%</label>
+                          </div>
+                        </div>
+
+                        <div class="row m-1">
+                          <div class="col-12 input-group input-group-sm">
+                            <label for="interim_payment_accumulated" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</label>
+                            <input type="text" class="col-3 form-control" name="interim_payment_accumulated" id="interim_payment_accumulated" readonly value="<?= $rsInspectionPeriod['interim_payment_accumulated'] ?>">
+                            <label class="input-group-text">บาท</label>
+                            <label class="col-2 input-group-text">(Including VAT7%)</label>
+                            <!-- </div>
+                          <div class="col-2 input-group input-group-sm"> -->
+                            <label class="input-group-text">คิดเป็น</label>
+                            <input type="text" class="col-2 form-control" name="interim_payment_accumulated_percent" id="interim_payment_accumulated_percent" readonly value="<?= $rsInspectionPeriod['interim_payment_accumulated_percent'] ?>">
                             <label class="input-group-text">%</label>
                           </div>
                         </div>

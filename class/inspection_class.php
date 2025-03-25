@@ -121,7 +121,7 @@ class Inspection extends Connection
         @session_start();
 
         try {
-            // $_SESSION['getData'] =  $getData;
+            $_SESSION['getData'] =  $getData;
             // exit;
             // $this->myConnect->beginTransaction();
 
@@ -130,11 +130,21 @@ class Inspection extends Connection
             $period_id = $getData['period_id'];
             $inspection_id = $getData['inspection_id'];
             $po_number = $getData['po_number'];
-            $workload_planned_percent = floatval($getData['workload_planned_percent'] ?? 0);
-            $interim_payment = floatval($getData['interim_payment'] ?? 0);
-            $workload_actual_completed_percent = floatval($getData['workload_actual_completed_percent'] ?? 0);
-            $workload_remaining_percent = floatval($getData['workload_remaining_percent'] ?? 0);
 
+            $workload_planned_percent=floatval($getData['workload_planned_percent'] ?? 0);
+            $workload_actual_completed_percent=floatval($getData['workload_actual_completed_percent'] ?? 0);
+            $workload_remaining_percent=floatval($getData['workload_remaining_percent'] ?? 0);
+            $interim_payment=floatval($getData['interim_payment'] ?? 0);
+            $interim_payment_less_previous=floatval($getData['interim_payment_less_previous'] ?? 0);
+            $interim_payment_accumulated=floatval($getData['interim_payment_accumulated'] ?? 0);
+            $interim_payment_remain=floatval($getData['interim_payment_remain'] ?? 0);
+            $retention_value=floatval($getData['retention_value'] ?? 0);
+            
+            $interim_payment_percent=floatval($getData['interim_payment_percent'] ?? 0);
+            $interim_payment_less_previous_percent=floatval($getData['interim_payment_less_previous_percent'] ?? 0);
+            $interim_payment_accumulated_percent=floatval($getData['interim_payment_accumulated_percent'] ?? 0);
+            $interim_payment_remain_percent=floatval($getData['interim_payment_remain_percent'] ?? 0);
+            
             // parameters ในส่วน period
             $order_nos = $getData['order_nos'];
             $details = $getData['details'];
@@ -175,9 +185,18 @@ class Inspection extends Connection
             //UPDATE po_main
             $sql = <<<EOD
                         UPDATE `inspection_periods`
-                            SET `interim_payment` = :interim_payment
-                            , `workload_actual_completed_percent` = :workload_actual_completed_percent
+                            SET `workload_actual_completed_percent` = :workload_actual_completed_percent
                             , `workload_remaining_percent` = :workload_remaining_percent
+                            , `workload_planned_percent` =:workload_planned_percent
+                            , `interim_payment` =:interim_payment
+                            , `interim_payment_percent` =:interim_payment_percent
+                            , `interim_payment_less_previous` =:interim_payment_less_previous
+                            , `interim_payment_less_previous_percent` =:interim_payment_less_previous_percent
+                            , `interim_payment_accumulated` =:interim_payment_accumulated
+                            , `interim_payment_accumulated_percent` =:interim_payment_accumulated_percent
+                            , `interim_payment_remain` =:interim_payment_remain
+                            , `interim_payment_remain_percent` =:interim_payment_remain_percent
+                            , `retention_value` =:retention_value
                             WHERE `period_id` = :period_id
                                 AND `inspection_id` = :inspection_id
                     EOD;
@@ -185,9 +204,18 @@ class Inspection extends Connection
             // $stmtInspectPeriods->bindParam(':po_number', $po_number, PDO::PARAM_STR);
             $stmtInspectPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
             $stmtInspectPeriods->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
-            $stmtInspectPeriods->bindParam(':interim_payment', $interim_payment, PDO::PARAM_STR);
             $stmtInspectPeriods->bindParam(':workload_actual_completed_percent', $workload_actual_completed_percent, PDO::PARAM_STR);
             $stmtInspectPeriods->bindParam(':workload_remaining_percent', $workload_remaining_percent, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':workload_planned_percent', $workload_planned_percent, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':interim_payment', $interim_payment, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':interim_payment_percent', $interim_payment_percent, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':interim_payment_less_previous', $interim_payment_less_previous, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':interim_payment_less_previous_percent', $interim_payment_less_previous_percent, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':interim_payment_accumulated', $interim_payment_accumulated, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':interim_payment_accumulated_percent', $interim_payment_accumulated_percent, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':interim_payment_remain', $interim_payment_remain, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':interim_payment_remain_percent', $interim_payment_remain_percent, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':retention_value', $retention_value, PDO::PARAM_STR);
 
             $_SESSION['period_id'] = $period_id;
             $_SESSION['inspection_id'] = $inspection_id;
