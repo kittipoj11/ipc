@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2025 at 11:31 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.1.17
+-- Generation Time: Mar 25, 2025 at 05:20 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -222,10 +222,10 @@ CREATE TABLE `inspection_periods` (
 --
 
 INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `current_status`, `current_approval_level`) VALUES
-(1, 1, 1, 1, 30.00, 30.00, 70.00, 132412.50, 15.23, 0.00, 0.00, 132412.50, 15.23, 736748.50, 84.77, 0.00, 1, 0, 0, NULL, 1, 1),
-(2, 2, 1, 2, 70.00, 100.00, 0.00, 736748.50, 84.77, 132412.50, 15.23, 869161.00, 100.00, 0.00, 0.00, 0.00, 1, 0, 0, NULL, 1, 1),
-(4, 4, 2, 1, 50.00, NULL, NULL, 50000.00, 50.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
-(5, 5, 2, 2, 50.00, NULL, NULL, 50000.00, 50.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1);
+(1, 1, 1, 1, '30.00', '30.00', '70.00', '200000.00', '23.01', '0.00', '0.00', '200000.00', '23.01', '669161.00', '76.99', '0.00', 1, 0, 0, NULL, 1, 1),
+(2, 2, 1, 2, '70.00', '100.00', '0.00', '669161.00', '76.99', '200000.00', '23.01', '869161.00', '100.00', '0.00', '0.00', '0.00', 1, 0, 0, NULL, 1, 1),
+(4, 4, 2, 1, '50.00', NULL, NULL, '50000.00', '50.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(5, 5, 2, 2, '50.00', NULL, NULL, '50000.00', '50.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -247,7 +247,7 @@ CREATE TABLE `inspection_period_details` (
 
 INSERT INTO `inspection_period_details` (`rec_id`, `inspection_id`, `order_no`, `details`, `remark`) VALUES
 (1, 1, 1, 'งานเดินท่อx', 'aaa'),
-(2, 2, 1, NULL, NULL),
+(2, 2, 1, '', ''),
 (4, 4, 1, NULL, NULL),
 (5, 5, 1, NULL, NULL);
 
@@ -382,8 +382,8 @@ CREATE TABLE `po_main` (
 --
 
 INSERT INTO `po_main` (`po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `workflow_id`) VALUES
-(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 869161.00, 812300.00, 56861.00, NULL, 10.00, 86916.10, '2024-05-19', '2024-07-22', 65, '05389', NULL, 2, 0.00, 0.00, 0, 1),
-(2, 'IMPO002', 'Sunset', 1, 1, 'ซันเซต ๑', 'Sunset 1', 1, 107000.00, 100000.00, 7000.00, 0, 0.00, 0.00, '2025-03-26', '2025-03-27', NULL, '05389', NULL, 2, 0.00, 0.00, 0, 1);
+(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, '869161.00', '812300.00', '56861.00', NULL, '10.00', '86916.10', '2024-05-19', '2024-07-22', 65, '05389', NULL, 2, '0.00', '0.00', 0, 1),
+(2, 'IMPO002', 'Sunset', 1, 1, 'ซันเซต ๑', 'Sunset 1', 1, '107000.00', '100000.00', '7000.00', 0, '0.00', '0.00', '2025-03-26', '2025-03-27', NULL, '05389', NULL, 2, '0.00', '0.00', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -407,10 +407,10 @@ CREATE TABLE `po_period` (
 --
 
 INSERT INTO `po_period` (`period_id`, `po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `period_status`, `remark`, `workload_planned_percent`) VALUES
-(1, 1, 1, 132412.50, 15.00, NULL, 'QR', 30.00),
-(2, 1, 2, 736748.50, 85.00, NULL, 'Cash', 70.00),
-(4, 2, 1, 50000.00, 50.00, NULL, 'QR', 50.00),
-(5, 2, 2, 50000.00, 50.00, NULL, 'Cash', 50.00);
+(1, 1, 1, '132412.50', '15.00', NULL, 'QR', '30.00'),
+(2, 1, 2, '736748.50', '85.00', NULL, 'Cash', '70.00'),
+(4, 2, 1, '50000.00', '50.00', NULL, 'QR', '50.00'),
+(5, 2, 2, '50000.00', '50.00', NULL, 'Cash', '50.00');
 
 -- --------------------------------------------------------
 

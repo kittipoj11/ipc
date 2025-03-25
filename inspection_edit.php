@@ -256,7 +256,7 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment_less_previous" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</label>
-                            <input type="text" class="col-3 form-control" name="interim_payment_less_previous" id="interim_payment_less_previous" readonly value="<?= $rsInspectionPeriod['interim_payment_less_previous'] ?>">
+                            <input type="text" class="col-3 form-control" name="interim_payment_less_previous" id="interim_payment_less_previous" readonly value="<?= $rsInspectionPeriod['previous_interim_payment_accumulated'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
