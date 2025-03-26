@@ -59,7 +59,7 @@ class Inspection extends Connection
                     LEFT JOIN action_type
                         ON action_type.action_type_id = approval_status.action_type_id
                     LEFT JOIN inspection_periods P2 
-                        ON P1.po_id = P2.po_id AND P1.period_number = P2.period_number + 1
+                        ON P2.po_id = P1.po_id AND P2.period_number = P1.period_number - 1
                     WHERE P1.po_id = :po_id
                         AND P1.period_id = :period_id
                     ORDER BY P1.po_id, period_number

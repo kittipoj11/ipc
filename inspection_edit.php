@@ -242,13 +242,13 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment" class="col-3 input-group-text">ยอดเบิกเงินงวดปัจจุบัน</label>
-                            <input type="text" class="col-3 form-control" name="interim_payment" id="interim_payment" value="<?= $rsInspectionPeriod['interim_payment'] ?>">
+                            <input type="number" step="0.01" class="col-3 form-control" name="interim_payment" id="interim_payment" value="<?= $rsInspectionPeriod['interim_payment'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="text" class="col-2 form-control" name="interim_payment_percent" id="interim_payment_percent" readonly value=<?= $rsInspectionPeriod['interim_payment_percent'] ?>>
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_percent" id="interim_payment_percent" readonly value=<?= $rsInspectionPeriod['interim_payment_percent'] ?>>
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
@@ -256,13 +256,13 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment_less_previous" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</label>
-                            <input type="text" class="col-3 form-control" name="interim_payment_less_previous" id="interim_payment_less_previous" readonly value="<?= $rsInspectionPeriod['previous_interim_payment_accumulated'] ?>">
+                            <input type="number" step="0.01" class="col-3 form-control" name="interim_payment_less_previous" id="interim_payment_less_previous" readonly value="<?= $rsInspectionPeriod['previous_interim_payment_accumulated'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="text" class="col-2 form-control" name="interim_payment_less_previous_percent" id="interim_payment_less_previous_percent" readonly value="<?= $rsInspectionPeriod['interim_payment_less_previous_percent'] ?>">
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_less_previous_percent" id="interim_payment_less_previous_percent" readonly value="<?= $rsInspectionPeriod['interim_payment_less_previous_percent'] ?>">
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
@@ -270,13 +270,13 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment_accumulated" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</label>
-                            <input type="text" class="col-3 form-control" name="interim_payment_accumulated" id="interim_payment_accumulated" readonly value="<?= $rsInspectionPeriod['interim_payment_accumulated'] ?>">
+                            <input type="number" step="0.01" class="col-3 form-control" name="interim_payment_accumulated" id="interim_payment_accumulated" readonly value="<?= $rsInspectionPeriod['interim_payment_accumulated'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="text" class="col-2 form-control" name="interim_payment_accumulated_percent" id="interim_payment_accumulated_percent" readonly value="<?= $rsInspectionPeriod['interim_payment_accumulated_percent'] ?>">
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_accumulated_percent" id="interim_payment_accumulated_percent" readonly value="<?= $rsInspectionPeriod['interim_payment_accumulated_percent'] ?>">
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
@@ -284,13 +284,13 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment_remain" class="col-3 input-group-text">ยอดเงินงวดคงเหลือ</label>
-                            <input type="text" class="col-3 form-control" name="interim_payment_remain" id="interim_payment_remain" readonly value="<?= $rsInspectionPeriod['interim_payment_remain'] ?>">
+                            <input type="number" step="0.01" class="col-3 form-control" name="interim_payment_remain" id="interim_payment_remain" readonly value="<?= $rsInspectionPeriod['interim_payment_remain'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="text" class="col-2 form-control" name="interim_payment_remain_percent" id="interim_payment_remain_percent" readonly value="<?= $rsInspectionPeriod['interim_payment_remain_percent'] ?>">
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_remain_percent" id="interim_payment_remain_percent" readonly value="<?= $rsInspectionPeriod['interim_payment_remain_percent'] ?>">
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
@@ -303,14 +303,14 @@ require_once 'auth.php';
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="workload_planned_percent" class="input-group-text ">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</label>
-                          <input type="number" class="form-control " name="workload_planned_percent" id="workload_planned_percent" readonly value="<?php echo isset($rsInspectionPeriod['workload_planned_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_planned_percent']) : ''; ?>">
+                          <input type="number" step="0.01" class="form-control " name="workload_planned_percent" id="workload_planned_percent" readonly value="<?php echo isset($rsInspectionPeriod['workload_planned_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_planned_percent']) : ''; ?>">
                           <label for="workload_planned_percent" class="input-group-text ">%</label>
                         </div>
                       </div>
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="workload_actual_completed_percent" class="input-group-text ">ปริมาณที่แล้วเสร็จจริง</label>
-                          <input type="number" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsInspectionPeriod['workload_actual_completed_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_actual_completed_percent']) : ''; ?>">
+                          <input type="number" step="0.01" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsInspectionPeriod['workload_actual_completed_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_actual_completed_percent']) : ''; ?>">
                           <label for="workload_actual_completed_percent" class="input-group-text ">%</label>
                         </div>
                       </div>
@@ -318,7 +318,7 @@ require_once 'auth.php';
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="workload_remaining_percent" class="input-group-text">ปริมาณงานคงเหลือ</label>
-                          <input type="number" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsInspectionPeriod['workload_remaining_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_remaining_percent']) : ''; ?>">
+                          <input type="number" step="0.01" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsInspectionPeriod['workload_remaining_percent']) ? htmlspecialchars($rsInspectionPeriod['workload_remaining_percent']) : ''; ?>">
                           <label for="workload_remaining_percent" class="input-group-text ">%</label>
                         </div>
                       </div>

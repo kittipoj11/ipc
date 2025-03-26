@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>สองรูปภาพ</title>
+<style>
+  .container {
+    position: relative; /* ทำให้รูปเล็กสามารถวางตำแหน่งแบบ absolute ได้ */
+    width: 100%; /* กว้างเต็มหน้าจอ */
+    height: 200px; /* ความสูง 200px */
+  }
+
+  .large-image {
+    display: block; /* กันไม่ให้มีพื้นที่ว่างใต้รูป */
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* ปรับขนาดรูปให้พอดีกับกรอบ โดยอาจมีการครอป */
+  }
+
+  .small-image {
+    position: absolute; /* วางตำแหน่งแบบสัมบูรณ์ภายใน container */
+    top: 0; /* ชิดขอบบน */
+    right: 0; /* ชิดขอบขวา */
+    width: 10%; /* ความกว้าง 10% ของ container */
+    height: auto; /* ปรับความสูงตามสัดส่วน */
+  }
+</style>
+</head>
+<body>
+
+  <div class="container">
+    <img src="../images/image1.jpg" alt="รูปภาพใหญ่" class="large-image">
+    <img src="../images/mypic.jpg" alt="รูปภาพเล็ก" class="small-image" usemap="#impact">
+  </div>
+
+    <map name="impact">
+      <area shape="rect" coords="0,0,100%,100%"
+        href="https://impact.ungerboeck.net/Test/app85.cshtml?aat=556455576b737551554b732f636e656e434b353658387543752b435a6a343765587348586154466c4a366b3d"
+        alt="Booth catering order[impact]"
+        title="Booth catering order[impact] - click here">
+    </map>
+
+</body>
+</html>

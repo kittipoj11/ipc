@@ -11,9 +11,14 @@ $(document).ready(function () {
   let interim_payment_accumulated_percent = isNaN(parseFloat($("#interim_payment_accumulated_percent").val())) ? 0 : parseFloat($("#interim_payment_accumulated_percent").val());
   let interim_payment_remain_percent = isNaN(parseFloat($("#interim_payment_remain_percent").val())) ? 0 : parseFloat($("#interim_payment_remain_percent").val());
   
+  // let workload_planned_percent = isNaN(parseFloat($("#workload_planned_percent").val())) ? 0 : parseFloat($("#workload_planned_percent").val());
+  // let workload_actual_completed_percent = isNaN(parseFloat($("#workload_actual_completed_percent").val())) ? 0 : parseFloat($("#workload_actual_completed_percent").val());
+  // let workload_remaining_percent = isNaN(parseFloat($("#workload_remaining_percent").val())) ? 0 : parseFloat($("#workload_remaining_percent").val());
+  // let workload_accumulated_percent = isNaN(parseFloat($("#workload_accumulated_percent").val())) ? 0 : parseFloat($("#workload_accumulated_percent").val());
+  
   // interim_payment_less_previous = interim_payment_accumulated;
-  let interim_payment_less_previous_old = interim_payment_less_previous;
-  let interim_payment_accumulated_old = interim_payment_accumulated;
+  // let interim_payment_less_previous_old = interim_payment_less_previous;
+  // let interim_payment_accumulated_old = interim_payment_accumulated;
 
   $("#btnAdd").click(function () {
     let order_no;
@@ -146,6 +151,28 @@ $(document).ready(function () {
   //     $("#vat").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
   //   }
   // });
+
+  $("#workload_actual_completed_percent").on("keypress", function(event) {
+    // Check if the pressed key is Enter (keyCode 13)
+    if (event.which === 13) {
+      calculateAndDisplay();
+    }
+  });
+
+  $("#workload_actual_completed_percent").on("blur", function() {
+    calculateAndDisplay();
+  });
+
+  function calculateAndDisplay() {
+    let workload_actual_completed_percent = $("#workload_actual_completed_percent").val();
+    
+    if (!isNaN(workload_actual_completed_percent) && workload_actual_completed_percent !== "") {
+      workload_remaining_percent	= 100-workload_actual_completed_percent;//(คือ Total Value Of Interim Payment))
+      $("#workload_remaining_percent").val(workload_remaining_percent.toFixed(2));
+    } else {
+      $("#workload_remaining_percent").val("");
+    }
+  }
   
   $("#myForm").on("submit", function (e) {
     // $(document).on("click", "#btnSave", function (e) {

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HTML Image Map Example</title>
+    <style>
+    .border{
+      border: 1px solid red;
+    }
+  </style>
+  </head>
+  <body>
+    <style>
+      .container {
+        position: relative; /* ทำให้รูปเล็กสามารถวางตำแหน่งแบบ absolute ได้ */
+        width: 100%; /* กว้างเต็มหน้าจอ */
+        height: 176; /* ความสูง 200px */
+      }
+    
+      .large-image {
+        /*position: relative;*/
+        display: block; /* กันไม่ให้มีพื้นที่ว่างใต้รูป */
+        width: 100%;
+        height: auto;
+        object-fit: cover; /* ปรับขนาดรูปให้พอดีกับกรอบ โดยอาจมีการครอป */
+      }
+    
+      .small-image {
+        position: absolute; /* วางตำแหน่งแบบสัมบูรณ์ภายใน container */
+        top: 0; /* ชิดขอบบน */
+        right: 0; /* ชิดขอบขวา */
+        width: 10%; /* ความกว้าง 10% ของ container */
+        height: 10%;
+        border: 1px solid rgb(223, 223, 223);
+
+        /*height: auto; /* ปรับขนาดอัตโนมัติ */
+        max-height: 10%; /* จำกัดขนาดตาม container */
+        object-fit: contain;
+
+        
+      }
+    </style>
+    <p>
+      <span class="container">
+        <img alt="Header ESC 2 [impact reit] Booth catering order - click here"
+          src="https://impact.ungerboeck.net/Test/api/ImageServer/GetImage?id=LMSjZmoWH5dNsWCicDzglSaZIj14SaoJ6ovyIct%2bn%2bOldqvEmxbjo8c1RZT3jfcb"
+          class="large-image">
+          
+          <a href="https://www.impact.co.th/">
+            <!-- <div class="small-image"></div> -->
+            <!-- <img src="../images//mypic.jpg" class="small-image"> -->
+            <img class="small-image">
+          </a>
+      </span>
+    </p>
+
+    
+  </body>
+</html>
