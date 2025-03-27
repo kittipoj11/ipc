@@ -7,15 +7,16 @@ class Inspection extends Connection
     public function getInspectionPeriodAllByPoId($getPoId)
     {
         $sql = <<<EOD
-                    SELECT inspection_periods.inspection_id, inspection_periods.period_id, inspection_periods.po_id, inspection_periods.period_number
-                    , inspection_periods.workload_planned_percent, inspection_periods.workload_actual_completed_percent, inspection_periods.workload_remaining_percent
-                    , inspection_periods.interim_payment, inspection_periods.interim_payment_percent
-                    , inspection_periods.interim_payment_less_previous, inspection_periods.interim_payment_less_previous_percent
-                    , inspection_periods.interim_payment_accumulated, inspection_periods.interim_payment_accumulated_percent
-                    , inspection_periods.interim_payment_remain, inspection_periods.interim_payment_remain_percent
-                    , inspection_periods.retention_value, inspection_periods.plan_status, inspection_periods.is_paid, inspection_periods.is_retention
-                    , inspection_periods.remark, inspection_periods.current_status, inspection_periods.current_approval_level 
-                    FROM `inspection_periods`
+                    SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
+                    , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
+                    , P1.interim_payment, P1.interim_payment_percent
+                    , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
+                    , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
+                    , P1.interim_payment_remain, P1.interim_payment_remain_percent
+                    , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
+                    , P1.remark, P1.current_status, P1.current_approval_level 
+                    , P1.disbursement
+                    FROM `inspection_periods` P1
                     WHERE `po_id` = :po_id
                     ORDER BY `period_number`
                 EOD;
@@ -35,8 +36,8 @@ class Inspection extends Connection
                     , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
                     , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
                     , P1.interim_payment_remain, P1.interim_payment_remain_percent
-                    , P1.retention_value, P1.plan_status, P1.is_paid, P1.is_retention
-                    , P1.remark, P1.current_status, P1.current_approval_level 
+                    , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
+                    , P1.remark, P1.current_status, P1.current_approval_level, P1.disbursement
                     , po_main.supplier_id, po_main.location_id , po_main.po_number, po_main.project_name
                     , po_main.working_name_th, po_main.working_name_en
                     , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
@@ -117,15 +118,17 @@ class Inspection extends Connection
         @session_start();
 
         try {
-            // $_SESSION['getData'] =  $getData;
-            // exit;
-            // $this->myConnect->beginTransaction();
+            $_SESSION['getData'] =  $getData;
+            exit;
+            $this->myConnect->beginTransaction();
 
             // parameters ในส่วน main
             $po_id = $getData['po_id'];
             $period_id = $getData['period_id'];
             $inspection_id = $getData['inspection_id'];
             $po_number = $getData['po_number'];
+            $plan_status_id = floatval($getData['plan_status_id'] ?? -1);
+            $disbursement = floatval($getData['disbursement'] ?? -1);
 
             $workload_planned_percent=floatval($getData['workload_planned_percent'] ?? 0);
             $workload_actual_completed_percent=floatval($getData['workload_actual_completed_percent'] ?? 0);
@@ -174,25 +177,27 @@ class Inspection extends Connection
             }
             $number_of_order = count($insert_indexs) + count($update_indexs);
 
-            // $_SESSION['insert'] = $insert_indexs;
-            // $_SESSION['update'] = $update_indexs;
-            // $_SESSION['delete'] = $delete_indexs;
+            $_SESSION['insert'] = $insert_indexs;
+            $_SESSION['update'] = $update_indexs;
+            $_SESSION['delete'] = $delete_indexs;
 
-            //UPDATE po_main
+            UPDATE po_main
             $sql = <<<EOD
                         UPDATE `inspection_periods`
                             SET `workload_actual_completed_percent` = :workload_actual_completed_percent
                             , `workload_remaining_percent` = :workload_remaining_percent
-                            , `workload_planned_percent` =:workload_planned_percent
-                            , `interim_payment` =:interim_payment
-                            , `interim_payment_percent` =:interim_payment_percent
-                            , `interim_payment_less_previous` =:interim_payment_less_previous
-                            , `interim_payment_less_previous_percent` =:interim_payment_less_previous_percent
-                            , `interim_payment_accumulated` =:interim_payment_accumulated
-                            , `interim_payment_accumulated_percent` =:interim_payment_accumulated_percent
-                            , `interim_payment_remain` =:interim_payment_remain
-                            , `interim_payment_remain_percent` =:interim_payment_remain_percent
-                            , `retention_value` =:retention_value
+                            , `workload_planned_percent` = :workload_planned_percent
+                            , `interim_payment` = :interim_payment
+                            , `interim_payment_percent` = :interim_payment_percent
+                            , `interim_payment_less_previous` = :interim_payment_less_previous
+                            , `interim_payment_less_previous_percent` = :interim_payment_less_previous_percent
+                            , `interim_payment_accumulated` = :interim_payment_accumulated
+                            , `interim_payment_accumulated_percent` = :interim_payment_accumulated_percent
+                            , `interim_payment_remain` = :interim_payment_remain
+                            , `interim_payment_remain_percent` = :interim_payment_remain_percent
+                            , `retention_value` = :retention_value
+                            , `plan_status_id` = :plan_status_id
+                            , `disbursement` = :disbursement
                             WHERE `po_id` = :po_id
                                 AND `period_id` = :period_id
                                 AND `inspection_id` = :inspection_id
@@ -213,13 +218,14 @@ class Inspection extends Connection
             $stmtInspectPeriods->bindParam(':interim_payment_accumulated_percent', $interim_payment_accumulated_percent, PDO::PARAM_STR);
             $stmtInspectPeriods->bindParam(':interim_payment_remain', $interim_payment_remain, PDO::PARAM_STR);
             $stmtInspectPeriods->bindParam(':interim_payment_remain_percent', $interim_payment_remain_percent, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':plan_status_id', $plan_status_id, PDO::PARAM_INT);
+            $stmtInspectPeriods->bindParam(':disbursement', $disbursement, PDO::PARAM_INT);
             $stmtInspectPeriods->bindParam(':retention_value', $retention_value, PDO::PARAM_STR);
 
-            $_SESSION['period_id'] = $period_id;
-            $_SESSION['inspection_id'] = $inspection_id;
-            $_SESSION['interim_payment'] = $interim_payment;
-            $_SESSION['workload_actual_completed_percent'] = $workload_actual_completed_percent;
-            $_SESSION['workload_remaining_percent'] = $workload_remaining_percent;
+            // $_SESSION['period_id'] = $period_id;
+            // $_SESSION['inspection_id'] = $inspection_id;
+            // $_SESSION['plan_status_id'] = $plan_status_id;
+            // $_SESSION['disbursement'] = $disbursement;
             // $_SESSION['stmtInspectPeriods->execute1'] = $stmtInspectPeriods->queryString;
             if ($stmtInspectPeriods->execute()) {
                 // $_SESSION['stmtInspectPeriods->execute2'] = $stmtInspectPeriods->queryString;

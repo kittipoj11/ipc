@@ -7,6 +7,7 @@ require_once 'auth.php';
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
   <?php include 'header_main.php'; ?>
@@ -71,6 +72,7 @@ require_once 'auth.php';
     require_once  'class/inspection_class.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
+    require_once  'class/plan_status_class.php';
 
     // $_SESSION['Request'] = $_REQUEST;
     $po_id = $_REQUEST['po_id'];
@@ -89,6 +91,9 @@ require_once 'auth.php';
     $location = new Location;
     $location_rs = $location->getRecordAll();
 
+    $plan_status = new Plan_status;
+    $plan_status_rs = $plan_status->getRecordAll();
+
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -105,17 +110,19 @@ require_once 'auth.php';
             </button>
             <ul class="dropdown-menu py-0" id="action_type">
               <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
-               <?php if(strtoupper($rsInspectionPeriod['action_type_name'])== strtoupper('submit')){ ?>
+              <?php if (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('submit')) { ?>
                 <li><a class="dropdown-item" href="#">Submit</a></li>
-                <?php }else { ?>
-                <?php if(strtoupper($rsInspectionPeriod['action_type_name'])== strtoupper('verify')){ ?>
+              <?php } else { ?>
+                <?php if (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('verify')) { ?>
                   <li><a class="dropdown-item" href="#">Verify</a></li>
-                  <?php }elseif(strtoupper($rsInspectionPeriod['action_type_name'])== strtoupper('approval')){ ?>
-                    <li><a class="dropdown-item" href="#">Approve</a></li>
-                    <?php } ?>
-                    <li><hr class="dropdown-divider  my-0"></li>
-                    <li><a class="dropdown-item" href="#">Reject</a></li>
-                    <?php } ?>
+                <?php } elseif (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('approval')) { ?>
+                  <li><a class="dropdown-item" href="#">Approve</a></li>
+                <?php } ?>
+                <li>
+                  <hr class="dropdown-divider  my-0">
+                </li>
+                <li><a class="dropdown-item" href="#">Reject</a></li>
+              <?php } ?>
               <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
               <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
             </ul>
@@ -381,18 +388,53 @@ require_once 'auth.php';
                     </div>
 
                     <div class="card-body">
-                      <div class="row">
-                        <div class="col-4">
-                          <div class="row-1 input-group input-group-sm">
-                            <label for="workload_planned_percentx" class="input-group-text ">ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน</label>
-                          </div>
+                      <div class="row m-1 mb-3">
+                        <div class="col-8 input-group input-group-sm">
+                          <label for="plan_status_id" class="input-group-text">ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน</label>
+                          <select class="form-select form-control" name="plan_status_id" id="plan_status_id">
+                            <option value="-1" selected>...</option>
+                            <?php
+                            foreach ($plan_status_rs as $row) :
+                              $selected_attr = ($rsInspectionPeriod['plan_status_id'] == $row['plan_status_id']) ? " selected" : "";
+                              echo "<option value='{$row['plan_status_id']}' {$selected_attr}>{$row['plan_status_name']}</option>";
+                            endforeach ?>
+                          </select>
                         </div>
-
                       </div>
-
                       <div class="form-floating">
                         <textarea class="form-control" placeholder="Leave a comment here"></textarea>
                         <label for="floatingTextarea">หมายเหตุ:</label>
+                      </div>
+
+                      <?php
+                      $disbursement = $rsInspectionPeriod['disbursement']; // ตัวอย่างค่า
+
+                      $checked0 = '';
+                      $checked1 = '';
+
+                      if ($disbursement == 0) {
+                        $checked0 = 'checked';
+                      } elseif ($disbursement == 1) {
+                        $checked1 = 'checked';
+                      }
+                      ?>
+
+                      <div class="row m-1 mb-3">
+                        <div class="col-2 input-group input-group-sm">
+                          <label for="disbursement" class="input-group-text">การเบิกจ่าย</label>
+                        </div>
+                        <div class="col-2 form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="disbursement" id="disbursement1" value="1" <?php echo $checked1; ?>>
+                          <label class="form-check-label" for="disbursement1">
+                            อนุมัติ
+                          </label>
+                        </div>
+                        <div class="col-2 form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="disbursement" id="disbursement2" value="0" <?php echo $checked0; ?>>
+                          <label class="form-check-label" for="disbursement2">
+                            ไม่อนุมัติ
+                          </label>
+                        </div>
                       </div>
 
                       <!-- ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร -->
