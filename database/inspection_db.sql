@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 27, 2025 at 04:24 PM
+-- Generation Time: Mar 27, 2025 at 05:10 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ipc_db`
+-- Database: `inspection_db`
 --
 
 -- --------------------------------------------------------
@@ -130,40 +130,39 @@ CREATE TABLE `inspection_approvals` (
 -- Dumping data for table `inspection_approvals`
 --
 
-INSERT INTO `inspection_approvals` (`inspection_approval_id`, `inspection_id`, `period_id`, `po_id`, `period_number`
-, `approval_level`, `approver_id`, `approval_status_id`, `approval_date`, `approval_comment`) VALUES
-(1, 1, 1, 1, 1,   1, 1, 1, NULL, NULL),
-(2, 1, 1, 1, 1,   2, 3, 7, NULL, NULL),
-(3, 1, 1, 1, 1,   3, 4, 1, NULL, NULL),
-(4, 1, 1, 1, 1,   4, 1, 3, NULL, NULL),
-(5, 1, 1, 1, 1,   5, 5, 7, NULL, NULL),
-(6, 1, 1, 1, 1,   6, 3, 7, NULL, NULL),
-(7, 1, 1, 1, 1,   7, 6, 3, NULL, NULL),
-(8, 1, 1, 1, 1,   8, 7, 7, NULL, NULL),
-(9, 2, 2, 1, 2,   1, 1, 1, NULL, NULL),
-(10, 2, 2,1,  2,   2, 3, 7, NULL, NULL),
-(11, 2, 2,1,  2,   3, 4, 1, NULL, NULL),
-(12, 2, 2,1,  2,   4, 1, 3, NULL, NULL),
-(13, 2, 2,1,  2,   5, 5, 7, NULL, NULL),
-(14, 2, 2,1,  2,   6, 3, 7, NULL, NULL),
-(15, 2, 2,1,  2,   7, 6, 3, NULL, NULL),
-(16, 2, 2,1,  2,   8, 7, 7, NULL, NULL),
-(17, 4, 4, 2, 1,   1, 1, 1, NULL, NULL),
-(18, 4, 4, 2, 1,   2, 3, 7, NULL, NULL),
-(19, 4, 4, 2, 1,   3, 4, 1, NULL, NULL),
-(20, 4, 4, 2, 1,   4, 1, 3, NULL, NULL),
-(21, 4, 4, 2, 1,   5, 5, 7, NULL, NULL),
-(22, 4, 4, 2, 1,   6, 3, 7, NULL, NULL),
-(23, 4, 4, 2, 1,   7, 6, 3, NULL, NULL),
-(24, 4, 4, 2, 1,   8, 7, 7, NULL, NULL),
-(25, 5, 5, 2, 2,   1, 1, 1, NULL, NULL),
-(26, 5, 5, 2,  2,  2, 3, 7, NULL, NULL),
-(27, 5, 5, 2,  2,  3, 4, 1, NULL, NULL),
-(28, 5, 5, 2,  2,  4, 1, 3, NULL, NULL),
-(29, 5, 5, 2,  2,  5, 5, 7, NULL, NULL),
-(30, 5, 5, 2,  2,  6, 3, 7, NULL, NULL),
-(31, 5, 5, 2,  2,  7, 6, 3, NULL, NULL),
-(32, 5, 5, 2,  2,  8, 7, 7, NULL, NULL);
+INSERT INTO `inspection_approvals` (`inspection_approval_id`, `inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_status_id`, `approval_date`, `approval_comment`) VALUES
+(1, 1, 1, 1, 1, 1, 1, 1, NULL, NULL),
+(2, 1, 1, 1, 1, 2, 3, 7, NULL, NULL),
+(3, 1, 1, 1, 1, 3, 4, 1, NULL, NULL),
+(4, 1, 1, 1, 1, 4, 1, 3, NULL, NULL),
+(5, 1, 1, 1, 1, 5, 5, 7, NULL, NULL),
+(6, 1, 1, 1, 1, 6, 3, 7, NULL, NULL),
+(7, 1, 1, 1, 1, 7, 6, 3, NULL, NULL),
+(8, 1, 1, 1, 1, 8, 7, 7, NULL, NULL),
+(9, 2, 2, 1, 2, 1, 1, 1, NULL, NULL),
+(10, 2, 2, 1, 2, 2, 3, 7, NULL, NULL),
+(11, 2, 2, 1, 2, 3, 4, 1, NULL, NULL),
+(12, 2, 2, 1, 2, 4, 1, 3, NULL, NULL),
+(13, 2, 2, 1, 2, 5, 5, 7, NULL, NULL),
+(14, 2, 2, 1, 2, 6, 3, 7, NULL, NULL),
+(15, 2, 2, 1, 2, 7, 6, 3, NULL, NULL),
+(16, 2, 2, 1, 2, 8, 7, 7, NULL, NULL),
+(17, 4, 4, 2, 1, 1, 1, 1, NULL, NULL),
+(18, 4, 4, 2, 1, 2, 3, 7, NULL, NULL),
+(19, 4, 4, 2, 1, 3, 4, 1, NULL, NULL),
+(20, 4, 4, 2, 1, 4, 1, 3, NULL, NULL),
+(21, 4, 4, 2, 1, 5, 5, 7, NULL, NULL),
+(22, 4, 4, 2, 1, 6, 3, 7, NULL, NULL),
+(23, 4, 4, 2, 1, 7, 6, 3, NULL, NULL),
+(24, 4, 4, 2, 1, 8, 7, 7, NULL, NULL),
+(25, 5, 5, 2, 2, 1, 1, 1, NULL, NULL),
+(26, 5, 5, 2, 2, 2, 3, 7, NULL, NULL),
+(27, 5, 5, 2, 2, 3, 4, 1, NULL, NULL),
+(28, 5, 5, 2, 2, 4, 1, 3, NULL, NULL),
+(29, 5, 5, 2, 2, 5, 5, 7, NULL, NULL),
+(30, 5, 5, 2, 2, 6, 3, 7, NULL, NULL),
+(31, 5, 5, 2, 2, 7, 6, 3, NULL, NULL),
+(32, 5, 5, 2, 2, 8, 7, 7, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -230,7 +229,7 @@ CREATE TABLE `inspection_periods` (
 INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `workload_accumulated_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status_id`, `is_paid`, `is_retention`, `remark`, `current_status`, `current_approval_level`, `disbursement`) VALUES
 (1, 1, 1, 1, '30.00', '29.00', '71.00', '0.00', '132412.50', '15.00', '0.00', '0.00', '132412.50', '15.23', '736748.50', '84.77', '0.00', -1, 0, 0, 'ฟฟฟLorem ipsum dolor sit, amet consectetur adipisicing elit. Minima vel perferendis blanditiis officiis omnis repellendus voluptatibus corporis odit inventore possimus consequuntur ex maxime, incidunt ducimus veritatis aspernatur iusto. Ducimus, minima. ปปป\n                                       ', 1, 1, -1),
 (2, 2, 1, 2, '100.00', '98.00', '2.00', '0.00', '736748.50', '85.00', '132412.50', '15.23', '869161.00', '100.00', '0.00', '0.00', '0.00', -1, 0, 0, NULL, 1, 1, -1),
-(4, 4, 2, 1, '50.00', '49.00', '51.00', '0.00', '45000.00', '42.06', '0.00', '0.00', '45000.00', '42.06', '62000.00', '57.94', '0.00', 2, 0, 0, '                                                      \r\nLorem ipsum dolor sit, amet consectetur adipisicing elit. \r\nMinima vel perferendis blanditiis officiis omnis repellendus voluptatibus corporis odit inventore possimus consequuntur ex maxime, \r\nincidunt ducimus veritatis aspernatur iusto. Ducimus, minima.', 1, 1, 1),
+(4, 4, 2, 1, '50.00', '49.00', '51.00', '0.00', '45000.00', '42.06', '0.00', '0.00', '45000.00', '42.06', '62000.00', '57.94', '0.00', 2, 0, 0, '                           Lorem ipsum dolor sit, amet consectetur adipisicing elit. \r\nMinima vel perferendis blanditiis officiis omnis repellendus voluptatibus corporis odit inventore possimus consequuntur ex maxime, \r\nincidunt ducimus veritatis aspernatur iusto. Ducimus, minima.                           \r\n                        ', 1, 1, 1),
 (5, 5, 2, 2, '100.00', '99.00', '1.00', '0.00', '50000.00', '46.73', '45000.00', '42.06', '95000.00', '88.79', '12000.00', '11.21', '0.00', 1, 0, 0, NULL, 1, 1, 1);
 
 -- --------------------------------------------------------
@@ -257,7 +256,8 @@ INSERT INTO `inspection_period_details` (`rec_id`, `inspection_id`, `order_no`, 
 (4, 4, 1, 'งานเดินท่อx', ''),
 (5, 5, 1, 'abc', ''),
 (6, 1, 2, 'งานติดตั้งโคมไฟ LED', ''),
-(7, 5, 2, 'xxx', '');
+(7, 5, 2, 'xxx', ''),
+(8, 4, 2, 'งานเดินท่อ2', '');
 
 -- --------------------------------------------------------
 
@@ -808,7 +808,7 @@ ALTER TABLE `inspection_periods`
 -- AUTO_INCREMENT for table `inspection_period_details`
 --
 ALTER TABLE `inspection_period_details`
-  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `ipc_period`

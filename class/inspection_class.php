@@ -118,9 +118,9 @@ class Inspection extends Connection
         @session_start();
 
         try {
-            $_SESSION['getData'] =  $getData;
-            exit;
-            $this->myConnect->beginTransaction();
+            // $_SESSION['getData'] =  $getData;
+            // exit;
+            // $this->myConnect->beginTransaction();
 
             // parameters ในส่วน main
             $po_id = $getData['po_id'];
@@ -143,6 +143,7 @@ class Inspection extends Connection
             $interim_payment_less_previous_percent=floatval($getData['interim_payment_less_previous_percent'] ?? 0);
             $interim_payment_accumulated_percent=floatval($getData['interim_payment_accumulated_percent'] ?? 0);
             $interim_payment_remain_percent=floatval($getData['interim_payment_remain_percent'] ?? 0);
+            $remark = $getData['remark'];
             
             // parameters ในส่วน period
             $order_nos = $getData['order_nos'];
@@ -177,11 +178,11 @@ class Inspection extends Connection
             }
             $number_of_order = count($insert_indexs) + count($update_indexs);
 
-            $_SESSION['insert'] = $insert_indexs;
-            $_SESSION['update'] = $update_indexs;
-            $_SESSION['delete'] = $delete_indexs;
+            // $_SESSION['insert'] = $insert_indexs;
+            // $_SESSION['update'] = $update_indexs;
+            // $_SESSION['delete'] = $delete_indexs;
 
-            UPDATE po_main
+            // UPDATE po_main
             $sql = <<<EOD
                         UPDATE `inspection_periods`
                             SET `workload_actual_completed_percent` = :workload_actual_completed_percent
@@ -198,6 +199,7 @@ class Inspection extends Connection
                             , `retention_value` = :retention_value
                             , `plan_status_id` = :plan_status_id
                             , `disbursement` = :disbursement
+                            , `remark` = :remark
                             WHERE `po_id` = :po_id
                                 AND `period_id` = :period_id
                                 AND `inspection_id` = :inspection_id
@@ -221,6 +223,7 @@ class Inspection extends Connection
             $stmtInspectPeriods->bindParam(':plan_status_id', $plan_status_id, PDO::PARAM_INT);
             $stmtInspectPeriods->bindParam(':disbursement', $disbursement, PDO::PARAM_INT);
             $stmtInspectPeriods->bindParam(':retention_value', $retention_value, PDO::PARAM_STR);
+            $stmtInspectPeriods->bindParam(':remark', $remark, PDO::PARAM_STR);
 
             // $_SESSION['period_id'] = $period_id;
             // $_SESSION['inspection_id'] = $inspection_id;
@@ -228,9 +231,8 @@ class Inspection extends Connection
             // $_SESSION['disbursement'] = $disbursement;
             // $_SESSION['stmtInspectPeriods->execute1'] = $stmtInspectPeriods->queryString;
             if ($stmtInspectPeriods->execute()) {
-                // $_SESSION['stmtInspectPeriods->execute2'] = $stmtInspectPeriods->queryString;
+                // $_SESSION['remark'] = $remark;
                 $stmtInspectPeriods->closeCursor();
-                
                 // INSERT inspection_period_details
                 $sql = <<<EOD
                             INSERT INTO `inspection_period_details`(`inspection_id`, `order_no`, `details`, `remark`) 
@@ -284,10 +286,10 @@ class Inspection extends Connection
                     $stmtInspectPeriodDetails->closeCursor();
                 }
 
-                $_SESSION['message'] =  'data has been created successfully.';
+                $_SESSION['Transaction'] =  'data has been updated successfully.';
             }
         } catch (PDOException $e) {
-            $_SESSION['message'] =  $e->getCode() + ' : ' + $e->getMessage();
+            $_SESSION['Transaction'] =  $e->getCode() + ' : ' + $e->getMessage();
         }
     }
 
