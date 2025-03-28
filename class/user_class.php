@@ -90,6 +90,37 @@ class User extends Connection
         return $rs;
     }
 
+    function has_permission($user_id, $permission_name) {
+        $sql = <<<EOD
+                    SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
+                    , D.department_name
+                    , R.role_name
+                    LEFT JOIN departments D
+                        ON D.department_id = U.department_id
+                    LEFT JOIN roles R
+                        ON R.role_id = U.role_id
+                    FROM users U
+                    WHERE U.username = :username
+                EOD;
+
+        $stmt = $this->myConnect->prepare($sql);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+        $rs = $stmt->fetch();
+        return $rs;
+        
+    $stmt = $conn->prepare("SELECT COUNT(rp.permission_id) FROM users u
+                                INNER JOIN roles r ON u.role_id = r.id
+                                INNER JOIN role_permissions rp ON r.id = rp.role_id
+                                INNER JOIN permissions p ON rp.permission_id = p.id
+                                WHERE u.id = :user_id AND p.name = :permission_name");
+    $stmt->bindParam(':user_id', $user_id);
+    $stmt->bindParam(':permission_name', $permission_name);
+    $stmt->execute();
+    return $stmt->fetchColumn() > 0;
+}
+
+
     public function getLineUserID($username)
     {
         $sql = "select line_user_id 

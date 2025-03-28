@@ -7,6 +7,8 @@ $user = new User;
 
 $result = $user->checkLogin($_POST['username'],$_POST['password']);
 $_SESSION['result'] = $result;
+$_SESSION['menu1'] = 'd-none';
+// Check
 
 echo $result;
 

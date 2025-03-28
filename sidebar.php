@@ -40,7 +40,7 @@
                 <!-- <hr class="sidebar-divider"> -->
 
                 <!-- Nav Item - ข้อมูลระบบ -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $_SESSION['menu1'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>

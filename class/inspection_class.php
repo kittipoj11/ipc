@@ -63,13 +63,11 @@ class Inspection extends Connection
                         ON P2.po_id = P1.po_id AND P2.period_number = P1.period_number - 1
                     WHERE P1.po_id = :po_id
                         AND P1.period_id = :period_id
-                        AND inspection_approvals.approver_id = :approver_id
                     ORDER BY P1.po_id, period_number
                 EOD;
         $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
-        $stmt->bindParam(':approver_id', $$_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
         return $rs;

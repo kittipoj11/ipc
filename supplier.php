@@ -192,4 +192,8 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
+
+
+    <!-- Load Menu  -->
+    <script src="javascript/load_menu.js"></script>
     <script src="javascript/supplier.js"></script>
