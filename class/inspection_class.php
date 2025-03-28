@@ -43,7 +43,7 @@ class Inspection extends Connection
                     , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
                     , working_date_from, working_date_to, working_day
                     , suppliers.supplier_name, locations.location_name
-                    , inspection_approvals.approval_level , approval_status.action_type_id,  action_type.action_type_name
+                    , inspection_approvals.approver_id, inspection_approvals.approval_level , approval_status.action_type_id,  action_type.action_type_name
                     , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
                     FROM inspection_periods P1
                     INNER JOIN po_main
@@ -63,11 +63,13 @@ class Inspection extends Connection
                         ON P2.po_id = P1.po_id AND P2.period_number = P1.period_number - 1
                     WHERE P1.po_id = :po_id
                         AND P1.period_id = :period_id
+                        AND inspection_approvals.approver_id = :approver_id
                     ORDER BY P1.po_id, period_number
                 EOD;
         $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
+        $stmt->bindParam(':approver_id', $$_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
         return $rs;

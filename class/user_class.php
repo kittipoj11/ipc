@@ -69,22 +69,24 @@ class User extends Connection
         return $rs;
     }
 
-    public function getRecordByUsername($username)
+    public function getUserByUsername($username)
     {
         $sql = <<<EOD
-                select * 
-                from users u
-                left join departments d
-                    on u.department_id = d.department_id
-                left join roles r
-                    on u.role_id = r.role_id
-                where username = :username
+                    SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
+                    , D.department_name
+                    , R.role_name
+                    LEFT JOIN departments D
+                        ON D.department_id = U.department_id
+                    LEFT JOIN roles R
+                        ON R.role_id = U.role_id
+                    FROM users U
+                    WHERE U.username = :username
                 EOD;
 
         $stmt = $this->myConnect->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
-        $rs = $stmt->fetchAll();
+        $rs = $stmt->fetch();
         return $rs;
     }
 
