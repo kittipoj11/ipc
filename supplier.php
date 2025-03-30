@@ -195,5 +195,4 @@ require_once 'auth.php';
 
 
     <!-- Load Menu  -->
-    <script src="javascript/load_menu.js"></script>
     <script src="javascript/supplier.js"></script>

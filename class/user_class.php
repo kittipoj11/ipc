@@ -75,11 +75,11 @@ class User extends Connection
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
                     , D.department_name
                     , R.role_name
+                    FROM users U
                     LEFT JOIN departments D
                         ON D.department_id = U.department_id
                     LEFT JOIN roles R
                         ON R.role_id = U.role_id
-                    FROM users U
                     WHERE U.username = :username
                 EOD;
 
@@ -89,17 +89,60 @@ class User extends Connection
         $rs = $stmt->fetch();
         return $rs;
     }
+    public function getPermissions()
+    {
+        $sql = <<<EOD
+                    SELECT P.permission_id, P.permission_name, P.menu_name
+                    , 'd-none' AS display_status
+                    FROM permissions P
+                EOD;
+
+        $stmt = $this->myConnect->prepare($sql);
+        $stmt->execute();
+        $rs = $stmt->fetchAll();
+        return $rs;
+    }
+    public function getPermissionByUsername($username)
+    {
+        // $sql = <<<EOD
+        //             SELECT P.permission_id, P.permission_name, P.menu_name
+        //             , CASE WHEN RP.role_id IS NOT NULL THEN 'd-block' ELSE 'd-none' END AS display_status
+        //             FROM permissions P
+        //             LEFT JOIN role_permissions RP 
+        //                 ON RP.permission_id = P.permission_id  
+        //                 AND RP.role_id = (SELECT role_id FROM users WHERE username = :username)  
+        //             LEFT JOIN users U 
+        //                 ON U.role_id = RP.role_id  
+        //                 AND U.username = :username
+        //         EOD;
+
+        $sql = <<<EOD
+                    SELECT P.permission_id, P.permission_name, P.menu_name
+                    FROM users U 
+                    INNER JOIN role_permissions RP
+                        ON RP.role_id = U.role_id
+                    INNER JOIN permissions P
+                        ON P.permission_id = RP.permission_id
+                    WHERE U.username = :username
+                EOD;
+
+        $stmt = $this->myConnect->prepare($sql);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+        $rs = $stmt->fetchAll();
+        return $rs;
+    }
 
     function has_permission($user_id, $permission_name) {
         $sql = <<<EOD
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
                     , D.department_name
                     , R.role_name
+                    FROM users U
                     LEFT JOIN departments D
                         ON D.department_id = U.department_id
                     LEFT JOIN roles R
                         ON R.role_id = U.role_id
-                    FROM users U
                     WHERE U.username = :username
                 EOD;
 

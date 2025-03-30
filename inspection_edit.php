@@ -94,6 +94,9 @@ require_once 'auth.php';
     $plan_status = new Plan_status;
     $plan_status_rs = $plan_status->getRecordAll();
 
+    // 
+    // ถ้า approval_level ตรงกับ current_approval_level และ approver_id ตรงกับ user_id ที่ login
+    // 
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -108,20 +111,25 @@ require_once 'auth.php';
             <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               Action
             </button>
-            <ul class="dropdown-menu py-0" id="action_type">
+            <ul class="dropdown-menu py-0" id="action_type" data-current_approval_level="<?= $rsInspectionPeriod['current_approval_level'] ?>">
               <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
               <?php if (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('submit')) { ?>
-                <li><a class="dropdown-item" href="#">Submit</a></li>
+                <!-- <li><a class="dropdown-item" href="#">Submit</a></li> -->
+                <li><button class="dropdown-item approval_next" id="document_submit">Submit</a>
+                </li>
               <?php } else { ?>
                 <?php if (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('verify')) { ?>
-                  <li><a class="dropdown-item" href="#">Verify</a></li>
+                  <!-- <li><a class="dropdown-item" href="#">Verify</a></li> -->
+                  <li><button class="dropdown-item approval_next" id="document_verify">Verify</button></li>
                 <?php } elseif (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('approval')) { ?>
-                  <li><a class="dropdown-item" href="#">Approve</a></li>
+                  <!-- <li><a class="dropdown-item" href="#">Approve</a></li> -->
+                  <li><button class="dropdown-item approval_next" id="document_approve">Approve</button></li>
                 <?php } ?>
                 <li>
                   <hr class="dropdown-divider  my-0">
                 </li>
-                <li><a class="dropdown-item" href="#">Reject</a></li>
+                <!-- <li><a class="dropdown-item" href="#">Reject</a></li> -->
+                <li><button class="dropdown-item approval_reject" id="document_reject">Reject</button></li>
               <?php } ?>
               <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
               <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
@@ -402,12 +410,7 @@ require_once 'auth.php';
                         </div>
                       </div>
                       <div class="form-floating">
-                        <!-- <textarea name="remark" class="form-control" placeholder="Leave a comment here" rows="5" style="min-height: 5em;height: auto;"> -->
-                          <!-- <textarea name="remark" class="form-control" placeholder="Leave a comment here" rows="5"> -->
-                          <textarea name="remark" class="form-control" placeholder="Leave a comment here" rows="4" style="min-height: 4em;height: auto;">
-                           <?php echo isset($rsInspectionPeriod['remark']) ? trim(htmlspecialchars($rsInspectionPeriod['remark'])) : ''; ?>
-                           
-                        </textarea>
+                        <textarea name="remark" class="form-control" id="floatingTextarea"placeholder="Leave a comment here" rows="4" style="min-height: 4em;height: auto;"><?php echo isset($rsInspectionPeriod['remark']) ? trim(htmlspecialchars($rsInspectionPeriod['remark'])) : ''; ?></textarea>
                         <label for="floatingTextarea">หมายเหตุ:</label>
                       </div>
 

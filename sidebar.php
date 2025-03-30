@@ -40,7 +40,7 @@
                 <!-- <hr class="sidebar-divider"> -->
 
                 <!-- Nav Item - ข้อมูลระบบ -->
-                <li class="nav-item <?php echo $_SESSION['menu1'] ?>">
+                <li class="nav-item <?php echo $_SESSION['system'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
@@ -70,7 +70,7 @@
                     </ul>
                 </li>
                 <!-- Nav Item - ข้อมูลพื้นฐาน -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $_SESSION['general_basic'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
@@ -111,7 +111,7 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                            ข้อมูลการอนุมัติ
+                            รูปแบบการอนุมัติ
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -133,12 +133,12 @@
                     </ul>
                 </li>
 
-                <!-- Nav Item - Inspection(การตรวจรับงาน) -->
-                <li class="nav-item">
+                <!-- Nav Item - Purchase Order -->
+                <li class="nav-item <?php echo $_SESSION['purchase_order'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                            Inspection
+                            Purchase Order
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -149,12 +149,38 @@
                                 <p>All purchase orders</p>
                             </a>
                         </li>
+                    </ul>
+                </li>
+
+                <!-- Nav Item - Inspection(การตรวจรับงาน) -->
+                <li class="nav-item <?php echo $_SESSION['inspection'] ?>">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-database"></i>
+                        <p>
+                            Inspection
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
                             <a href="inspection.php" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
                                 <p>All Inspection</p>
                             </a>
                         </li>
+                    </ul>
+                </li>
+
+                <!-- Nav Item - IPC -->
+                <li class="nav-item <?php echo $_SESSION['ipc'] ?>">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-database"></i>
+                        <p>
+                            IPC
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
                             <a href="ipc.php" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
@@ -165,7 +191,7 @@
                 </li>
 
                 <!-- Nav Item - Student -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $_SESSION['manage_user'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa-solid fa-user-gear"></i>
                         <p>
@@ -192,12 +218,12 @@
                 <hr class="sidebar-divider">
 
                 <!-- Heading -->
-                <div class="sidebar-heading">
+                <!-- <div class="sidebar-heading">
                     Reports
-                </div>
+                </div> -->
 
                 <!-- Nav Item - รายงาน -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $_SESSION['report'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa-regular fa-file-lines"></i>
                         <p>

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 28, 2025 at 12:03 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.1.17
+-- Generation Time: Mar 30, 2025 at 04:23 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -128,38 +128,38 @@ CREATE TABLE `inspection_approvals` (
 --
 
 INSERT INTO `inspection_approvals` (`inspection_approval_id`, `inspection_id`, `approval_level`, `approver_id`, `approval_status_id`, `approval_date`, `approval_comment`) VALUES
-(1, 1, 1, 1, 1, NULL, NULL),
-(2, 1, 2, 3, 7, NULL, NULL),
-(3, 1, 3, 4, 1, NULL, NULL),
-(4, 1, 4, 1, 3, NULL, NULL),
-(5, 1, 5, 5, 7, NULL, NULL),
-(6, 1, 6, 3, 7, NULL, NULL),
-(7, 1, 7, 6, 3, NULL, NULL),
-(8, 1, 8, 7, 7, NULL, NULL),
-(9, 2, 1, 1, 1, NULL, NULL),
-(10, 2, 2, 3, 7, NULL, NULL),
-(11, 2, 3, 4, 1, NULL, NULL),
-(12, 2, 4, 1, 3, NULL, NULL),
-(13, 2, 5, 5, 7, NULL, NULL),
-(14, 2, 6, 3, 7, NULL, NULL),
-(15, 2, 7, 6, 3, NULL, NULL),
-(16, 2, 8, 7, 7, NULL, NULL),
-(17, 4, 1, 1, 1, NULL, NULL),
-(18, 4, 2, 3, 7, NULL, NULL),
-(19, 4, 3, 4, 1, NULL, NULL),
-(20, 4, 4, 1, 3, NULL, NULL),
-(21, 4, 5, 5, 7, NULL, NULL),
-(22, 4, 6, 3, 7, NULL, NULL),
-(23, 4, 7, 6, 3, NULL, NULL),
-(24, 4, 8, 7, 7, NULL, NULL),
-(25, 5, 1, 1, 1, NULL, NULL),
-(26, 5, 2, 3, 7, NULL, NULL),
-(27, 5, 3, 4, 1, NULL, NULL),
-(28, 5, 4, 1, 3, NULL, NULL),
-(29, 5, 5, 5, 7, NULL, NULL),
-(30, 5, 6, 3, 7, NULL, NULL),
-(31, 5, 7, 6, 3, NULL, NULL),
-(32, 5, 8, 7, 7, NULL, NULL);
+(1, 1, 1, 2, 1, NULL, NULL),
+(2, 1, 2, 6, 7, NULL, NULL),
+(3, 1, 3, 5, 1, NULL, NULL),
+(4, 1, 4, 2, 3, NULL, NULL),
+(5, 1, 5, 3, 7, NULL, NULL),
+(6, 1, 6, 6, 7, NULL, NULL),
+(7, 1, 7, 7, 3, NULL, NULL),
+(8, 1, 8, 8, 7, NULL, NULL),
+(9, 2, 1, 2, 1, NULL, NULL),
+(10, 2, 2, 6, 7, NULL, NULL),
+(11, 2, 3, 5, 1, NULL, NULL),
+(12, 2, 4, 2, 3, NULL, NULL),
+(13, 2, 5, 3, 7, NULL, NULL),
+(14, 2, 6, 6, 7, NULL, NULL),
+(15, 2, 7, 7, 3, NULL, NULL),
+(16, 2, 8, 8, 7, NULL, NULL),
+(17, 4, 1, 2, 1, NULL, NULL),
+(18, 4, 2, 6, 7, NULL, NULL),
+(19, 4, 3, 5, 1, NULL, NULL),
+(20, 4, 4, 2, 3, NULL, NULL),
+(21, 4, 5, 3, 7, NULL, NULL),
+(22, 4, 6, 6, 7, NULL, NULL),
+(23, 4, 7, 7, 3, NULL, NULL),
+(24, 4, 8, 8, 7, NULL, NULL),
+(25, 5, 1, 2, 1, NULL, NULL),
+(26, 5, 2, 6, 7, NULL, NULL),
+(27, 5, 3, 5, 1, NULL, NULL),
+(28, 5, 4, 2, 3, NULL, NULL),
+(29, 5, 5, 3, 7, NULL, NULL),
+(30, 5, 6, 6, 7, NULL, NULL),
+(31, 5, 7, 7, 3, NULL, NULL),
+(32, 5, 8, 8, 7, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -224,10 +224,10 @@ CREATE TABLE `inspection_periods` (
 --
 
 INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `workload_accumulated_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status_id`, `is_paid`, `is_retention`, `remark`, `current_status`, `current_approval_level`, `disbursement`) VALUES
-(1, 1, 1, 1, 30.00, 29.00, 71.00, 0.00, 132412.50, 15.00, 0.00, 0.00, 132412.50, 15.23, 736748.50, 84.77, 0.00, -1, 0, 0, NULL, 1, 1, -1),
-(2, 2, 1, 2, 100.00, 98.00, 2.00, 0.00, 736748.50, 85.00, 132412.50, 15.23, 869161.00, 100.00, 0.00, 0.00, 0.00, -1, 0, 0, NULL, 1, 1, -1),
-(4, 4, 2, 1, 50.00, 49.00, 51.00, 0.00, 50000.00, 50.00, 0.00, 0.00, 40000.00, 37.38, 67000.00, 62.62, 0.00, 2, 0, 0, 'ทดสอบ', 1, 1, 1),
-(5, 5, 2, 2, 100.00, 99.00, 1.00, 0.00, 50000.00, 50.00, 40000.00, 37.38, 97000.00, 90.65, 10000.00, 9.35, 0.00, -1, 0, 0, NULL, 1, 1, -1);
+(1, 1, 1, 1, '30.00', '29.00', '71.00', '0.00', '132412.50', '15.00', '0.00', '0.00', '132412.50', '15.23', '736748.50', '84.77', '0.00', -1, 0, 0, NULL, 1, 1, -1),
+(2, 2, 1, 2, '100.00', '98.00', '2.00', '0.00', '736748.50', '85.00', '132412.50', '15.23', '869161.00', '100.00', '0.00', '0.00', '0.00', -1, 0, 0, 'ทดสอบ', 1, 1, -1),
+(4, 4, 2, 1, '50.00', '49.00', '51.00', '0.00', '50000.00', '50.00', '0.00', '0.00', '40000.00', '37.38', '67000.00', '62.62', '0.00', 2, 0, 0, 'ทดสอบ', 1, 1, 1),
+(5, 5, 2, 2, '100.00', '99.00', '1.00', '0.00', '50000.00', '50.00', '40000.00', '37.38', '97000.00', '90.65', '10000.00', '9.35', '0.00', -1, 0, 0, NULL, 1, 1, -1);
 
 -- --------------------------------------------------------
 
@@ -334,21 +334,22 @@ INSERT INTO `locations` (`location_id`, `location_name`, `is_deleted`) VALUES
 
 CREATE TABLE `permissions` (
   `permission_id` int(11) NOT NULL COMMENT 'รหัสสิทธิ์การใช้งาน',
-  `permission_name` varchar(255) NOT NULL COMMENT 'ชื่อสิทธิ์การใช้งาน (เช่น ''view_dashboard'', ''manage_users'', ''edit_products'')'
+  `permission_name` varchar(255) NOT NULL COMMENT 'ชื่อสิทธิ์การใช้งาน (เช่น ''view_dashboard'', ''manage_users'', ''edit_products'')',
+  `menu_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `permissions`
 --
 
-INSERT INTO `permissions` (`permission_id`, `permission_name`) VALUES
-(1, 'ข้อมูลระบบ'),
-(2, 'ข้อมูลพื้นฐานทั่วไป'),
-(3, 'Purchase Order'),
-(4, 'ตรวจรับงาน'),
-(5, 'IPC'),
-(6, 'การจัดการผู้ใช้'),
-(7, 'รายงาน');
+INSERT INTO `permissions` (`permission_id`, `permission_name`, `menu_name`) VALUES
+(1, 'ข้อมูลระบบ', 'system'),
+(2, 'ข้อมูลพื้นฐานทั่วไป', 'general_basic'),
+(3, 'Purchase Order', 'purchase_order'),
+(4, 'ตรวจรับงาน', 'inspection'),
+(5, 'IPC', 'ipc'),
+(6, 'การจัดการผู้ใช้', 'manage_user'),
+(7, 'รายงาน', 'report');
 
 -- --------------------------------------------------------
 
@@ -409,8 +410,8 @@ CREATE TABLE `po_main` (
 --
 
 INSERT INTO `po_main` (`po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `workflow_id`) VALUES
-(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 869161.00, 812300.00, 56861.00, NULL, 10.00, 86916.10, '2024-05-19', '2024-07-22', 65, '05389', NULL, 2, 0.00, 0.00, 0, 1),
-(2, 'IMPO002', 'Sunset', 1, 1, 'ซันเซต ๑', 'Sunset 1', 1, 107000.00, 100000.00, 7000.00, NULL, 0.00, 0.00, '2025-03-26', '2025-03-27', 0, '05389', NULL, 2, 0.00, 0.00, 0, 1);
+(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, '869161.00', '812300.00', '56861.00', NULL, '10.00', '86916.10', '2024-05-19', '2024-07-22', 65, '05389', NULL, 2, '0.00', '0.00', 0, 1),
+(2, 'IMPO002', 'Sunset', 1, 1, 'ซันเซต ๑', 'Sunset 1', 1, '107000.00', '100000.00', '7000.00', NULL, '0.00', '0.00', '2025-03-26', '2025-03-27', 0, '05389', NULL, 2, '0.00', '0.00', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -434,10 +435,10 @@ CREATE TABLE `po_period` (
 --
 
 INSERT INTO `po_period` (`period_id`, `po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `period_status`, `remark`, `workload_planned_percent`) VALUES
-(1, 1, 1, 132412.50, 15.00, NULL, 'QR', 30.00),
-(2, 1, 2, 736748.50, 85.00, NULL, 'Cash', 100.00),
-(4, 2, 1, 50000.00, 50.00, NULL, 'QR', 50.00),
-(5, 2, 2, 50000.00, 50.00, NULL, 'Cash', 100.00);
+(1, 1, 1, '132412.50', '15.00', NULL, 'QR', '30.00'),
+(2, 1, 2, '736748.50', '85.00', NULL, 'Cash', '100.00'),
+(4, 2, 1, '50000.00', '50.00', NULL, 'QR', '50.00'),
+(5, 2, 2, '50000.00', '50.00', NULL, 'Cash', '100.00');
 
 -- --------------------------------------------------------
 
@@ -562,12 +563,13 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `user_code`, `username`, `password`, `full_name`, `role_id`, `department_id`, `is_deleted`) VALUES
 (1, '05389', 'systemadmin', 'admin', 'System Administrator', 0, 1, 0),
-(3, '05389', 'admin', 'admin', 'Administrator', 1, 1, 0),
+(2, '00001', 'admin', 'admin', 'Administrator', 1, 1, 0),
+(3, '05389', 'A000', '1111', 'Mr. Three', 3, 1, 0),
 (4, '05389', 'nathapat', '1111', 'Nathapat Soontornpurmsap', 2, 1, 0),
 (5, '00002', 'A001', '1111', 'AA AM', 2, 1, 0),
 (6, '00003', 'A002', '1111', 'BB Mgr', 3, 1, 0),
-(7, '00004', 'A003', '1111', 'CC Dir', 4, 1, 0),
-(8, '00005', 'A004', '1111', 'DD MD', 5, 1, 0);
+(7, '00004', 'A003', '1111', 'เลขา', 2, 1, 0),
+(8, '00005', 'A004', '1111', 'MD', 5, 1, 0);
 
 -- --------------------------------------------------------
 

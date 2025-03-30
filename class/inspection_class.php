@@ -143,7 +143,8 @@ class Inspection extends Connection
             $interim_payment_less_previous_percent=floatval($getData['interim_payment_less_previous_percent'] ?? 0);
             $interim_payment_accumulated_percent=floatval($getData['interim_payment_accumulated_percent'] ?? 0);
             $interim_payment_remain_percent=floatval($getData['interim_payment_remain_percent'] ?? 0);
-            $remark = $getData['remark'];
+            $remark = trim($getData['remark']);
+            $_SESSION['remark'] = $remark;
             
             // parameters ในส่วน period
             $order_nos = $getData['order_nos'];
@@ -285,6 +286,55 @@ class Inspection extends Connection
                     $stmtInspectPeriodDetails->execute();
                     $stmtInspectPeriodDetails->closeCursor();
                 }
+
+                $_SESSION['Transaction'] =  'data has been updated successfully.';
+            }
+        } catch (PDOException $e) {
+            $_SESSION['Transaction'] =  $e->getCode() + ' : ' + $e->getMessage();
+        }
+    }
+    public function updateCurrentApprovalLevel($getData)
+    {
+        @session_start();
+
+        try {
+            $po_id = $getData['po_id'];
+            $period_id = $getData['period_id'];
+            $inspection_id = $getData['inspection_id'];
+            $current_approval_level = $getData['current_approval_level'];
+            $new_approval_level = $getData['new_approval_level'];
+
+            // UPDATE inspection_periods
+            $sql = <<<EOD
+                        UPDATE `inspection_periods`
+                            SET `current_approval_level` = :new_approval_level
+                            WHERE `po_id` = :po_id
+                                AND `period_id` = :period_id
+                                AND `inspection_id` = :inspection_id
+                    EOD;
+            $stmtInspectPeriods = $this->myConnect->prepare($sql);
+            $stmtInspectPeriods->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+            $stmtInspectPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
+            $stmtInspectPeriods->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
+            $stmtInspectPeriods->bindParam(':new_approval_level', $new_approval_level, PDO::PARAM_INT);
+
+            if ($stmtInspectPeriods->execute()) {
+                // $_SESSION['remark'] = $remark;
+                $stmtInspectPeriods->closeCursor();
+
+                // UPDATE inspection_approvals
+                $sql = <<<EOD
+                            UPDATE `inspection_approvals`
+                            SET `approval_date` = NOW()
+                            WHERE `inspection_id` = :inspection_id
+                                AND `approval_level` = :approval_level
+                        EOD;
+                $stmtInspectionApproval = $this->myConnect->prepare($sql);
+                $stmtInspectionApproval->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
+                $stmtInspectionApproval->bindParam(':approval_level', $current_approval_level, PDO::PARAM_INT);
+
+                $stmtInspectionApproval->execute();
+                $stmtInspectionApproval->closeCursor();
 
                 $_SESSION['Transaction'] =  'data has been updated successfully.';
             }
