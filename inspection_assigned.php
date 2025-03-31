@@ -448,7 +448,7 @@ require_once 'auth.php';
 
 
                   <div class="container-fluid card-footer p-0 d-flex justify-content-start">
-                    <button type="button" name="btnCancel" id="btnCancel" class="btn btn-primary btn-sm m-1"> <i class="fi fi-rr-left"></i> </button>
+                    <button type="button" name="btnCancel" class="btn btn-primary btn-sm m-1 btnCancel"> <i class="fi fi-rr-left"></i> </button>
                   </div>
                 </div>
                 <!-- /.card -->

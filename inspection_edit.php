@@ -105,37 +105,6 @@ require_once 'auth.php';
       <section class="container-fluid content-header">
         <div class="col-sm-12  d-flex justify-content-between">
           <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
-
-          <!-- <div class="dropdown"> -->
-          <div class="btn-group" role="group">
-            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Action
-            </button>
-            <ul class="dropdown-menu py-0" id="action_type" data-current_approval_level="<?= $rsInspectionPeriod['current_approval_level'] ?>">
-              <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
-              <?php if (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('submit')) { ?>
-                <!-- <li><a class="dropdown-item" href="#">Submit</a></li> -->
-                <li><button class="dropdown-item approval_next" id="document_submit">Submit</a>
-                </li>
-              <?php } else { ?>
-                <?php if (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('verify')) { ?>
-                  <!-- <li><a class="dropdown-item" href="#">Verify</a></li> -->
-                  <li><button class="dropdown-item approval_next" id="document_verify">Verify</button></li>
-                <?php } elseif (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('approval')) { ?>
-                  <!-- <li><a class="dropdown-item" href="#">Approve</a></li> -->
-                  <li><button class="dropdown-item approval_next" id="document_approve">Approve</button></li>
-                <?php } ?>
-                <li>
-                  <hr class="dropdown-divider  my-0">
-                </li>
-                <!-- <li><a class="dropdown-item" href="#">Reject</a></li> -->
-                <li><button class="dropdown-item approval_reject" id="document_reject">Reject</button></li>
-              <?php } ?>
-              <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
-              <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
-            </ul>
-          </div>
-
         </div>
       </section>
       <!-- /.container-fluid content-header-->
@@ -338,126 +307,138 @@ require_once 'auth.php';
                         </div>
                       </div>
                     </div>
+
+                    <div class="card border border-1 border-dark m-1">
+                      <h6 class="m-1 fw-bold">รายการรายละเอียดการตรวจสอบ</h6>
+                      <!-- <div class="card-header" style="display: flex;"> -->
+                      <div class="m-1">
+                        <a id="btnAdd" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="right" title="เพิ่มงวดงาน">
+                          Add Order
+                        </a>
+
+                        <a id="btnDeleteLast" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="ลบงวดงานล่าสุด">
+                          Delete last order
+                        </a>
+                        <a id="btnClear" class="btn btn-danger btn-sm d-none" data-toggle="tooltip" data-placement="right" title="ลบงวดงานทั้งหมด">
+                          Clear all order
+                        </a>
+                      </div>
+
+                      <div class="card-body p-0">
+                        <!-- สร้าง Table ตามปกติ -->
+                        <table class="table table-bordered justify-content-center text-center" id="tableOrder">
+                          <thead>
+                            <tr>
+                              <th class="p-1" width="5%">ลำดับที่</th>
+                              <th class="p-1" width="20%">รายละเอียดการตรวจสอบ</th>
+                              <th class="p-1">หมายเหตุ</th>
+                              <th class="p-1" width="5%">Crud</th>
+                              <th class="p-1 d-nonex" width="5%">rec_id</th>
+                            </tr>
+                          </thead>
+
+                          <tbody id="tbody-order">
+                            <?php foreach ($rsInspectionPeriodDetail as $row) { ?>
+                              <tr class="firstTr">
+                                <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
+                                <td class="input-group-sm p-0"><input type="number" name="order_nos[]" class="form-control order_no" value="<?php echo isset($row['order_no']) ? htmlspecialchars($row['order_no']) : ''; ?>" readonly>
+                                </td>
+                                <td class="input-group-sm p-0"><input type="text" name="details[]" class="form-control detail" value="<?php echo isset($row['details']) ? htmlspecialchars($row['details']) : ''; ?>">
+                                </td>
+                                <td class="input-group-sm p-0"><input type="text" name="remarks[]" class="form-control remark" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">
+                                </td>
+                                <td class="input-group-sm p-0">
+                                  <input type="text" name="cruds[]" class="form-control crud" value="s">
+                                </td>
+                                <td class="input-group-sm p-0 d-nonex"><input type="text" name="rec_ids[]" class="form-control rec_id" value="<?php echo isset($row['rec_id']) ? htmlspecialchars($row['rec_id']) : ''; ?>" readonly></td>
+                              </tr>
+                            <?php } ?>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div class="card">
+                      <div class="card-header d-none">
+                      </div>
+
+                      <div class="card-body">
+                        <div class="row m-1 mb-3">
+                          <div class="col-8 input-group input-group-sm">
+                            <label for="plan_status_id" class="input-group-text">ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน</label>
+                            <select class="form-select form-control" name="plan_status_id" id="plan_status_id">
+                              <option value="-1" selected>...</option>
+                              <?php
+                              foreach ($plan_status_rs as $row) :
+                                $selected_attr = ($rsInspectionPeriod['plan_status_id'] == $row['plan_status_id']) ? " selected" : "";
+                                echo "<option value='{$row['plan_status_id']}' {$selected_attr}>{$row['plan_status_name']}</option>";
+                              endforeach ?>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-floating">
+                          <textarea name="remark" class="form-control" id="floatingTextarea" placeholder="Leave a comment here" rows="4" style="min-height: 4em;height: auto;"><?php echo isset($rsInspectionPeriod['remark']) ? trim(htmlspecialchars($rsInspectionPeriod['remark'])) : ''; ?></textarea>
+                          <label for="floatingTextarea">หมายเหตุ:</label>
+                        </div>
+
+                        <?php
+                        $disbursement = $rsInspectionPeriod['disbursement']; // ตัวอย่างค่า
+
+                        $checked0 = '';
+                        $checked1 = '';
+
+                        if ($disbursement == 0) {
+                          $checked0 = 'checked';
+                        } elseif ($disbursement == 1) {
+                          $checked1 = 'checked';
+                        }
+                        ?>
+
+                        <div class="row m-1 mb-3">
+                          <div class="col-2 input-group input-group-sm">
+                            <label for="disbursement" class="input-group-text">การเบิกจ่าย</label>
+                          </div>
+                          <div class="col-2 form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="disbursement" id="disbursement1" value="1" <?php echo $checked1; ?>>
+                            <label class="form-check-label" for="disbursement1">
+                              อนุมัติ
+                            </label>
+                          </div>
+                          <div class="col-2 form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="disbursement" id="disbursement2" value="0" <?php echo $checked0; ?>>
+                            <label class="form-check-label" for="disbursement2">
+                              ไม่อนุมัติ
+                            </label>
+                          </div>
+                        </div>
+
+                        <!-- ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร -->
+                      </div>
+                      <!-- /.card-body -->
+
+                    </div>
+
                   </div>
                   <!-- /.card-body -->
 
-                  <div class="card border border-1 border-dark m-1">
-                    <h6 class="m-1 fw-bold">รายการรายละเอียดการตรวจสอบ</h6>
-                    <!-- <div class="card-header" style="display: flex;"> -->
-                    <div class="m-1">
-                      <a id="btnAdd" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="right" title="เพิ่มงวดงาน">
-                        Add Order
-                      </a>
 
-                      <a id="btnDeleteLast" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="ลบงวดงานล่าสุด">
-                        Delete last order
-                      </a>
-                      <a id="btnClear" class="btn btn-danger btn-sm d-none" data-toggle="tooltip" data-placement="right" title="ลบงวดงานทั้งหมด">
-                        Clear all order
-                      </a>
-                    </div>
 
-                    <div class="card-body p-0">
-                      <!-- สร้าง Table ตามปกติ -->
-                      <table class="table table-bordered justify-content-center text-center" id="tableOrder">
-                        <thead>
-                          <tr>
-                            <th class="p-1" width="5%">ลำดับที่</th>
-                            <th class="p-1" width="20%">รายละเอียดการตรวจสอบ</th>
-                            <th class="p-1">หมายเหตุ</th>
-                            <th class="p-1" width="5%">Crud</th>
-                            <th class="p-1 d-nonex" width="5%">rec_id</th>
-                          </tr>
-                        </thead>
 
-                        <tbody id="tbody-order">
-                          <?php foreach ($rsInspectionPeriodDetail as $row) { ?>
-                            <tr class="firstTr">
-                              <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                              <td class="input-group-sm p-0"><input type="number" name="order_nos[]" class="form-control order_no" value="<?php echo isset($row['order_no']) ? htmlspecialchars($row['order_no']) : ''; ?>" readonly>
-                              </td>
-                              <td class="input-group-sm p-0"><input type="text" name="details[]" class="form-control detail" value="<?php echo isset($row['details']) ? htmlspecialchars($row['details']) : ''; ?>">
-                              </td>
-                              <td class="input-group-sm p-0"><input type="text" name="remarks[]" class="form-control remark" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">
-                              </td>
-                              <td class="input-group-sm p-0">
-                                <input type="text" name="cruds[]" class="form-control crud" value="s">
-                              </td>
-                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="rec_ids[]" class="form-control rec_id" value="<?php echo isset($row['rec_id']) ? htmlspecialchars($row['rec_id']) : ''; ?>" readonly></td>
-                            </tr>
-                          <?php } ?>
-                        </tbody>
-                      </table>
+                  <div class="container-fluid  p-0 d-flex justify-content-between">
+                    <button type="button" name="btnCancel" class="btn btn-primary btn-sm m-1 btnCancel"> <i class="fi fi-rr-left"></i> </button>
+                    <div>
+                      <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsInspectionPeriod['current_approval_level'] ?>">
+                      <button type="button" name="btnCancel" class="btn btn-warning btn-sm m-1 btnCancel">ยกเลิก</button>
                     </div>
                   </div>
+                  <!-- <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary btn-sm m-1">บันทึก</button> -->
 
-                  <div class="card">
-                    <div class="card-header d-none">
-                    </div>
+                  <!-- <div class="container-fluid card-footer p-0 d-flex justify-content-start">
+                  </div> -->
 
-                    <div class="card-body">
-                      <div class="row m-1 mb-3">
-                        <div class="col-8 input-group input-group-sm">
-                          <label for="plan_status_id" class="input-group-text">ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน</label>
-                          <select class="form-select form-control" name="plan_status_id" id="plan_status_id">
-                            <option value="-1" selected>...</option>
-                            <?php
-                            foreach ($plan_status_rs as $row) :
-                              $selected_attr = ($rsInspectionPeriod['plan_status_id'] == $row['plan_status_id']) ? " selected" : "";
-                              echo "<option value='{$row['plan_status_id']}' {$selected_attr}>{$row['plan_status_name']}</option>";
-                            endforeach ?>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-floating">
-                        <textarea name="remark" class="form-control" id="floatingTextarea"placeholder="Leave a comment here" rows="4" style="min-height: 4em;height: auto;"><?php echo isset($rsInspectionPeriod['remark']) ? trim(htmlspecialchars($rsInspectionPeriod['remark'])) : ''; ?></textarea>
-                        <label for="floatingTextarea">หมายเหตุ:</label>
-                      </div>
-
-                      <?php
-                      $disbursement = $rsInspectionPeriod['disbursement']; // ตัวอย่างค่า
-
-                      $checked0 = '';
-                      $checked1 = '';
-
-                      if ($disbursement == 0) {
-                        $checked0 = 'checked';
-                      } elseif ($disbursement == 1) {
-                        $checked1 = 'checked';
-                      }
-                      ?>
-
-                      <div class="row m-1 mb-3">
-                        <div class="col-2 input-group input-group-sm">
-                          <label for="disbursement" class="input-group-text">การเบิกจ่าย</label>
-                        </div>
-                        <div class="col-2 form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="disbursement" id="disbursement1" value="1" <?php echo $checked1; ?>>
-                          <label class="form-check-label" for="disbursement1">
-                            อนุมัติ
-                          </label>
-                        </div>
-                        <div class="col-2 form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="disbursement" id="disbursement2" value="0" <?php echo $checked0; ?>>
-                          <label class="form-check-label" for="disbursement2">
-                            ไม่อนุมัติ
-                          </label>
-                        </div>
-                      </div>
-
-                      <!-- ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร -->
-                    </div>
-                    <!-- /.card-body -->
-
-                  </div>
-
-
-                  <div class="card-footer p-0 d-flex justify-content-end">
-                    <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsInspectionPeriod['current_approval_level'] ?>">
-                    <!-- <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary btn-sm m-1">บันทึก</button> -->
-                    <button type="button" name="btnCancel" id="btnCancel" class="btn btn-secondary btn-sm m-1">ยกเลิก</button>
-                  </div>
                 </div>
+
+
                 <!-- /.card -->
 
               </form>
