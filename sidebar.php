@@ -190,6 +190,26 @@
                     </ul>
                 </li>
 
+                <!-- Nav Item - Assign to me -->
+                <!-- <li class="nav-item <?php echo $_SESSION['assign_to_me'] ?>"> -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-database"></i>
+                        <p>
+                            Assign to me
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
+                        <li class="nav-item">
+                            <a href="ipc.php" class="nav-link text-dark">
+                                <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
+                                <p>Lists</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <!-- Nav Item - Student -->
                 <li class="nav-item <?php echo $_SESSION['manage_user'] ?>">
                     <a href="#" class="nav-link">
