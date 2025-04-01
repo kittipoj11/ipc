@@ -91,6 +91,7 @@ require_once 'auth.php';
     $po_id = $_REQUEST['po_id'];
     $period_id = $_REQUEST['period_id'];
     $inspection_id = $_REQUEST['inspection_id'];
+    $mode = $_REQUEST['mode'];
 
     $po = new Po;
 
@@ -110,10 +111,19 @@ require_once 'auth.php';
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
+        <div class="col d-flex justify-content-between">
+          <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
+          <!-- <button type="btn" name="btnCancel" class="btn btn-primary btn-sm m-1 btnCancel"> <i class="fi fi-rr-circle-xmark"></i> </button> -->
+          <button type="button" name="btnClose" class="btn-close" aria-label="Close"></button>
+        </div>
+      </section>
+
+      <!-- <section class="container-fluid d-flex justify-content-between content-header">
         <div class="col-sm-6 d-flex">
           <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
         </div>
-      </section>
+        <button type="button" name="btnCancel" class="btn btn-primary btn-sm m-1 btnCancel"> <i class="fi fi-rr-left"></i> </button>
+      </section> -->
       <!-- /.container-fluid content-header-->
 
       <!-- Main content -->
@@ -132,42 +142,48 @@ require_once 'auth.php';
                     <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspectionPeriod['period_number'] . "]" ?></h6>
                   </div>
 
-                  <div class="card-header d-flex">
+                  <div class="card-header d-flex" id="mode" data-mode="<?= $mode ?>">
                     <h6 class="m-1 fw-bold">รายการไฟล์</h6>
                     <!-- เรียก Modal -->
-                    <a href="" class="btn btn-success btn-sm btnAdd" title="Add" style="margin: 0px 5px 5px 5px;" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+
+                    <a href="" class="btn btn-success btn-sm btnAdd <?= $mode ?>" title="Add" style="margin: 0px 5px 5px 5px;" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                       <i class="fa-solid fa-plus"></i>
                     </a>
                   </div>
 
                   <!-- ส่วนของตารางแสดงรายชื่อไฟล์ -->
-                  <div class="card-body m-0 p-0" id="recordsDisplay">
-                    <table id="tableMain" class="table table-bordered table-striped table-sm">
-                      <thead>
-                        <tr>
-                          <th class="text-center p-1">#</th>
-                          <th class="text-center p-1">ชื่อไฟล์</th>
-                          <th class="text-center p-1" style="width: 120px;"></th>
-                        </tr>
-                      </thead>
-                      <tbody id="tbody">
-                      </tbody>
-                    </table>
+                  <div class="card-body row m-0 p-0" id="recordsDisplay">
+                    <div class="col col-3">
+                      <table class="table table-bordered table-striped table-sm" id="tableMain" >
+                        <thead>
+                          <tr>
+                            <th class="text-center p-1 d-none">#</th>
+                            <th class="text-center p-1">ชื่อไฟล์</th>
+                            <th class="text-center p-1 <?= $mode ?>" style="width: 60px;"></th>
+                          </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col">
+                      <div class="card file-display-area m-0 p-0" id="fileDisplayArea">
+                        <div class="card-header">
+                          File Preview
+                        </div>
+                        <div class="card-body">
+                          <p>No file selected.</p>
+                        </div>
+                        <!-- /.card-body -->
+                      </div>
+                      <!-- /.card -->
+                    </div>
                   </div>
                   <!-- /.card-body -->
                 </div>
                 <!-- /.card -->
 
-                <div class="card mt-4 file-display-area" id="fileDisplayArea">
-                  <div class="card-header">
-                    File Preview
-                  </div>
-                  <div class="card-body">
-                    <p>No file selected.</p>
-                  </div>
-                  <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
+
 
                 <!-- Modal : Upload -->
                 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

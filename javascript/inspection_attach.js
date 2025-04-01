@@ -56,6 +56,7 @@ $(document).ready(function () {
     let po_id = $("#po_id").val();
     let period_id = $("#period_id").val();
     let inspection_id = $("#inspection_id").val();
+    let mode = $("#mode").data("mode");
 
     $.ajax({
       url: "inspection_crud.php",
@@ -79,9 +80,9 @@ $(document).ready(function () {
               // <td class="tdMain p-0"><span class="file-list-item" data-fileurl="${row.file_path}" data-filetype="${row.file_type}" data-filename="${row.file_name}">${row.file_name}</span></td>
               htmlJavascript += `
                                     <tr data-file_id='${row.file_id}'>
-                                        <td class="tdMain p-0">${row.file_id}</td>
-                                        <td class="tdMain p-0"><a href="#" class="file-list-item" data-fileurl="${row.file_path}" data-filetype="${row.file_type}" data-filename="${row.file_name}">${row.file_name}</a></td>
-                                        <td class="tdMain p-0 action" align='center'>
+                                        <td class="tdMain p-0 d-none">${row.file_id}</td>
+                                        <td class="tdMain px-1"><a href="#" class="file-list-item" data-fileurl="${row.file_path}" data-filetype="${row.file_type}" data-filename="${row.file_name}">${row.file_name}</a></td>
+                                        <td class="tdMain p-0 action ${mode}" align='center'>
                                             <div class='btn-group-sm'>
                                                 <a class='btn btn-danger btn-sm deleteFile' style='margin: 0px 5px 5px 5px' data-file_id='${row.file_id}'>
                                                     <i class='fa-regular fa-trash-can'></i>
@@ -201,6 +202,10 @@ $(document).ready(function () {
         },
       });
     }
+  });
+
+  $("button[name='btnClose']").click(function () {
+    window.history.back();
   });
 
   // Event delegation สำหรับ click ที่ .file-list-item

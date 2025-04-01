@@ -202,7 +202,7 @@
                     </a>
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
-                            <a href="ipc.php" class="nav-link text-dark">
+                            <a href="inspection_assigned.php?po_id=1&period_id=1&inspection_id=1" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
                                 <p>Lists</p>
                             </a>

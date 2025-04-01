@@ -57,7 +57,7 @@ require_once 'auth.php';
     }
 
     input[name="disbursement"] {
-      /* กำหนดสไตล์สำหรับ input ที่มี name="gender" */
+      /* กำหนดสไตล์สำหรับ input ที่มี name="disbursement" */
       opacity: 0.5;
       pointer-events: none;
     }
@@ -111,38 +111,9 @@ require_once 'auth.php';
       <section class="container-fluid content-header">
         <div class="col-sm-12  d-flex justify-content-between">
           <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
-
-          <!-- <div class="dropdown"> -->
-          <div class="btn-group" role="group">
-            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Action
-            </button>
-            <ul class="dropdown-menu py-0" id="action_type" data-current_approval_level="<?= $rsInspectionPeriod['current_approval_level'] ?>">
-              <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
-              <?php if (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('submit')) { ?>
-                <!-- <li><a class="dropdown-item" href="#">Submit</a></li> -->
-                <li><button class="dropdown-item approval_next" id="document_submit">Submit</a>
-                </li>
-              <?php } else { ?>
-                <?php if (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('verify')) { ?>
-                  <!-- <li><a class="dropdown-item" href="#">Verify</a></li> -->
-                  <li><button class="dropdown-item approval_next" id="document_verify">Verify</button></li>
-                <?php } elseif (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('approval')) { ?>
-                  <!-- <li><a class="dropdown-item" href="#">Approve</a></li> -->
-                  <li><button class="dropdown-item approval_next" id="document_approve">Approve</button></li>
-                <?php } ?>
-                <li>
-                  <hr class="dropdown-divider  my-0">
-                </li>
-                <!-- <li><a class="dropdown-item" href="#">Reject</a></li> -->
-                <li><button class="dropdown-item approval_reject" id="document_reject">Reject</button></li>
-              <?php } ?>
-              <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
-              <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
-            </ul>
-          </div>
-
+          <!-- <button type="button" name="btnClose" class="btn-close" aria-label="Close"></button> -->
         </div>
+
       </section>
       <!-- /.container-fluid content-header-->
 
@@ -153,20 +124,51 @@ require_once 'auth.php';
             <div class="col-12">
               <form name="myForm" id="myForm" action="" method="post">
                 <div class="card">
-                  <div class="card-header d-flex align-items-center">
-                    <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspectionPeriod['inspection_id'] ?>">
-                    <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspectionPeriod['period_id'] ?>">
-                    <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspectionPeriod['po_id'] ?>">
+                  <div class="card-header d-flex justify-content-between">
+                    <div class="col d-flex align-items-center">
+                      <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspectionPeriod['inspection_id'] ?>">
+                      <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspectionPeriod['period_id'] ?>">
+                      <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspectionPeriod['po_id'] ?>">
 
-                    <h6 class="m-1 fw-bold"><?= $rsInspectionPeriod['po_number'] . " : " . $rsInspectionPeriod['supplier_id'] . " - " . $rsInspectionPeriod['supplier_name'] ?></h6>
-                    <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspectionPeriod['period_number'] . "]" ?></h6>
-                    <button type="button" name="btnAttach" id="btnAttach" class="btn btn-primary btn-sm m-1">
-                      <i class="fi fi-rr-clip"></i>
-                    </button>
+                      <h6 class="m-1 fw-bold"><?= $rsInspectionPeriod['po_number'] . " : " . $rsInspectionPeriod['supplier_id'] . " - " . $rsInspectionPeriod['supplier_name'] ?></h6>
+                      <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspectionPeriod['period_number'] . "]" ?></h6>
+                      <button type="button" name="btnAttach" id="btnAttach" class="btn btn-primary btn-sm m-1">
+                        <i class="fi fi-rr-clip"></i>
+                      </button>
+                    </div>
+                    
+                    <!-- <div class="dropdown"> -->
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                      </button>
+                      <ul class="dropdown-menu py-0" id="action_type" data-current_approval_level="<?= $rsInspectionPeriod['current_approval_level'] ?>">
+                        <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
+                        <?php if (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('submit')) { ?>
+                          <!-- <li><a class="dropdown-item" href="#">Submit</a></li> -->
+                          <li><button class="dropdown-item approval_next" id="document_submit">Submit</a>
+                          </li>
+                        <?php } else { ?>
+                          <?php if (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('verify')) { ?>
+                            <!-- <li><a class="dropdown-item" href="#">Verify</a></li> -->
+                            <li><button class="dropdown-item approval_next" id="document_verify">Verify</button></li>
+                          <?php } elseif (strtoupper($rsInspectionPeriod['action_type_name']) == strtoupper('approval')) { ?>
+                            <!-- <li><a class="dropdown-item" href="#">Approve</a></li> -->
+                            <li><button class="dropdown-item approval_next" id="document_approve">Approve</button></li>
+                          <?php } ?>
+                          <li>
+                            <hr class="dropdown-divider  my-0">
+                          </li>
+                          <!-- <li><a class="dropdown-item" href="#">Reject</a></li> -->
+                          <li><button class="dropdown-item approval_reject" id="document_reject">Reject</button></li>
+                        <?php } ?>
+                        <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
+                        <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                      </ul>
+                    </div>
                   </div>
 
                   <div class="card-body m-0 p-0">
-
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
                         <label for="supplier_name" class="input-group-text">ผู้รับเหมา</label>
@@ -422,9 +424,9 @@ require_once 'auth.php';
                       }
                       ?>
 
-                      <div class="row m-1 mb-3">
+                      <div class="row m-1 mb-3 border border-1 border-black">
                         <div class="col-2 input-group input-group-sm">
-                          <label for="disbursement" class="input-group-text">การเบิกจ่าย</label>
+                          <label for="disbursement" class="input-group-text bg-white border-0">การเบิกจ่าย</label>
                         </div>
                         <div class="col-2 form-check form-check-inline">
                           <input class="form-check-input" type="radio" name="disbursement" id="disbursement1" value="1" <?php echo $checked1; ?>>
@@ -490,4 +492,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/inspection_edit.js"></script>
+    <script src="javascript/inspection_assigned.js"></script>
