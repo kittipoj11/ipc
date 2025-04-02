@@ -73,6 +73,51 @@ class Inspection extends Connection
         return $rs;
     }
 
+    public function getInspectionPeriodAssignToMe($getUsername)
+    {
+        $sql = <<<EOD
+                    SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
+                    , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
+                    , P1.interim_payment, P1.interim_payment_percent
+                    , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
+                    , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
+                    , P1.interim_payment_remain, P1.interim_payment_remain_percent
+                    , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
+                    , P1.remark, P1.current_status, P1.current_approval_level, P1.disbursement
+                    , po_main.supplier_id, po_main.location_id , po_main.po_number, po_main.project_name
+                    , po_main.working_name_th, po_main.working_name_en
+                    , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
+                    , working_date_from, working_date_to, working_day
+                    , suppliers.supplier_name, locations.location_name
+                    , inspection_approvals.approver_id, inspection_approvals.approval_level , approval_status.action_type_id,  action_type.action_type_name
+                    , U.username, U.full_name
+                    FROM inspection_periods P1
+                    INNER JOIN po_main
+                        ON P1.po_id = po_main.po_id
+                    INNER JOIN suppliers
+                        ON suppliers.supplier_id = po_main.supplier_id
+                    INNER JOIN locations
+                        ON locations.location_id = po_main.location_id   
+                    INNER JOIN inspection_approvals
+                        ON inspection_approvals.approval_level = P1.current_approval_level
+                        AND inspection_approvals.inspection_id = P1.inspection_id
+                    INNER JOIN approval_status
+                        ON approval_status.approval_status_id = inspection_approvals.approval_status_id
+                    INNER JOIN action_type
+                        ON action_type.action_type_id = approval_status.action_type_id
+                    INNER JOIN users U 
+                        ON U.user_id = inspection_approvals.approver_id
+                    WHERE U.username = :username
+                        AND P1.current_approval_level >1 
+                    ORDER BY P1.po_id, period_number
+                EOD;
+        $stmt = $this->myConnect->prepare($sql);
+        $stmt->bindParam(':username', $getUsername, PDO::PARAM_STR);
+        $stmt->execute();
+        $rs = $stmt->fetchAll();
+        return $rs;
+    }
+
     public function getInspectionPeriodDetailByPeriodId($getPoId, $getPeriodId)
     {
         $sql = <<<EOD

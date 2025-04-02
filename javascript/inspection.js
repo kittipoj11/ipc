@@ -17,8 +17,8 @@ $(document).ready(function () {
 
     let po_id = $(this).closest("tr").data("po_id"); //$(this).closest("tr")
     let po_number = $(this).closest("tr").find("a:first").data("po_number");
-    console.log(`po_id = ${po_id}` );
-    console.log(`po_number = ${po_number}` );
+    // console.log(`po_id = ${po_id}` );
+    // console.log(`po_number = ${po_number}` );
     // let po_id = $(this).closest('tr').attr('po-id');
     $(".card-title").html(po_number);
 

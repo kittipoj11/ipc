@@ -325,11 +325,13 @@ $(document).ready(function () {
     //   error: function () {
     //     $("#fileDisplay").html("ไม่สามารถโหลดไฟล์ได้.");
     //   },
-    // });
+    // });btn-group
     if ($("#submit").data("current_approval_level") > 1) {
       $("#submit").addClass("d-none");
+      $(".btn-group").addClass("d-none");
     } else {
       $("#submit").removeClass("d-none");
+      $(".btn-group").removeClass("d-none");
     }
 
 
