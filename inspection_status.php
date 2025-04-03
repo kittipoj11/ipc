@@ -53,7 +53,7 @@ require_once 'auth.php';
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6 d-flex">
-              <h4>inspection_status</h4>
+              <h4>Inspection status</h4>
               <a class="btn btn-success btn-sm btnNew" data-bs-toggle="modal" data-bs-placement="right" title="New" data-bs-target="#openModal" style="margin: 0px 5px 5px 5px;">
                 <i class="fa-solid fa-plus"></i>
               </a>
@@ -79,7 +79,7 @@ require_once 'auth.php';
                     <thead>
                       <tr>
                         <th class="text-center" style="width: 100px;">#</th>
-                        <th class="text-center">inspection_status name</th>
+                        <th class="text-center">Name</th>
                         <th class="text-center" style="width: 120px;">Action</th>
                       </tr>
                     </thead>
@@ -149,7 +149,7 @@ require_once 'auth.php';
               </div>
 
               <div class="row m-3">
-                <label for="inspection_status_name" class="col-sm-6 col-form-label">inspection_status name</label>
+                <label for="inspection_status_name" class="col-sm-6 col-form-label">Name</label>
                 <div class="col-sm-6">
                   <input type="input" class="form-control form-control-sm" name="inspection_status_name" id="inspection_status_name">
                 </div>

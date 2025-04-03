@@ -381,7 +381,7 @@ CREATE TABLE `po_main` (
   `number_of_period` int(11) NOT NULL DEFAULT 0,
   `remain_value_interim_payment` decimal(9,2) NOT NULL,
   `total_retention_value` decimal(9,2) NOT NULL,
-  `inspect_status` int(11) NOT NULL,
+  `po_status` int(11) NOT NULL,
   `workflow_id` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -389,7 +389,7 @@ CREATE TABLE `po_main` (
 -- Dumping data for table `po_main`
 --
 
-INSERT INTO `po_main` (`po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `workflow_id`) VALUES
+INSERT INTO `po_main` (`po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`, `remain_value_interim_payment`, `total_retention_value`, `po_status`, `workflow_id`) VALUES
 (1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, '869161.00', '812300.00', '56861.00', NULL, '10.00', '86916.10', '2024-05-19', '2024-07-22', 65, '05389', NULL, 2, '0.00', '0.00', 0, 1),
 (2, 'IMPO002', 'Sunset', 1, 1, 'ซันเซต ๑', 'Sunset 1', 1, '107000.00', '100000.00', '7000.00', NULL, '0.00', '0.00', '2025-03-26', '2025-03-27', 2, '05389', NULL, 2, '0.00', '0.00', 0, 1);
 

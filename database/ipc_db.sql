@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 30, 2025 at 04:23 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Generation Time: Apr 03, 2025 at 06:37 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.1.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -128,7 +128,7 @@ CREATE TABLE `inspection_approvals` (
 --
 
 INSERT INTO `inspection_approvals` (`inspection_approval_id`, `inspection_id`, `approval_level`, `approver_id`, `approval_status_id`, `approval_date`, `approval_comment`) VALUES
-(1, 1, 1, 2, 1, NULL, NULL),
+(1, 1, 1, 2, 1, '2025-04-01 08:39:01', NULL),
 (2, 1, 2, 6, 7, NULL, NULL),
 (3, 1, 3, 5, 1, NULL, NULL),
 (4, 1, 4, 2, 3, NULL, NULL),
@@ -144,7 +144,7 @@ INSERT INTO `inspection_approvals` (`inspection_approval_id`, `inspection_id`, `
 (14, 2, 6, 6, 7, NULL, NULL),
 (15, 2, 7, 7, 3, NULL, NULL),
 (16, 2, 8, 8, 7, NULL, NULL),
-(17, 4, 1, 2, 1, NULL, NULL),
+(17, 4, 1, 2, 1, '2025-04-02 15:46:34', NULL),
 (18, 4, 2, 6, 7, NULL, NULL),
 (19, 4, 3, 5, 1, NULL, NULL),
 (20, 4, 4, 2, 3, NULL, NULL),
@@ -224,10 +224,10 @@ CREATE TABLE `inspection_periods` (
 --
 
 INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `workload_accumulated_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status_id`, `is_paid`, `is_retention`, `remark`, `current_status`, `current_approval_level`, `disbursement`) VALUES
-(1, 1, 1, 1, '30.00', '29.00', '71.00', '0.00', '132412.50', '15.00', '0.00', '0.00', '132412.50', '15.23', '736748.50', '84.77', '0.00', -1, 0, 0, NULL, 1, 1, -1),
-(2, 2, 1, 2, '100.00', '98.00', '2.00', '0.00', '736748.50', '85.00', '132412.50', '15.23', '869161.00', '100.00', '0.00', '0.00', '0.00', -1, 0, 0, 'ทดสอบ', 1, 1, -1),
-(4, 4, 2, 1, '50.00', '49.00', '51.00', '0.00', '50000.00', '50.00', '0.00', '0.00', '40000.00', '37.38', '67000.00', '62.62', '0.00', 2, 0, 0, 'ทดสอบ', 1, 1, 1),
-(5, 5, 2, 2, '100.00', '99.00', '1.00', '0.00', '50000.00', '50.00', '40000.00', '37.38', '97000.00', '90.65', '10000.00', '9.35', '0.00', -1, 0, 0, NULL, 1, 1, -1);
+(1, 1, 1, 1, 30.00, 29.00, 71.00, 0.00, 132412.50, 15.00, 0.00, 0.00, 132412.50, 15.23, 736748.50, 84.77, 0.00, -1, 0, 0, 'ทดสอบ', 1, 2, 1),
+(2, 2, 1, 2, 100.00, 98.00, 2.00, 0.00, 736748.50, 85.00, 132412.50, 15.23, 869161.00, 100.00, 0.00, 0.00, 0.00, -1, 0, 0, 'ทดสอบ', 1, 1, -1),
+(4, 4, 2, 1, 50.00, 49.00, 51.00, 0.00, 50000.00, 50.00, 0.00, 0.00, 40000.00, 37.38, 67000.00, 62.62, 0.00, 2, 0, 0, 'ทดสอบ', 1, 2, 1),
+(5, 5, 2, 2, 100.00, 99.00, 1.00, 0.00, 50000.00, 50.00, 40000.00, 37.38, 97000.00, 90.65, 10000.00, 9.35, 0.00, -1, 0, 0, NULL, 1, 1, -1);
 
 -- --------------------------------------------------------
 
@@ -401,7 +401,7 @@ CREATE TABLE `po_main` (
   `number_of_period` int(11) NOT NULL DEFAULT 0,
   `remain_value_interim_payment` decimal(9,2) NOT NULL,
   `total_retention_value` decimal(9,2) NOT NULL,
-  `inspect_status` int(11) NOT NULL,
+  `po_status` int(11) NOT NULL DEFAULT 1,
   `workflow_id` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -409,9 +409,9 @@ CREATE TABLE `po_main` (
 -- Dumping data for table `po_main`
 --
 
-INSERT INTO `po_main` (`po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `workflow_id`) VALUES
-(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, '869161.00', '812300.00', '56861.00', NULL, '10.00', '86916.10', '2024-05-19', '2024-07-22', 65, '05389', NULL, 2, '0.00', '0.00', 0, 1),
-(2, 'IMPO002', 'Sunset', 1, 1, 'ซันเซต ๑', 'Sunset 1', 1, '107000.00', '100000.00', '7000.00', NULL, '0.00', '0.00', '2025-03-26', '2025-03-27', 0, '05389', NULL, 2, '0.00', '0.00', 0, 1);
+INSERT INTO `po_main` (`po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`, `remain_value_interim_payment`, `total_retention_value`, `po_status`, `workflow_id`) VALUES
+(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 869161.00, 812300.00, 56861.00, NULL, 10.00, 86916.10, '2024-05-19', '2024-07-22', 65, '05389', NULL, 2, 0.00, 0.00, 1, 1),
+(2, 'IMPO002', 'Sunset', 1, 1, 'ซันเซต ๑', 'Sunset 1', 1, 107000.00, 100000.00, 7000.00, NULL, 0.00, 0.00, '2025-03-26', '2025-03-27', 0, '05389', NULL, 2, 0.00, 0.00, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -435,10 +435,31 @@ CREATE TABLE `po_period` (
 --
 
 INSERT INTO `po_period` (`period_id`, `po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `period_status`, `remark`, `workload_planned_percent`) VALUES
-(1, 1, 1, '132412.50', '15.00', NULL, 'QR', '30.00'),
-(2, 1, 2, '736748.50', '85.00', NULL, 'Cash', '100.00'),
-(4, 2, 1, '50000.00', '50.00', NULL, 'QR', '50.00'),
-(5, 2, 2, '50000.00', '50.00', NULL, 'Cash', '100.00');
+(1, 1, 1, 132412.50, 15.00, NULL, 'QR', 30.00),
+(2, 1, 2, 736748.50, 85.00, NULL, 'Cash', 100.00),
+(4, 2, 1, 50000.00, 50.00, NULL, 'QR', 50.00),
+(5, 2, 2, 50000.00, 50.00, NULL, 'Cash', 100.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `po_status`
+--
+
+CREATE TABLE `po_status` (
+  `po_status_id` int(11) NOT NULL,
+  `po_status_name` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `po_status`
+--
+
+INSERT INTO `po_status` (`po_status_id`, `po_status_name`, `is_deleted`) VALUES
+(1, 'Open', 0),
+(2, 'Pending', 0),
+(3, 'Closed', 0);
 
 -- --------------------------------------------------------
 
@@ -785,6 +806,12 @@ ALTER TABLE `po_period`
   ADD KEY `po_id` (`po_id`);
 
 --
+-- Indexes for table `po_status`
+--
+ALTER TABLE `po_status`
+  ADD PRIMARY KEY (`po_status_id`);
+
+--
 -- Indexes for table `records`
 --
 ALTER TABLE `records`
@@ -918,6 +945,12 @@ ALTER TABLE `po_main`
 --
 ALTER TABLE `po_period`
   MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `po_status`
+--
+ALTER TABLE `po_status`
+  MODIFY `po_status_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `records`

@@ -339,7 +339,7 @@ class Po extends Connection
             // $update_by = $_SESSION['user_code'];
 
             $remain_value_interim_payment = $contract_value;
-            $inspect_status = 1; //1:รอตรวจ
+            $po_status = 1; //1:รอตรวจ
 
             // parameters ในส่วน po_period
             $period_numbers = $getData['period_numbers'];
@@ -421,7 +421,7 @@ class Po extends Connection
             $stmtPoMainUpdate->bindParam(':working_day', $working_day, PDO::PARAM_INT);
             $stmtPoMainUpdate->bindParam(':number_of_period', $number_of_period, PDO::PARAM_INT);
             // $stmtPoMainUpdate->bindParam(':remain_value_interim_payment', $remain_value_interim_payment, PDO::PARAM_STR);
-            // $stmtPoMainUpdate->bindParam(':inspect_status', $inspect_status, PDO::PARAM_INT);
+            // $stmtPoMainUpdate->bindParam(':po_status', $po_status, PDO::PARAM_INT);
 
             if ($stmtPoMainUpdate->execute()) {
                 $stmtPoMainUpdate->closeCursor();

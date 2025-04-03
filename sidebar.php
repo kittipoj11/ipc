@@ -50,6 +50,12 @@
                     </a>
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
+                            <a href="po_status.php" class="nav-link text-dark">
+                                <i class="nav-icon fa-solid fa-truck d-none"></i>
+                                <p>PO status</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="inspection_status.php" class="nav-link text-dark">
                                 <i class="nav-icon fa-solid fa-truck d-none"></i>
                                 <p>Inspection status</p>

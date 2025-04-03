@@ -41,9 +41,9 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/plan_status_class.php';
-    $plan_status = new Plan_status;
-    $rs = $plan_status->getRecordAll();
+    require_once  'class/po_status_class.php';
+    $po_status = new Po_status;
+    $rs = $po_status->getRecordAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -53,7 +53,7 @@ require_once 'auth.php';
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6 d-flex">
-              <h4>Plan status</h4>
+              <h4>PO status</h4>
               <a class="btn btn-success btn-sm btnNew" data-bs-toggle="modal" data-bs-placement="right" title="New" data-bs-target="#openModal" style="margin: 0px 5px 5px 5px;">
                 <i class="fa-solid fa-plus"></i>
               </a>
@@ -71,7 +71,7 @@ require_once 'auth.php';
 
               <div class="card">
                 <!-- <div class="card-header">
-                               <h3 class="card-title">plan_status</h3>
+                               <h3 class="card-title">po_status</h3>
                            </div> -->
                 <!-- /.card-header -->
                 <div class="card-body" id="card-body">
@@ -86,15 +86,15 @@ require_once 'auth.php';
                     <tbody id="tbody">
                       <?php foreach ($rs as $row) {
                         $html = <<<EOD
-                                        <tr id="{$row['plan_status_id']}">
-                                            <td>{$row['plan_status_id']}</td>
-                                            <td>{$row['plan_status_name']}</td>
+                                        <tr id="{$row['po_status_id']}">
+                                            <td>{$row['po_status_id']}</td>
+                                            <td>{$row['po_status_name']}</td>
                                             <td align='center'>
                                                 <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' iid='{$row['plan_status_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' iid='{$row['po_status_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-pen-to-square'></i>
                                                     </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' iid='{$row['plan_status_id']}' style='margin: 0px 5px 5px 5px'>
+                                                    <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' iid='{$row['po_status_id']}' style='margin: 0px 5px 5px 5px'>
                                                         <i class='fa-regular fa-trash-can'></i>
                                                     </a>
                                                 </div>
@@ -141,17 +141,17 @@ require_once 'auth.php';
             <!-- <input type="text" name="action" id="action"> -->
             <div class="modal-body">
               <div class="row m-3">
-                <label for="plan_status_id" class="col-sm-6 col-form-label">#</label>
+                <label for="po_status_id" class="col-sm-6 col-form-label">#</label>
                 <div class="col-sm-6">
-                  <!-- <input type="hidden" class="plan_status_id" name="plan_status_id"> -->
-                  <input type="input" class="form-control form-control-sm fst-italic plan_status_id" id="plan_status_id" readonly name="plan_status_id">
+                  <!-- <input type="hidden" class="po_status_id" name="po_status_id"> -->
+                  <input type="input" class="form-control form-control-sm fst-italic po_status_id" id="po_status_id" readonly name="po_status_id">
                 </div>
               </div>
 
               <div class="row m-3">
-                <label for="plan_status_name" class="col-sm-6 col-form-label">Name</label>
+                <label for="po_status_name" class="col-sm-6 col-form-label">Name</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm" name="plan_status_name" id="plan_status_name">
+                  <input type="input" class="form-control form-control-sm" name="po_status_name" id="po_status_name">
                 </div>
               </div>
             </div>
@@ -190,6 +190,10 @@ require_once 'auth.php';
     <script src="plugins/dist/js/adminlte.js"></script>
     <!-- Sweet Alert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <!-- DataTable -->
     <!-- My JavaScript  -->
-    <script src="javascript/plan_status.js"></script>
+    <script src="javascript/po_status.js"></script>
+
+</body>
+
+</html>

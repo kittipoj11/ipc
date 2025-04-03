@@ -24,40 +24,7 @@ class Ipc extends Connection
         return $rs;
     }
 
-    public function getPeriodOneLine($getPoId, $getPeriodId)
-    {
-        $sql = <<<EOD
-                SELECT `po_period_id`, `inspect_period`.`po_id`, `period`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`
-                , `interim_payment`, `interim_payment_percent`
-                , `interim_payment_less_previous`, `interim_payment_less_previous_percent`
-                , `interim_payment_accumulated`, `interim_payment_accumulated_percent`
-                , `interim_payment_remain`, `interim_payment_remain_percent`
-                , `retention_value`, `plan_status`, `is_paid`, `is_retention`, `remark`, `workflow_id`, `current_status`, `current_approval_level` 
-                , `inspect_id`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`
-                , `po_no`, `project_name`, `po_main`.`supplier_id`, `po_main`.`location_id`, `working_name_th`, `working_name_en`, `is_include_vat`
-                , `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`
-                , `working_date_from`, `working_date_to`, `working_day`, `number_of_period`
-                , `supplier_name`, `location_name`
-                FROM `inspect_period` 
-                INNER JOIN `inspect_main` 
-                    ON `inspect_period`.`po_id` = `inspect_main`.`po_id`
-                INNER JOIN `po_main`
-                    ON `inspect_main`.`po_id` = `po_main`.`po_id`
-                INNER JOIN `suppliers`
-                    ON `suppliers`.`supplier_id` = `po_main`.`supplier_id`
-                INNER JOIN `locations`
-                    ON `locations`.`location_id` = `po_main`.`location_id`
-                WHERE `inspect_period`.`po_id` = :po_id
-                    AND `po_period_id` = :po_period_id
-                ORDER BY `po_id`, `period`
-                EOD;
-        $stmt = $this->myConnect->prepare($sql);
-        $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
-        $stmt->bindParam(':po_period_id', $getPeriodId, PDO::PARAM_INT);
-        $stmt->execute();
-        $rs = $stmt->fetch();
-        return $rs;
-    }
+    
 
     public function getInspectionFilesByInspectionId($getPoId, $getPeriodId, $getInspectionId)
     {
@@ -122,15 +89,15 @@ class Ipc extends Connection
             $interim_payment_percents = $getData['interim_payment_percent'];
             $remarks = $getData['remark'];
             $sql = <<<EOD
-                        INSERT INTO `inspect_main`(`po_id`, `remain_value_interim_payment`, `total_retention_value`, `inspect_status`, `create_by`) 
-                        VALUES(:po_id, :remain_value_interim_payment, :total_retention_value, :inspect_status, :create_by)
+                        INSERT INTO `inspect_main`(`po_id`, `remain_value_interim_payment`, `total_retention_value`, `po_status`, `create_by`) 
+                        VALUES(:po_id, :remain_value_interim_payment, :total_retention_value, :po_status, :create_by)
                     EOD;
             $stmt = $this->myConnect->prepare($sql);
             // $stmt->bindParam(':id', $headerId, PDO::PARAM_STR);
             $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
             $stmt->bindParam(':remain_value_interim_payment', $remain_value_interim_payment, PDO::PARAM_STR);
             $stmt->bindParam(':total_retention_value', $total_retention_value,  PDO::PARAM_STR);
-            $stmt->bindParam(':inspect_status', $inspect_status, PDO::PARAM_INT);
+            $stmt->bindParam(':po_status', $po_status, PDO::PARAM_INT);
             $stmt->bindParam(':create_by', $create_by, PDO::PARAM_STR);
 
             if ($stmt->execute()) {
