@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 04, 2025 at 11:23 AM
+-- Generation Time: Apr 04, 2025 at 11:18 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -23,6 +23,9 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+
+-- --------------------------------------------------------
+
 --
 -- Table structure for table `action_type`
 --
@@ -37,10 +40,10 @@ CREATE TABLE `action_type` (
 --
 
 INSERT INTO `action_type` (`action_type_id`, `action_type_name`) VALUES
-(4, 'approval'),
-(3, 'confirm'),
 (1, 'submit'),
-(2, 'verify');
+(2, 'verify'),
+(3, 'confirm'),
+(4, 'approval');
 
 -- --------------------------------------------------------
 
@@ -620,6 +623,10 @@ ALTER TABLE `action_type`
   ADD UNIQUE KEY `action_type_name` (`action_type_name`);
 
 --
+-- Indexes for table `action_type`
+--
+
+--
 -- Indexes for table `approval_status`
 --
 ALTER TABLE `approval_status`
@@ -782,7 +789,7 @@ ALTER TABLE `your_table_name`
 --
 
 --
--- AUTO_INCREMENT for table `action_type`
+-- AUTO_INCREMENT for table `action_t`
 --
 ALTER TABLE `action_type`
   MODIFY `action_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;

@@ -139,7 +139,7 @@ $(document).ready(function () {
     $("#tbody-period").find("tr:gt(0)").remove();
   });
 
-  $("#btnCancel").click(function () {
+  $(".btnCancel , .btnBack").click(function () {
     window.history.back();
     // window.history.go(-1);
     // window.location.href = "po.php";

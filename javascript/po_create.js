@@ -154,7 +154,7 @@ $(document).ready(function () {
     $(this).parents("tr").remove();
   });
 
-  $("#btnCancel").click(function () {
+  $(".btnCancel , .btnBack").click(function () {
     // history.go(-1);
     // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
     // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้

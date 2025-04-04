@@ -138,10 +138,10 @@ require_once 'auth.php';
                         <label for="contract_value" class="input-group-text">PO รวม VAT</label>
                         <input type="number" class="form-control" name="contract_value" id="contract_value">
                       </div>
- 
+
                       <div class="col-2 input-group input-group-sm">
                         <label for="vat" class="input-group-text">VAT</label>
-                        <input type="number" class="form-control" name="vat" id="vat"  data-vat_rate=<?= VAT_RATE ?> readonly>
+                        <input type="number" class="form-control" name="vat" id="vat" data-vat_rate=<?= VAT_RATE ?> readonly>
                       </div>
 
                       <div class="col-2 input-group input-group-sm">
@@ -232,10 +232,17 @@ require_once 'auth.php';
                       </div>
                     </div>
 
-                    <div class="card-footer p-0 d-flex justify-content-end">
+                    <!-- <div class="card-footer p-0 d-flex justify-content-end">
                       <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก">
-                      <!-- <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary btn-sm m-1">บันทึก</button> -->
                       <button type="button" name="btnCancel" id="btnCancel" class="btn btn-secondary btn-sm m-1">ยกเลิก</button>
+                    </div> -->
+
+                    <div class="container-fluid  p-0 d-flex justify-content-between">
+                      <button type="button" name="btnBack" class="btn btn-primary btn-sm m-1 btnBack"> <i class="fi fi-rr-left"></i> </button>
+                      <div>
+                        <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsInspectionPeriod['current_approval_level'] ?>">
+                        <button type="button" name="btnCancel" class="btn btn-warning btn-sm m-1 btnCancel">ยกเลิก</button>
+                      </div>
                     </div>
 
                   </form>
