@@ -452,7 +452,7 @@ class Po extends Connection
                 $is_paid = 0;
                 $is_retention = 0;
                 $workflow_id = 1;
-                $current_status = 1;
+                $inspection_status = 1;
                 $current_approval_level = 1; //จะใช้เป็นอะไร: approval_level หรือ workflow_step_id
 
                 foreach ($insert_indexs as $i) { //ถ้าต้องการใช้ค่าของ key ให้เขียนแบบนี้ foreach($insert_indexs as $key=> $value){

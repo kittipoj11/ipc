@@ -333,7 +333,7 @@ class Po extends Connection
             $stmtWorkflowSteps->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
             $stmtWorkflowSteps->execute();
             $rsWorkflowSteps = $stmtWorkflowSteps->fetchAll();
-            
+
             // parameters ในส่วน po_main
             $po_id = $getData['po_id'];
             $po_number = $getData['po_number'];
@@ -448,7 +448,9 @@ class Po extends Connection
             // $stmtPoMainUpdate->bindParam(':remain_value_interim_payment', $remain_value_interim_payment, PDO::PARAM_STR);
             // $stmtPoMainUpdate->bindParam(':po_status', $po_status, PDO::PARAM_INT);
 
+            // $_SESSION['exe1'] = '1';
             if ($stmtPoMainUpdate->execute()) {
+                // $_SESSION['exe2'] = '2';
                 $stmtPoMainUpdate->closeCursor();
 
                 // INSERT po_period
@@ -463,7 +465,7 @@ class Po extends Connection
                             INSERT INTO `inspection_periods`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `is_paid`, `is_retention`) 
                             VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :is_paid, :is_retention)
                         EOD;
-                $stmtInspectPeriodInsert = $this->myConnect->prepare($sql);
+                $stmtInspectPeriodInsert = $this->myConnect->prepare($sql);                
 
                 // INSERT inspection_period_details
                 $sql = <<<EOD
@@ -478,12 +480,12 @@ class Po extends Connection
                             VALUES (:inspection_id, :period_id, :po_id, :period_number, :approval_level, :approver_id, :approval_status_id)
                         EOD;
                 $stmtInspectApprovals = $this->myConnect->prepare($sql);
-                
+
                 $period_status = 1;
                 $is_paid = 0;
                 $is_retention = 0;
                 $workflow_id = 1;
-                $current_status = 1;
+                $inspection_status = 1;
                 $current_approval_level = 1; //จะใช้เป็นอะไร: approval_level หรือ workflow_step_id
 
                 foreach ($insert_indexs as $i) { //ถ้าต้องการใช้ค่าของ key ให้เขียนแบบนี้ foreach($insert_indexs as $key=> $value){
@@ -493,8 +495,9 @@ class Po extends Connection
                     $stmtPoPeriodInsert->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
                     $stmtPoPeriodInsert->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
                     $stmtPoPeriodInsert->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
-
+                    // $_SESSION['exe3'] = '3';
                     $stmtPoPeriodInsert->execute();
+                    // $_SESSION['exe4'] = '4';
                     $stmtPoPeriodInsert->closeCursor();
 
                     $period_id = $this->myConnect->lastInsertId();
@@ -507,8 +510,9 @@ class Po extends Connection
                     $stmtInspectPeriodInsert->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
                     $stmtInspectPeriodInsert->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
                     $stmtInspectPeriodInsert->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
-
+                    // $_SESSION['exe5'] = '5';
                     $stmtInspectPeriodInsert->execute();
+                    // $_SESSION['exe6'] = '6';
                     $stmtInspectPeriodInsert->closeCursor();
 
                     $inspection_id = $this->myConnect->lastInsertId();
@@ -517,8 +521,9 @@ class Po extends Connection
                     // $stmtInspectPeriodDetailInsert->bindParam(':order_no', $order_no,  PDO::PARAM_INT);
                     // $stmtInspectPeriodDetailInsert->bindParam(':details', $details,  PDO::PARAM_STR);
                     // $stmtInspectPeriodDetailInsert->bindParam(':remark', $remark,  PDO::PARAM_STR);
-
+                    // $_SESSION['exe7'] = '7';
                     $stmtInspectPeriodDetailInsert->execute();
+                    // $_SESSION['exe8'] = '8';
                     $stmtInspectPeriodDetailInsert->closeCursor();
 
                     // inspection_approvals
@@ -550,7 +555,9 @@ class Po extends Connection
 
                         // $_SESSION['Loop'] = 'inspection_id='+$inspection_id+'approval_level='+$row['approval_level']+'approver_id='+$row['approver_id'];
                         // $_SESSION['After param Loop'] = 'After';
+                        // $_SESSION['exe9'] = '9';
                         $stmtInspectApprovals->execute();
+                        // $_SESSION['exe10'] = '10';
                         // $_SESSION['Execute Loop'] = 'Execute';
 
                     }

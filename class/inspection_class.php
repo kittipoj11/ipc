@@ -14,7 +14,7 @@ class Inspection extends Connection
                     , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
                     , P1.interim_payment_remain, P1.interim_payment_remain_percent
                     , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
-                    , P1.remark, P1.current_status, P1.current_approval_level 
+                    , P1.remark, P1.inspection_status, P1.current_approval_level 
                     , P1.disbursement
                     FROM `inspection_periods` P1
                     WHERE `po_id` = :po_id
@@ -37,7 +37,7 @@ class Inspection extends Connection
                     , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
                     , P1.interim_payment_remain, P1.interim_payment_remain_percent
                     , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
-                    , P1.remark, P1.current_status, P1.current_approval_level, P1.disbursement
+                    , P1.remark, P1.inspection_status, P1.current_approval_level, P1.disbursement
                     , po_main.supplier_id, po_main.location_id , po_main.po_number, po_main.project_name
                     , po_main.working_name_th, po_main.working_name_en
                     , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
@@ -83,7 +83,7 @@ class Inspection extends Connection
                     , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
                     , P1.interim_payment_remain, P1.interim_payment_remain_percent
                     , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
-                    , P1.remark, P1.current_status, P1.current_approval_level, P1.disbursement
+                    , P1.remark, P1.inspection_status, P1.current_approval_level, P1.disbursement
                     , po_main.supplier_id, po_main.location_id , po_main.po_number, po_main.project_name
                     , po_main.working_name_th, po_main.working_name_en
                     , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value

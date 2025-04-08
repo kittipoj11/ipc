@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2025 at 05:21 AM
+-- Generation Time: Apr 08, 2025 at 12:30 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `action_type` (
   `action_type_id` int(11) NOT NULL,
-  `action_type_name` varchar(50) NOT NULL
+  `action_type_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -40,7 +40,7 @@ INSERT INTO `action_type` (`action_type_id`, `action_type_name`) VALUES
 (1, 'submit'),
 (2, 'verify'),
 (3, 'confirm'),
-(4, 'approval');
+(4, 'approve');
 
 -- --------------------------------------------------------
 
@@ -95,6 +95,17 @@ INSERT INTO `departments` (`department_id`, `department_name`, `is_deleted`) VAL
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `document_type`
+--
+
+CREATE TABLE `document_type` (
+  `document_type_id` int(11) NOT NULL,
+  `document_type_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `files`
 --
 
@@ -116,6 +127,9 @@ CREATE TABLE `files` (
 CREATE TABLE `inspection_approvals` (
   `inspection_approval_id` int(11) UNSIGNED NOT NULL,
   `inspection_id` int(11) UNSIGNED DEFAULT NULL,
+  `period_id` int(11) DEFAULT NULL,
+  `po_id` int(11) DEFAULT NULL,
+  `period_number` int(11) DEFAULT NULL,
   `approval_level` int(11) UNSIGNED DEFAULT NULL,
   `approver_id` int(11) UNSIGNED DEFAULT NULL,
   `approval_status_id` int(11) UNSIGNED DEFAULT NULL,
@@ -142,6 +156,11 @@ CREATE TABLE `inspection_files` (
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Dumping data for table `inspection_files`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -151,9 +170,12 @@ CREATE TABLE `inspection_files` (
 CREATE TABLE `inspection_periods` (
   `inspection_id` int(11) UNSIGNED NOT NULL,
   `period_id` int(11) DEFAULT NULL,
+  `po_id` int(11) DEFAULT NULL,
+  `period_number` int(11) DEFAULT NULL,
   `workload_planned_percent` decimal(5,2) DEFAULT NULL,
   `workload_actual_completed_percent` decimal(5,2) DEFAULT NULL,
   `workload_remaining_percent` decimal(5,2) DEFAULT NULL,
+  `workload_accumulated_percent` decimal(5,2) NOT NULL DEFAULT 0.00,
   `interim_payment` decimal(19,2) DEFAULT NULL,
   `interim_payment_percent` decimal(5,2) DEFAULT NULL,
   `interim_payment_less_previous` decimal(19,2) DEFAULT NULL,
@@ -163,15 +185,19 @@ CREATE TABLE `inspection_periods` (
   `interim_payment_remain` decimal(19,2) DEFAULT NULL,
   `interim_payment_remain_percent` decimal(5,2) DEFAULT NULL,
   `retention_value` decimal(19,2) DEFAULT NULL,
-  `plan_status` int(11) UNSIGNED DEFAULT NULL,
+  `plan_status_id` int(11) DEFAULT -1,
   `is_paid` tinyint(1) DEFAULT NULL,
   `is_retention` tinyint(1) DEFAULT NULL,
-  `remark` text DEFAULT NULL
+  `remark` text DEFAULT NULL,
+  `inspection_status` int(11) NOT NULL DEFAULT 1,
+  `current_approval_level` int(11) NOT NULL DEFAULT 1,
+  `disbursement` tinyint(1) NOT NULL DEFAULT -1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `inspection_periods`
 --
+
 
 -- --------------------------------------------------------
 
@@ -190,7 +216,6 @@ CREATE TABLE `inspection_period_details` (
 --
 -- Dumping data for table `inspection_period_details`
 --
-
 
 -- --------------------------------------------------------
 
@@ -222,9 +247,12 @@ INSERT INTO `inspection_status` (`inspection_status_id`, `inspection_status_name
 
 CREATE TABLE `ipc_period` (
   `ipc_id` int(11) UNSIGNED NOT NULL,
-  `period_id` int(11) NOT NULL,
-  `project_name` varchar(255) DEFAULT NULL,
+  `inspection_id` int(11) UNSIGNED NOT NULL,
+  `period_id` int(11) DEFAULT NULL,
+  `po_id` int(11) DEFAULT NULL,
+  `period_number` int(11) DEFAULT NULL,
   `create_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `project_name` varchar(255) DEFAULT NULL,
   `agreement_date` datetime DEFAULT NULL,
   `contractor` varchar(255) DEFAULT NULL,
   `contract_value` decimal(19,2) DEFAULT NULL,
@@ -236,9 +264,9 @@ CREATE TABLE `ipc_period` (
   `total_value_of_retention` decimal(19,2) DEFAULT NULL,
   `total_value_of_certification_made` decimal(19,2) DEFAULT NULL,
   `resulting_balance_of_contract_sum_outstanding` decimal(19,2) DEFAULT NULL,
+  `submit_by` varchar(255) DEFAULT NULL,
   `approved1_by` varchar(255) DEFAULT NULL,
   `approved2_by` varchar(255) DEFAULT NULL,
-  `submit_by` varchar(255) DEFAULT NULL,
   `remark` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -261,7 +289,33 @@ CREATE TABLE `locations` (
 INSERT INTO `locations` (`location_id`, `location_name`, `is_deleted`) VALUES
 (1, 'Sky', 0),
 (2, 'Aktiv', 0),
-(3, 'Challenger', 0);
+(3, 'Challenger', 0),
+(4, 'IMP Exhibition', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `permissions`
+--
+
+CREATE TABLE `permissions` (
+  `permission_id` int(11) NOT NULL COMMENT 'รหัสสิทธิ์การใช้งาน',
+  `permission_name` varchar(255) NOT NULL COMMENT 'ชื่อสิทธิ์การใช้งาน (เช่น ''view_dashboard'', ''manage_users'', ''edit_products'')',
+  `menu_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `permissions`
+--
+
+INSERT INTO `permissions` (`permission_id`, `permission_name`, `menu_name`) VALUES
+(1, 'ข้อมูลระบบ', 'system'),
+(2, 'ข้อมูลพื้นฐานทั่วไป', 'general_basic'),
+(3, 'Purchase Order', 'purchase_order'),
+(4, 'ตรวจรับงาน', 'inspection'),
+(5, 'IPC', 'ipc'),
+(6, 'การจัดการผู้ใช้', 'manage_user'),
+(7, 'รายงาน', 'report');
 
 -- --------------------------------------------------------
 
@@ -313,13 +367,14 @@ CREATE TABLE `po_main` (
   `number_of_period` int(11) NOT NULL DEFAULT 0,
   `remain_value_interim_payment` decimal(9,2) NOT NULL,
   `total_retention_value` decimal(9,2) NOT NULL,
-  `po_status` int(11) NOT NULL,
+  `po_status` int(11) NOT NULL DEFAULT 1,
   `workflow_id` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `po_main`
 --
+
 
 -- --------------------------------------------------------
 
@@ -334,12 +389,35 @@ CREATE TABLE `po_period` (
   `interim_payment` decimal(19,2) DEFAULT NULL,
   `interim_payment_percent` decimal(4,2) NOT NULL,
   `period_status` int(11) DEFAULT NULL,
-  `remark` text DEFAULT NULL
+  `remark` text DEFAULT NULL,
+  `workload_planned_percent` decimal(5,2) DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `po_period`
 --
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `po_status`
+--
+
+CREATE TABLE `po_status` (
+  `po_status_id` int(11) NOT NULL,
+  `po_status_name` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `po_status`
+--
+
+INSERT INTO `po_status` (`po_status_id`, `po_status_name`, `is_deleted`) VALUES
+(1, 'Open', 0),
+(2, 'Pending', 0),
+(3, 'Closed', 0);
 
 -- --------------------------------------------------------
 
@@ -369,11 +447,56 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`role_id`, `role_name`) VALUES
-(1, 'admin'),
+(0, 'System Admin'),
+(1, 'Admin'),
 (2, 'Assistant Manager'),
 (3, 'Manager'),
 (4, 'Director'),
 (5, 'Managing Director');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `role_permissions`
+--
+
+CREATE TABLE `role_permissions` (
+  `role_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `role_permissions`
+--
+
+INSERT INTO `role_permissions` (`role_id`, `permission_id`) VALUES
+(0, 1),
+(0, 2),
+(0, 3),
+(0, 4),
+(0, 5),
+(0, 6),
+(0, 7),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(2, 3),
+(2, 4),
+(2, 5),
+(2, 7),
+(3, 3),
+(3, 4),
+(3, 5),
+(3, 7),
+(4, 4),
+(4, 5),
+(4, 7),
+(5, 4),
+(5, 5),
+(5, 7);
 
 -- --------------------------------------------------------
 
@@ -409,21 +532,23 @@ CREATE TABLE `users` (
   `password` varchar(255) DEFAULT NULL,
   `full_name` varchar(255) DEFAULT NULL,
   `role_id` int(11) UNSIGNED DEFAULT NULL,
-  `department_id` int(11) UNSIGNED DEFAULT NULL
+  `department_id` int(11) UNSIGNED DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `user_code`, `username`, `password`, `full_name`, `role_id`, `department_id`) VALUES
-(1, '05389', 'admin', 'admin', 'Administrator', 1, 1),
-(3, '05389', 'nathapat', '1111', 'Nathapat Soontornpurmsap', 2, 1),
-(4, '00001', 'A00001', '1111', 'AA Admin', 1, 1),
-(5, '00002', 'A00002', '1111', 'BB AM', 2, 1),
-(6, '00003', 'A00003', '1111', 'CC Mgr', 3, 1),
-(7, '00004', 'A00004', '1111', 'DD D', 4, 1),
-(8, '00005', 'A00005', '1111', 'EE MD', 5, 1);
+INSERT INTO `users` (`user_id`, `user_code`, `username`, `password`, `full_name`, `role_id`, `department_id`, `is_deleted`) VALUES
+(1, '05389', 'systemadmin', 'admin', 'System Administrator', 0, 1, 0),
+(2, '00001', 'admin', 'admin', 'Administrator', 1, 1, 0),
+(3, '05389', 'nathapat', '1111', 'Nathapat Soontornpurmsap', 2, 1, 0),
+(4, '05389', 'A000', '1111', 'Mr. Zero', 3, 1, 0),
+(5, '00002', 'A001', '1111', 'Mr. One', 2, 1, 0),
+(6, '00003', 'A002', '1111', 'Mr. Two', 3, 1, 0),
+(7, '00004', 'A003', '1111', 'เลขา Three', 2, 1, 0),
+(8, '00005', 'A004', '1111', 'MD. Four', 5, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -434,6 +559,7 @@ INSERT INTO `users` (`user_id`, `user_code`, `username`, `password`, `full_name`
 CREATE TABLE `workflows` (
   `workflow_id` int(11) UNSIGNED NOT NULL,
   `workflow_name` varchar(255) DEFAULT NULL,
+  `document_type_id` int(11) NOT NULL,
   `is_deleted` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -441,9 +567,10 @@ CREATE TABLE `workflows` (
 -- Dumping data for table `workflows`
 --
 
-INSERT INTO `workflows` (`workflow_id`, `workflow_name`, `is_deleted`) VALUES
-(1, 'การอนุมัติแบบทั่วไป', 0),
-(2, 'การอนุมัติพิเศษ', 1);
+INSERT INTO `workflows` (`workflow_id`, `workflow_name`, `document_type_id`, `is_deleted`) VALUES
+(1, 'ตรวจรับงาน', 1, 0),
+(2, 'ตรวจรับงาน', 1, 0),
+(3, 'IPC', 2, 0);
 
 -- --------------------------------------------------------
 
@@ -536,15 +663,13 @@ INSERT INTO `your_table_name` (`id`, `category`, `column1`, `column2`, `column3`
 -- Indexes for table `action_type`
 --
 ALTER TABLE `action_type`
-  ADD PRIMARY KEY (`action_type_id`),
-  ADD UNIQUE KEY `action_type_name` (`action_type_name`);
+  ADD PRIMARY KEY (`action_type_id`);
 
 --
 -- Indexes for table `approval_status`
 --
 ALTER TABLE `approval_status`
   ADD PRIMARY KEY (`approval_status_id`),
-  ADD UNIQUE KEY `approval_status_name` (`approval_status_name`),
   ADD KEY `action_type_id` (`action_type_id`);
 
 --
@@ -552,6 +677,12 @@ ALTER TABLE `approval_status`
 --
 ALTER TABLE `departments`
   ADD PRIMARY KEY (`department_id`);
+
+--
+-- Indexes for table `document_type`
+--
+ALTER TABLE `document_type`
+  ADD PRIMARY KEY (`document_type_id`);
 
 --
 -- Indexes for table `files`
@@ -565,10 +696,7 @@ ALTER TABLE `files`
 --
 ALTER TABLE `inspection_approvals`
   ADD PRIMARY KEY (`inspection_approval_id`),
-  ADD KEY `inspect_id` (`inspection_id`),
-  ADD KEY `approved_level` (`approval_level`),
-  ADD KEY `approver_id` (`approver_id`),
-  ADD KEY `approved_status_id` (`approval_status_id`);
+  ADD KEY `inspection_approvals_idx` (`inspection_id`,`period_id`,`po_id`) USING BTREE;
 
 --
 -- Indexes for table `inspection_files`
@@ -582,7 +710,7 @@ ALTER TABLE `inspection_files`
 --
 ALTER TABLE `inspection_periods`
   ADD PRIMARY KEY (`inspection_id`),
-  ADD KEY `plan_status` (`plan_status`),
+  ADD KEY `plan_status` (`plan_status_id`),
   ADD KEY `inspection_periods_ibfk_1` (`period_id`);
 
 --
@@ -603,13 +731,19 @@ ALTER TABLE `inspection_status`
 --
 ALTER TABLE `ipc_period`
   ADD PRIMARY KEY (`ipc_id`),
-  ADD KEY `ipc_periods_ibfk_1` (`period_id`);
+  ADD KEY `ipc_periods_ibfk_1` (`inspection_id`,`period_id`,`po_id`) USING BTREE;
 
 --
 -- Indexes for table `locations`
 --
 ALTER TABLE `locations`
   ADD PRIMARY KEY (`location_id`);
+
+--
+-- Indexes for table `permissions`
+--
+ALTER TABLE `permissions`
+  ADD PRIMARY KEY (`permission_id`);
 
 --
 -- Indexes for table `plan_status`
@@ -633,6 +767,12 @@ ALTER TABLE `po_period`
   ADD KEY `po_id` (`po_id`);
 
 --
+-- Indexes for table `po_status`
+--
+ALTER TABLE `po_status`
+  ADD PRIMARY KEY (`po_status_id`);
+
+--
 -- Indexes for table `records`
 --
 ALTER TABLE `records`
@@ -643,6 +783,12 @@ ALTER TABLE `records`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`role_id`);
+
+--
+-- Indexes for table `role_permissions`
+--
+ALTER TABLE `role_permissions`
+  ADD PRIMARY KEY (`role_id`,`permission_id`);
 
 --
 -- Indexes for table `suppliers`
@@ -702,6 +848,12 @@ ALTER TABLE `departments`
   MODIFY `department_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `document_type`
+--
+ALTER TABLE `document_type`
+  MODIFY `document_type_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
@@ -717,7 +869,7 @@ ALTER TABLE `inspection_approvals`
 -- AUTO_INCREMENT for table `inspection_files`
 --
 ALTER TABLE `inspection_files`
-  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `inspection_periods`
@@ -741,7 +893,13 @@ ALTER TABLE `ipc_period`
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `location_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `location_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `permissions`
+--
+ALTER TABLE `permissions`
+  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'รหัสสิทธิ์การใช้งาน', AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `po_main`
@@ -754,6 +912,12 @@ ALTER TABLE `po_main`
 --
 ALTER TABLE `po_period`
   MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
+-- AUTO_INCREMENT for table `po_status`
+--
+ALTER TABLE `po_status`
+  MODIFY `po_status_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `records`
@@ -771,7 +935,7 @@ ALTER TABLE `suppliers`
 -- AUTO_INCREMENT for table `workflows`
 --
 ALTER TABLE `workflows`
-  MODIFY `workflow_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `workflow_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `workflow_steps`
