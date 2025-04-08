@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 08, 2025 at 12:30 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.1.17
+-- Generation Time: Apr 08, 2025 at 06:11 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -103,6 +103,14 @@ CREATE TABLE `document_type` (
   `document_type_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Dumping data for table `document_type`
+--
+
+INSERT INTO `document_type` (`document_type_id`, `document_type_name`) VALUES
+(1, 'ตรวจรับงาน'),
+(2, 'IPC');
+
 -- --------------------------------------------------------
 
 --
@@ -137,10 +145,6 @@ CREATE TABLE `inspection_approvals` (
   `approval_comment` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
---
--- Dumping data for table `inspection_approvals`
---
-
 -- --------------------------------------------------------
 
 --
@@ -155,11 +159,6 @@ CREATE TABLE `inspection_files` (
   `file_type` varchar(100) NOT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `inspection_files`
---
-
 
 -- --------------------------------------------------------
 
@@ -194,11 +193,6 @@ CREATE TABLE `inspection_periods` (
   `disbursement` tinyint(1) NOT NULL DEFAULT -1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
---
--- Dumping data for table `inspection_periods`
---
-
-
 -- --------------------------------------------------------
 
 --
@@ -212,10 +206,6 @@ CREATE TABLE `inspection_period_details` (
   `details` text DEFAULT NULL,
   `remark` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `inspection_period_details`
---
 
 -- --------------------------------------------------------
 
@@ -371,11 +361,6 @@ CREATE TABLE `po_main` (
   `workflow_id` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
---
--- Dumping data for table `po_main`
---
-
-
 -- --------------------------------------------------------
 
 --
@@ -392,11 +377,6 @@ CREATE TABLE `po_period` (
   `remark` text DEFAULT NULL,
   `workload_planned_percent` decimal(5,2) DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `po_period`
---
-
 
 -- --------------------------------------------------------
 
@@ -626,7 +606,15 @@ INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approval_level
 (5, 1, 5, 5, 4, 7),
 (6, 1, 6, 3, 4, 7),
 (7, 1, 7, 6, 2, 3),
-(8, 1, 8, 7, 4, 7);
+(8, 1, 8, 7, 4, 7),
+(9, 2, 1, 1, 1, 1),
+(10, 2, 2, 3, 4, 7),
+(11, 3, 1, 4, 1, 1),
+(12, 3, 2, 1, 2, 3),
+(13, 3, 3, 5, 4, 7),
+(14, 3, 4, 3, 4, 7),
+(15, 3, 5, 6, 2, 3),
+(16, 3, 6, 7, 4, 7);
 
 -- --------------------------------------------------------
 
@@ -851,7 +839,7 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `document_type`
 --
 ALTER TABLE `document_type`
-  MODIFY `document_type_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `document_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `files`
@@ -863,25 +851,25 @@ ALTER TABLE `files`
 -- AUTO_INCREMENT for table `inspection_approvals`
 --
 ALTER TABLE `inspection_approvals`
-  MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `inspection_files`
 --
 ALTER TABLE `inspection_files`
-  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `inspection_periods`
 --
 ALTER TABLE `inspection_periods`
-  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `inspection_period_details`
 --
 ALTER TABLE `inspection_period_details`
-  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `ipc_period`
@@ -905,13 +893,13 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `po_main`
 --
 ALTER TABLE `po_main`
-  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `po_period`
 --
 ALTER TABLE `po_period`
-  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `po_status`
@@ -941,7 +929,7 @@ ALTER TABLE `workflows`
 -- AUTO_INCREMENT for table `workflow_steps`
 --
 ALTER TABLE `workflow_steps`
-  MODIFY `workflow_step_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `workflow_step_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `your_table_name`

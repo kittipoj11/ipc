@@ -352,10 +352,10 @@ class Inspection extends Connection
             // UPDATE inspection_periods
             $sql = <<<EOD
                         UPDATE `inspection_periods`
-                            SET `current_approval_level` = :new_approval_level
-                            WHERE `po_id` = :po_id
-                                AND `period_id` = :period_id
-                                AND `inspection_id` = :inspection_id
+                        SET `current_approval_level` = :new_approval_level
+                        WHERE `po_id` = :po_id
+                            AND `period_id` = :period_id
+                            AND `inspection_id` = :inspection_id
                     EOD;
             $stmtInspectPeriods = $this->myConnect->prepare($sql);
             $stmtInspectPeriods->bindParam(':po_id', $po_id, PDO::PARAM_INT);
