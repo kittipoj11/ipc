@@ -198,14 +198,14 @@ class Po extends Connection
                         INSERT INTO `inspection_periods`(`period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `plan_status`, `is_paid`, `is_retention`) 
                         VALUES (:period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :plan_status, :is_paid, :is_retention)
                     EOD;
-                $stmtInspectPeriods = $this->myConnect->prepare($sql);
+                $stmtInspectionPeriods = $this->myConnect->prepare($sql);
 
                 // INSERT inspection_period_details
                 $sql = <<<EOD
                             INSERT INTO `inspection_period_details`(`inspection_id`) 
                             VALUES (:inspection_id)
                         EOD;
-                $stmtInspectPeriodDetails = $this->myConnect->prepare($sql);
+                $stmtInspectionPeriodDetails = $this->myConnect->prepare($sql);
 
                 // INSERT inspection_approvals
                 $sql = <<<EOD
@@ -230,24 +230,24 @@ class Po extends Connection
                     // inspection_periods
                     $period_id = $this->myConnect->lastInsertId();
 
-                    $stmtInspectPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
-                    $stmtInspectPeriods->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
-                    $stmtInspectPeriods->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
-                    $stmtInspectPeriods->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
+                    $stmtInspectionPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
+                    $stmtInspectionPeriods->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
+                    $stmtInspectionPeriods->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
+                    $stmtInspectionPeriods->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
 
-                    $stmtInspectPeriods->execute();
-                    $stmtInspectPeriods->closeCursor();
+                    $stmtInspectionPeriods->execute();
+                    $stmtInspectionPeriods->closeCursor();
 
 
                     // inspection_period_details
                     $inspection_id = $this->myConnect->lastInsertId();
-                    $stmtInspectPeriodDetails->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
-                    // $stmtInspectPeriodDetails->bindParam(':order_no', 1,  PDO::PARAM_INT);
-                    // $stmtInspectPeriodDetails->bindParam(':details', "",  PDO::PARAM_STR);
-                    // $stmtInspectPeriodDetails->bindParam(':remark', "",  PDO::PARAM_STR);
+                    $stmtInspectionPeriodDetails->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
+                    // $stmtInspectionPeriodDetails->bindParam(':order_no', 1,  PDO::PARAM_INT);
+                    // $stmtInspectionPeriodDetails->bindParam(':details', "",  PDO::PARAM_STR);
+                    // $stmtInspectionPeriodDetails->bindParam(':remark', "",  PDO::PARAM_STR);
 
-                    $stmtInspectPeriodDetails->execute();
-                    $stmtInspectPeriodDetails->closeCursor();
+                    $stmtInspectionPeriodDetails->execute();
+                    $stmtInspectionPeriodDetails->closeCursor();
 
 
                     // inspection_approvals
@@ -438,14 +438,14 @@ class Po extends Connection
                             INSERT INTO `inspection_periods`(`period_id`, `plan_status`, `is_paid`, `is_retention`) 
                             VALUES (:period_id, :plan_status, :is_paid, :is_retention)
                         EOD;
-                $stmtInspectPeriodInsert = $this->myConnect->prepare($sql);
+                $stmtInspectionPeriodInsert = $this->myConnect->prepare($sql);
 
                 // INSERT inspection_period_details
                 $sql = <<<EOD
                             INSERT INTO `inspection_period_details`(`inspection_id`) 
                             VALUES (:inspection_id)
                         EOD;
-                $stmtInspectPeriodDetailInsert = $this->myConnect->prepare($sql);
+                $stmtInspectionPeriodDetailInsert = $this->myConnect->prepare($sql);
 
                 $plan_status = 1;
                 $period_status = 1;
@@ -467,23 +467,23 @@ class Po extends Connection
 
                     $period_id = $this->myConnect->lastInsertId();
 
-                    $stmtInspectPeriodInsert->bindParam(':period_id', $period_id, PDO::PARAM_INT);
-                    $stmtInspectPeriodInsert->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
-                    $stmtInspectPeriodInsert->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
-                    $stmtInspectPeriodInsert->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
+                    $stmtInspectionPeriodInsert->bindParam(':period_id', $period_id, PDO::PARAM_INT);
+                    $stmtInspectionPeriodInsert->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
+                    $stmtInspectionPeriodInsert->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
+                    $stmtInspectionPeriodInsert->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
 
-                    $stmtInspectPeriodInsert->execute();
-                    $stmtInspectPeriodInsert->closeCursor();
+                    $stmtInspectionPeriodInsert->execute();
+                    $stmtInspectionPeriodInsert->closeCursor();
 
                     $inspection_id = $this->myConnect->lastInsertId();
 
-                    $stmtInspectPeriodDetailInsert->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
-                    // $stmtInspectPeriodDetailInsert->bindParam(':order_no', $order_no,  PDO::PARAM_INT);
-                    // $stmtInspectPeriodDetailInsert->bindParam(':details', $details,  PDO::PARAM_STR);
-                    // $stmtInspectPeriodDetailInsert->bindParam(':remark', $remark,  PDO::PARAM_STR);
+                    $stmtInspectionPeriodDetailInsert->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
+                    // $stmtInspectionPeriodDetailInsert->bindParam(':order_no', $order_no,  PDO::PARAM_INT);
+                    // $stmtInspectionPeriodDetailInsert->bindParam(':details', $details,  PDO::PARAM_STR);
+                    // $stmtInspectionPeriodDetailInsert->bindParam(':remark', $remark,  PDO::PARAM_STR);
 
-                    $stmtInspectPeriodDetailInsert->execute();
-                    $stmtInspectPeriodDetailInsert->closeCursor();
+                    $stmtInspectionPeriodDetailInsert->execute();
+                    $stmtInspectionPeriodDetailInsert->closeCursor();
                 }
 
                 // UPDATE po_period
@@ -504,7 +504,7 @@ class Po extends Connection
                             , `is_retention` = :is_retention
                             WHERE `period_id` = :period_id
                         EOD;
-                $stmtInspectPeriodUpdate = $this->myConnect->prepare($sql);
+                $stmtInspectionPeriodUpdate = $this->myConnect->prepare($sql);
 
                 foreach ($update_indexs as $i) {
                     $stmtPoPeriodUpdate->bindParam(':po_id', $po_id, PDO::PARAM_INT);
@@ -516,13 +516,13 @@ class Po extends Connection
                     $stmtPoPeriodUpdate->execute();
                     $stmtPoPeriodUpdate->closeCursor();
 
-                    $stmtInspectPeriodUpdate->bindParam(':period_id', $period_ids[$i], PDO::PARAM_INT);
-                    $stmtInspectPeriodUpdate->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
-                    $stmtInspectPeriodUpdate->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
-                    $stmtInspectPeriodUpdate->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
+                    $stmtInspectionPeriodUpdate->bindParam(':period_id', $period_ids[$i], PDO::PARAM_INT);
+                    $stmtInspectionPeriodUpdate->bindParam(':plan_status', $plan_status,  PDO::PARAM_INT);
+                    $stmtInspectionPeriodUpdate->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
+                    $stmtInspectionPeriodUpdate->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
 
-                    $stmtInspectPeriodUpdate->execute();
-                    $stmtInspectPeriodUpdate->closeCursor();
+                    $stmtInspectionPeriodUpdate->execute();
+                    $stmtInspectionPeriodUpdate->closeCursor();
                 }
 
                 // DELETE po_period
@@ -538,7 +538,7 @@ class Po extends Connection
                 //             DELETE FROM `inspection_periods`
                 //             WHERE `period_id` = :period_id
                 //         EOD;
-                // $stmtInspectPeriodDelete = $this->myConnect->prepare($sql);
+                // $stmtInspectionPeriodDelete = $this->myConnect->prepare($sql);
 
                 foreach ($delete_indexs as $i) {
                     $period_id = $period_ids[$i];
@@ -573,10 +573,10 @@ class Po extends Connection
 
 
                     // ใช้ ON DELETE CASCADE
-                    // $stmtInspectPeriodDelete->bindParam(':period_id', $period_ids[$i], PDO::PARAM_INT);
+                    // $stmtInspectionPeriodDelete->bindParam(':period_id', $period_ids[$i], PDO::PARAM_INT);
 
-                    // $stmtInspectPeriodDelete->execute();
-                    // $stmtInspectPeriodDelete->closeCursor();
+                    // $stmtInspectionPeriodDelete->execute();
+                    // $stmtInspectionPeriodDelete->closeCursor();
                 }
 
                 $_SESSION['message'] =  'data has been created successfully.';

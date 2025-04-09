@@ -41,14 +41,14 @@ CREATE TABLE `workflow_steps` (
 --
 
 INSERT INTO `workflow_steps` (`workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `action_type_id`, `first_status_id`) VALUES
-(1, 1, 1, 1, 1, 1),
-(2, 1, 2, 3, 4, 7),
-(3, 1, 3, 4, 1, 1),
-(4, 1, 4, 1, 2, 3),
-(5, 1, 5, 5, 4, 7),
-(6, 1, 6, 3, 4, 7),
-(7, 1, 7, 6, 2, 3),
-(8, 1, 8, 7, 4, 7);
+(1, 2, 1, 1, 1, 1),
+(2, 2, 2, 3, 4, 7),
+(3, 3, 1, 4, 1, 1),
+(4, 3, 2, 1, 2, 3),
+(5, 3, 3, 5, 4, 7),
+(6, 3, 4, 3, 4, 7),
+(7, 3, 5, 6, 2, 3),
+(8, 3, 6, 7, 4, 7);
 
 --
 -- Indexes for dumped tables
