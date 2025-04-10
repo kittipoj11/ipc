@@ -180,6 +180,8 @@ class Po extends Connection
             $stmt->bindParam(':number_of_period', $number_of_period, PDO::PARAM_INT);
             $stmt->bindParam(':create_by', $create_by, PDO::PARAM_STR);
             $stmt->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
+
+            $_SESSION['location_id'] = $location_id;
             // $stmt->bindParam(':is_active', $is_active, PDO::PARAM_BOOL);
             // $affected = $stmt->execute();
             // $stmt->debugDumpParams();
@@ -275,7 +277,7 @@ class Po extends Connection
                         //     $approval_status_id = 41;
                         // }
 
-                        // $_SESSION['Before param Loop'] = 'Before';
+                        
                         $stmtInspectApprovals->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
                         $stmtInspectApprovals->bindParam(':period_id', $period_id, PDO::PARAM_INT);
                         $stmtInspectApprovals->bindParam(':po_id', $po_id, PDO::PARAM_INT);

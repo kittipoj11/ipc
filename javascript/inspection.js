@@ -8,7 +8,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  // Click ที่รายการใดๆ
+  // Click ที่รายการงวดงานใดๆใน tdMain ที่ไม่มี <a></a>
   $(document).on("click", ".tdMain:not(:has(a))", function (e) {
     e.preventDefault();
     $(".content-period").removeClass("d-none");
@@ -68,6 +68,7 @@ console.log(`po_id = ${po_id}`);
 console.log(`period_id = ${period_id}`);
 console.log(`inspection_id = ${inspection_id}`);
     window.location.href = `inspection_edit.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
+    
   });
 });
 
