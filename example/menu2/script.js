@@ -28,6 +28,20 @@ $(document).ready(function() {
         });
     }
 
+    // ฟังก์ชันสำหรับโหลดเนื้อหาและเรียกฟังก์ชัน init ที่เกี่ยวข้อง
+    function loadContent_test(contentFile, initScript) {
+        $.ajax({
+            url: contentFile,
+            type: 'GET',
+            success: function(data) {
+                contentDiv.html(data);
+                if (window[initScript] && typeof window[initScript] === 'function') {
+                    window[initScript](); // เรียกฟังก์ชัน init ตามชื่อที่ระบุใน data-init
+                }
+            }
+        });
+    }
+
     // ฟังก์ชันสำหรับเพิ่ม Event Listener ให้กับลิงก์เมนู
     function attachMenuClickListeners() {
         sidebarMenu.on('click', 'a', function(event) {
@@ -43,3 +57,4 @@ $(document).ready(function() {
     // โหลดเมนูเริ่มต้นเมื่อ DOM พร้อมใช้งาน
     loadSidebarMenu();
 });
+

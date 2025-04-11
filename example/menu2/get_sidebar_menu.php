@@ -24,3 +24,19 @@ foreach ($menus as $menu) {
 echo '</ul>';
 ?>
 
+
+<!-- SELECT
+U.user_id,
+U.username,
+P.permission_id,
+P.permission_name,
+CASE
+WHEN RP.permission_id IS NOT NULL THEN 'yes'
+ELSE 'no'
+END AS role_status
+FROM users U
+CROSS JOIN permissions P
+LEFT JOIN role_permissions RP
+ON RP.role_id = U.role_id
+AND RP.permission_id = P.permission_id
+ORDER BY U.user_id, P.permission_id; -->
