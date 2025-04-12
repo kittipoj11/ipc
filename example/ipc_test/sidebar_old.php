@@ -1,25 +1,3 @@
-<?php
-session_start();
-
-require_once  'class/menu_class.php';
-$role_id = isset($_SESSION['role_id']) ? $_SESSION['role_id'] : 1; // Default role เป็น 1
-$username = isset($_SESSION['username']) ? $_SESSION['username'] : 1; // Default role เป็น 1
-
-$menu = new Menu;
-$rsMenu = $menu->getMenuByUsername($username);
-
-// ในระบบจริง คุณจะต้องดึง role_id จาก session
-// นี่คือการจำลอง role_id เพื่อให้ทดสอบได้
-// $role_id = 1; // สมมติผู้ใช้มีบทบาท ID เป็น 1
-
-$menus = array();
-
-foreach ($rsMenu as $row) {
-    // $menus[$row['menu_name']] = array('menu_name' => $row['menu_name'], 'link' => '#', 'content_filename' => $row['content_filename'], 'function_name' => $row['function_name']);
-    $menus[$row['menu_name']] = array('menu_name' => $row['menu_name'], 'link' => '#', 'content_filename' => $row['content_filename'], 'function_name' => $row['function_name'], 'permission_name' => $row['permission_name']);
-}
-?>
-
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -62,11 +40,11 @@ foreach ($rsMenu as $row) {
                 <!-- <hr class="sidebar-divider"> -->
 
                 <!-- Nav Item - ข้อมูลระบบ -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $_SESSION['system'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                            <?php echo $menus['system']['permission_name'] ?>
+                            ข้อมูลระบบ
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -98,11 +76,11 @@ foreach ($rsMenu as $row) {
                     </ul>
                 </li>
                 <!-- Nav Item - ข้อมูลพื้นฐาน -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $_SESSION['general_basic'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                        <?php echo $menus['general_basic']['permission_name'] ?>
+                            ข้อมูลพื้นฐาน
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -162,11 +140,11 @@ foreach ($rsMenu as $row) {
                 </li>
 
                 <!-- Nav Item - Purchase Order -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $_SESSION['purchase_order'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                        <?php echo $menus['purchase_order']['permission_name'] ?>
+                            Purchase Order
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -181,11 +159,11 @@ foreach ($rsMenu as $row) {
                 </li>
 
                 <!-- Nav Item - Inspection(การตรวจรับงาน) -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $_SESSION['inspection'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                        <?php echo $menus['inspection']['permission_name'] ?>
+                            Inspection
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -200,11 +178,11 @@ foreach ($rsMenu as $row) {
                 </li>
 
                 <!-- Nav Item - IPC -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $_SESSION['ipc'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                        <?php echo $menus['ipc']['permission_name'] ?>
+                            IPC
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -219,7 +197,7 @@ foreach ($rsMenu as $row) {
                 </li>
 
                 <!-- Nav Item - Assign to me -->
-                <!-- <li class="nav-item"> -->
+                <!-- <li class="nav-item <?php echo $_SESSION['assign_to_me'] ?>"> -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
@@ -243,11 +221,11 @@ foreach ($rsMenu as $row) {
                 </li>
 
                 <!-- Nav Item - Student -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $_SESSION['manage_user'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa-solid fa-user-gear"></i>
                         <p>
-                        <?php echo $menus['manage_user']['permission_name'] ?>
+                            Users
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -275,11 +253,11 @@ foreach ($rsMenu as $row) {
                 </div> -->
 
                 <!-- Nav Item - รายงาน -->
-                <li class="nav-item ">
+                <li class="nav-item <?php echo $_SESSION['report'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa-regular fa-file-lines"></i>
                         <p>
-                        <?php echo $menus['report']['permission_name'] ?>
+                            รายงาน
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
