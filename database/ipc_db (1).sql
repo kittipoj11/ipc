@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 11, 2025 at 11:13 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.1.17
+-- Generation Time: Apr 12, 2025 at 05:32 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -150,14 +150,10 @@ CREATE TABLE `inspection_approvals` (
 --
 
 INSERT INTO `inspection_approvals` (`inspection_approval_id`, `inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_status_id`, `approval_date`, `approval_comment`) VALUES
-(1, 1, 1, 1, 1, 1, 1, 1, NULL, NULL),
+(1, 1, 1, 1, 1, 1, 1, 1, '2025-04-09 23:23:06', NULL),
 (2, 1, 1, 1, 1, 2, 3, 7, NULL, NULL),
 (3, 2, 2, 1, 2, 1, 1, 1, NULL, NULL),
-(4, 2, 2, 1, 2, 2, 3, 7, NULL, NULL),
-(5, 3, 3, 2, 1, 1, 1, 1, NULL, NULL),
-(6, 3, 3, 2, 1, 2, 3, 7, NULL, NULL),
-(7, 4, 4, 2, 2, 1, 1, 1, NULL, NULL),
-(8, 4, 4, 2, 2, 2, 3, 7, NULL, NULL);
+(4, 2, 2, 1, 2, 2, 3, 7, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -213,10 +209,8 @@ CREATE TABLE `inspection_periods` (
 --
 
 INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `workload_accumulated_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status_id`, `is_paid`, `is_retention`, `remark`, `inspection_status`, `current_approval_level`, `disbursement`, `workflow_id`) VALUES
-(1, 1, 1, 1, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, -1, 0, 0, '', 1, 1, -1, 2),
-(2, 2, 1, 2, 0.00, NULL, NULL, 0.00, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0, NULL, 1, 1, -1, 2),
-(3, 3, 2, 1, 0.00, NULL, NULL, 0.00, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0, NULL, 1, 1, -1, 2),
-(4, 4, 2, 2, 0.00, NULL, NULL, 0.00, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0, NULL, 1, 1, -1, 2);
+(1, 1, 1, 1, '0.00', NULL, NULL, '0.00', '0.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, NULL, NULL, NULL, 1, 2, -1, 2),
+(2, 2, 1, 2, '0.00', NULL, NULL, '0.00', '0.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, NULL, NULL, NULL, 1, 1, -1, 2);
 
 -- --------------------------------------------------------
 
@@ -237,10 +231,8 @@ CREATE TABLE `inspection_period_details` (
 --
 
 INSERT INTO `inspection_period_details` (`rec_id`, `inspection_id`, `order_no`, `details`, `remark`) VALUES
-(1, 1, 1, '', ''),
-(2, 2, 1, NULL, NULL),
-(3, 3, 1, NULL, NULL),
-(4, 4, 1, NULL, NULL);
+(1, 1, 1, NULL, NULL),
+(2, 2, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -347,21 +339,23 @@ INSERT INTO `locations` (`location_id`, `location_name`, `is_deleted`) VALUES
 CREATE TABLE `permissions` (
   `permission_id` int(11) NOT NULL COMMENT 'รหัสสิทธิ์การใช้งาน',
   `permission_name` varchar(255) NOT NULL COMMENT 'ชื่อสิทธิ์การใช้งาน (เช่น ''view_dashboard'', ''manage_users'', ''edit_products'')',
-  `menu_name` varchar(255) NOT NULL
+  `menu_name` varchar(255) NOT NULL,
+  `content_filename` varchar(255) NOT NULL DEFAULT 'content_filename',
+  `function_name` varchar(255) NOT NULL DEFAULT 'function_name'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `permissions`
 --
 
-INSERT INTO `permissions` (`permission_id`, `permission_name`, `menu_name`) VALUES
-(1, 'ข้อมูลระบบ', 'system'),
-(2, 'ข้อมูลพื้นฐานทั่วไป', 'general_basic'),
-(3, 'Purchase Order', 'purchase_order'),
-(4, 'ตรวจรับงาน', 'inspection'),
-(5, 'IPC', 'ipc'),
-(6, 'การจัดการผู้ใช้', 'manage_user'),
-(7, 'รายงาน', 'report');
+INSERT INTO `permissions` (`permission_id`, `permission_name`, `menu_name`, `content_filename`, `function_name`) VALUES
+(1, 'ข้อมูลระบบ', 'system', 'content_filename', 'function_name'),
+(2, 'ข้อมูลพื้นฐานทั่วไป', 'general_basic', 'content_filename', 'function_name'),
+(3, 'Purchase Order', 'purchase_order', 'content_filename', 'function_name'),
+(4, 'ตรวจรับงาน', 'inspection', 'content_filename', 'function_name'),
+(5, 'IPC', 'ipc', 'content_filename', 'function_name'),
+(6, 'การจัดการผู้ใช้', 'manage_user', 'content_filename', 'function_name'),
+(7, 'รายงาน', 'report', 'content_filename', 'function_name');
 
 -- --------------------------------------------------------
 
@@ -422,8 +416,7 @@ CREATE TABLE `po_main` (
 --
 
 INSERT INTO `po_main` (`po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`, `remain_value_interim_payment`, `total_retention_value`, `po_status`, `workflow_id`) VALUES
-(1, 'IMPO001', 'ข่าวช่องวันเสาร์-อาทิตย์', 2, 1, 'วัน', 'one', 1, 107000.00, 100000.00, 7000.00, NULL, 0.00, 0.00, '2025-04-01', '2025-04-05', 0, '05389', NULL, 2, 0.00, 0.00, 1, 2),
-(2, 'IMPO002', 'Statue of Load Indra Riding on Erawan Elephant', 1, 2, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุมx', 'Install of LED decoration lampsx', 1, 42800.00, 40000.00, 2800.00, NULL, 0.00, 0.00, '2025-04-10', '2025-04-17', 0, '05389', NULL, 2, 0.00, 0.00, 1, 2);
+(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, '107000.00', '100000.00', '7000.00', 0, '0.00', '0.00', '2025-04-01', '2025-04-30', NULL, '00001', NULL, 2, '0.00', '0.00', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -447,10 +440,8 @@ CREATE TABLE `po_period` (
 --
 
 INSERT INTO `po_period` (`period_id`, `po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `period_status`, `remark`, `workload_planned_percent`) VALUES
-(1, 1, 1, 0.00, 0.00, NULL, '', 0.00),
-(2, 1, 2, 0.00, 0.00, NULL, '', 0.00),
-(3, 2, 1, 0.00, 0.00, NULL, '', 0.00),
-(4, 2, 2, 0.00, 0.00, NULL, '', 0.00);
+(1, 1, 1, '0.00', '0.00', NULL, '', '0.00'),
+(2, 1, 2, '0.00', '0.00', NULL, '', '0.00');
 
 -- --------------------------------------------------------
 
@@ -932,7 +923,7 @@ ALTER TABLE `files`
 -- AUTO_INCREMENT for table `inspection_approvals`
 --
 ALTER TABLE `inspection_approvals`
-  MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `inspection_files`
@@ -944,13 +935,13 @@ ALTER TABLE `inspection_files`
 -- AUTO_INCREMENT for table `inspection_periods`
 --
 ALTER TABLE `inspection_periods`
-  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `inspection_period_details`
 --
 ALTER TABLE `inspection_period_details`
-  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `ipc_approvals`
@@ -980,13 +971,13 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `po_main`
 --
 ALTER TABLE `po_main`
-  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `po_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `po_period`
 --
 ALTER TABLE `po_period`
-  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `period_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `po_status`

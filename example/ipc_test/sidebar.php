@@ -16,7 +16,7 @@ $menus = array();
 
 foreach ($rsMenu as $row) {
     // $menus[$row['menu_name']] = array('menu_name' => $row['menu_name'], 'link' => '#', 'content_filename' => $row['content_filename'], 'function_name' => $row['function_name']);
-    $menus[$row['menu_name']] = array('menu_name' => $row['menu_name'], 'link' => '#', 'content_filename' => $row['content_filename'], 'function_name' => $row['function_name'], 'permission_name' => $row['permission_name']);
+    $menus[$row['menu_name']] = array('menu_name' => $row['menu_name'], 'link' => '#', 'content_filename' => $row['content_filename'], 'function_name' => $row['function_name'], 'permission_name' => $row['permission_name'], 'menu_display' => $row['menu_display']);
 }
 ?>
 
@@ -62,7 +62,7 @@ foreach ($rsMenu as $row) {
                 <!-- <hr class="sidebar-divider"> -->
 
                 <!-- Nav Item - ข้อมูลระบบ -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $menus['system']['menu_display'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
@@ -98,11 +98,11 @@ foreach ($rsMenu as $row) {
                     </ul>
                 </li>
                 <!-- Nav Item - ข้อมูลพื้นฐาน -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $menus['general_basic']['menu_display'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                        <?php echo $menus['general_basic']['permission_name'] ?>
+                            <?php echo $menus['general_basic']['permission_name'] ?>
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -135,7 +135,7 @@ foreach ($rsMenu as $row) {
                 </li>
 
                 <!-- Nav Item - Approval(การอนุมัติ) -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $menus['system']['menu_display'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
@@ -162,11 +162,11 @@ foreach ($rsMenu as $row) {
                 </li>
 
                 <!-- Nav Item - Purchase Order -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $menus['purchase_order']['menu_display'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                        <?php echo $menus['purchase_order']['permission_name'] ?>
+                            <?php echo $menus['purchase_order']['permission_name'] ?>
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -181,11 +181,11 @@ foreach ($rsMenu as $row) {
                 </li>
 
                 <!-- Nav Item - Inspection(การตรวจรับงาน) -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $menus['inspection']['menu_display'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                        <?php echo $menus['inspection']['permission_name'] ?>
+                            <?php echo $menus['inspection']['permission_name'] ?>
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -200,11 +200,11 @@ foreach ($rsMenu as $row) {
                 </li>
 
                 <!-- Nav Item - IPC -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $menus['ipc']['menu_display'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
-                        <?php echo $menus['ipc']['permission_name'] ?>
+                            <?php echo $menus['ipc']['permission_name'] ?>
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -243,11 +243,11 @@ foreach ($rsMenu as $row) {
                 </li>
 
                 <!-- Nav Item - Student -->
-                <li class="nav-item">
+                <li class="nav-item <?php echo $menus['manage_user']['menu_display'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa-solid fa-user-gear"></i>
                         <p>
-                        <?php echo $menus['manage_user']['permission_name'] ?>
+                            <?php echo $menus['manage_user']['permission_name'] ?>
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -275,11 +275,11 @@ foreach ($rsMenu as $row) {
                 </div> -->
 
                 <!-- Nav Item - รายงาน -->
-                <li class="nav-item ">
+                <li class="nav-item <?php echo $menus['report']['menu_display'] ?>">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa-regular fa-file-lines"></i>
                         <p>
-                        <?php echo $menus['report']['permission_name'] ?>
+                            <?php echo $menus['report']['permission_name'] ?>
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>

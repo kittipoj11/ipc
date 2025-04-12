@@ -31,7 +31,7 @@ class Menu extends Connection
         $sql = <<<EOD
                     SELECT U.user_id, U.username, P.permission_id, P.permission_name, P.menu_name
                     , P.content_filename, P.function_name
-                    , CASE WHEN RP.permission_id IS NOT NULL THEN 'yes' ELSE 'no' END AS role_status
+                    , CASE WHEN RP.permission_id IS NOT NULL THEN 'd-inline' ELSE 'd-none' END AS menu_display
                     FROM users U
                     CROSS JOIN permissions P
                     LEFT JOIN role_permissions RP
