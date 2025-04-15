@@ -9,17 +9,17 @@ $role_id = isset($_SESSION['role_id']) ? $_SESSION['role_id'] : 1; // Default ro
 $menus = array();
 
 if ($role_id == 1) {
-    $menus[] = array('name' => 'เมนูที่ 1', 'link' => '#', 'content' => 'content1.php', 'init_script' => 'initContent1');
-    $menus[] = array('name' => 'เมนูที่ 2', 'link' => '#', 'content' => 'content2.php', 'init_script' => 'initContent2');
+    $menus[] = array('name' => 'เมนูที่ 1', 'link' => '#', 'content_filename' => 'content1.php', 'function_name' => 'initContent1');
+    $menus[] = array('name' => 'เมนูที่ 2', 'link' => '#', 'content_filename' => 'content2.php', 'function_name' => 'initContent2');
 } elseif ($role_id == 2) {
-    $menus[] = array('name' => 'เมนูที่ 2', 'link' => '#', 'content' => 'content2.php', 'init_script' => 'initContent2');
+    $menus[] = array('name' => 'เมนูที่ 2', 'link' => '#', 'content_filename' => 'content2.php', 'function_name' => 'initContent2');
 } else {
-    $menus[] = array('name' => 'เมนูที่ 1', 'link' => '#', 'content' => 'content1.php', 'init_script' => 'initContent1');
+    $menus[] = array('name' => 'เมนูที่ 1', 'link' => '#', 'content_filename' => 'content1.php', 'function_name' => 'initContent1');
 }
 
 echo '<ul>';
 foreach ($menus as $menu) {
-    echo '<li><a href="' . $menu['link'] . '" data-content="' . $menu['content'] . '" data-init="' . $menu['init_script'] . '">' . $menu['name'] . '</a></li>';
+    echo '<li><a href="' . $menu['link'] . '" data-content_filename="' . $menu['content_filename'] . '" data-function_name="' . $menu['function_name'] . '">' . $menu['name'] . '</a></li>';
 }
 echo '</ul>';
 ?>
