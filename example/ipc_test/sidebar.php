@@ -76,6 +76,12 @@ foreach ($rsMenu as $row) {
                                 <i class="nav-icon fa-solid fa-truck d-none"></i>
                                 <p>PO status</p>
                             </a>
+                            <!-- <a href="#" class="nav-link text-dark"
+                                data-content_filename="< ?php echo $menus['po_status']['content_filename'] ?>"
+                                data-function_name="< ?php echo $menus['po_status']['function_name'] ?>">
+                                <i class="nav-icon fa-solid fa-truck d-none"></i>
+                                <p>< ?php echo $menus['po_status']['permission_name'] ?></p>
+                            </a> -->
                         </li>
                         <li class="nav-item">
                             <a href="inspection_status.php" class="nav-link text-dark">

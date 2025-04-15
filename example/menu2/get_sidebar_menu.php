@@ -3,8 +3,8 @@ session_start();
 
 // ในระบบจริง คุณจะต้องดึง role_id จาก session
 // นี่คือการจำลอง role_id เพื่อให้ทดสอบได้
-// $role_id = 1; // สมมติผู้ใช้มีบทบาท ID เป็น 1
-$role_id = isset($_SESSION['role_id']) ? $_SESSION['role_id'] : 1; // Default role เป็น 1
+$role_id = 1; // สมมติผู้ใช้มีบทบาท ID เป็น 1
+// $role_id = isset($_SESSION['role_id']) ? $_SESSION['role_id'] : 1; // Default role เป็น 1
 
 $menus = array();
 
