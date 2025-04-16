@@ -177,17 +177,7 @@ foreach ($rsMenu as $row) {
                     </a>
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-dark"
-                                data-content_filename="<?php echo $menus['purchase_order']['content_filename'] ?>" 
-                                data-function_name="<?php echo $menus['purchase_order']['function_name'] ?>">
-                                <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
-                                <p>All purchase orders</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-dark"
-                                data-content_filename="<?php echo $menus['po']['content_filename'] ?>" 
-                                data-function_name="<?php echo $menus['po']['function_name'] ?>">
+                            <a href="po.php" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
                                 <p>All purchase orders</p>
                             </a>

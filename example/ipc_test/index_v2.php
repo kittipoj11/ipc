@@ -39,11 +39,10 @@ if (!isset($_SESSION['username'])) {
   <!-- Page Wrapper -->
   <div class="wrapper">
 
+  <aside class="main-sidebar sidebar-dark-primary elevation-4" id="main-sidebar">
     <!-- ทำการโหลดเมนูและผูก Event ของเมนูจากไฟล์ javascript/script.js -->
-  <!-- <aside class="main-sidebar sidebar-dark-primary elevation-4" id="main-sidebar">
-  </aside> -->
+  </aside>
   
-    <?php include 'sidebar.php'; ?>
     <?php include 'navbar.php'; ?>
 
     <!-- Content Wrapper. Contains page content -->
