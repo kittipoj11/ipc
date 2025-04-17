@@ -149,7 +149,7 @@ $(document).ready(function () {
       data: {
         permission_id: permission_id,
         permission_name: permission_name,
-        menu_name_name: menu_name_name,
+        menu_name: menu_name,
         content_filename: content_filename,
         function_name: function_name,
         action: action

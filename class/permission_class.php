@@ -44,6 +44,9 @@ class Permission extends Connection
     public function insertData($getData)
     {
         $permission_name = $getData['permission_name'];
+        $menu_name = $getData['menu_name'];
+        $content_filename = $getData['content_filename'];
+        $function_name = $getData['function_name'];
 
         $sql = "insert into permissions(permission_name, menu_name, content_filename, function_name) 
                 values(:permission_name, :menu_name, :content_filename, :function_name)";
@@ -69,6 +72,9 @@ class Permission extends Connection
     {
         $permission_id = $getData['permission_id'];
         $permission_name = $getData['permission_name'];
+        $menu_name = $getData['menu_name'];
+        $content_filename = $getData['content_filename'];
+        $function_name = $getData['function_name'];
         $sql = "update permissions 
                 set permission_name = :permission_name
                 , menu_name = :menu_name
