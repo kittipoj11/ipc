@@ -73,6 +73,12 @@
                                 <p>Approval status</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="permission.php" class="nav-link text-dark">
+                                <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
+                                <p>Permission</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <!-- Nav Item - ข้อมูลพื้นฐาน -->

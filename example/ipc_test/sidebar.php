@@ -1,5 +1,5 @@
 <?php
-session_start();
+@session_start();
 
 require_once  'class/menu_class.php';
 $role_id = isset($_SESSION['role_id']) ? $_SESSION['role_id'] : 1; // Default role เป็น 1

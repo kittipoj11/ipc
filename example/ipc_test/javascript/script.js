@@ -1,17 +1,18 @@
-$(document).ready(function() {
+// $(document).ready(function() {
   const sidebarMenu = $("#sidebar-menu");
   const contentDiv = $("#content");
 
   // ฟังก์ชันสำหรับโหลดเมนูเริ่มต้น
   function loadSidebarMenu() {
-    $.ajax({
-      url: "sidebar.php",
-      type: "GET",
-      success: function (data) {
-        // $('#main-sidebar').html(data);
-        attachMenuClickListeners();
-      },
-    });
+    // $.ajax({
+    //   url: "sidebar.php",
+    //   type: "GET",
+    //   success: function (data) {
+    //     $('#main-sidebar').html(data);
+    //     attachMenuClickListeners();
+    //   },
+    // });
+    attachMenuClickListeners();
   }
 
   // ฟังก์ชันสำหรับเพิ่ม Event Listener ให้กับลิงก์เมนู
@@ -21,7 +22,7 @@ $(document).ready(function() {
       event.preventDefault();
       const content_filename = $(this).data("content_filename");
       const function_name = $(this).data("function_name");
-      console.log(content_filename);
+      // console.log(content_filename);
         if (content_filename) {
         loadContent(content_filename, function_name);
       }
@@ -51,4 +52,4 @@ $(document).ready(function() {
 
   // โหลดหน้าเริ่มต้นเมื่อ DOM พร้อมใช้งาน
   // loadContent("dashboard2.php","dashboard2")
-});
+// });
