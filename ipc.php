@@ -45,8 +45,6 @@ require_once 'auth.php';
 
 </head>
 
-
-
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 
 
