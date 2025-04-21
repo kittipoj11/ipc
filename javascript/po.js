@@ -93,15 +93,16 @@ $(document).ready(function () {
   // });
   $(document).on("click", ".btnEdit", function (e) {
     const po_id = $(this).parents("tr").data("id");
-    window.location.href = "po_edit.php?po_id=" + po_id;
+    // window.location.href = "po_edit.php?po_id=" + po_id;
+    window.location.href = "po_dml.php?action=edit"+"&po_id=" + po_id;
   });
-
+  
   // $(document).on("click", ".tdMain:has(a)", function (e) {
-  $(document).on("click", "a.po_number", function (e) {
-    e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
-    const po_id = $(this).parents("tr").data("id");
-    // window.location.href = "po_edit.php?po_id=" + po_id + "&href=inspect.php";
-    window.location.href = "po_edit.php?po_id=" + po_id;
+    $(document).on("click", "a.po_number", function (e) {
+      e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
+      const po_id = $(this).parents("tr").data("id");
+      // window.location.href = "po_edit.php?po_id=" + po_id;
+      window.location.href = "po_dml.php?action=edit"+"&po_id=" + po_id;
   });
 
   // $(".btnEdit").each(function () {

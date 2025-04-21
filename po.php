@@ -79,7 +79,7 @@ require_once 'auth.php';
               <div class="card">
                 <div class="card-header d-flex">
                   <h6 class="m-1 fw-bold">All Purchase Order</h6>
-                  <a href="po_create.php" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
+                  <a href="po_dml.php?action=insert" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
                     <i class="fa-solid fa-plus"></i>
                   </a>
                 </div>
