@@ -3,44 +3,42 @@ $(document).ready(function () {
     // $(document).on("click", "#btnSave", function (e) {
     // console.log('submit');
     e.preventDefault();
-    let can_save = true;
-    if (can_save == true) {
-      let data_sent = $("#myForm").serializeArray();
-      data_sent.push({
-        name: "action",
-        value: "insert", //หรือ update
-      });
-      // console.log(data_sent);
-      $.ajax({
-        type: "POST",
-        url: "po_crud.php",
-        // data: $(this).serialize(),
-        data: data_sent,
-        success: function (response) {
-          Swal.fire({
-            icon: "success",
-            title: "Data saved successfully",
-            color: "#716add",
-            allowOutsideClick: false,
-            background: "black",
-            // backdrop: `
-            //                     rgba(0,0,123,0.4)
-            //                     url("_images/paw.gif")
-            //                     left bottom
-            //                     no-repeat
-            //                     `,
-            // showConfirmButton: false,
-            // timer: 15000
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = "po.php";
-              // window.location.reload();
-            }
-          });
-          // window.location.href = 'main.php?page=open_area_schedule';
-        },
-      });
-    }
+    let data_sent = $("#myForm").serializeArray();
+    data_sent.push({
+      name: "action",
+      value: $("#submit").data("action"),//"insert", //หรือ update
+    });
+    console.log(data_sent);
+    $.ajax({
+      type: "POST",
+      url: "po_crud.php",
+      // data: $(this).serialize(),
+      data: data_sent,
+      success: function (response) {
+        Swal.fire({
+          icon: "success",
+          title: "Data saved successfully",
+          color: "#716add",
+          allowOutsideClick: false,
+          background: "black",
+          // backdrop: `
+          //                     rgba(0,0,123,0.4)
+          //                     url("_images/paw.gif")
+          //                     left bottom
+          //                     no-repeat
+          //                     `,
+          // showConfirmButton: false,
+          // timer: 15000
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "po.php";
+            // window.location.reload();
+          }
+        });
+        // window.location.href = 'main.php?page=open_area_schedule';
+      },
+    });
+
   });
 
   

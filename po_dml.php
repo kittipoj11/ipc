@@ -34,7 +34,7 @@ require_once 'auth.php';
       cursor: pointer;
     }
 
-    table thead tr{
+    table thead tr {
       cursor: default;
     }
   </style>
@@ -56,15 +56,19 @@ require_once 'auth.php';
 
     $action = $_REQUEST['action'];
     if ($action == 'insert') {
-      $display = 'd-inline';
-      $content_header='Create Purchase Order';
-    } elseif ($action == 'edit') {
       $display = 'd-none';
+      $disabled = '';
+      $content_header = 'Create Purchase Order';
+    } elseif ($action == 'update') {
+      $display = 'd-inline';
+      $disabled = 'disabled';
       $po_id = $_REQUEST['po_id'];
-      $content_header='Edit Purchase Order';
-    }
+      $content_header = 'Edit Purchase Order';
 
-    $po = new Po;
+      $po = new Po;
+      $rsPoMain = $po->getPoMainByPoId($po_id);
+      $rsPoPeriod = $po->getPoPeriodByPoId($po_id);
+    }
 
     $supplier = new Supplier;
     $supplier_rs = $supplier->getRecordAll();
@@ -83,28 +87,33 @@ require_once 'auth.php';
         <!-- /.container-fluid -->
       </section>
 
-      <!-- Main content -->
+      <!-- Main content = isset($_GET['user']) ? $_GET['user'] : 'default';$_GET["user"] ?? "anonymous"-->
       <section>
         <div class="container-fluid">
           <div class="row">
             <div class="col-12">
 
               <div class="card">
+                <div class="card-header <?= $display ?>">
+                  <!-- <h6 class="m-1 fw-bold">< ?= (isset($rsPoMain['po_number'])?$rsPoMain['po_number']:'') . " : " . $rsPoMain['supplier_id']??'' . " - " . $rsPoMain['supplier_name']??'' ?></h6> -->
+                  <h6 class="m-1 fw-bold"><?= (isset($rsPoMain['po_number'])?$rsPoMain['po_number']:'') . " : " . (isset($rsPoMain['supplier_id'])?$rsPoMain['supplier_id']:'') . " - " . (isset($rsPoMain['supplier_name'])?$rsPoMain['supplier_name']:'') ?></h6>
+                </div>
+
                 <div class="card-body m-0 p-0">
                   <form name="myForm" id="myForm" action="" method="post">
-                    <input type="text" class="d-none" name="po_id" id="po_id" value="[Autonumber]">
+                    <input type="text" class="d-none" name="po_id" id="po_id" value=<?= (isset($po_id)?$po_id:'[Autonumber]') ?>>
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
                         <label for="po_number" class="input-group-text">เลขที่ PO</label>
-                        <input type="text" class="form-control" name="po_number" id="po_number">
+                        <input type="text" class="form-control" name="po_number" id="po_number" value="<?= (isset($rsPoMain['po_number'])?$rsPoMain['po_number']:'') ?>" <?= $disabled?>>
                       </div>
                     </div>
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
                         <label for="project_name" class="input-group-text">ชื่อโครงการ</label>
-                        <input type="text" class="form-control" name="project_name" id="project_name">
+                        <input type="text" class="form-control" name="project_name" id="project_name" value="<?= (isset($rsPoMain['project_name'])?$rsPoMain['project_name']:'') ?>">
                       </div>
 
                       <div class="col-4 input-group input-group-sm">
@@ -113,7 +122,8 @@ require_once 'auth.php';
                           <option value="">...</option>
                           <?php
                           foreach ($supplier_rs as $row) :
-                            echo "<option value='{$row['supplier_id']}'>{$row['supplier_name']}</option>";
+                            $selected_attr = ((isset($rsPoMain['supplier_id'])?$rsPoMain['supplier_id']:'') == $row['supplier_id']) ? " selected" : "";
+                            echo "<option value='{$row['supplier_id']}' {$selected_attr}>{$row['supplier_name']}</option>";
                           endforeach ?>
                         </select>
                       </div>
@@ -124,7 +134,9 @@ require_once 'auth.php';
                           <option value="">...</option>
                           <?php
                           foreach ($location_rs as $row) :
-                            echo "<option value='{$row['location_id']}'>{$row['location_name']}</option>";
+                            $selected_attr = ((isset($rsPoMain['location_id'])?$rsPoMain['location_id']:'') == $row['location_id']) ? " selected" : "";
+                            // $selected_attr = ($rsPoMain['location_id'] == $row['location_id']) ? " selected" : "";
+                            echo "<option value='{$row['location_id']}' {$selected_attr}>{$row['location_name']}</option>";
                           endforeach ?>
                         </select>
                       </div>
@@ -133,12 +145,12 @@ require_once 'auth.php';
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
                         <label for="working_name_th" class="input-group-text">ชื่องาน(ภาษาไทย)</label>
-                        <input type="text" class="form-control" name="working_name_th" id="working_name_th">
+                        <input type="text" class="form-control" name="working_name_th" id="working_name_th" value="<?= (isset($rsPoMain['working_name_th'])?$rsPoMain['working_name_th']:'') ?>">
                       </div>
 
                       <div class="col-4 input-group input-group-sm">
                         <label for="working_name_en" class="input-group-text">ชื่องาน(ภาษาอังกฤษ)</label>
-                        <input type="text" class="form-control" name="working_name_en" id="working_name_en">
+                        <input type="text" class="form-control" name="working_name_en" id="working_name_en" value="<?= (isset($rsPoMain['working_name_en'])?$rsPoMain['working_name_en']:'') ?>">
                       </div>
                     </div>
                     <hr>
@@ -146,17 +158,17 @@ require_once 'auth.php';
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
                         <label for="contract_value_before" class="input-group-text">PO ไม่รวม VAT</label>
-                        <input type="number" class="form-control" name="contract_value_before" id="contract_value_before">
+                        <input type="number" step="0.01" class="form-control" name="contract_value_before" id="contract_value_before" value="<?= (isset($rsPoMain['contract_value_before'])?$rsPoMain['contract_value_before']:'') ?>">
                       </div>
 
                       <div class="col-4 input-group input-group-sm">
                         <label for="contract_value" class="input-group-text">PO รวม VAT</label>
-                        <input type="number" class="form-control" name="contract_value" id="contract_value">
+                        <input type="number" step="0.01" class="form-control" name="contract_value" id="contract_value" value="<?= (isset($rsPoMain['contract_value'])?$rsPoMain['contract_value']:'') ?>">
                       </div>
 
                       <div class="col-2 input-group input-group-sm">
                         <label for="vat" class="input-group-text">VAT</label>
-                        <input type="number" class="form-control" name="vat" id="vat" data-vat_rate=<?= VAT_RATE ?> readonly>
+                        <input type="number" step="0.01" class="form-control" name="vat" id="vat" value="<?= (isset($rsPoMain['vat'])?$rsPoMain['vat']:'') ?>" data-vat_rate=<?= VAT_RATE ?> readonly>
                       </div>
 
                       <div class="col-2 input-group input-group-sm">
@@ -164,7 +176,7 @@ require_once 'auth.php';
                           <input class="form-check-input" type="checkbox" name="is_deposit" id="is_deposit" checked>
                         </div>
                         <label class="form-check-label" for="deposit_percent">เงินมัดจำ</label>
-                        <input type="number" class="form-control" name="deposit_percent" id="deposit_percent">%
+                        <input type="number" step="0.01" class="form-control" name="deposit_percent" id="deposit_percent" value="<?= (isset($rsPoMain['deposit_percent'])?$rsPoMain['deposit_percent']:'') ?>">%
                       </div>
                     </div>
                     <hr>
@@ -173,19 +185,19 @@ require_once 'auth.php';
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="working_date_from" class="input-group-text ">ระยะเวลาดำเนินการ</label>
-                          <input type="date" class="form-control " name="working_date_from" id="working_date_from">
+                          <input type="date" class="form-control " name="working_date_from" id="working_date_from" value=<?= (isset($rsPoMain['working_date_from'])?htmlspecialchars($rsPoMain['working_date_from']):'') ?>>
                         </div>
                       </div>
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="working_date_to" class="input-group-text "> ถึง </label>
-                          <input type="date" class="form-control " name="working_date_to" id="working_date_to">
+                          <input type="date" class="form-control " name="working_date_to" id="working_date_to" value=<?= (isset($rsPoMain['working_date_to'])?htmlspecialchars($rsPoMain['working_date_to']):'') ?>>
                         </div>
                       </div>
 
                       <div class="col-2 input-group input-group-sm">
                         <label for="working_day" class="input-group-text">รวม</label>
-                        <input type="number" class="form-control" name="working_day" id="working_day" disabled>
+                        <input type="number" class="form-control" name="working_day" id="working_day" value="<?= (isset($rsPoMain['working_day'])?$rsPoMain['working_day']:'') ?>" readonly>
                       </div>
                     </div>
 
@@ -202,7 +214,7 @@ require_once 'auth.php';
                         <a id="btnDeleteLast" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="ลบงวดงานล่าสุด">
                           Delete last period
                         </a>
-                        <a id="btnClear" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="ลบงวดงานทั้งหมด">
+                        <a id="btnClear" class="btn btn-danger btn-sm <?= ($action=='insert'?'d-inline':'d-none')?>" data-toggle="tooltip" data-placement="right" title="ลบงวดงานทั้งหมด" >
                           Clear all period
                         </a>
                       </div>
@@ -223,25 +235,29 @@ require_once 'auth.php';
                             </tr>
                           </thead>
                           <tbody id="tbody-period">
-                            <!-- <tr class="firstTr">
-                              <td class="input-group-sm p-0"><input type="number" name="period_numbers[]" class="form-control period_number" value="1" readonly>
-                              </td>
-                              <td class="input-group-sm p-0"><input type="number" name="interim_payments[]" class="form-control interim_payment" require>
-                              </td>
-                              <td class="input-group-sm p-0"><input type="number" name="interim_payment_percents[]" class="form-control interim_payment_percent">
-                              </td>
-                              <td class="input-group-sm p-0">
-                                <input type="text" name="remarks[]" class="form-control remark">
-                              </td>
-                              <td class="p-1 align-content-center d-none">
-                                <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-trash"></i></a>
-                                <a class="btn btn-sm align-self-center btnDeleteThis" style="display:none;" title="ลบรายการนี้"><i class="fi fi-rr-cross-circle"></i></a>
-                              </td>
-                              <td class="input-group-sm p-0">
-                                <input type="text" name="cruds[]" class="form-control crud" value="i">
-                              </td>
-                              <td class="input-group-sm p-0 d-nonex"><input type="text" name="period_id[]" class="form-control period_id" readonly></td>
-                            </tr> -->
+                          <?php if ($action == 'insert'){
+
+                          }elseif($action == 'update'){
+                            foreach ($rsPoPeriod as $row) { ?>
+                                <tr class="firstTr" crud='s'>
+                                  <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
+                                  <td class="input-group-sm p-0"><input type="number" step="0.01" name="period_numbers[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>
+                                  </td>
+                                  <td class="input-group-sm p-0"><input type="number" step="0.01" name="workload_planned_percents[]" class="form-control workload_planned_percent" value="<?php echo isset($row['workload_planned_percent']) ? htmlspecialchars($row['workload_planned_percent']) : ''; ?>">
+                                  </td>
+                                  <td class="input-group-sm p-0"><input type="number" step="0.01" name="interim_payments[]" class="form-control interim_payment" value="<?php echo isset($row['interim_payment']) ? htmlspecialchars($row['interim_payment']) : ''; ?>">
+                                  </td>
+                                  <td class="input-group-sm p-0"><input type="number" step="0.01" name="interim_payment_percents[]" class="form-control interim_payment_percent" value="<?php echo isset($row['interim_payment_percent']) ? htmlspecialchars($row['interim_payment_percent']) : ''; ?>">
+                                  </td>
+                                  <td class="input-group-sm p-0">
+                                    <input type="text" name="remarks[]" class="form-control remark" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">
+                                  </td>
+                                  <td class="input-group-sm p-0">
+                                    <input type="text" name="cruds[]" class="form-control crud" value="s">
+                                  </td>
+                                  <td class="input-group-sm p-0 d-nonex"><input type="text" name="period_ids[]" class="form-control period_id" value="<?php echo isset($row['period_id']) ? htmlspecialchars($row['period_id']) : ''; ?>" readonly></td>
+                                </tr>
+                              <?php }} ?>
                           </tbody>
                         </table>
                       </div>
@@ -255,7 +271,7 @@ require_once 'auth.php';
                     <div class="container-fluid  p-0 d-flex justify-content-between">
                       <button type="button" name="btnBack" class="btn btn-primary btn-sm m-1 btnBack"> <i class="fi fi-rr-left"></i> </button>
                       <div>
-                        <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsInspectionPeriod['current_approval_level'] ?>">
+                        <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" data-action="<?= $action ?>" value="บันทึก" data-current_approval_level="<?= $rsInspectionPeriod['current_approval_level'] ?>">
                         <button type="button" name="btnCancel" class="btn btn-warning btn-sm m-1 btnCancel">ยกเลิก</button>
                       </div>
                     </div>

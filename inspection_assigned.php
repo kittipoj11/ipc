@@ -86,9 +86,6 @@ require_once 'auth.php';
               <div class="card">
                 <div class="card-header d-flex">
                   <h6 class="m-1 fw-bold">All Assign to me</h6>
-                  <a href="po_create.php" class="btn btn-success btn-sm btnNew d-none" title="New" style="margin: 0px 5px 5px 5px;">
-                    <i class="fa-solid fa-plus"></i>
-                  </a>
                 </div>
 
                 <div class="card-body p-0" id="card-body">

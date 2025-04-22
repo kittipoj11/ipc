@@ -7,6 +7,7 @@ $user = new User;
 
 $result = $user->checkLogin($_POST['username'],$_POST['password']);
 $_SESSION['result1'] = $result;
+
 if($result){
     $_SESSION['result2']= $result;
     $permissions = $user->getPermissions();
