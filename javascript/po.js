@@ -1,6 +1,6 @@
 $(document).ready(function () {
   // $('.btnDelete').on('click', function() { // แบบนี้ -> ไม่สามารถใช้งานได้เมื่อสร้างปุ่มขึ้นมาที่หลัง
-  $(document).on("click", ".btnDelete", function (e) {
+  $("#tableMain #tbody").on("click", ".btnDelete", function (e) {
     e.preventDefault();
     // const po_id = $(this).data("id");
     const tr = $(this).parents("tr");
@@ -91,18 +91,18 @@ $(document).ready(function () {
   //         window.location.href = "po_edit.php?id=" + po_id;
   //     });
   // });
-  $(document).on("click", ".btnEdit", function (e) {
+  $("#tableMain #tbody").on("click", ".btnEdit", function (e) {
     const po_id = $(this).parents("tr").data("id");
     // window.location.href = "po_edit.php?po_id=" + po_id;
-    window.location.href = "po_dml.php?action=update"+"&po_id=" + po_id;
+    window.location.href = "po_dml.php?action=update" + "&po_id=" + po_id;
   });
-  
+
   // $(document).on("click", ".tdMain:has(a)", function (e) {
-    $(document).on("click", "a.po_number", function (e) {
-      e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
-      const po_id = $(this).parents("tr").data("id");
-      // window.location.href = "po_edit.php?po_id=" + po_id;
-      window.location.href = "po_dml.php?action=update"+"&po_id=" + po_id;
+  $("#tableMain #tbody").on("click", "a.po_number", function (e) {
+    e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
+    const po_id = $(this).parents("tr").data("id");
+    // window.location.href = "po_edit.php?po_id=" + po_id;
+    window.location.href = "po_dml.php?action=update" + "&po_id=" + po_id;
   });
 
   // $(".btnEdit").each(function () {
@@ -116,39 +116,67 @@ $(document).ready(function () {
   //   });
 
   // });
-});
 
-$(document).ready(function () {
-  $(document).on("click", ".tdMain:not(:has(a),.action)", function (e) {
-    //, (comma) ภายใน :not(...): ใช้เพื่อรวมเงื่อนไขหลายอย่าง ในที่นี้คือ :has(a), :has(.action)
-    // หมายความว่า :not() จะกรอง <td> ที่ ไม่มีทั้ง <a> และ ไม่มีทั้ง .action
-    e.preventDefault();
-    $(".content-period").removeClass("d-none");
-    // หรือ
-    // $(".content-period").removeClass('d-none').addClass('d-flex');
+  $("#tableMain #tbody").on("click", ".tdMain:not(:has(a), .action)", function (e) {
+      //, (comma) ภายใน :not(...): ใช้เพื่อรวมเงื่อนไขหลายอย่าง ในที่นี้คือ :has(a), :has(.action)
+      // หมายความว่า :not() จะกรอง <td> ที่ ไม่มีทั้ง <a> และ ไม่มีทั้ง .action
+      e.preventDefault();
+      $(".content-period").removeClass("d-none");
+      // หรือ
+      // $(".content-period").removeClass('d-none').addClass('d-flex');
 
-    let po_id = $(this).parents("tr").data("id"); //$(this).closest("tr")
-    let po_number = $(this).parents("tr").find("a:first").data("id");
-    // let po_id = $(this).closest('tr').attr('po-id');
-    $(".card-title").html(po_number);
+      let po_id = $(this).parents("tr").data("id"); //$(this).closest("tr")
+      let po_number = $(this).parents("tr").find("a:first").data("id");
+      // let po_id = $(this).closest('tr').attr('po-id');
+      $(".card-title").html(po_number);
 
+      $.ajax({
+        url: "po_crud.php",
+        type: "POST",
+        data: {
+          po_id: po_id,
+          dataType: "json",
+          action: "selectperiod",
+        },
+        success: function (response) {
+          $("#tbody-period").html(response);
+        },
+      });
+    }
+  );
+
+  // ฟังก์ชันสำหรับโหลดข้อมูลเริ่มต้น
+  function loadAllPurchaseOrder(){
+    console.log("Start");
     $.ajax({
-      url: "po_crud.php",
-      type: "POST",
+      url: 'po_crud.php',
+      type: 'POST',
       data: {
-        po_id: po_id,
         dataType: "json",
-        action: "selectperiod",
+        action: "select",
       },
-      success: function (response) {
-        // console.log(`response=${response}`);
-        // data = JSON.parse(response);
-        // console.log(data);
-
-        $("#tbody-period").html(response);
-      },
-    });
+      success: function(response) {
+        console.log("load");
+        console.log(response);
+          $("#tbody").html(response);
+          // attachMenuClickListeners();
+      }
   });
+  }
+
+      // ฟังก์ชันสำหรับเพิ่ม Event Listener ให้กับลิงก์เมนู
+      function attachMenuClickListeners() {
+        // $('#tbody').on('click', 'a', function(event) {
+        //     event.preventDefault();
+        //     const content_filename = $(this).data('content_filename');
+        //     const function_name = $(this).data('function_name');
+        //     if (content_filename) {
+        //         loadContent(content_filename, function_name);
+        //     }
+        // });
+    }
+
+  loadAllPurchaseOrder();
 });
 
 // document.getElementById("opt_event_id").addEventListener("change", complete_selection);

@@ -85,3 +85,8 @@ echo "<br>Database Host: " . DB_HOST;
     // print_r($_SESSION);
     // echo "</pre>";
 
+การใช้ includes ในการตรวจสอบว่ามีค่านั้นๆหรือไม่ ใช้ได้กับ string หรือ Array เช่น
+const fruits=['apple','banana','mango'];
+fruits.includes('banana'); //จะได้ผลลัพธ์เป็น true 
+
+'hello world'.includes('world'); //จะได้ผลลัพธ์เป็น true

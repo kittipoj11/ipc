@@ -87,7 +87,7 @@ require_once 'auth.php';
         <!-- /.container-fluid -->
       </section>
 
-      <!-- Main content = isset($_GET['user']) ? $_GET['user'] : 'default';$_GET["user"] ?? "anonymous"-->
+      <!-- Main content -->
       <section>
         <div class="container-fluid">
           <div class="row">
@@ -95,7 +95,6 @@ require_once 'auth.php';
 
               <div class="card">
                 <div class="card-header <?= $display ?>">
-                  <!-- <h6 class="m-1 fw-bold">< ?= (isset($rsPoMain['po_number'])?$rsPoMain['po_number']:'') . " : " . $rsPoMain['supplier_id']??'' . " - " . $rsPoMain['supplier_name']??'' ?></h6> -->
                   <h6 class="m-1 fw-bold"><?= (isset($rsPoMain['po_number'])?$rsPoMain['po_number']:'') . " : " . (isset($rsPoMain['supplier_id'])?$rsPoMain['supplier_id']:'') . " - " . (isset($rsPoMain['supplier_name'])?$rsPoMain['supplier_name']:'') ?></h6>
                 </div>
 
@@ -173,7 +172,10 @@ require_once 'auth.php';
 
                       <div class="col-2 input-group input-group-sm">
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" name="is_deposit" id="is_deposit" checked>
+                            <?php
+                            $checked_attr = isset($rsPoMain['deposit_percent'])?($rsPoMain['is_deposit'] ? "checked" : ""):"";
+                            ?>
+                            <input class="form-check-input" type="checkbox" name="is_deposit" id="is_deposit" <?= $checked_attr ?>>
                         </div>
                         <label class="form-check-label" for="deposit_percent">เงินมัดจำ</label>
                         <input type="number" step="0.01" class="form-control" name="deposit_percent" id="deposit_percent" value="<?= (isset($rsPoMain['deposit_percent'])?$rsPoMain['deposit_percent']:'') ?>">%
@@ -185,13 +187,13 @@ require_once 'auth.php';
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="working_date_from" class="input-group-text ">ระยะเวลาดำเนินการ</label>
-                          <input type="date" class="form-control " name="working_date_from" id="working_date_from" value=<?= (isset($rsPoMain['working_date_from'])?htmlspecialchars($rsPoMain['working_date_from']):'') ?>>
+                          <input type="date" class="form-control " name="working_date_from" id="working_date_from" value="<?= (isset($rsPoMain['working_date_from'])?htmlspecialchars($rsPoMain['working_date_from']):'') ?>">
                         </div>
                       </div>
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="working_date_to" class="input-group-text "> ถึง </label>
-                          <input type="date" class="form-control " name="working_date_to" id="working_date_to" value=<?= (isset($rsPoMain['working_date_to'])?htmlspecialchars($rsPoMain['working_date_to']):'') ?>>
+                          <input type="date" class="form-control " name="working_date_to" id="working_date_to" value="<?= (isset($rsPoMain['working_date_to'])?htmlspecialchars($rsPoMain['working_date_to']):'') ?>">
                         </div>
                       </div>
 
@@ -203,7 +205,7 @@ require_once 'auth.php';
 
                     <hr>
 
-                    <div class="card border border-1 border-dark m-1" id="div_open_area_schedule">
+                    <div class="card border border-1 border-dark m-1">
                       <h6 class="m-1 fw-bold">รายการงวดงาน</h6>
                       <!-- <div class="card-header" style="display: flex;"> -->
                       <div class="m-1">
