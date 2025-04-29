@@ -56,7 +56,7 @@ require_once 'auth.php';
     require_once  'class/location_class.php';
     $po = new Po;
     $rsPoMainAll = $po->getPoMainAll();
-    $rsPoPeriod = $po->getPoPeriodByPoId(0);
+    // $rsPoPeriod = $po->getPoPeriodByPoId(0);
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -163,7 +163,7 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody-period">
-                      <!-- < ?php foreach ($rsPoPeriod as $row) {
+                      <!-- <!-- < ?php foreach ($rsPoPeriod as $row) { -->
                         $html = <<<EOD
                                         <tr>
                                             <td class="p-0 d-none">{$row['po_period_id']}</td>
