@@ -163,7 +163,7 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody-period">
-                      <!-- <!-- < ?php foreach ($rsPoPeriod as $row) { -->
+                      <!-- < ?php foreach ($rsPoPeriod as $row) {
                         $html = <<<EOD
                                         <tr>
                                             <td class="p-0 d-none">{$row['po_period_id']}</td>
