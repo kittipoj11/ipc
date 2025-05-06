@@ -192,16 +192,16 @@ class Po extends Connection
 
                 // INSERT INTO po_period
                 $sql = <<<EOD
-                        INSERT INTO `po_period`(`po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`) 
-                        VALUES (:po_id, :period_number, :workload_planned_percent, :interim_payment, :interim_payment_percent, :remark)
-                    EOD;
+                            INSERT INTO `po_period`(`po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`) 
+                            VALUES (:po_id, :period_number, :workload_planned_percent, :interim_payment, :interim_payment_percent, :remark)
+                        EOD;
                 $stmtPoPeriod = $this->myConnect->prepare($sql);
 
                 // INSERT INTO inspection_periods
                 $sql = <<<EOD
-                        INSERT INTO `inspection_periods`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `is_paid`, `is_retention`, `workflow_id`) 
-                        VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :is_paid, :is_retention, :workflow_id)
-                    EOD;
+                            INSERT INTO `inspection_periods`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `is_paid`, `is_retention`, `workflow_id`) 
+                            VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :is_paid, :is_retention, :workflow_id)
+                        EOD;
                 $stmtInspectionPeriods = $this->myConnect->prepare($sql);
 
                 // INSERT inspection_period_details
