@@ -20,7 +20,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
     // getPoMainAll($po);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
     $rs = $po->getPoMainAll();
-    createPOTable($rs);
+    createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
     $rs = $po->getPoPeriodByPoId($_REQUEST['po_id']);
     createPeriodTable($rs);
@@ -30,7 +30,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
 }
 // }
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function createPOTable($getRs) {
+function createTable($getRs) {
     try {
         $html = '';
         foreach ($getRs as $row) {

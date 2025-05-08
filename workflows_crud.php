@@ -4,23 +4,55 @@
 require_once 'config.php';
 require_once 'class/workflows_class.php';
 
-$obj = new Workflows();
+$workflows = new Workflows();
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
-    $obj->insertData($_REQUEST);
-    getAllRecords($obj);
+    $workflows->insertData($_REQUEST);
+    // getAllRecords($workflows);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
-    $obj->updateData($_REQUEST);
-    getAllRecords($obj);
+    $workflows->updateData($_REQUEST);
+    // getAllRecords($workflows);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
-    $obj->deleteData($_REQUEST);
-    getAllRecords($obj);
+    $workflows->deleteData($_REQUEST);
+    // getAllRecords($workflows);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
+    $rs = $workflows->getAllRecords();
+    createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $obj->getRecordById($_REQUEST['workflow_id']);
+    $rs = $workflows->getRecordById($_REQUEST['workflow_id']);
     echo json_encode($rs);
 } else {
-    getAllRecords($obj);
+    getAllRecords($workflows);
+}
+
+//หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
+function createTable($getRs) {
+    try {
+        $html = '';
+        foreach ($getRs as $row) {
+            $html .= <<<EOD
+                        <tr id="{$row['workflow_id']}">
+                            <td>{$row['workflow_id']}</td>
+                            <td>{$row['workflow_name']}</td>
+                            <td align='center'>
+                                <div class='btn-group-sm'>
+                                    <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' style='margin: 0px 5px 5px 5px'>
+                                        <i class='fa-regular fa-pen-to-square'></i>
+                                    </a>
+                                    <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' style='margin: 0px 5px 5px 5px'>
+                                        <i class='fa-regular fa-trash-can'></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        EOD;
+          }
+        echo $html;
+        // print_r($rs);
+    } catch (PDOException $e) {
+        echo 'Data not found!';
+    }
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่

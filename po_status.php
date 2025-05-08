@@ -84,7 +84,7 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody">
-                      <?php foreach ($rs as $row) {
+                      <!-- < ?php foreach ($rs as $row) {
                         $html = <<<EOD
                                         <tr id="{$row['po_status_id']}">
                                             <td>{$row['po_status_id']}</td>
@@ -102,7 +102,7 @@ require_once 'auth.php';
                                         </tr>
                                         EOD;
                         echo $html;
-                      } ?>
+                      } ?> -->
                     </tbody>
                   </table>
                 </div>

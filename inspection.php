@@ -103,7 +103,7 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody">
-                      <?php foreach ($rsPoMainAll as $row) {
+                      <!-- < ?php foreach ($rsPoMainAll as $row) {
                         $html = <<<EOD
                                         <tr data-po_id='{$row['po_id']}'>
                                             <td class="tdMain p-0 d-none">{$row['po_id']}</td>
@@ -127,7 +127,7 @@ require_once 'auth.php';
                                         </tr>
                                         EOD;
                         echo $html;
-                      } ?>
+                      } ?> -->
                     </tbody>
                   </table>
                 </div>
@@ -203,11 +203,6 @@ require_once 'auth.php';
 
     </div>
     <!-- /.content-wrapper -->
-
-    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ส่วน Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-
-    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Logout Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-    <!-- logout.php -->
 
     <!-- Main Content End -->
 

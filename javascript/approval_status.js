@@ -78,27 +78,28 @@ $(document).ready(function () {
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
-                    // Load เฉพาะ card-body
                     $("#frmOpen")[0].reset();
-                    $("#card-body").empty();
-                    $("#card-body").html(response);
-                    $("#example1")
-                      .DataTable({
-                        responsive: true, //  true=การรองรับอุปกรณ์
-                        lengthChange: true, //true ให้เลือกหน้าได้ว่าใน 1 หน้าต้องการให้แสดงกี่ row(มี 10, 25, 50, 100)
-                        autoWidth: false, //กำหนดความกว้างอัตโนมัติ
-                        buttons: [
-                          "copy",
-                          "csv",
-                          "excel",
-                          "pdf",
-                          "print",
-                          "colvis",
-                        ],
-                      })
-                      .buttons()
-                      .container()
-                      .appendTo("#example1_wrapper .col-md-6:eq(0)");
+                    loadAllApprovalStatus();
+                    // Load เฉพาะ card-body
+                    // $("#card-body").empty();
+                    // $("#card-body").html(response);
+                    // $("#example1")
+                    //   .DataTable({
+                    //     responsive: true, //  true=การรองรับอุปกรณ์
+                    //     lengthChange: true, //true ให้เลือกหน้าได้ว่าใน 1 หน้าต้องการให้แสดงกี่ row(มี 10, 25, 50, 100)
+                    //     autoWidth: false, //กำหนดความกว้างอัตโนมัติ
+                    //     buttons: [
+                    //       "copy",
+                    //       "csv",
+                    //       "excel",
+                    //       "pdf",
+                    //       "print",
+                    //       "colvis",
+                    //     ],
+                    //   })
+                    //   .buttons()
+                    //   .container()
+                    //   .appendTo("#example1_wrapper .col-md-6:eq(0)");
 
                     // Load เฉพาะ tbody
                     // $("#frmOpen].reset();
@@ -168,20 +169,21 @@ $(document).ready(function () {
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            // Load เฉพาะ card-body
             $("#frmOpen")[0].reset();
-            $("#card-body").empty();
-            $("#card-body").html(response);
-            $("#example1")
-              .DataTable({
-                responsive: true, //  true=การรองรับอุปกรณ์
-                lengthChange: true, //true ให้เลือกหน้าได้ว่าใน 1 หน้าต้องการให้แสดงกี่ row(มี 10, 25, 50, 100)
-                autoWidth: false, //กำหนดความกว้างอัตโนมัติ
-                buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
-              })
-              .buttons()
-              .container()
-              .appendTo("#example1_wrapper .col-md-6:eq(0)");
+            loadAllApprovalStatus();
+            // Load เฉพาะ card-body
+            // $("#card-body").empty();
+            // $("#card-body").html(response);
+            // $("#example1")
+            //   .DataTable({
+            //     responsive: true, //  true=การรองรับอุปกรณ์
+            //     lengthChange: true, //true ให้เลือกหน้าได้ว่าใน 1 หน้าต้องการให้แสดงกี่ row(มี 10, 25, 50, 100)
+            //     autoWidth: false, //กำหนดความกว้างอัตโนมัติ
+            //     buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+            //   })
+            //   .buttons()
+            //   .container()
+            //   .appendTo("#example1_wrapper .col-md-6:eq(0)");
 
             // Load เฉพาะ tbody
             // $("#Open].reset();
@@ -197,5 +199,24 @@ $(document).ready(function () {
     });
   });
 
+  // ฟังก์ชันสำหรับโหลดข้อมูลเริ่มต้น
+  function loadAllApprovalStatus() {
+    // console.log("Start");
+    $.ajax({
+      url: "approval_status_crud.php",
+      type: "POST",
+      data: {
+        dataType: "json",
+        action: "select",
+      },
+      success: function (response) {
+        // console.log("load");
+        // console.log(response);
+        $("#tbody").html(response);
+        // attachMenuClickListeners();
+      },
+    });
+  }
 
+  loadAllApprovalStatus();
 });
