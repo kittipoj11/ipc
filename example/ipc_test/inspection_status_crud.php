@@ -9,25 +9,25 @@ $obj = new inspection_status();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $obj->insertData($_REQUEST);
-    getRecordAll($obj);
+    getAllRecords($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $obj->updateData($_REQUEST);
-    getRecordAll($obj);
+    getAllRecords($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $obj->deleteData($_REQUEST);
-    getRecordAll($obj);
+    getAllRecords($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
     $rs = $obj->getRecordById($_REQUEST['inspection_status_id']);
     echo json_encode($rs);
 } else {
-    getRecordAll($obj);
+    getAllRecords($obj);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getRecordAll($getObj)
+function getAllRecords($getObj)
 {
     try {
-        $rs = $getObj->getRecordAll();
+        $rs = $getObj->getAllRecords();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

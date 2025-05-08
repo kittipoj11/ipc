@@ -179,6 +179,7 @@ $(document).ready(function () {
   loadAllPurchaseOrder();
 });
 
+// code ข้างล่างไม่เกี่ยวข้อง ใช้อ้างอิงในการทำในส่วนของ event change ของ dropdown
 // document.getElementById("opt_event_id").addEventListener("change", complete_selection);
 // document
 //   .getElementById("building_id")

@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/supplier_class.php';
     $supplier = new Supplier;
-    $rs = $supplier->getRecordAll();
+    $rs = $supplier->getAllRecords();
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -84,7 +84,7 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody">
-                      <?php foreach ($rs as $row) {
+                      <!-- < ?php foreach ($rs as $row) {
                         $html = <<<EOD
                                         <tr id="{$row['supplier_id']}">
                                             <td>{$row['supplier_id']}</td>
@@ -102,7 +102,7 @@ require_once 'auth.php';
                                         </tr>
                                         EOD;
                         echo $html;
-                      } ?>
+                      } ?> -->
                     </tbody>
                   </table>
                 </div>

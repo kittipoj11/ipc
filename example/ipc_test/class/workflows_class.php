@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Workflows extends Connection
 {
-    public function getRecordAll()
+    public function getAllRecords()
     {
         $sql = <<<EOD
                 select workflow_id, workflow_name, is_deleted 

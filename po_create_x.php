@@ -52,10 +52,10 @@ require_once 'auth.php';
     $po = new Po;
 
     $supplier = new Supplier;
-    $supplier_rs = $supplier->getRecordAll();
+    $supplier_rs = $supplier->getAllRecords();
 
     $location = new Location;
-    $location_rs = $location->getRecordAll();
+    $location_rs = $location->getAllRecords();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

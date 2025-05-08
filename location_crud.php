@@ -4,30 +4,62 @@
 require_once 'config.php';
 require_once 'class/location_class.php';
 
-$obj = new Location();
+$location = new Location();
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
-    $obj->insertData($_REQUEST);
-    getRecordAll($obj);
+    $location->insertData($_REQUEST);
+    // getAllRecords($location);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
-    $obj->updateData($_REQUEST);
-    getRecordAll($obj);
+    $location->updateData($_REQUEST);
+    // getAllRecords($location);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
-    $obj->deleteData($_REQUEST);
-    getRecordAll($obj);
+    $location->deleteData($_REQUEST);
+    // getAllRecords($location);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
+    $rs = $location->getAllRecords();
+    createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $obj->getRecordById($_REQUEST['location_id']);
+    $rs = $location->getRecordById($_REQUEST['location_id']);
     echo json_encode($rs);
 } else {
-    getRecordAll($obj);
+    getAllRecords($location);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getRecordAll($getObj)
+function createTable($getRs) {
+    try {
+        $html = '';
+        foreach ($getRs as $row) {
+            $html .= <<<EOD
+                            <tr id="{$row['location_id']}">
+                                <td>{$row['location_id']}</td>
+                                <td>{$row['location_name']}</td>
+                                <td align='center'>
+                                    <div class='btn-group-sm'>
+                                        <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' data-id='{$row['location_id']}' style='margin: 0px 5px 5px 5px'>
+                                            <i class='fa-regular fa-pen-to-square'></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' data-id='{$row['location_id']}' style='margin: 0px 5px 5px 5px'>
+                                            <i class='fa-regular fa-trash-can'></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        EOD;
+          }
+        echo $html;
+        // print_r($rs);
+    } catch (PDOException $e) {
+        echo 'Data not found!';
+    }
+}
+
+//หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
+function getAllRecords($getObj)
 {
     try {
-        $rs = $getObj->getRecordAll();
+        $rs = $getObj->getAllRecords();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

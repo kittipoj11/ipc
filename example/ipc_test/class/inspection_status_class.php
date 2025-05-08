@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Inspection_status extends Connection
 {
-    public function getRecordAll()
+    public function getAllRecords()
     {
         $sql = <<<EOD
                 select inspection_status_id, inspection_status_name, is_deleted 

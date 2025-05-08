@@ -9,17 +9,17 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     // print_r($_REQUEST);
     // exit;
     $obj->insertData($_REQUEST);
-    getRecordAll($obj);
+    getAllRecords($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     // print_r($_REQUEST);
     // exit;
     $obj->updateData($_REQUEST);
-    getRecordAll($obj);
+    getAllRecords($obj);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     // print_r($_REQUEST);
     // exit;
     $obj->deleteData($_REQUEST);
-    getRecordAll($obj);
+    getAllRecords($obj);
 } elseif (isset($_REQUEST['edit_id'])) {
     // print_r($_REQUEST);
     // exit;
@@ -29,15 +29,15 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     // print_r($_REQUEST);
     // exit;
     $obj->deleteData($_REQUEST);
-    getRecordAll($obj);
+    getAllRecords($obj);
 }
 
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getRecordAll($getObj)
+function getAllRecords($getObj)
 {
     try {
-        $rs = $getObj->getRecordAll();
+        $rs = $getObj->getAllRecords();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

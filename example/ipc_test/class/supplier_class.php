@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Supplier extends Connection
 {
-    public function getRecordAll()
+    public function getAllRecords()
     {
         $sql = <<<EOD
                 select supplier_id, supplier_name, is_deleted 

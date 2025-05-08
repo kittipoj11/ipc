@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/location_class.php';
     $location = new Location;
-    $rs = $location->getRecordAll();
+    $rs = $location->getAllRecords();
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -84,7 +84,7 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody">
-                      <?php foreach ($rs as $row) {
+                      <!-- < ?php foreach ($rs as $row) {
                         $html = <<<EOD
                                         <tr id="{$row['location_id']}">
                                             <td>{$row['location_id']}</td>
@@ -102,7 +102,7 @@ require_once 'auth.php';
                                         </tr>
                                         EOD;
                         echo $html;
-                      } ?>
+                      } ?> -->
                     </tbody>
                   </table>
                 </div>

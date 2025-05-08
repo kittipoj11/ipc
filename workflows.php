@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/workflows_class.php';
     $workflow = new Workflows;
-    $rs = $workflow->getRecordAll();
+    $rs = $workflow->getAllRecords();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

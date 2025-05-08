@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/department_class.php';
     $department = new Department;
-    $rs = $department->getRecordAll();
+    $rs = $department->getAllRecords();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

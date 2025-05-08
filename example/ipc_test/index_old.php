@@ -46,7 +46,7 @@ if (!isset($_SESSION['username'])) {
     <?php
     require_once  'class/supplier_class.php';
     $supplier = new Supplier;
-    $rs = $supplier->getRecordAll();
+    $rs = $supplier->getAllRecords();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

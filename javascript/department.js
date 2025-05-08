@@ -2,8 +2,8 @@ $(document).ready(function () {
   // $('#myForm').submit(function (e) {
 
   $(document).on("click", ".btnNew", function (e) {
-    $("#department_id").val('[Autonumber]');
-    $("#department_name").val('');
+    $("#department_id").val("[Autonumber]");
+    $("#department_name").val("");
   });
 
   $(document).on("click", ".btnEdit", function (e) {
@@ -15,10 +15,10 @@ $(document).ready(function () {
       type: "POST",
       data: {
         department_id: department_id,
-        action: 'selectdata'
+        action: "selectdata",
       },
       success: function (response) {
-        console.log(`response=${response}`);
+        // console.log(`response=${response}`);
         data = JSON.parse(response);
         // console.log(data);
         $("#department_id").val(data.department_id);
@@ -36,7 +36,7 @@ $(document).ready(function () {
       type: "POST",
       data: {
         department_id: department_id,
-        action: 'selectdata'
+        action: "selectdata",
       },
       success: function (response) {
         data = JSON.parse(response);
@@ -78,27 +78,28 @@ $(document).ready(function () {
                 }).then((result) => {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
-                    // Load เฉพาะ card-body
                     $("#frmOpen")[0].reset();
-                    $("#card-body").empty();
-                    $("#card-body").html(response);
-                    $("#example1")
-                      .DataTable({
-                        responsive: true, //  true=การรองรับอุปกรณ์
-                        lengthChange: true, //true ให้เลือกหน้าได้ว่าใน 1 หน้าต้องการให้แสดงกี่ row(มี 10, 25, 50, 100)
-                        autoWidth: false, //กำหนดความกว้างอัตโนมัติ
-                        buttons: [
-                          "copy",
-                          "csv",
-                          "excel",
-                          "pdf",
-                          "print",
-                          "colvis",
-                        ],
-                      })
-                      .buttons()
-                      .container()
-                      .appendTo("#example1_wrapper .col-md-6:eq(0)");
+                    loadAllDepartment();
+                    // Load เฉพาะ card-body
+                    // $("#card-body").empty();
+                    // $("#card-body").html(response);
+                    // $("#example1")
+                    //   .DataTable({
+                    //     responsive: true, //  true=การรองรับอุปกรณ์
+                    //     lengthChange: true, //true ให้เลือกหน้าได้ว่าใน 1 หน้าต้องการให้แสดงกี่ row(มี 10, 25, 50, 100)
+                    //     autoWidth: false, //กำหนดความกว้างอัตโนมัติ
+                    //     buttons: [
+                    //       "copy",
+                    //       "csv",
+                    //       "excel",
+                    //       "pdf",
+                    //       "print",
+                    //       "colvis",
+                    //     ],
+                    //   })
+                    //   .buttons()
+                    //   .container()
+                    //   .appendTo("#example1_wrapper .col-md-6:eq(0)");
 
                     // Load เฉพาะ tbody
                     // $("#frmOpen].reset();
@@ -116,23 +117,20 @@ $(document).ready(function () {
         });
       },
     });
-
-
   });
-
 
   $(document).on("click", "#btnSaveData", function (e) {
     e.preventDefault();
 
     let department_id = $("#department_id").val();
     let department_name = $("#department_name").val();
-    let action = '';
-    if (department_id == '[Autonumber]') {
-      action = 'insertdata';
+    let action = "";
+    if (department_id == "[Autonumber]") {
+      action = "insertdata";
     } else {
-      action = 'updatedata';
+      action = "updatedata";
     }
-    console.log(`action=${action}`);
+    // console.log(`action=${action}`);
     $.ajax({
       url: "department_crud.php",
       type: "POST",
@@ -140,10 +138,10 @@ $(document).ready(function () {
       data: {
         department_id: department_id,
         department_name: department_name,
-        action: action
+        action: action,
       },
       success: function (response) {
-      // Swal.fire({
+        // Swal.fire({
         //     icon: 'success',
         //     title: 'Data updated successfully'
         //     // showConfirmButton: false,
@@ -168,20 +166,21 @@ $(document).ready(function () {
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            // Load เฉพาะ card-body
             $("#frmOpen")[0].reset();
-            $("#card-body").empty();
-            $("#card-body").html(response);
-            $("#example1")
-              .DataTable({
-                responsive: true, //  true=การรองรับอุปกรณ์
-                lengthChange: true, //true ให้เลือกหน้าได้ว่าใน 1 หน้าต้องการให้แสดงกี่ row(มี 10, 25, 50, 100)
-                autoWidth: false, //กำหนดความกว้างอัตโนมัติ
-                buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
-              })
-              .buttons()
-              .container()
-              .appendTo("#example1_wrapper .col-md-6:eq(0)");
+            loadAllDepartment();
+            // Load เฉพาะ card-body
+            // $("#card-body").empty();
+            // $("#card-body").html(response);
+            // $("#example1")
+            //   .DataTable({
+            //     responsive: true, //  true=การรองรับอุปกรณ์
+            //     lengthChange: true, //true ให้เลือกหน้าได้ว่าใน 1 หน้าต้องการให้แสดงกี่ row(มี 10, 25, 50, 100)
+            //     autoWidth: false, //กำหนดความกว้างอัตโนมัติ
+            //     buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+            //   })
+            //   .buttons()
+            //   .container()
+            //   .appendTo("#example1_wrapper .col-md-6:eq(0)");
 
             // Load เฉพาะ tbody
             // $("#Open].reset();
@@ -197,5 +196,24 @@ $(document).ready(function () {
     });
   });
 
+  // ฟังก์ชันสำหรับโหลดข้อมูลเริ่มต้น
+  function loadAllDepartment() {
+    // console.log("Start");
+    $.ajax({
+      url: "department_crud.php",
+      type: "POST",
+      data: {
+        dataType: "json",
+        action: "select",
+      },
+      success: function (response) {
+        // console.log("load");
+        // console.log(response);
+        $("#tbody").html(response);
+        // attachMenuClickListeners();
+      },
+    });
+  }
 
+  loadAllDepartment();
 });

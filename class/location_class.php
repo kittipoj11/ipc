@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Location extends Connection
 {
-    public function getRecordAll()
+    public function getAllRecords()
     {
         $sql = <<<EOD
                 select location_id, location_name, is_deleted 
