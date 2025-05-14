@@ -176,7 +176,7 @@ require_once 'auth.php';
                     <tbody id="tbody-period">
                       <!-- <tr>
                         <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_id" value="{$row['po_id']}" readonly></td>
-                        <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_period_id" value="{$row['po_period_id']}" readonly></td>
+                        <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_periods_id" value="{$row['po_periods_id']}" readonly></td>
                         <td class="tdPeriod text-right py-0 px-1"><a class='link-opacity-100 pe-auto' style='margin: 0px 5px 5px 5px'>{$row['period']}</a></td>
                         <td class="tdPeriod text-right py-0 px-1">{$row['workload_planned_percent']}</td>
                         <td class="tdPeriod text-right py-0 px-1">{$row['workload_actual_completed_percent']}</td>

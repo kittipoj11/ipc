@@ -43,7 +43,7 @@ class Inspection extends Connection
                     , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
                     , working_date_from, working_date_to, working_day
                     , suppliers.supplier_name, locations.location_name
-                    , inspection_approvals.approver_id, inspection_approvals.approval_level , approval_status.action_type_id,  action_type.action_type_name
+                    , inspection_period_approvals.approver_id, inspection_period_approvals.approval_level , approval_status.action_type_id,  action_type.action_type_name
                     , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
                     FROM inspection_periods P1
                     INNER JOIN po_main
@@ -52,11 +52,11 @@ class Inspection extends Connection
                         ON suppliers.supplier_id = po_main.supplier_id
                     INNER JOIN locations
                         ON locations.location_id = po_main.location_id   
-                    LEFT JOIN inspection_approvals
-                        ON inspection_approvals.approval_level = P1.current_approval_level
-                        AND inspection_approvals.inspection_id = P1.inspection_id
+                    LEFT JOIN inspection_period_approvals
+                        ON inspection_period_approvals.approval_level = P1.current_approval_level
+                        AND inspection_period_approvals.inspection_id = P1.inspection_id
                     LEFT JOIN approval_status
-                        ON approval_status.approval_status_id = inspection_approvals.approval_status_id
+                        ON approval_status.approval_status_id = inspection_period_approvals.approval_status_id
                     LEFT JOIN action_type
                         ON action_type.action_type_id = approval_status.action_type_id
                     LEFT JOIN inspection_periods P2 
@@ -89,7 +89,7 @@ class Inspection extends Connection
                     , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
                     , working_date_from, working_date_to, working_day
                     , suppliers.supplier_name, locations.location_name
-                    , inspection_approvals.approver_id, inspection_approvals.approval_level , approval_status.action_type_id,  action_type.action_type_name
+                    , inspection_period_approvals.approver_id, inspection_period_approvals.approval_level , approval_status.action_type_id,  action_type.action_type_name
                     , U.username, U.full_name
                     FROM inspection_periods P1
                     INNER JOIN po_main
@@ -98,15 +98,15 @@ class Inspection extends Connection
                         ON suppliers.supplier_id = po_main.supplier_id
                     INNER JOIN locations
                         ON locations.location_id = po_main.location_id   
-                    INNER JOIN inspection_approvals
-                        ON inspection_approvals.approval_level = P1.current_approval_level
-                        AND inspection_approvals.inspection_id = P1.inspection_id
+                    INNER JOIN inspection_period_approvals
+                        ON inspection_period_approvals.approval_level = P1.current_approval_level
+                        AND inspection_period_approvals.inspection_id = P1.inspection_id
                     INNER JOIN approval_status
-                        ON approval_status.approval_status_id = inspection_approvals.approval_status_id
+                        ON approval_status.approval_status_id = inspection_period_approvals.approval_status_id
                     INNER JOIN action_type
                         ON action_type.action_type_id = approval_status.action_type_id
                     INNER JOIN users U 
-                        ON U.user_id = inspection_approvals.approver_id
+                        ON U.user_id = inspection_period_approvals.approver_id
                     WHERE U.username = :username
                         AND P1.current_approval_level >1 
                     ORDER BY P1.po_id, period_number
@@ -367,9 +367,9 @@ class Inspection extends Connection
                 // $_SESSION['remark'] = $remark;
                 $stmtInspectionPeriods->closeCursor();
 
-                // UPDATE inspection_approvals
+                // UPDATE inspection_period_approvals
                 $sql = <<<EOD
-                            UPDATE `inspection_approvals`
+                            UPDATE `inspection_period_approvals`
                             SET `approval_date` = NOW()
                             WHERE `inspection_id` = :inspection_id
                                 AND `approval_level` = :approval_level

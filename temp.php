@@ -67,7 +67,7 @@ class Po extends Connection
     {
         $sql = <<<EOD
                 SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`
-                FROM `po_period`
+                FROM `po_periods`
                 WHERE `po_id` = :po_id
                 ORDER BY `po_id`, `period_number`
                 EOD;
@@ -132,7 +132,7 @@ class Po extends Connection
             $working_day =  $interval->days + 1;
             $create_by = $_SESSION['user_code'];
 
-            // parameters ในส่วน po_period
+            // parameters ในส่วน po_periods
             $period_numbers = $getData['period_numbers'];
             // $period_numbers = null; // ตัวอย่างกรณีที่ตัวแปรเป็น null
 
@@ -186,9 +186,9 @@ class Po extends Connection
                 $stmt->closeCursor();
                 $po_id = $this->myConnect->lastInsertId();
 
-                // INSERT INTO po_period
+                // INSERT INTO po_periods
                 $sql = <<<EOD
-                        INSERT INTO `po_period`(`po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`) 
+                        INSERT INTO `po_periods`(`po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`) 
                         VALUES (:po_id, :period_number, :workload_planned_percent, :interim_payment, :interim_payment_percent, :remark)
                     EOD;
                 $stmtPoPeriod = $this->myConnect->prepare($sql);
@@ -207,16 +207,16 @@ class Po extends Connection
                         EOD;
                 $stmtInspectionPeriodDetails = $this->myConnect->prepare($sql);
 
-                // INSERT inspection_approvals
+                // INSERT inspection_period_approvals
                 $sql = <<<EOD
-                            INSERT INTO `inspection_approvals`(`inspection_id`, `approval_level`, `approver_id`, `approval_status_id`) 
+                            INSERT INTO `inspection_period_approvals`(`inspection_id`, `approval_level`, `approver_id`, `approval_status_id`) 
                             VALUES (:inspection_id, :approval_level, :approver_id, :approval_status_id)
                         EOD;
                 $stmtInspectApprovals = $this->myConnect->prepare($sql);
 
                 // $_SESSION['number_of_period'] = $number_of_period;
                 for ($i = 0; $i < $number_of_period; $i++) {
-                    // po_period
+                    // po_periods
                     $stmtPoPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtPoPeriod->bindParam(':period_number', $period_numbers[$i], PDO::PARAM_INT);
                     $stmtPoPeriod->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
@@ -250,7 +250,7 @@ class Po extends Connection
                     $stmtInspectionPeriodDetails->closeCursor();
 
 
-                    // inspection_approvals
+                    // inspection_period_approvals
                     $approval_status_id = 1;
                     foreach ($rsWorkflowSteps as $row) {
                         $approverId = $row['approver_id'];
@@ -341,7 +341,7 @@ class Po extends Connection
             $remain_value_interim_payment = $contract_value;
             $po_status = 1; //1:รอตรวจ
 
-            // parameters ในส่วน po_period
+            // parameters ในส่วน po_periods
             $period_numbers = $getData['period_numbers'];
             $workload_planned_percent = $getData['workload_planned_percent'];
             $interim_payments = $getData['interim_payments'];
@@ -426,9 +426,9 @@ class Po extends Connection
             if ($stmtPoMainUpdate->execute()) {
                 $stmtPoMainUpdate->closeCursor();
 
-                // INSERT po_period
+                // INSERT po_periods
                 $sql = <<<EOD
-                            INSERT INTO `po_period`(`po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `remark`) 
+                            INSERT INTO `po_periods`(`po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `remark`) 
                             VALUES (:po_id, :period_number, :interim_payment, :interim_payment_percent, :remark)
                         EOD;
                 $stmtPoPeriodInsert = $this->myConnect->prepare($sql);
@@ -486,9 +486,9 @@ class Po extends Connection
                     $stmtInspectionPeriodDetailInsert->closeCursor();
                 }
 
-                // UPDATE po_period
+                // UPDATE po_periods
                 $sql = <<<EOD
-                            UPDATE `po_period`
+                            UPDATE `po_periods`
                             SET `interim_payment` = :interim_payment
                             , `interim_payment_percent` = :interim_payment_percent
                             , `remark` = :remark
@@ -525,9 +525,9 @@ class Po extends Connection
                     $stmtInspectionPeriodUpdate->closeCursor();
                 }
 
-                // DELETE po_period
+                // DELETE po_periods
                 $sql = <<<EOD
-                            DELETE FROM `po_period`
+                            DELETE FROM `po_periods`
                             WHERE `po_id` = :po_id
                                 AND `period_id` = :period_id
                         EOD;
@@ -598,14 +598,14 @@ class Po extends Connection
             // ใช้การกำหนด ON DELETE CASCADE ใน Table ลูก
             // $sql = <<<EOD
             //         DELETE FROM `inspection_periods` 
-            //         WHERE `period_id` IN (SELECT `period_id` FROM `po_period` WHERE `po_id` = :po_id);
+            //         WHERE `period_id` IN (SELECT `period_id` FROM `po_periods` WHERE `po_id` = :po_id);
             //         EOD;
             // $stmt = $this->myConnect->prepare($sql);
             // $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
             // $stmt->execute();
 
             // $sql = <<<EOD
-            //         DELETE FROM `po_period` 
+            //         DELETE FROM `po_periods` 
             //         WHERE po_id = :po_id;
             //         EOD;
             // $stmt = $this->myConnect->prepare($sql);
@@ -617,8 +617,8 @@ class Po extends Connection
                         FROM `inspection_files` 
                         INNER JOIN `inspection_periods`
                             ON `inspection_files`.`inspection_id` = `inspection_periods`.`inspection_id`
-                        INNER JOIN `po_period`
-                            ON `po_period`.`period_id` = `inspection_periods`.`period_id`
+                        INNER JOIN `po_periods`
+                            ON `po_periods`.`period_id` = `inspection_periods`.`period_id`
                         WHERE `po_id` = :po_id
                     EOD;
             $stmt = $this->myConnect->prepare($sql);

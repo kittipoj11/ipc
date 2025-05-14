@@ -211,9 +211,9 @@ class Po extends Connection
                         EOD;
                 $stmtInspectionPeriodDetails = $this->myConnect->prepare($sql);
 
-                // INSERT inspection_approvals
+                // INSERT inspection_period_approvals
                 $sql = <<<EOD
-                            INSERT INTO `inspection_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_status_id`) 
+                            INSERT INTO `inspection_period_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_status_id`) 
                             VALUES (:inspection_id, :period_id, :po_id, :period_number, :approval_level, :approver_id, :approval_status_id)
                         EOD;
                 $stmtInspectApprovals = $this->myConnect->prepare($sql);
@@ -259,7 +259,7 @@ class Po extends Connection
                     $stmtInspectionPeriodDetails->closeCursor();
 
 
-                    // inspection_approvals
+                    // inspection_period_approvals
                     $approval_status_id = 1;
                     foreach ($rsWorkflowSteps as $row) {
                         $approverId = $row['approver_id'];
@@ -477,9 +477,9 @@ class Po extends Connection
                         EOD;
                 $stmtInspectionPeriodDetailInsert = $this->myConnect->prepare($sql);
 
-                // INSERT inspection_approvals
+                // INSERT inspection_period_approvals
                 $sql = <<<EOD
-                            INSERT INTO `inspection_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_status_id`) 
+                            INSERT INTO `inspection_period_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_status_id`) 
                             VALUES (:inspection_id, :period_id, :po_id, :period_number, :approval_level, :approver_id, :approval_status_id)
                         EOD;
                 $stmtInspectApprovals = $this->myConnect->prepare($sql);
@@ -529,7 +529,7 @@ class Po extends Connection
                     // $_SESSION['exe8'] = '8';
                     $stmtInspectionPeriodDetailInsert->closeCursor();
 
-                    // inspection_approvals
+                    // inspection_period_approvals
                     $approval_status_id = 1;
                     foreach ($rsWorkflowSteps as $row) {
                         $approverId = $row['approver_id'];

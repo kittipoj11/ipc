@@ -166,7 +166,7 @@ require_once 'auth.php';
                       <!-- < ?php foreach ($rsPoPeriod as $row) {
                         $html = <<<EOD
                                         <tr>
-                                            <td class="p-0 d-none">{$row['po_period_id']}</td>
+                                            <td class="p-0 d-none">{$row['po_periods_id']}</td>
                                             <td class="text-left py-0 px-1">{$row['period']}</td>
                                             <td class="text-left py-0 px-1">{$row['interim_payment']}</td>
                                             <td class="text-left py-0 px-1">{$row['interim_payment_percent']}</td>

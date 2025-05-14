@@ -129,10 +129,10 @@ CREATE TABLE `files` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inspection_approvals`
+-- Table structure for table `inspection_period_approvals`
 --
 
-CREATE TABLE `inspection_approvals` (
+CREATE TABLE `inspection_period_approvals` (
   `inspection_approval_id` int(11) UNSIGNED NOT NULL,
   `inspection_id` int(11) UNSIGNED DEFAULT NULL,
   `period_id` int(11) DEFAULT NULL,
@@ -232,10 +232,10 @@ INSERT INTO `inspection_status` (`inspection_status_id`, `inspection_status_name
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ipc_period`
+-- Table structure for table `ipc_periods`
 --
 
-CREATE TABLE `ipc_period` (
+CREATE TABLE `ipc_periods` (
   `ipc_id` int(11) UNSIGNED NOT NULL,
   `inspection_id` int(11) UNSIGNED NOT NULL,
   `period_id` int(11) DEFAULT NULL,
@@ -680,11 +680,11 @@ ALTER TABLE `files`
   ADD KEY `record_id` (`record_id`);
 
 --
--- Indexes for table `inspection_approvals`
+-- Indexes for table `inspection_period_approvals`
 --
-ALTER TABLE `inspection_approvals`
+ALTER TABLE `inspection_period_approvals`
   ADD PRIMARY KEY (`inspection_approval_id`),
-  ADD KEY `inspection_approvals_idx` (`inspection_id`,`period_id`,`po_id`) USING BTREE;
+  ADD KEY `inspection_period_approvals_idx` (`inspection_id`,`period_id`,`po_id`) USING BTREE;
 
 --
 -- Indexes for table `inspection_files`
@@ -715,11 +715,11 @@ ALTER TABLE `inspection_status`
   ADD PRIMARY KEY (`inspection_status_id`);
 
 --
--- Indexes for table `ipc_period`
+-- Indexes for table `ipc_periods`
 --
-ALTER TABLE `ipc_period`
+ALTER TABLE `ipc_periods`
   ADD PRIMARY KEY (`ipc_id`),
-  ADD KEY `ipc_periods_ibfk_1` (`inspection_id`,`period_id`,`po_id`) USING BTREE;
+  ADD KEY `ipc_periodss_ibfk_1` (`inspection_id`,`period_id`,`po_id`) USING BTREE;
 
 --
 -- Indexes for table `locations`
@@ -848,9 +848,9 @@ ALTER TABLE `files`
   MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `inspection_approvals`
+-- AUTO_INCREMENT for table `inspection_period_approvals`
 --
-ALTER TABLE `inspection_approvals`
+ALTER TABLE `inspection_period_approvals`
   MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -872,7 +872,7 @@ ALTER TABLE `inspection_period_details`
   MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `ipc_period`
+-- AUTO_INCREMENT for table `ipc_periods`
 --
 ALTER TABLE `ipc_period`
   MODIFY `ipc_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;

@@ -129,10 +129,10 @@ CREATE TABLE `files` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inspection_approvals`
+-- Table structure for table `inspection_period_approvals`
 --
 
-CREATE TABLE `inspection_approvals` (
+CREATE TABLE `inspection_period_approvals` (
   `inspection_approval_id` int(11) UNSIGNED NOT NULL,
   `inspection_id` int(11) UNSIGNED DEFAULT NULL,
   `period_id` int(11) DEFAULT NULL,
@@ -702,11 +702,11 @@ ALTER TABLE `files`
   ADD KEY `record_id` (`record_id`);
 
 --
--- Indexes for table `inspection_approvals`
+-- Indexes for table `inspection_period_approvals`
 --
-ALTER TABLE `inspection_approvals`
+ALTER TABLE `inspection_period_approvals`
   ADD PRIMARY KEY (`inspection_approval_id`),
-  ADD KEY `inspection_approvals_idx` (`inspection_id`,`period_id`,`po_id`) USING BTREE;
+  ADD KEY `inspection_period_approvals_idx` (`inspection_id`,`period_id`,`po_id`) USING BTREE;
 
 --
 -- Indexes for table `inspection_files`
@@ -877,9 +877,9 @@ ALTER TABLE `files`
   MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `inspection_approvals`
+-- AUTO_INCREMENT for table `inspection_period_approvals`
 --
-ALTER TABLE `inspection_approvals`
+ALTER TABLE `inspection_period_approvals`
   MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
