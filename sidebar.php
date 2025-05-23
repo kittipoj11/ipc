@@ -68,6 +68,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="approval_type.php" class="nav-link text-dark">
+                                <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
+                                <p>Approval type</p>
+                            </a>
+                        </li>
+                        </li>
+                        <li class="nav-item">
                             <a href="approval_status.php" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
                                 <p>Approval status</p>

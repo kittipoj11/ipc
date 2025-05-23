@@ -2,13 +2,13 @@
 // require_once 'config.php';
 require_once 'connection_class.php';
 
-class Approval_status extends Connection
+class Approval_type extends Connection
 {
     public function getAllRecords()
     {
         $sql = <<<EOD
-                SELECT `approval_status_id`, `approval_status_name` 
-                from approval_status 
+                SELECT `approval_type_id`, `approval_type_name` 
+                from approval_type 
                 where is_deleted = false
                 EOD;
         $stmt = $this->myConnect->prepare($sql);
@@ -28,9 +28,9 @@ class Approval_status extends Connection
     public function getRecordById($id)
     {
         $sql = <<<EOD
-                SELECT `approval_status_id`, `approval_status_name` 
-                from approval_status
-                where approval_status_id = :id
+                SELECT `approval_type_id`, `approval_type_name` 
+                from approval_type
+                where approval_type_id = :id
                 EOD;
 
         $stmt = $this->myConnect->prepare($sql);
@@ -42,12 +42,12 @@ class Approval_status extends Connection
 
     public function insertData($getData)
     {
-        $approval_status_name = $getData['approval_status_name'];
+        $approval_type_name = $getData['approval_type_name'];
 
-        $sql = "insert into approval_status(approval_status_name) 
-                values(:approval_status_name)";
+        $sql = "insert into approval_type(approval_type_name) 
+                values(:approval_type_name)";
         $stmt = $this->myConnect->prepare($sql);
-        $stmt->bindParam(':approval_status_name', $approval_status_name, PDO::PARAM_STR);
+        $stmt->bindParam(':approval_type_name', $approval_type_name, PDO::PARAM_STR);
 
         try {
             if ($stmt->execute()) {
@@ -63,15 +63,15 @@ class Approval_status extends Connection
     }
     public function updateData($getData)
     {
-        $approval_status_id = $getData['approval_status_id'];
-        $approval_status_name = $getData['approval_status_name'];
-        $sql = "update approval_status 
-                set approval_status_name = :approval_status_name
-                where approval_status_id = :approval_status_id";
+        $approval_type_id = $getData['approval_type_id'];
+        $approval_type_name = $getData['approval_type_name'];
+        $sql = "update approval_type 
+                set approval_type_name = :approval_type_name
+                where approval_type_id = :approval_type_id";
         // , update_datetime = CURRENT_TIMESTAMP()
         $stmt = $this->myConnect->prepare($sql);
-        $stmt->bindParam(':approval_status_id', $approval_status_id, PDO::PARAM_INT);
-        $stmt->bindParam(':approval_status_name', $approval_status_name, PDO::PARAM_STR);
+        $stmt->bindParam(':approval_type_id', $approval_type_id, PDO::PARAM_INT);
+        $stmt->bindParam(':approval_type_name', $approval_type_name, PDO::PARAM_STR);
 
         try {
             if ($stmt->execute()) {
@@ -87,13 +87,13 @@ class Approval_status extends Connection
     }
     public function deleteData($getData)
     {
-        $approval_status_id = $getData['approval_status_id'];
+        $approval_type_id = $getData['approval_type_id'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
-        $sql = "update approval_status 
+        $sql = "update approval_type 
                 set is_deleted = 1
-                where approval_status_id = :approval_status_id";
+                where approval_type_id = :approval_type_id";
         $stmt = $this->myConnect->prepare($sql);
-        $stmt->bindParam(':approval_status_id', $approval_status_id, PDO::PARAM_INT);
+        $stmt->bindParam(':approval_type_id', $approval_type_id, PDO::PARAM_INT);
 
         try {
             if ($stmt->execute()) {
@@ -110,8 +110,8 @@ class Approval_status extends Connection
 
     public function getHtmlData()
     {
-        $sql = "select approval_status_id, approval_status_name, is_deleted 
-                from approval_status 
+        $sql = "select approval_type_id, approval_type_name, is_deleted 
+                from approval_type 
                 where is_deleted = false";
 
         $stmt = $this->myConnect->prepare($sql);
@@ -135,8 +135,8 @@ class Approval_status extends Connection
         $html .= "</tr>";
         foreach ($rs as $row) :
             $html .=  "<tr bgcolor='#c7c7c7'>";
-            $html .=  "<td>{$row['approval_status_id']}</td>";
-            $html .=  "<td>{$row['approval_status_name']}</td>";
+            $html .=  "<td>{$row['approval_type_id']}</td>";
+            $html .=  "<td>{$row['approval_type_name']}</td>";
             $html .=  "</tr>";
         endforeach;
 
