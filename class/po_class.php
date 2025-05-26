@@ -87,10 +87,14 @@ class Po extends Connection
         // $_SESSION['getData'] = $getData;
         // exit;
         try {
-            // $workflow_id=$getData['workflow_id'];
-            $workflow_id = 2;
+            // กำหนดค่า default สำหรับ workflow step ของ inspection และ ipc (อาจจะมีหน้าจอ config) โดยที่
+            // 1. ทำการสร้าง inspection_period_approvals เมื่อมีการ save po เรียบร้อยแล้ว
+            // 2. ทำการสร้าง ipc_period_approvals เมื่อมีการ approve ใน step สุดท้ายของ inspection ในแต่ละ period  
+            // workflow_id = 2 สร้าง inspection_period_approvals
+            // workflow_id = 3 สร้าง ipc_period_approvals
+            $workflow_id = 2;//ในที่นี้กำหนด workflow_id = 2 ของการสร้าง inspection_period_approvals
             $sql = <<<EOD
-                        SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `action_type_id`, `first_status_id`
+                        SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`
                         FROM `workflow_steps`
                         WHERE `workflow_id` = :workflow_id
                         ORDER BY approval_level asc
