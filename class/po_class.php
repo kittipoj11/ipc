@@ -92,7 +92,7 @@ class Po extends Connection
             // 2. ทำการสร้าง ipc_period_approvals เมื่อมีการ approve ใน step สุดท้ายของ inspection ในแต่ละ period  
             // workflow_id = 2 สร้าง inspection_period_approvals
             // workflow_id = 3 สร้าง ipc_period_approvals
-            $workflow_id = 2;//ในที่นี้กำหนด workflow_id = 2 ของการสร้าง inspection_period_approvals
+            $workflow_id = 2; //ในที่นี้กำหนด workflow_id = 2 ของการสร้าง inspection_period_approvals
             $sql = <<<EOD
                         SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`
                         FROM `workflow_steps`
@@ -127,12 +127,11 @@ class Po extends Connection
             $deposit_value = ($deposit_percent * $contract_value) / 100;
             $working_date_from = $getData['working_date_from'];
             $working_date_to = $getData['working_date_to'];
-            // $workflow_id = 1; //$getData['workflow_id'];
 
-            // // Create DateTime objects from the input strings
+            // Create DateTime objects from the input strings
             // $date1 = new DateTime($working_date_from);
             // $date2 = new DateTime($working_date_to);
-            // // Calculate the difference between the two dates
+            // Calculate the difference between the two dates
             // $interval = $date1->diff($date2);
             // $working_day =  $interval->days + 1;
             $working_day =  $getData['working_day'];
@@ -154,6 +153,7 @@ class Po extends Connection
             $interim_payment_percents = $getData['interim_payment_percents'];
             $remarks = $getData['remarks'];
 
+            // INSERT INTO po_main
             $sql = <<<EOD
                         INSERT INTO `po_main`(`po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`
                         , `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`
@@ -164,7 +164,6 @@ class Po extends Connection
                     EOD;
 
             $stmt = $this->myConnect->prepare($sql);
-            // $stmt->bindParam(':id', $headerId, PDO::PARAM_STR);
             $stmt->bindParam(':po_number', $po_number, PDO::PARAM_STR);
             $stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
             $stmt->bindParam(':supplier_id', $supplier_id,  PDO::PARAM_INT);
@@ -185,12 +184,9 @@ class Po extends Connection
             $stmt->bindParam(':create_by', $create_by, PDO::PARAM_STR);
             $stmt->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
 
-            $_SESSION['location_id'] = $location_id;
-            // $stmt->bindParam(':is_active', $is_active, PDO::PARAM_BOOL);
-            // $affected = $stmt->execute();
-            // $stmt->debugDumpParams();
-            // exit;
             if ($stmt->execute()) {
+                $_SESSION['location_id'] = $location_id;
+
                 // การเรียกใช้ closeCursor() จะช่วยคืนทรัพยากรการเชื่อมต่อฐานข้อมูลที่ถูกใช้โดย Statement นั้นๆ ทำให้การเชื่อมต่อพร้อมสำหรับคำสั่ง SQL อื่นๆ ต่อไป
                 $stmt->closeCursor();
 
@@ -220,12 +216,11 @@ class Po extends Connection
 
                 // INSERT inspection_period_approvals
                 $sql = <<<EOD
-                            INSERT INTO `inspection_period_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_status_id`) 
-                            VALUES (:inspection_id, :period_id, :po_id, :period_number, :approval_level, :approver_id, :approval_status_id)
+                            INSERT INTO `inspection_period_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`) 
+                            VALUES (:inspection_id, :period_id, :po_id, :period_number, :approval_level, :approver_id, :approval_type_id, :approval_type_text, :approval_status_id)
                         EOD;
                 $stmtInspectApprovals = $this->myConnect->prepare($sql);
 
-                // $_SESSION['number_of_period'] = $number_of_period;
                 for ($i = 0; $i < $number_of_period; $i++) {
                     // po_periods
                     $stmtPoPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
@@ -275,26 +270,21 @@ class Po extends Connection
                     foreach ($rsWorkflowSteps as $row) {
                         $approverId = $row['approver_id'];
                         $approvalLevel = $row['approval_level'];
+                        $approvalLevel = $row['approval_level'];
+                        $approvalTypeId = $row['approval_type_id'];
+                        $approvalTypeText = $row['approval_type_text'];
                         $actionType = $row['action_type']; // สมมติว่ามี action_type เช่น 'approval', 'submit', 'confirm', 'verify'
 
-                        $approval_status_id = $row['first_status_id'];//จาก approval_status
-                        // if ($actionType === 'approval') {
-                        //     $approval_status_id = 11;
-                        // } elseif ($actionType === 'submit') {
-                        //     $approval_status_id = 21;
-                        // } elseif ($actionType === 'confirm') {
-                        //     $approval_status_id = 31;
-                        // } elseif ($actionType === 'verify') {
-                        //     $approval_status_id = 41;
-                        // }
+                        $approval_status_id = 1; //จาก approval_status
 
-                        
                         $stmtInspectApprovals->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
                         $stmtInspectApprovals->bindParam(':period_id', $period_id, PDO::PARAM_INT);
                         $stmtInspectApprovals->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                         $stmtInspectApprovals->bindParam(':period_number', $period_numbers[$i], PDO::PARAM_INT);
                         $stmtInspectApprovals->bindParam(':approval_level', $approvalLevel,  PDO::PARAM_INT);
                         $stmtInspectApprovals->bindParam(':approver_id', $approverId, PDO::PARAM_INT);
+                        $stmtInspectApprovals->bindParam(':approval_type_id', $approvalTypeId, PDO::PARAM_INT);
+                        $stmtInspectApprovals->bindParam(':approval_type_text', $approvalTypeText, PDO::PARAM_STR);
                         $stmtInspectApprovals->bindParam(':approval_status_id', $approval_status_id, PDO::PARAM_INT);
 
                         // $_SESSION['Loop'] = 'inspection_id='+$inspection_id+'approval_level='+$row['approval_level']+'approver_id='+$row['approver_id'];
@@ -329,16 +319,24 @@ class Po extends Connection
 
     public function updateData($getData)
     {
+        // ถ้ารายการผ่านขั้นตอนแรกใน inspection_period_approvals (เปลี่ยน approval_status_id จาก 1-pending เป็น 2-approved) แล้วจะต้องห้ามแก้ไขหรือลบ period นี้
+        // แต่ถ้า approval_status_id เปลี่ยนจาก 1-pending เป็น 0-reject จะสามารถแก้ไขหรือลบได้
+        // ในขั้นตอนเริ่มต้นของ approval_type ที่เป็น submit จะไม่สามารถ reject เอกสารของตัวเองได้่  ทำได้เพียงเปลี่ยนจาก 1-pending เป็น 2-approved 
+        // เพื่อเปลี่ยน approval_type เป็นค่าอื่นที่ไม่ใช่ submit เพื่อส่งให้ผู้ดำเนินการในลำดับถัดไป เช่น จาก 1-submit เป็น verify, confirm หรือ approve ตามแต่ที่กำหนดใน inspection_period_approvals
+        // และในการลบจะยังคงลบจากรายการสุดท้ายก่อนเสมอ
         @session_start();
 
         try {
-            // $_SESSION['Begin'] =  'Begin';
             // $this->myConnect->beginTransaction();
 
-            // $workflow_id=$getData['workflow_id'];
-            $workflow_id = 2;
+            // กำหนดค่า default สำหรับ workflow step ของ inspection และ ipc (อาจจะมีหน้าจอ config) โดยที่
+            // 1. ทำการสร้าง inspection_period_approvals เมื่อมีการ save po เรียบร้อยแล้ว
+            // 2. ทำการสร้าง ipc_period_approvals เมื่อมีการ approve ใน step สุดท้ายของ inspection ในแต่ละ period  
+            // workflow_id = 2 สร้าง inspection_period_approvals
+            // workflow_id = 3 สร้าง ipc_period_approvals
+            $workflow_id = 2; //ในที่นี้กำหนด workflow_id = 2 ของการสร้าง inspection_period_approvals
             $sql = <<<EOD
-                        SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `action_type_id`, `first_status_id`
+                        SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`
                         FROM `workflow_steps`
                         WHERE `workflow_id` = :workflow_id
                         ORDER BY approval_level asc
@@ -365,16 +363,14 @@ class Po extends Connection
             $deposit_value = ($deposit_percent * $contract_value) / 100;
             $working_date_from = $getData['working_date_from'];
             $working_date_to = $getData['working_date_to'];
-            // $workflow_id = 1; //$getData['workflow_id'];
 
-            // // Create DateTime objects from the input strings
+            // Create DateTime objects from the input strings
             // $date1 = new DateTime($working_date_from);
             // $date2 = new DateTime($working_date_to);
-            // // Calculate the difference between the two dates
+            // Calculate the difference between the two dates
             // $interval = $date1->diff($date2);
             // $working_day =  $interval->days + 1;
             $working_day =  $getData['working_day'];
-
             // $update_by = $_SESSION['user_code'];
 
             $remain_value_interim_payment = $contract_value;
@@ -382,12 +378,6 @@ class Po extends Connection
 
             // parameters ในส่วน po_periods
             $period_numbers = $getData['period_numbers'];
-            $workload_planned_percents = $getData['workload_planned_percents'];
-            $interim_payments = $getData['interim_payments'];
-            $interim_payment_percents = $getData['interim_payment_percents'];
-            $remarks = $getData['remarks'];
-            $cruds = $getData['cruds'];
-            $period_ids = $getData['period_ids'];
 
             if (is_array($period_numbers)) {
                 $number_of_period = count($period_numbers);
@@ -396,6 +386,12 @@ class Po extends Connection
                 // echo "ตัวแปร \$period_numbers ไม่ใช่ array หรือเป็น null";
                 $number_of_period = 0; // กำหนดค่าเริ่มต้นให้ $count ในกรณีที่ไม่ใช่ array
             }
+            $workload_planned_percents = $getData['workload_planned_percents'];
+            $interim_payments = $getData['interim_payments'];
+            $interim_payment_percents = $getData['interim_payment_percents'];
+            $remarks = $getData['remarks'];
+            $cruds = $getData['cruds'];
+            $period_ids = $getData['period_ids'];
 
             //ตัวแปร array สำหรับเก็บค่า index ของ element(class crud) แยกตาม value ของ crud ลงในแต่ละ array
             $insert_indexs = [];
@@ -479,7 +475,7 @@ class Po extends Connection
                             INSERT INTO `inspection_periods`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `is_paid`, `is_retention`,`workflow_id`) 
                             VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :is_paid, :is_retention,:workflow_id)
                         EOD;
-                $stmtInspectionPeriodInsert = $this->myConnect->prepare($sql);                
+                $stmtInspectionPeriodInsert = $this->myConnect->prepare($sql);
 
                 // INSERT inspection_period_details
                 $sql = <<<EOD
