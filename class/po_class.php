@@ -137,7 +137,7 @@ class Po extends Connection
             $working_day =  $getData['working_day'];
             $create_by = $_SESSION['user_code'];
 
-            // จัดการตรงจุดนี้ให้เหมือนกับ updateData function
+            // จัดการตรงจุดนี้ให้เหมือนกับ updateData function เพราะอาจจะมีการเพิ่ม-ลบ period
             // parameters ในส่วน po_periods
             $period_numbers = $getData['period_numbers'];
             // $period_numbers = null; // ตัวอย่างกรณีที่ตัวแปรเป็น null
@@ -153,6 +153,26 @@ class Po extends Connection
             $interim_payments = $getData['interim_payments'];
             $interim_payment_percents = $getData['interim_payment_percents'];
             $remarks = $getData['remarks'];
+            $cruds = $getData['cruds'];
+            $period_ids = $getData['period_ids'];
+
+            //ตัวแปร array สำหรับเก็บค่า index ของ element(class crud) แยกตาม value ของ crud ลงในแต่ละ array
+            $insert_indexs = [];
+            $update_indexs = [];
+            $delete_indexs = [];
+
+            //ตรวจสอบว่า valaue ของ crud แต่ละตัวมีค่าเป็นอะไรและจัดเก็บ index นั้นๆลงแต่ละตัวแปร array
+            for ($i = 0; $i < $number_of_period; $i++) {
+                if ($cruds[$i] === 'i') {
+                    $insert_indexs[] = $i;
+                } elseif ($cruds[$i] === 's' || $cruds[$i] === 'u') {
+                    $update_indexs[] = $i;
+                } elseif ($cruds[$i] === 'd') {
+                    $delete_indexs[] = $i;
+                }
+            }
+            // จัดการตรงจุดนี้
+            $number_of_period = count($insert_indexs) + count($update_indexs);
 
             // INSERT INTO po_main
             $sql = <<<EOD
@@ -164,32 +184,32 @@ class Po extends Connection
                         , :working_date_from, :working_date_to, :working_day, :create_by, :number_of_period, :workflow_id)
                     EOD;
 
-            $stmt = $this->myConnect->prepare($sql);
-            $stmt->bindParam(':po_number', $po_number, PDO::PARAM_STR);
-            $stmt->bindParam(':project_name', $project_name, PDO::PARAM_STR);
-            $stmt->bindParam(':supplier_id', $supplier_id,  PDO::PARAM_INT);
-            $stmt->bindParam(':location_id', $location_id, PDO::PARAM_INT);
-            $stmt->bindParam(':working_name_th', $working_name_th, PDO::PARAM_STR);
-            $stmt->bindParam(':working_name_en', $working_name_en, PDO::PARAM_STR);
-            $stmt->bindParam(':is_include_vat', $is_include_vat, PDO::PARAM_BOOL);
-            $stmt->bindParam(':contract_value_before', $contract_value_before, PDO::PARAM_STR);
-            $stmt->bindParam(':contract_value', $contract_value, PDO::PARAM_STR);
-            $stmt->bindParam(':vat', $vat, PDO::PARAM_STR);
-            $stmt->bindParam(':is_deposit', $is_deposit, PDO::PARAM_BOOL);
-            $stmt->bindParam(':deposit_percent', $deposit_percent, PDO::PARAM_STR);
-            $stmt->bindParam(':deposit_value', $deposit_value, PDO::PARAM_STR);
-            $stmt->bindParam(':working_date_from', $working_date_from, PDO::PARAM_STR);
-            $stmt->bindParam(':working_date_to', $working_date_to, PDO::PARAM_STR);
-            $stmt->bindParam(':working_day', $working_day, PDO::PARAM_INT);
-            $stmt->bindParam(':number_of_period', $number_of_period, PDO::PARAM_INT);
-            $stmt->bindParam(':create_by', $create_by, PDO::PARAM_STR);
-            $stmt->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
+            $stmtPoMainInsert = $this->myConnect->prepare($sql);
+            $stmtPoMainInsert->bindParam(':po_number', $po_number, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':project_name', $project_name, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':supplier_id', $supplier_id,  PDO::PARAM_INT);
+            $stmtPoMainInsert->bindParam(':location_id', $location_id, PDO::PARAM_INT);
+            $stmtPoMainInsert->bindParam(':working_name_th', $working_name_th, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':working_name_en', $working_name_en, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':is_include_vat', $is_include_vat, PDO::PARAM_BOOL);
+            $stmtPoMainInsert->bindParam(':contract_value_before', $contract_value_before, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':contract_value', $contract_value, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':vat', $vat, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':is_deposit', $is_deposit, PDO::PARAM_BOOL);
+            $stmtPoMainInsert->bindParam(':deposit_percent', $deposit_percent, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':deposit_value', $deposit_value, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':working_date_from', $working_date_from, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':working_date_to', $working_date_to, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':working_day', $working_day, PDO::PARAM_INT);
+            $stmtPoMainInsert->bindParam(':number_of_period', $number_of_period, PDO::PARAM_INT);
+            $stmtPoMainInsert->bindParam(':create_by', $create_by, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
 
-            if ($stmt->execute()) {
+            if ($stmtPoMainInsert->execute()) {
                 $_SESSION['location_id'] = $location_id;
 
                 // การเรียกใช้ closeCursor() จะช่วยคืนทรัพยากรการเชื่อมต่อฐานข้อมูลที่ถูกใช้โดย Statement นั้นๆ ทำให้การเชื่อมต่อพร้อมสำหรับคำสั่ง SQL อื่นๆ ต่อไป
-                $stmt->closeCursor();
+                $stmtPoMainInsert->closeCursor();
 
                 // ดึงข้อมูล po_id ที่เป็น Auto Increment หลังจาก Insert ข้อมูลใน po_main แล้ว
                 $po_id = $this->myConnect->lastInsertId();
@@ -222,8 +242,7 @@ class Po extends Connection
                         EOD;
                 $stmtInspectApprovals = $this->myConnect->prepare($sql);
 
-                for ($i = 0; $i < $number_of_period; $i++) {
-                    // po_periods
+                foreach ($insert_indexs as $i) { //ถ้าต้องการใช้ค่าของ key ให้เขียนแบบนี้ foreach($insert_indexs as $key=> $value){
                     $stmtPoPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtPoPeriod->bindParam(':period_number', $period_numbers[$i], PDO::PARAM_INT);
                     $stmtPoPeriod->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
@@ -234,7 +253,6 @@ class Po extends Connection
                     $stmtPoPeriod->execute();
                     $stmtPoPeriod->closeCursor();
 
-                    // inspection_periods
                     $period_id = $this->myConnect->lastInsertId();
 
                     $stmtInspectionPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
@@ -250,23 +268,14 @@ class Po extends Connection
                     $stmtInspectionPeriods->execute();
                     $stmtInspectionPeriods->closeCursor();
 
-
-                    // inspection_period_details
-                    // insert เริ่มต้น 1 รายการ
                     $inspection_id = $this->myConnect->lastInsertId();
+
                     $stmtInspectionPeriodDetails->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
-                    // $stmtInspectionPeriodDetails->bindParam(':order_no', 1,  PDO::PARAM_INT);
-                    // $stmtInspectionPeriodDetails->bindParam(':details', "",  PDO::PARAM_STR);
-                    // $stmtInspectionPeriodDetails->bindParam(':remark', "",  PDO::PARAM_STR);
 
                     $stmtInspectionPeriodDetails->execute();
                     $stmtInspectionPeriodDetails->closeCursor();
 
-
                     // inspection_period_approvals
-                    // เพิ่มรายการลำดับการอนุมัติจากข้อมูลในตาราง workflow_step ของ inspection_periods
-                    // ในที่นี้ตาราง workflows จะใช้ workflow_id = 1(ตรวจรับงาน) และเชื่อมโยงกับลำดับการอนุมัติในตาราง workflow_step
-                    // นำมา Loop เพื่อ insert ข้อมูลลง inspection_period_approvals ตามลำดับใน workflow_step ที่มี workflow_id = 1 
                     $approval_status_id = 1;
                     foreach ($rsWorkflowSteps as $row) {
                         $approverId = $row['approver_id'];
@@ -286,7 +295,6 @@ class Po extends Connection
                         $stmtInspectApprovals->bindParam(':approval_status_id', $approval_status_id, PDO::PARAM_INT);
 
                         $stmtInspectApprovals->execute();
-
                     }
                     $stmtInspectApprovals->closeCursor();
                 }
@@ -393,7 +401,6 @@ class Po extends Connection
             $update_indexs = [];
             $delete_indexs = [];
 
-
             //ตรวจสอบว่า valaue ของ crud แต่ละตัวมีค่าเป็นอะไรและจัดเก็บ index นั้นๆลงแต่ละตัวแปร array
             for ($i = 0; $i < $number_of_period; $i++) {
                 if ($cruds[$i] === 'i') {
@@ -406,10 +413,6 @@ class Po extends Connection
             }
             // จัดการตรงจุดนี้
             $number_of_period = count($insert_indexs) + count($update_indexs);
-
-            // $_SESSION['insert']=$insert_indexs;
-            // $_SESSION['update']=$update_indexs;
-            // $_SESSION['delete']=$delete_indexs;
 
             //UPDATE po_main
             $sql = <<<EOD
@@ -544,7 +547,6 @@ class Po extends Connection
                         $stmtInspectApprovals->bindParam(':approval_status_id', $approval_status_id, PDO::PARAM_INT);
 
                         $stmtInspectApprovals->execute();
-
                     }
                     $stmtInspectApprovals->closeCursor();
                 }
@@ -628,14 +630,12 @@ class Po extends Connection
                     $stmtPoPeriodDelete->closeCursor();
 
                     // ลบไฟล์ออกจาก server
-                    // $_SESSION['rs'] = $rs;
                     foreach ($rs as $row) {
                         $filePath = $row['file_path'];
                         if (file_exists($filePath)) {
                             unlink($filePath); // ลบไฟล์
                         }
                     }
-
 
                     // ใช้ ON DELETE CASCADE
                     // $stmtInspectionPeriodDelete->bindParam(':period_id', $period_ids[$i], PDO::PARAM_INT);
