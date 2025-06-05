@@ -1,0 +1,5 @@
+/* ... other styles ... */
+#main-menu li a.active-menu {
+    background-color: #007bff; /* สีฟ้าสำหรับเมนูที่ active */
+    font-weight: bold;
+}

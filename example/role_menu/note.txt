@@ -1,0 +1,48 @@
+การออกแบบและแนวคิด
+Database (ฐานข้อมูล):
+
+roles: ตารางเก็บข้อมูล Role ต่างๆ (admin, user, management)
+users: ตารางเก็บข้อมูลผู้ใช้งาน และระบุ role_id ของแต่ละคน
+pages: ตารางเก็บข้อมูลหน้าเว็บเพจ (A.php, B.php, C.php)
+role_permissions: ตารางเชื่อมความสัมพันธ์ระหว่าง Role กับ Page ที่อนุญาตให้เข้าถึง (Many-to-Many)
+PHP (ฝั่ง Server):
+
+Authentication: ระบบ Login เพื่อตรวจสอบผู้ใช้งาน และเก็บ role_id หรือ role_name ของผู้ใช้ไว้ใน Session
+Authorization & Menu Generation:
+เมื่อผู้ใช้ Login สำเร็จ ก่อนจะแสดงเมนู จะดึงข้อมูลจาก role_permissions และ pages เพื่อสร้างรายการเมนูเฉพาะที่ Role นั้นๆ มีสิทธิ์เข้าถึง
+ในแต่ละหน้า (A.php, B.php, C.php) จะมีการตรวจสอบ Session และสิทธิ์การเข้าถึงหน้านั้นๆ อีกครั้ง หากไม่มีสิทธิ์ ให้ redirect ไปหน้าอื่น หรือแสดงข้อความ "Access Denied"
+JavaScript/jQuery (ฝั่ง Client):
+
+ในกรณีนี้ การควบคุมการมองเห็นเมนูหลักๆ จะทำจากฝั่ง PHP เพื่อความปลอดภัย
+jQuery อาจใช้เพื่อเสริมประสบการณ์ผู้ใช้ (UX) เช่น การทำ animation ของเมนู, หรือการจัดการ UI อื่นๆ แต่ ไม่ใช่ กลไกหลักในการควบคุมสิทธิ์การเข้าถึงเมนู (เพราะ User สามารถแก้ไข JavaScript ที่ฝั่ง Client ได้) 
+-----------------------------------------------------------
+
+ตัวอย่างโค้ด PHP, jQuery/JavaScript
+สมมติว่าเรามีไฟล์ดังนี้:
+
+db_connect.php: สำหรับเชื่อมต่อฐานข้อมูล
+login.php: หน้าสำหรับ Login (จำลองการ Login)
+logout.php: สำหรับ Logout
+index.php: หน้าหลักหลัง Login ที่จะแสดงเมนู
+A.php, B.php, C.php: หน้าเนื้อหา
+partials/menu.php: ไฟล์สำหรับสร้างเมนู
+partials/auth_check.php: ไฟล์สำหรับตรวจสอบสิทธิ์การเข้าถึงหน้า
+-----------------------------------------------------------
+
+โครงสร้างไฟล์และโฟลเดอร์ที่แนะนำ
+your_project_root/
+├── css/
+│   └── style.css  (ไฟล์ CSS ทั่วไป)
+├── js/
+│   └── scripts.js (ไฟล์ JavaScript ถ้ามี)
+├── pages/
+│   ├── A.php
+│   ├── B.php
+│   └── C.php
+├── partials/
+│   ├── auth_check.php
+│   └── menu.php
+├── db_connect.php
+├── index.php
+├── login.php
+└── logout.php
