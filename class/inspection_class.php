@@ -14,7 +14,7 @@ class Inspection extends Connection
                     , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
                     , P1.interim_payment_remain, P1.interim_payment_remain_percent
                     , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
-                    , P1.remark, P1.inspection_status, P1.current_approval_level 
+                    , P1.remark, P1.inspection_status, P1.current_approval_level
                     , P1.disbursement, P1.workflow_id
                     FROM `inspection_periods` P1
                     WHERE `po_id` = :po_id
