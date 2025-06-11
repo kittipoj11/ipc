@@ -4,6 +4,14 @@ session_start();
 
 // --- 1. การกำหนดค่าให้กับ Session (โครงสร้างใหม่) ---
 // ตอนนี้ทั้งเมนูหลักและเมนูย่อยจะมีโครงสร้างเป็น Array ที่เก็บคุณสมบัติต่างๆ
+/*
+table:menu
+menu_id
+menu_title
+menu_url
+menu_icon
+menu_parent_id
+*/
 $_SESSION['user_menu'] = [
     'dashboard' => [
         'visible' => true,

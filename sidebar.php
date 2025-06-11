@@ -25,20 +25,6 @@
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
-                <!-- Nav Item - Today Activities -->
-                <!-- <li class="nav-item">
-                    <a href="index.php" class="nav-link">
-                        <i class="nav-icon fas fa-file"></i>
-                        <i class="nav-icon fas fi-rr-chart-tree-map"></i>
-                        <p>
-                            Dashboard
-                        </p>
-                    </a>
-                </li> -->
-
-                <!-- Divider -->
-                <!-- <hr class="sidebar-divider"> -->
-
                 <!-- Nav Item - ข้อมูลระบบ -->
                 <li class="nav-item <?php echo $_SESSION['system'] ?>">
                     <a href="#" class="nav-link">
@@ -88,6 +74,7 @@
                         </li>
                     </ul>
                 </li>
+                
                 <!-- Nav Item - ข้อมูลพื้นฐาน -->
                 <li class="nav-item <?php echo $_SESSION['general_basic'] ?>">
                     <a href="#" class="nav-link">
@@ -260,11 +247,6 @@
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
-                <!-- Heading -->
-                <!-- <div class="sidebar-heading">
-                    Reports
-                </div> -->
-
                 <!-- Nav Item - รายงาน -->
                 <li class="nav-item <?php echo $_SESSION['report'] ?>">
                     <a href="#" class="nav-link">
@@ -307,7 +289,6 @@
                         </li>
                     </ul>
                 </li>
-
 
             </ul>
         </nav>
