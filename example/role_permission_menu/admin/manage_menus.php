@@ -2,7 +2,9 @@
 session_start();
 require '../db_connection.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'Admin') { die("Access Denied."); }
+if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'Admin') {
+    die("Access Denied.");
+}
 
 // --- ดึงข้อมูลและฟังก์ชัน ---
 
@@ -10,15 +12,22 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'Admin') { die("A
 $all_menus_raw = $pdo->query("SELECT * FROM menu_items ORDER BY parent_id, order_num")->fetchAll();
 $all_menus_structured = [];
 $itemsById = [];
-foreach ($all_menus_raw as $item) { $itemsById[$item['id']] = $item; $itemsById[$item['id']]['sub_menus'] = []; }
+foreach ($all_menus_raw as $item) {
+    $itemsById[$item['id']] = $item;
+    $itemsById[$item['id']]['sub_menus'] = [];
+}
 foreach ($itemsById as $id => &$item) {
-    if ($item['parent_id'] !== null && isset($itemsById[$item['parent_id']])) { $itemsById[$item['parent_id']]['sub_menus'][] = &$item; } 
-    else { $all_menus_structured[] = &$item; }
+    if ($item['parent_id'] !== null && isset($itemsById[$item['parent_id']])) {
+        $itemsById[$item['parent_id']]['sub_menus'][] = &$item;
+    } else {
+        $all_menus_structured[] = &$item;
+    }
 }
 unset($item);
 
 // 2. ฟังก์ชันสำหรับแสดงโครงสร้างเมนู
-function display_menu_tree($menus) {
+function display_menu_tree($menus)
+{
     echo '<ul class="menu-tree">';
     foreach ($menus as $menu) {
         echo '<li>';
@@ -65,7 +74,8 @@ if (isset($_GET['action'])) {
 }
 
 // 4. ฟังก์ชันสำหรับสร้าง Dropdown เลือก Parent
-function build_parent_dropdown($menus, $current_parent_id, $prefix = '') {
+function build_parent_dropdown($menus, $current_parent_id, $prefix = '')
+{
     foreach ($menus as $menu) {
         $selected = ($menu['id'] == $current_parent_id) ? 'selected' : '';
         echo '<option value="' . $menu['id'] . '" ' . $selected . '>' . $prefix . htmlspecialchars($menu['title']) . '</option>';
@@ -78,56 +88,59 @@ function build_parent_dropdown($menus, $current_parent_id, $prefix = '') {
 
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <title>จัดการเมนู</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
-<div class="admin-container">
-    <h1>จัดการเมนู</h1>
-    <a href="../dashboard.php">&laquo; กลับไปหน้า Dashboard</a>
+    <div class="admin-container">
+        <h1>จัดการเมนู</h1>
+        <a href="../dashboard.php">&laquo; กลับไปหน้า Dashboard</a>
 
-    <div class="admin-form">
-        <h3><i class="fa-solid fa-pen-to-square"></i> <?php echo $form_title; ?></h3>
-        <form action="menu_process.php" method="post">
-            <input type="hidden" name="action" value="<?php echo $form_action; ?>">
-            <input type="hidden" name="id" value="<?php echo $menu_data['id']; ?>">
-            
-            <div class="form-group">
-                <label for="parent_id">เมนูหลัก (Parent)</label>
-                <select id="parent_id" name="parent_id">
-                    <option value="">-- เป็นเมนูหลัก (Top-Level) --</option>
-                    <?php build_parent_dropdown($all_menus_structured, $menu_data['parent_id']); ?>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="title">ชื่อเมนู (Title)</label>
-                <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($menu_data['title']); ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="url">URL</label>
-                <input type="text" id="url" name="url" value="<?php echo htmlspecialchars($menu_data['url']); ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="icon">คลาสไอคอน (Icon Class)</label>
-                <input type="text" id="icon" name="icon" value="<?php echo htmlspecialchars($menu_data['icon']); ?>">
-            </div>
-             <div class="form-group">
-                <label for="order_num">ลำดับ (Order)</label>
-                <input type="number" id="order_num" name="order_num" value="<?php echo htmlspecialchars($menu_data['order_num']); ?>" required>
-            </div>
-            <button type="submit">บันทึก</button>
-            <?php if ($edit_mode): ?>
-                <a href="manage_menus.php" style="margin-left:10px;">ยกเลิก</a>
-            <?php endif; ?>
-        </form>
+        <div class="admin-form">
+            <h3><i class="fa-solid fa-pen-to-square"></i> <?php echo $form_title; ?></h3>
+            <form action="menu_process.php" method="post">
+                <input type="hidden" name="action" value="<?php echo $form_action; ?>">
+                <input type="hidden" name="id" value="<?php echo $menu_data['id']; ?>">
+
+                <div class="form-group">
+                    <label for="parent_id">เมนูหลัก (Parent)</label>
+                    <select id="parent_id" name="parent_id">
+                        <option value="">-- เป็นเมนูหลัก (Top-Level) --</option>
+                        <?php build_parent_dropdown($all_menus_structured, $menu_data['parent_id']); ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="title">ชื่อเมนู (Title)</label>
+                    <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($menu_data['title']); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="url">URL</label>
+                    <input type="text" id="url" name="url" value="<?php echo htmlspecialchars($menu_data['url']); ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="icon">คลาสไอคอน (Icon Class)</label>
+                    <input type="text" id="icon" name="icon" value="<?php echo htmlspecialchars($menu_data['icon']); ?>">
+                </div>
+                <div class="form-group">
+                    <label for="order_num">ลำดับ (Order)</label>
+                    <input type="number" id="order_num" name="order_num" value="<?php echo htmlspecialchars($menu_data['order_num']); ?>" required>
+                </div>
+                <button type="submit">บันทึก</button>
+                <?php if ($edit_mode): ?>
+                    <a href="manage_menus.php" style="margin-left:10px;">ยกเลิก</a>
+                <?php endif; ?>
+            </form>
+        </div>
+
+        <h3><i class="fa-solid fa-list-check"></i> โครงสร้างเมนูทั้งหมด</h3>
+        <?php display_menu_tree($all_menus_structured); ?>
+
     </div>
-
-    <h3><i class="fa-solid fa-list-check"></i> โครงสร้างเมนูทั้งหมด</h3>
-    <?php display_menu_tree($all_menus_structured); ?>
-
-</div>
 </body>
+
 </html>
