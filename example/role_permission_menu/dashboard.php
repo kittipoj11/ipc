@@ -23,7 +23,10 @@ if (!isset($_SESSION['user_id'])) {
                 <p>(สิทธิ์: <?php echo htmlspecialchars($_SESSION['role_name']); ?>)</p>
             </div>
             <ul>
-                <?php foreach ($_SESSION['user_menu'] as $menu_data): ?>
+                <?php foreach ($_SESSION['user_menu'] as $menu_data): 
+                //$_SESSION['user_menu'] เมนูสำหรับ role ของ user ที่ login ถูกเก็บลง session 
+                //ซึ่งมีการทำงานในไฟล์ login_process.php หลังจาก login ในหน้า login.html    
+                ?>
                     <li>
                         <a href="<?php echo htmlspecialchars($menu_data['url']); ?>">
                             <i class="icon <?php echo htmlspecialchars($menu_data['icon']); ?>"></i>
