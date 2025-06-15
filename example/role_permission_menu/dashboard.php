@@ -47,7 +47,7 @@ if (!isset($_SESSION['user_id'])) {
                     </li>
                 <?php endforeach; ?>
 
-                <?php if ($_SESSION['role_name'] === 'Admin'): ?>
+                <?php if ($_SESSION['role_name'] === 'System Admin'): ?>
                     <li class="admin-menu-separator">
                         <hr>
                     </li>

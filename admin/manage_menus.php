@@ -1,6 +1,7 @@
 <?php
-session_start();
-require '../db_connection.php';
+@session_start();
+require_once  '../class/menu_class.php';
+$menu = new Menu;
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'System Admin') {
     die("Access Denied.");
@@ -9,7 +10,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'System Admin') {
 // --- ดึงข้อมูลและฟังก์ชัน ---
 
 // 1. ดึงเมนูทั้งหมดมาสร้างเป็น Tree
-$all_menus_raw = $pdo->query("SELECT * FROM menu_items ORDER BY parent_id, order_num")->fetchAll();
+$all_menus_raw = $menu->fetchAll();
 $all_menus_structured = [];
 $itemsById = [];
 foreach ($all_menus_raw as $item) {

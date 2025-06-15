@@ -11,7 +11,7 @@
     <div class="sidebar">
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column d-none">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
                 <!-- Nav Item - หน้าหลัก -->
                 <li class="nav-item">
                     <a href="index.php" class="nav-link">
@@ -328,84 +328,6 @@
                         <p>ออกจากระบบ</p>
                     </a>
                 </li>
-            </ul>
-
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
-                <!-- Nav Item - หน้าหลัก -->
-                <li class="nav-item">
-                    <a href="index.php" class="nav-link">
-                        <i class="nav-icon fas fa-landmark"></i>
-                        <p>
-                            หน้าหลัก
-                        </p>
-                    </a>
-                </li>
-
-                <!-- Divider -->
-                <hr class="sidebar-divider">
-
-                <?php foreach ($_SESSION['user_menu'] as $menu_data):
-                ?>
-                    <li class="nav-item">
-                        <a href="<?php echo htmlspecialchars($menu_data['url']); ?>" class="nav-link">
-                            <i class="nav-icon <?php echo htmlspecialchars($menu_data['icon']); ?>"></i>
-                            <span><?php echo htmlspecialchars($menu_data['title']); ?></span>
-                        </a>
-                        <?php if (!empty($menu_data['sub_menus'])): ?>
-                            <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
-                                <?php foreach ($menu_data['sub_menus'] as $submenu_data): ?>
-                                    <li class="nav-item">
-                                        <a href="<?php echo htmlspecialchars($submenu_data['url']); ?>" class="nav-link text-dark">
-                                            <i class="nav-icon <?php echo htmlspecialchars($submenu_data['icon']); ?>"></i>
-                                            <p><?php echo htmlspecialchars($submenu_data['title']); ?></p>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-
-                <!-- Divider -->
-                <hr class="sidebar-divider">
-
-                <!-- Nav Item - รายงาน -->
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fa-regular fa-file-lines"></i>
-                        <p>
-                            Roles & Menus
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
-                        <?php if ($_SESSION['role_name'] === 'System Admin'): ?>
-                            <li>
-                                <a href="admin/manage_roles.php" class="nav-link text-dark">
-                                    <i class="icon fa-solid fa-user-shield"></i>
-                                    <p>จัดการสิทธิ์ (Roles)</p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="admin/manage_menus.php" class="nav-link text-dark">
-                                    <i class="icon fa-solid fa-list-check"></i>
-                                    <p>จัดการเมนู (Menus)</p>
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                </li>
-
-                <!-- Divider -->
-                <hr class="sidebar-divider">
-
-                <li class="nav-item">
-                    <a href="logout.php" class="nav-link">
-                        <i class="nav-icon fa-solid fa-right-from-bracket"></i>
-                        <p>ออกจากระบบ</p>
-                    </a>
-                </li>
-
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
