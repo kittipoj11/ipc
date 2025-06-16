@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/approval_status_class.php';
     $approval_status = new Approval_status;
-    $rs = $approval_status->getAllRecords();
+    $rs = $approval_status->fetchAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

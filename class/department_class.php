@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Department extends Connection
 {
-    public function getAllRecords()
+    public function fetchAll()
     {
         $sql = <<<EOD
                 select department_id, department_name, is_deleted 

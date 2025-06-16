@@ -86,13 +86,13 @@ require_once 'auth.php';
     $rsInspectionPeriodDetail = $inspection->getInspectionPeriodDetailByPeriodId($po_id, $period_id);
 
     $supplier = new Supplier;
-    $supplier_rs = $supplier->getAllRecords();
+    $supplier_rs = $supplier->fetchAll();
 
     $location = new Location;
-    $location_rs = $location->getAllRecords();
+    $location_rs = $location->fetchAll();
 
     $plan_status = new Plan_status;
-    $plan_status_rs = $plan_status->getAllRecords();
+    $plan_status_rs = $plan_status->fetchAll();
 
     // 
     // ถ้า approval_level ตรงกับ current_approval_level และ approver_id ตรงกับ user_id ที่ login

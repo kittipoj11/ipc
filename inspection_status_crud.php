@@ -9,21 +9,21 @@ $inspection_status = new inspection_status();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $inspection_status->insertData($_REQUEST);
-    // getAllRecords($inspection_status);
+    // fetchAll($inspection_status);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $inspection_status->updateData($_REQUEST);
-    // getAllRecords($inspection_status);
+    // fetchAll($inspection_status);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $inspection_status->deleteData($_REQUEST);
-    // getAllRecords($inspection_status);
+    // fetchAll($inspection_status);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $inspection_status->getAllRecords();
+    $rs = $inspection_status->fetchAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $inspection_status->getRecordById($_REQUEST['inspection_status_id']);
+    $rs = $inspection_status->fetchById($_REQUEST['inspection_status_id']);
     echo json_encode($rs);
 } else {
-    getAllRecords($inspection_status);
+    fetchAll($inspection_status);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
@@ -56,10 +56,10 @@ function createTable($getRs) {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getAllRecords($getObj)
+function fetchAll($getObj)
 {
     try {
-        $rs = $getObj->getAllRecords();
+        $rs = $getObj->fetchAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

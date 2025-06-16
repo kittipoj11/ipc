@@ -32,7 +32,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deleteInspectionFiles') {
     $inspection->deleteInspectionFiles($_REQUEST['file_id']);
 } else {
-    // getAllRecords($inspection);
+    // fetchAll($inspection);
 }
 
 

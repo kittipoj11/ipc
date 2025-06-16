@@ -8,7 +8,7 @@ require_once  'connection_class.php';
 
 class Menu extends Connection
 {
-    public function getAllRecords()
+    public function fetchAll()
     {
         $sql = <<<EOD
                 select * 

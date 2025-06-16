@@ -13,12 +13,12 @@ if(!isset($_SESSION['user_id'])){
 }
 
 // ตรวจสอบว่ามีการ login เข้ามาแล้วหรือยังจาก $_SESSION['login_status']
-if (!isset($_SESSION['login_status']) || $_SESSION['login_status'] == false) :
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] == false) :
     $message = "คุณยังไม่ได้ Login!";
-    $_SESSION['message'] = $message;
+    // $_SESSION['message'] = $message;
     echo 'alert(' . $message . '); ';
     header('location: login.php');
     exit;
 else :
-    $_SESSION['message'] = "Login already";
+    // $_SESSION['message'] = "Login already";
 endif;

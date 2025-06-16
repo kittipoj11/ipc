@@ -9,21 +9,21 @@ $approval_type = new Approval_type();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $approval_type->insertData($_REQUEST);
-    getAllRecords($approval_type);
+    fetchAll($approval_type);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $approval_type->updateData($_REQUEST);
-    getAllRecords($approval_type);
+    fetchAll($approval_type);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $approval_type->deleteData($_REQUEST);
-    getAllRecords($approval_type);
+    fetchAll($approval_type);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $approval_type->getAllRecords();
+    $rs = $approval_type->fetchAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $approval_type->getRecordById($_REQUEST['approval_type_id']);
+    $rs = $approval_type->fetchById($_REQUEST['approval_type_id']);
     echo json_encode($rs);
 } else {
-    getAllRecords($approval_type);
+    fetchAll($approval_type);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
@@ -56,10 +56,10 @@ function createTable($getRs) {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getAllRecords($getObj)
+function fetchAll($getObj)
 {
     try {
-        $rs = $getObj->getAllRecords();
+        $rs = $getObj->fetchAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

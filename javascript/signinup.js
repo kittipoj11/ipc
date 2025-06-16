@@ -43,9 +43,9 @@ $(document).ready(function () {
           });
         }
       },
-      error: function (response) {
-        console.log(`response => FAIL!!!`);
-        window.location = "login.php";
+      error: function (xhr, status, error) {
+        console.error("เกิดข้อผิดพลาดในการเชื่อมต่อ:", error);
+        $("#loginError").text("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
       },
     });
   });

@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Supplier extends Connection
 {
-    public function getAllRecords()
+    public function fetchAll()
     {
         $sql = <<<EOD
                 select supplier_id, supplier_name, is_deleted 
@@ -20,8 +20,6 @@ class Supplier extends Connection
         // exit;
 
         $rs = $stmt->fetchAll();
-
-
         return $rs;
     }
 

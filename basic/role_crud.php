@@ -12,13 +12,13 @@ $role = new Role($pdo);
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $role->insertData($_REQUEST);
-    // getAllRecords($role);
+    // fetchAll($role);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $role->updateData($_REQUEST);
-    // getAllRecords($role);
+    // fetchAll($role);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $role->deleteData($_REQUEST);
-    // getAllRecords($role);
+    // fetchAll($role);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
     $rs = $role->fetchAll();
     createTable($rs);
@@ -26,7 +26,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $rs = $role->fetchById($_REQUEST['role_id']);
     echo json_encode($rs);
 } else {
-    getAllRecords($role);
+    fetchAll($role);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
@@ -60,7 +60,7 @@ function createTable($getRs)
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getAllRecords($getObj)
+function fetchAll($getObj)
 {
     try {
         $rs = $getObj->fetchAll();

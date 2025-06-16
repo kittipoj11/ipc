@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Workflows extends Connection
 {
-    public function getAllRecords()
+    public function fetchAll()
     {
         $sql = <<<EOD
                 select workflow_id, workflow_name, is_deleted 
@@ -21,17 +21,16 @@ class Workflows extends Connection
 
         $rs = $stmt->fetchAll();
 
-
         return $rs;
     }
 
     public function getRecordById($id)
     {
         $sql = <<<EOD
-                select workflow_id, workflow_name, is_deleted 
-                from workflows
-                where is_deleted = false
-                and workflow_id = :id
+                    select workflow_id, workflow_name, is_deleted 
+                    from workflows
+                    where is_deleted = false
+                    and workflow_id = :id
                 EOD;
 
         $stmt = $this->myConnect->prepare($sql);

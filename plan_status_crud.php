@@ -9,21 +9,21 @@ $plan_status = new Plan_status();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $plan_status->insertData($_REQUEST);
-    // getAllRecords($plan_status);
+    // fetchAll($plan_status);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $plan_status->updateData($_REQUEST);
-    // getAllRecords($plan_status);
+    // fetchAll($plan_status);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $plan_status->deleteData($_REQUEST);
-    // getAllRecords($plan_status);
+    // fetchAll($plan_status);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $plan_status->getAllRecords();
+    $rs = $plan_status->fetchAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $plan_status->getRecordById($_REQUEST['plan_status_id']);
+    $rs = $plan_status->fetchById($_REQUEST['plan_status_id']);
     echo json_encode($rs);
 } else {
-    getAllRecords($plan_status);
+    fetchAll($plan_status);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
@@ -56,10 +56,10 @@ function createTable($getRs) {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getAllRecords($getObj)
+function fetchAll($getObj)
 {
     try {
-        $rs = $getObj->getAllRecords();
+        $rs = $getObj->fetchAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

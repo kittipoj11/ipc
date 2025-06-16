@@ -9,21 +9,21 @@ $workflows = new Workflows();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $workflows->insertData($_REQUEST);
-    // getAllRecords($workflows);
+    // fetchAll($workflows);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $workflows->updateData($_REQUEST);
-    // getAllRecords($workflows);
+    // fetchAll($workflows);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $workflows->deleteData($_REQUEST);
-    // getAllRecords($workflows);
+    // fetchAll($workflows);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $workflows->getAllRecords();
+    $rs = $workflows->fetchAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $workflows->getRecordById($_REQUEST['workflow_id']);
+    $rs = $workflows->fetchById($_REQUEST['workflow_id']);
     echo json_encode($rs);
 } else {
-    getAllRecords($workflows);
+    fetchAll($workflows);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
@@ -56,10 +56,10 @@ function createTable($getRs) {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getAllRecords($getObj)
+function fetchAll($getObj)
 {
     try {
-        $rs = $getObj->getAllRecords();
+        $rs = $getObj->fetchAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

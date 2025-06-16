@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Permission extends Connection
 {
-    public function getAllRecords()
+    public function fetchAll()
     {
         $sql = <<<EOD
                 select `permission_id`, `permission_name`, `menu_name`, `content_filename`, `function_name`, `is_deleted` 
@@ -25,7 +25,7 @@ class Permission extends Connection
         return $rs;
     }
 
-    public function getRecordById($id)
+    public function fetchById($id)
     {
         $sql = <<<EOD
                 select `permission_id`, `permission_name`, `menu_name`, `content_filename`, `function_name`, `is_deleted` 

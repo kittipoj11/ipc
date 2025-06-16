@@ -11,10 +11,10 @@ $rsPoMain = $po->getPoMainByPoId($po_id);
 $rsPoPeriod = $po->getPoPeriodByPoId($po_id);
 
 $supplier = new Supplier;
-$supplier_rs = $supplier->getAllRecords();
+$supplier_rs = $supplier->fetchAll();
 
 $location = new Location;
-$location_rs = $location->getAllRecords();
+$location_rs = $location->fetchAll();
 
 ?>
 <style>

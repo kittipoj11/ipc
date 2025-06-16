@@ -1,7 +1,7 @@
 <?php
 require_once  'class/supplier_class.php';
 $supplier = new Supplier;
-$rs = $supplier->getAllRecords();
+$rs = $supplier->fetchAll();
 ?>
 <!-- Content Header (Page header) -->
 <div class="content-header">

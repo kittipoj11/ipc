@@ -37,9 +37,8 @@ class User
         $stmt->execute();
         $user_data = $stmt->fetch();
 
-        $_SESSION["USER"] = $user_data;
         // ตรวจสอบว่าเจอผู้ใช้ และรหัสผ่านที่ hash ไว้ตรงกันหรือไม่
-        // if ($user_data && password_verify($getPassword, $user_data['password'])) {
+        // if ($user_data && password_verify($password, $user_data['password'])) {
         if ($user_data) {
             // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูลผู้ใช้ทั้งหมด
             return $user_data;
@@ -48,31 +47,9 @@ class User
             // ถ้าไม่เจอผู้ใช้ หรือรหัสผ่านไม่ถูก ให้คืนค่า false
             return false;
         }
-
-        // @session_start();
-
-        // remove all session variables
-        // session_unset();
-        // $_SESSION = [];
-        // if ($user_data && $password == $user_data['password']) {
-        //     $_SESSION['user_id'] = $user_data['user_id'];
-        //     $_SESSION['user_code'] = $user_data['user_code'];
-        //     $_SESSION['username'] = $user_data['username'];
-        //     $_SESSION['full_name'] = $user_data['full_name'];
-        //     $_SESSION['role_id'] = $user_data['role_id'];
-        //     $_SESSION['role_name'] = $user_data['role_name'];
-        //     $_SESSION['department_id'] = $user_data['department_id'];
-        //     $_SESSION['department_name'] = $user_data['department_name'];
-
-        //     $_SESSION['login_status'] = 'success';
-        //     return true;
-        // } else {
-        //     $_SESSION['login_status'] = 'fail';
-        //     return false;
-        // }
     }
 
-    public function getAllRecords()
+    public function fetchAll()
     {
         $sql = <<<EOD
                     select user_id, user_code, username, password, full_name, u.role_id, u.department_id 
@@ -90,7 +67,7 @@ class User
         return $rs;
     }
 
-    public function getUserByUsername($username)
+    public function fetchByUsername($username)
     {
         $sql = <<<EOD
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
@@ -110,7 +87,7 @@ class User
         $rs = $stmt->fetch();
         return $rs;
     }
-    public function getPermissions()
+    public function fetchAllPermissions()
     {
         $sql = <<<EOD
                     SELECT P.permission_id, P.permission_name, P.menu_name
@@ -123,7 +100,7 @@ class User
         $rs = $stmt->fetchAll();
         return $rs;
     }
-    public function getPermissionByUsername($username)
+    public function fetchAllPermissionByUsername($username)
     {
         // $sql = <<<EOD
         //             SELECT P.permission_id, P.permission_name, P.menu_name

@@ -9,21 +9,21 @@ $department = new Department();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $department->insertData($_REQUEST);
-    // getAllRecords($department);
+    // fetchAll($department);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $department->updateData($_REQUEST);
-    // getAllRecords($department);
+    // fetchAll($department);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $department->deleteData($_REQUEST);
-    // getAllRecords($department);
+    // fetchAll($department);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $department->getAllRecords();
+    $rs = $department->fetchAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $department->getRecordById($_REQUEST['department_id']);
+    $rs = $department->fetchById($_REQUEST['department_id']);
     echo json_encode($rs);
 } else {
-    getAllRecords($department);
+    fetchAll($department);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
@@ -56,10 +56,10 @@ function createTable($getRs) {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getAllRecords($getObj)
+function fetchAll($getObj)
 {
     try {
-        $rs = $getObj->getAllRecords();
+        $rs = $getObj->fetchAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

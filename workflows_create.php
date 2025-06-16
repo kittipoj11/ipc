@@ -50,13 +50,13 @@ require_once 'auth.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
     $po = new Po;
-    $rs = $po->getAllRecords();
+    $rs = $po->fetchAll();
 
     $supplier = new Supplier;
-    $supplier_rs = $supplier->getAllRecords();
+    $supplier_rs = $supplier->fetchAll();
 
     $location = new Location;
-    $location_rs = $location->getAllRecords();
+    $location_rs = $location->fetchAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

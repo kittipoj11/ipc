@@ -9,21 +9,21 @@ $location = new Location();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $location->insertData($_REQUEST);
-    // getAllRecords($location);
+    // fetchAll($location);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $location->updateData($_REQUEST);
-    // getAllRecords($location);
+    // fetchAll($location);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $location->deleteData($_REQUEST);
-    // getAllRecords($location);
+    // fetchAll($location);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $location->getAllRecords();
+    $rs = $location->fetchAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $location->getRecordById($_REQUEST['location_id']);
+    $rs = $location->fetchById($_REQUEST['location_id']);
     echo json_encode($rs);
 } else {
-    getAllRecords($location);
+    fetchAll($location);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
@@ -56,10 +56,10 @@ function createTable($getRs) {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getAllRecords($getObj)
+function fetchAll($getObj)
 {
     try {
-        $rs = $getObj->getAllRecords();
+        $rs = $getObj->fetchAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

@@ -9,21 +9,21 @@ $permission = new Permission();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $permission->insertData($_REQUEST);
-    // getAllRecords($permission);
+    // fetchAll($permission);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $permission->updateData($_REQUEST);
-    // getAllRecords($permission);
+    // fetchAll($permission);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $permission->deleteData($_REQUEST);
-    // getAllRecords($permission);
+    // fetchAll($permission);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $permission->getAllRecords();
+    $rs = $permission->fetchAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $permission->getRecordById($_REQUEST['permission_id']);
+    $rs = $permission->fetchById($_REQUEST['permission_id']);
     echo json_encode($rs);
 } else {
-    getAllRecords($permission);
+    fetchAll($permission);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
@@ -56,10 +56,10 @@ function createTable($getRs) {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getAllRecords($getObj)
+function fetchAll($getObj)
 {
     try {
-        $rs = $getObj->getAllRecords();
+        $rs = $getObj->fetchAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

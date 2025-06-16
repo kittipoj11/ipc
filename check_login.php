@@ -164,6 +164,10 @@ function buildMenuForRole(PDO $pdo, int $role_id): array
 }
 
 try {
+    // ตรวจสอบว่ามีการส่งข้อมูล username และ password มาหรือไม่
+    if (isset($_POST['username']) && isset($_POST['password'])) {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
     // 1. สร้าง Connection
     $connection = new Connection();
     $pdo = $connection->getDbConnection(); // ดึง PDO object ออกมา
@@ -172,31 +176,38 @@ try {
     $user = new User($pdo);
 
     // 3. ตรวจสอบการ login และรับผลลัพธ์ (จะเป็น array ข้อมูลผู้ใช้ หรือ false)
-    $userData = $user->checkLogin($_POST['username'], $_POST['password']);
-    if ($userData) {
+    $loggedInUser = $user->checkLogin($username, $password);
+}
+    // 4. กำหนด Content-Type เป็น application/json
+    header('Content-Type: application/json');
+
+    // ส่งผลลัพธ์กลับไปเป็น JSON
+    if ($loggedInUser) {
         // --- Login สำเร็จ ---
         // 1. ป้องกัน Session Fixation Attack
         session_regenerate_id(true);
 
-        // 2. เก็บข้อมูลที่จำเป็นจาก $userData ลงใน $_SESSION
-        $_SESSION['user_id'] = $userData['user_id'];
-        $_SESSION['user_code'] = $userData['user_code'];
-        $_SESSION['username'] = $userData['username'];
-        $_SESSION['full_name'] = $userData['full_name'];
-        $_SESSION['role_name'] = $userData['role_name'];
-        $_SESSION['department_name'] = $userData['department_name'];
+        // 2. เก็บข้อมูลที่จำเป็นจาก $loggedInUser ลงใน $_SESSION
+        $_SESSION['user_id'] = $loggedInUser['user_id'];
+        $_SESSION['user_code'] = $loggedInUser['user_code'];
+        $_SESSION['username'] = $loggedInUser['username'];
+        $_SESSION['full_name'] = $loggedInUser['full_name'];
+        $_SESSION['role_name'] = $loggedInUser['role_name'];
+        $_SESSION['department_name'] = $loggedInUser['department_name'];
         $_SESSION['logged_in'] = true; // สร้างตัวแปรเช็คสถานะ login
 
         // $_SESSION['user_menu'] = buildMenuForRole($pdo, $user['role_id']);
 
         // 3. ส่งผู้ใช้ไปยังหน้า dashboard
-        header('Location: dashboard.php'); // สมมติว่า dashboard อยู่นอกโฟลเดอร์นี้
-        exit();
+        // header('Location: dashboard.php'); // สมมติว่า dashboard อยู่นอกโฟลเดอร์นี้
+        echo json_encode($loggedInUser);
+        // exit();
     } else {
         // --- Login ล้มเหลว ---
         // ส่งกลับไปหน้า login พร้อมกับแสดงข้อความผิดพลาด
-        header('Location: ../login.php?error=1'); // ส่ง parameter ไปกับ URL
-        exit();
+        // header('Location: ../login.php?error=1'); // ส่ง parameter ไปกับ URL
+        echo json_encode(false);
+        // exit();
     }
 } catch (PDOException $e) {
     // หากเกิดปัญหากับฐานข้อมูล (เช่น ต่อไม่ได้)

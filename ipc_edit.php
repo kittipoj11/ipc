@@ -60,10 +60,10 @@ require_once 'auth.php';
     $rsInspectionPeriodDetail = $po->getInspectionPeriodDetailByPeriodId($po_id, $period_id);
 
     $supplier = new Supplier;
-    $supplier_rs = $supplier->getAllRecords();
+    $supplier_rs = $supplier->fetchAll();
 
     $location = new Location;
-    $location_rs = $location->getAllRecords();
+    $location_rs = $location->fetchAll();
 
     ?>
 

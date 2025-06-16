@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/po_status_class.php';
     $po_status = new Po_status;
-    $rs = $po_status->getAllRecords();
+    $rs = $po_status->fetchAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

@@ -25,7 +25,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectInspectionPeriod
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deleteInspectionFiles') {
     $obj->deleteInspectionFiles($_REQUEST['file_id']);
 } else {
-    // getAllRecords($obj);
+    // fetchAll($obj);
 }
 
 

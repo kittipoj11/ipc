@@ -10,7 +10,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     // print_r($_REQUEST);
     // exit;
     $open_area->insertSchedule($_REQUEST);
-    // getAllRecords($open_area);
+    // fetchAll($open_area);
     // header(APP_PATH . 'main.php?page=open_area_schedule');
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     // print_r($_REQUEST);

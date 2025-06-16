@@ -9,21 +9,21 @@ $po_status = new Po_status();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $po_status->insertData($_REQUEST);
-    // getAllRecords($po_status);
+    // fetchAll($po_status);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $po_status->updateData($_REQUEST);
-    // getAllRecords($po_status);
+    // fetchAll($po_status);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $po_status->deleteData($_REQUEST);
-    // getAllRecords($po_status);
+    // fetchAll($po_status);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $po_status->getAllRecords();
+    $rs = $po_status->fetchAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $po_status->getRecordById($_REQUEST['po_status_id']);
+    $rs = $po_status->fetchById($_REQUEST['po_status_id']);
     echo json_encode($rs);
 } else {
-    getAllRecords($po_status);
+    fetchAll($po_status);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
@@ -56,10 +56,10 @@ function createTable($getRs) {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getAllRecords($getObj)
+function fetchAll($getObj)
 {
     try {
-        $rs = $getObj->getAllRecords();
+        $rs = $getObj->fetchAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

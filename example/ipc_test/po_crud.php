@@ -19,7 +19,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
     $po->deleteData($_REQUEST);
     // getPoMainAll($po);
 // } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-//     $rs = $po->getRecordById($_REQUEST['plan_status_id']);
+//     $rs = $po->fetchById($_REQUEST['plan_status_id']);
 //     echo json_encode($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
     $rs = $po->getPoPeriodByPoId($_REQUEST['po_id']);

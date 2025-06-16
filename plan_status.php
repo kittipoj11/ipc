@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/plan_status_class.php';
     $plan_status = new Plan_status;
-    $rs = $plan_status->getAllRecords();
+    $rs = $plan_status->fetchAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

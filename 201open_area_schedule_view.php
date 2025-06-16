@@ -13,13 +13,13 @@
         $id = $_REQUEST['id'];
 
         $car_type = new Car_type;
-        $rsCarType =    $car_type->getAllRecords();
+        $rsCarType =    $car_type->fetchAll();
 
         $hall = new Hall;
-        $rsHall =    $hall->getAllRecords();
+        $rsHall =    $hall->fetchAll();
 
         $building = new Building;
-        $rsBuilding =    $building->getAllRecords();
+        $rsBuilding =    $building->fetchAll();
 
         $open_area = new OpenArea;
         $rsHeader = $open_area->getRSOpenAreaScheduleHeaderById($id);

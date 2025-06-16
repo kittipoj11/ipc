@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Approval_type extends Connection
 {
-    public function getAllRecords()
+    public function fetchAll()
     {
         $sql = <<<EOD
                 SELECT `approval_type_id`, `approval_type_name` 
@@ -25,7 +25,7 @@ class Approval_type extends Connection
         return $rs;
     }
 
-    public function getRecordById($id)
+    public function fetchById($id)
     {
         $sql = <<<EOD
                 SELECT `approval_type_id`, `approval_type_name` 

@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Approval_status extends Connection
 {
-    public function getAllRecords()
+    public function fetchAll()
     {
         $sql = <<<EOD
                 SELECT `approval_status_id`, `action_type_id`, `approval_status_name` 
@@ -24,7 +24,7 @@ class Approval_status extends Connection
         return $rs;
     }
 
-    public function getRecordById($id)
+    public function fetchById($id)
     {
         $sql = <<<EOD
                 SELECT `approval_status_id`, `action_type_id`, `approval_status_name` 

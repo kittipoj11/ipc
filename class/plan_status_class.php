@@ -4,7 +4,7 @@ require_once 'connection_class.php';
 
 class Plan_status extends Connection
 {
-    public function getAllRecords()
+    public function fetchAll()
     {
         $sql = <<<EOD
                 select plan_status_id, plan_status_name, is_deleted 
@@ -25,7 +25,7 @@ class Plan_status extends Connection
         return $rs;
     }
 
-    public function getRecordById($id)
+    public function fetchById($id)
     {
         $sql = <<<EOD
                 select plan_status_id, plan_status_name, is_deleted 

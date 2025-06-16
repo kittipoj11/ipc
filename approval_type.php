@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/approval_type_class.php';
     $approval_type = new Approval_type;
-    $rs = $approval_type->getAllRecords();
+    $rs = $approval_type->fetchAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

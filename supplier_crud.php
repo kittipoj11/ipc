@@ -9,21 +9,21 @@ $supplier = new Supplier();
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     $supplier->insertData($_REQUEST);
-    // getAllRecords($supplier);
+    // fetchAll($supplier);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
     $supplier->updateData($_REQUEST);
-    // getAllRecords($supplier);
+    // fetchAll($supplier);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
     $supplier->deleteData($_REQUEST);
-    // getAllRecords($supplier);
+    // fetchAll($supplier);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $supplier->getAllRecords();
+    $rs = $supplier->fetchAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $supplier->getRecordById($_REQUEST['supplier_id']);
+    $rs = $supplier->fetchById($_REQUEST['supplier_id']);
     echo json_encode($rs);
 } else {
-    getAllRecords($supplier);
+    fetchAll($supplier);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
@@ -56,10 +56,10 @@ function createTable($getRs) {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function getAllRecords($getObj)
+function fetchAll($getObj)
 {
     try {
-        $rs = $getObj->getAllRecords();
+        $rs = $getObj->fetchAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

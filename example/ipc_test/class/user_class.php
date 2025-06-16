@@ -52,7 +52,7 @@ class User extends Connection
         }
     }
 
-    public function getAllRecords()
+    public function fetchAll()
     {
         $sql = <<<EOD
                 select * 
@@ -69,7 +69,7 @@ class User extends Connection
         return $rs;
     }
 
-    public function getUserByUsername($username)
+    public function fetchByUsername($username)
     {
         $sql = <<<EOD
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
@@ -89,7 +89,7 @@ class User extends Connection
         $rs = $stmt->fetch();
         return $rs;
     }
-    public function getPermissions()
+    public function fetchAllPermissions()
     {
         $sql = <<<EOD
                     SELECT P.permission_id, P.permission_name, P.menu_name
@@ -102,7 +102,7 @@ class User extends Connection
         $rs = $stmt->fetchAll();
         return $rs;
     }
-    public function getPermissionByUsername($username)
+    public function fetchAllPermissionByUsername($username)
     {
         // $sql = <<<EOD
         //             SELECT P.permission_id, P.permission_name, P.menu_name
