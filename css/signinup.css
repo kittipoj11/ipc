@@ -21,9 +21,9 @@ body {
   color: #212529;
   text-align: left;
   background-color: #fff;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.4),
+  /* background-image: linear-gradient(rgba(0, 0, 0, 0.4),
       rgba(0, 0, 0, 0.7)),
-    url("../images/impact_muangthong.jpg");
+    url("../images/impact_muangthong.jpg"); */
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;

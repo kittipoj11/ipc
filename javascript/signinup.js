@@ -7,6 +7,8 @@ $(document).ready(function () {
 
     let username = $("#username").val();
     let password = $("#password").val();
+        // console.log(username);
+        // console.log(password);
     $.ajax({
       url: "check_login.php",
       data: {
@@ -16,7 +18,6 @@ $(document).ready(function () {
       method: "POST",
       datatype: "json",
       success: function (response) {
-        console.log(`response => ${response}`);
         if (response) {
           // return;
           window.location = "dashboard.php";
@@ -41,7 +42,6 @@ $(document).ready(function () {
             }
           });
         }
-
       },
       error: function (response) {
         console.log(`response => FAIL!!!`);
@@ -123,28 +123,6 @@ $(document).ready(function () {
   });
 
   // Delete
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // Delete
   $(document).on("click", ".btnEdit", function (e) {

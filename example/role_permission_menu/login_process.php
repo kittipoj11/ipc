@@ -10,7 +10,7 @@ require 'db_connection.php';
  */
 function buildMenuForRole(PDO $pdo, int $role_id): array
 {
-    $sql =<<<EOD
+    $sql = <<<EOD
                 SELECT m.`id`, m.`parent_id`, m.`title`, m.`url`, m.`icon`, m.`order_num`
                 FROM menu_items m
                 JOIN role_menu_permissions p ON m.id = p.menu_item_id
@@ -61,6 +61,7 @@ function buildMenuForRole(PDO $pdo, int $role_id): array
             $structuredMenu[] = &$item;
         }
     }
+
     /*
 การทำงานจริงทีละรอบ:
 

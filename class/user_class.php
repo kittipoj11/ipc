@@ -1,69 +1,90 @@
 <?php
 @session_start();
 
-// destroy the session
-// session_destroy();
+// ไม่ต้อง require_once ที่นี่ แต่จะไป require ในไฟล์ที่ใช้งานจริง
+// require_once 'connection_class.php';
 
-require_once  'connection_class.php';
-
-class User extends Connection
+class User
 {
+    /** @var PDO */
+    private $db; // เปลี่ยนเป็น private และใช้ชื่อที่สื่อความหมาย
+
+    /**
+     * รับ PDO connection object เข้ามาทาง Constructor
+     */
+    public function __construct(PDO $pdoConnection)
+    {
+        $this->db = $pdoConnection;
+    }
+
     public function checkLogin($getUsername, $getPassword)
     {
-        // echo($getUsername . $getPassword);
-        // exit;
         $username = $getUsername;
         $password = $getPassword;
         $sql = <<<EOD
-                select * 
-                from users u
-                left join departments d
-                    on u.department_id = d.department_id
-                left join roles r
-                    on u.role_id = r.role_id
-                where username = :username
+                    select user_id, user_code, username, password, full_name, u.role_id, u.department_id 
+                    , d.department_name, r.role_name
+                    from users u
+                    left join departments d
+                        on u.department_id = d.department_id
+                    left join roles r
+                        on u.role_id = r.role_id
+                    where username = :username
                 EOD;
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
-        $rs = $stmt->fetch();
+        $user_data = $stmt->fetch();
+
+        $_SESSION["USER"] = $user_data;
+        // ตรวจสอบว่าเจอผู้ใช้ และรหัสผ่านที่ hash ไว้ตรงกันหรือไม่
+        // if ($user_data && password_verify($getPassword, $user_data['password'])) {
+        if ($user_data) {
+            // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูลผู้ใช้ทั้งหมด
+            return $user_data;
+            // return true;
+        } else {
+            // ถ้าไม่เจอผู้ใช้ หรือรหัสผ่านไม่ถูก ให้คืนค่า false
+            return false;
+        }
 
         // @session_start();
 
         // remove all session variables
-        session_unset();
-        $_SESSION = [];
-        if ($rs && $password == $rs['password']) {
-            $_SESSION['user_id'] = $rs['user_id'];
-            $_SESSION['user_code'] = $rs['user_code'];
-            $_SESSION['username'] = $rs['username'];
-            $_SESSION['full_name'] = $rs['full_name'];
-            $_SESSION['role_id'] = $rs['role_id'];
-            $_SESSION['role_name'] = $rs['role_name'];
-            $_SESSION['department_id'] = $rs['department_id'];
-            $_SESSION['department_name'] = $rs['department_name'];
+        // session_unset();
+        // $_SESSION = [];
+        // if ($user_data && $password == $user_data['password']) {
+        //     $_SESSION['user_id'] = $user_data['user_id'];
+        //     $_SESSION['user_code'] = $user_data['user_code'];
+        //     $_SESSION['username'] = $user_data['username'];
+        //     $_SESSION['full_name'] = $user_data['full_name'];
+        //     $_SESSION['role_id'] = $user_data['role_id'];
+        //     $_SESSION['role_name'] = $user_data['role_name'];
+        //     $_SESSION['department_id'] = $user_data['department_id'];
+        //     $_SESSION['department_name'] = $user_data['department_name'];
 
-            $_SESSION['login_status'] = 'success';
-            return true;
-        } else {
-            $_SESSION['login_status'] = 'fail';
-            return false;
-        }
+        //     $_SESSION['login_status'] = 'success';
+        //     return true;
+        // } else {
+        //     $_SESSION['login_status'] = 'fail';
+        //     return false;
+        // }
     }
 
     public function getAllRecords()
     {
         $sql = <<<EOD
-                select * 
-                from users u
-                left join departments d
-                    on u.department_id = d.department_id
-                left join roles r
-                    on u.role_id = r.role_id"
+                    select user_id, user_code, username, password, full_name, u.role_id, u.department_id 
+                        , d.department_name, r.role_name
+                    from users u
+                    left join departments d
+                        on u.department_id = d.department_id
+                    left join roles r
+                        on u.role_id = r.role_id
                 EOD;
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
         return $rs;
@@ -83,7 +104,7 @@ class User extends Connection
                     WHERE U.username = :username
                 EOD;
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
         $rs = $stmt->fetch();
@@ -97,7 +118,7 @@ class User extends Connection
                     FROM permissions P
                 EOD;
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
         return $rs;
@@ -126,14 +147,15 @@ class User extends Connection
                     WHERE U.username = :username
                 EOD;
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
         $rs = $stmt->fetchAll();
         return $rs;
     }
 
-    function has_permission($user_id, $permission_name) {
+    function has_permission($user_id, $permission_name)
+    {
         $sql = <<<EOD
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
                     , D.department_name
@@ -146,22 +168,22 @@ class User extends Connection
                     WHERE U.username = :username
                 EOD;
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
         $rs = $stmt->fetch();
         return $rs;
-        
-    $stmt = $conn->prepare("SELECT COUNT(rp.permission_id) FROM users u
+
+        $stmt = $conn->prepare("SELECT COUNT(rp.permission_id) FROM users u
                                 INNER JOIN roles r ON u.role_id = r.id
                                 INNER JOIN role_permissions rp ON r.id = rp.role_id
                                 INNER JOIN permissions p ON rp.permission_id = p.id
                                 WHERE u.id = :user_id AND p.name = :permission_name");
-    $stmt->bindParam(':user_id', $user_id);
-    $stmt->bindParam(':permission_name', $permission_name);
-    $stmt->execute();
-    return $stmt->fetchColumn() > 0;
-}
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':permission_name', $permission_name);
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0;
+    }
 
 
     public function getLineUserID($username)
@@ -170,7 +192,7 @@ class User extends Connection
                 from users 
                 where username = :username";
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
         $rs = $stmt->fetchAll();
@@ -218,7 +240,7 @@ class User extends Connection
         // $is_active = isset($getData['is_active']) ? 1 : 0;
         $sql = "insert into users(username, password, fullname, role_id, department_id, phone, email) 
                 values(:username, :password, :fullname, :role_id, :department_id, :phone, :email)";
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         // $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
@@ -261,7 +283,7 @@ class User extends Connection
                 , email = :email
                 , update_datetime = CURRENT_TIMESTAMP()
                 where username = :username";
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
         $stmt->bindParam(':password', $password, PDO::PARAM_STR);
@@ -290,7 +312,7 @@ class User extends Connection
         $sql = "update users 
                 set is_deleted = 1
                 where username = :username";
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
 
         try {
@@ -305,6 +327,4 @@ class User extends Connection
             }
         }
     }
-
-    
 }

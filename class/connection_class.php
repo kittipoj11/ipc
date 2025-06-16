@@ -10,41 +10,46 @@ class Connection
     private $dbname = 'ipc_db';
     // private $dbname = 'inspection_db';
 
+    /**
+     * @var PDO|null ตัวแปรสำหรับเก็บ object PDO connection
+     */
     public $myConnect;
 
+    /**
+     * Constructor ของคลาส
+     * จะทำงานอัตโนมัติเมื่อมีการสร้าง object ใหม่ (new Connection())
+     * เพื่อเชื่อมต่อกับฐานข้อมูลทันที
+     */
+    // __construct ไม่จำเป็นต้อง return ค่าใดๆ หน้าที่ของมันคือการกำหนดค่าเริ่มต้นให้กับ object
     function __construct()
     {
-
+        $this->myConnect = null;
         try {
-            // $this->myConnect = $this->connection();
-            $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4";
+            // $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4";
+            $dsn = "mysql:host={$this->host};dbname={$this->dbname};charset=utf8mb4";
 
+            // สร้าง PDO object และเก็บไว้ใน property ของคลาส
             $pdoObj = new PDO($dsn, $this->username, $this->password);
             $pdoObj->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdoObj->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             $pdoObj->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
-            // echo "Connection successfully: ";
-
             $this->myConnect = $pdoObj;
         } catch (PDOException $e) {
+            // หากการเชื่อมต่อล้มเหลว ให้โยน Exception ออกไป
+            // เพื่อให้โค้ดที่เรียกใช้สามารถดักจับ Error ได้
             throw new PDOException("Connection failed: " . $e->getMessage());
-            // echo "Connection failed: " . $e->getMessage();
         }
     }
 
-    protected function connection()
+    /**
+     * ฟังก์ชันสำหรับดึง PDO connection object (แนะนำให้ใช้)
+     * @return PDO|null
+     */
+    // เป็นวิธีที่ดีในการเข้าถึง connection object แทนที่จะเข้าถึง property $myConnect โดยตรง (หลักการ Encapsulation)
+    public function getDbConnection()
     {
-        // $dsn1 = 'mysql:host=' . $this->host . '; port=' . $this->port . ';dbname=' . $this->dbname . ';charset=utf8mb4';
-        // $_SESSION['dsn1'] = $dsn1;
-        $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4";
-        // $_SESSION['dsn2'] = $dsn;
-
-        $pdoObj = new PDO($dsn, $this->username, $this->password);
-        $pdoObj->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        $pdoObj->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdoObj->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-        return $pdoObj;
+        return $this->myConnect;
     }
 }
 
