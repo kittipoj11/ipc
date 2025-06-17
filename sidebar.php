@@ -91,7 +91,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="department.php" class="nav-link text-dark">
+                            <a href="basic/department.php" class="nav-link text-dark">
                                 <i class="nav-icon fa-solid fa-city d-none"></i>
                                 <p>Department</p>
                             </a>

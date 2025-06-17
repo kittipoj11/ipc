@@ -1,58 +1,59 @@
 <?php
 // @session_start();
+require_once '../config.php';
+require_once '../class/connection_class.php';
+require_once '../class/plan_status_class.php';
 
-require_once 'config.php';
-require_once 'class/department_class.php';
+// 1. สร้าง Connection
+$connection = new Connection();
+$pdo = $connection->getDbConnection(); // ดึง PDO object ออกมา
 
-$department = new Department();
-// print_r($_REQUEST);
-// exit;
+// 2. "ส่ง" PDO object เข้าไปใน class
+$plan_status = new Plan_Status($pdo);
+
+// 3. 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
-    $department->insertData($_REQUEST);
-    // fetchAll($department);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
-    $department->updateData($_REQUEST);
-    // fetchAll($department);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
-    $department->deleteData($_REQUEST);
-    // fetchAll($department);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $department->fetchAll();
-    createTable($rs);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $department->fetchById($_REQUEST['department_id']);
-    echo json_encode($rs);
-} else {
-    fetchAll($department);
-}
+    $id = $plan_status->create($_REQUEST);
+    // 4. กำหนด Content-Type เป็น application/json
+    header('Content-Type: application/json');
 
-//หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function createTable($getRs) {
-    try {
-        $html = '';
-        foreach ($getRs as $row) {
-            $html .= <<<EOD
-                            <tr id="{$row['department_id']}">
-                                <td>{$row['department_id']}</td>
-                                <td>{$row['department_name']}</td>
-                                <td align='center'>
-                                    <div class='btn-group-sm'>
-                                        <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' data-id='{$row['department_id']}' style='margin: 0px 5px 5px 5px'>
-                                            <i class='fa-regular fa-pen-to-square'></i>
-                                        </a>
-                                        <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' data-id='{$row['department_id']}' style='margin: 0px 5px 5px 5px'>
-                                            <i class='fa-regular fa-trash-can'></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        EOD;
-          }
-        echo $html;
-        // print_r($rs);
-    } catch (PDOException $e) {
-        echo 'Data not found!';
-    }
+    // 5. ส่งผลลัพธ์กลับไปเป็น JSON
+    echo json_encode($id);
+
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
+    $result=$plan_status->update($_REQUEST['plan_status_id'],$_REQUEST);
+    // 4. กำหนด Content-Type เป็น application/json
+    header('Content-Type: application/json');
+
+    // 5. ส่งผลลัพธ์กลับไปเป็น JSON
+    echo json_encode($result);
+
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
+    $result=$plan_status->delete($_REQUEST['plan_status_id']);
+    // 4. กำหนด Content-Type เป็น application/json
+    header('Content-Type: application/json');
+
+    // 5. ส่งผลลัพธ์กลับไปเป็น JSON
+    echo json_encode($result);
+
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
+    $rs = $plan_status->fetchAll();
+    // 4. กำหนด Content-Type เป็น application/json
+    header('Content-Type: application/json');
+
+    // 5. ส่งผลลัพธ์กลับไปเป็น JSON
+    echo json_encode($rs);
+
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
+    $rs = $plan_status->fetchById($_REQUEST['plan_status_id']);
+    // 4. กำหนด Content-Type เป็น application/json
+    header('Content-Type: application/json');
+
+    // 5. ส่งผลลัพธ์กลับไปเป็น JSON
+    echo json_encode($rs);
+
+} else {
+    fetchAll($plan_status);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
@@ -67,7 +68,7 @@ function fetchAll($getObj)
                         <thead>
                             <tr>
                                 <th class="text-center" style="width: 100px;">#</th>
-                                <th class="text-center">Department name</th>
+                                <th class="text-center">Plan_Status name</th>
                                 <th class="text-center" style="width: 120px;">Action</th>
                             </tr>
                         </thead>
@@ -76,9 +77,9 @@ function fetchAll($getObj)
         echo $html;
         foreach ($rs as $row) {
             $html = <<<EOD
-                        <tr id="{$row['department_id']}">
-                            <td>{$row['department_id']}</td>
-                            <td>{$row['department_name']}</td>
+                        <tr id="{$row['plan_status_id']}">
+                            <td>{$row['plan_status_id']}</td>
+                            <td>{$row['plan_status_name']}</td>
                             <td align='center'>
                                 <div class='btn-group-sm'>
                                     <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' style='margin: 0px 5px 5px 5px'>

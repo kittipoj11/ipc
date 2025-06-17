@@ -1,7 +1,7 @@
 <?php
 @session_start();
-require_once 'config.php';
-require_once 'auth.php';
+require_once '../config.php';
+require_once '../auth.php';
 
 ?>
 
@@ -10,12 +10,12 @@ require_once 'auth.php';
 
 <head>
 
-  <?php include 'header_main.php'; ?>
+  <?php include '../header_main.php'; ?>
 
   <!-- Bootstrap 5.3.3 add by Poj-->
-  <link rel="stylesheet" href="plugins/bootstrap-5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../plugins/bootstrap-5.3.3/dist/css/bootstrap.min.css">
   <!-- ใช้แสดง icon ปุ่ม Insert, Update, Delete และ icon เมนูต่างๆบน sidebar-->
-  <link rel="stylesheet" href="plugins/fontawesome-free-6.5.1-web/css/all.min.css" type="text/css">
+  <link rel="stylesheet" href="../plugins/fontawesome-free-6.5.1-web/css/all.min.css" type="text/css">
   <!-- Google Font: Source Sans Pro -->
   <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"> -->
   <!-- flaticon dist\bootstrap-icons-1.11.3\font\bootstrap-icons.min.css-->
@@ -27,7 +27,7 @@ require_once 'auth.php';
   <link rel="stylesheet" href="plugins/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css"> -->
   <!-- Theme style -->
-  <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="../plugins/dist/css/adminlte.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -36,14 +36,19 @@ require_once 'auth.php';
   <!-- Page Wrapper -->
   <div class="wrapper">
 
-    <?php include 'sidebar.php'; ?>
-    <?php include 'navbar.php'; ?>
+    <?php include '../sidebar.php'; ?>
+    <?php include '../navbar.php'; ?>
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/department_class.php';
-    $department = new Department;
-    $rs = $department->fetchAll();
+    require_once '../class/connection_class.php';
+    require_once  '../class/location_class.php';
+
+    $connection = new Connection();
+    $pdo = $connection->getDbConnection();
+
+    $location = new Location($pdo);
+    $rs = $location->fetchAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -53,7 +58,7 @@ require_once 'auth.php';
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6 d-flex">
-              <h4>Department</h4>
+              <h4>Location</h4>
               <a class="btn btn-success btn-sm btnNew" data-bs-toggle="modal" data-bs-placement="right" title="New" data-bs-target="#openModal" style="margin: 0px 5px 5px 5px;">
                 <i class="fa-solid fa-plus"></i>
               </a>
@@ -71,7 +76,7 @@ require_once 'auth.php';
 
               <div class="card">
                 <!-- <div class="card-header">
-                               <h3 class="card-title">department</h3>
+                               <h3 class="card-title">location</h3>
                            </div> -->
                 <!-- /.card-header -->
                 <div class="card-body" id="card-body">
@@ -79,30 +84,12 @@ require_once 'auth.php';
                     <thead>
                       <tr>
                         <th class="text-center" style="width: 100px;">#</th>
-                        <th class="text-center">Department name</th>
+                        <th class="text-center">Location name</th>
                         <th class="text-center" style="width: 120px;">Action</th>
                       </tr>
                     </thead>
                     <tbody id="tbody">
-                      <!-- < ?php foreach ($rs as $row) {
-                        $html = <<<EOD
-                                        <tr id="{$row['department_id']}">
-                                            <td>{$row['department_id']}</td>
-                                            <td>{$row['department_name']}</td>
-                                            <td align='center'>
-                                                <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' data-bs-toggle='modal'  data-bs-placement='right' title='Edit' data-bs-target='#openModal' iid='{$row['department_id']}' style='margin: 0px 5px 5px 5px'>
-                                                        <i class='fa-regular fa-pen-to-square'></i>
-                                                    </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' data-bs-toggle='modal'  data-bs-placement='right' title='Delete' data-bs-target='#deleteModal' iid='{$row['department_id']}' style='margin: 0px 5px 5px 5px'>
-                                                        <i class='fa-regular fa-trash-can'></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        EOD;
-                        echo $html;
-                      } ?> -->
+
                     </tbody>
                   </table>
                 </div>
@@ -122,9 +109,6 @@ require_once 'auth.php';
 
     <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ส่วน Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
-    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Logout Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-    <!-- logout.php -->
-
     <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Open(Insert/Update) data Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
     <!-- <div class="container-fluid table-responsive-sm p-0"> -->
     <div class="modal fade" id="openModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -141,17 +125,17 @@ require_once 'auth.php';
             <!-- <input type="text" name="action" id="action"> -->
             <div class="modal-body">
               <div class="row m-3">
-                <label for="department_id" class="col-sm-6 col-form-label">#</label>
+                <label for="location_id" class="col-sm-6 col-form-label">#</label>
                 <div class="col-sm-6">
-                  <!-- <input type="hidden" class="department_id" name="department_id"> -->
-                  <input type="input" class="form-control form-control-sm fst-italic department_id" id="department_id" readonly name="department_id">
+                  <!-- <input type="hidden" class="location_id" name="location_id"> -->
+                  <input type="input" class="form-control form-control-sm fst-italic location_id" id="location_id" readonly name="location_id">
                 </div>
               </div>
 
               <div class="row m-3">
-                <label for="department_name" class="col-sm-6 col-form-label">department name</label>
+                <label for="location_name" class="col-sm-6 col-form-label">location name</label>
                 <div class="col-sm-6">
-                  <input type="input" class="form-control form-control-sm" name="department_name" id="department_name">
+                  <input type="input" class="form-control form-control-sm" name="location_name" id="location_name">
                 </div>
               </div>
             </div>
@@ -168,9 +152,9 @@ require_once 'auth.php';
 
     <!-- Main Content End -->
 
-    <?php include 'logout_modal.php'; ?>
+    <?php include '../logout_modal.php'; ?>
 
-    <?php include 'footer_bar.php'; ?>
+    <?php include '../footer_bar.php'; ?>
 
 
     <!-- ./wrapper -->
@@ -182,14 +166,14 @@ require_once 'auth.php';
 
     <!-- REQUIRED SCRIPTS -->
     <!-- Bootstrap 5.3.3 -->
-    <script src="plugins/bootstrap-5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../plugins/bootstrap-5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
     <!-- jQuery -->
-    <script src="plugins/jQuery-3.7.1/jquery-3.7.1.min.js"></script>
+    <script src="../plugins/jQuery-3.7.1/jquery-3.7.1.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="plugins/dist/js/adminlte.js"></script>
+    <script src="../plugins/dist/js/adminlte.js"></script>
     <!-- Sweet Alert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/department.js"></script>
+    <script src="javascript/location.js"></script>

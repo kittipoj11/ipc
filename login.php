@@ -86,7 +86,7 @@ require_once "config.php";
                         </div>
                     </form>
 
-                    <div class="bg-white p-3">
+                    <div class="bg-white p-3 d-none">
                         <section class="with-styles">
                             <h6>ตัวอย่างการใช้ Semantic Elements</h6>
                             <kbd>kbd</kbd>
