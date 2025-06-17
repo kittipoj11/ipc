@@ -40,7 +40,7 @@ CREATE TABLE `role_menu_permissions` (
 -- ---------------------------------
 -- -- 2. ใส่ข้อมูลตัวอย่าง (SAMPLE DATA) --
 -- ---------------------------------
-INSERT INTO `roles` (`id`, `role_name`) VALUES (1, 'Admin'), (2, 'Editor');
+INSERT INTO `roles` (`id`, `role_name`) VALUES (1, 'System Admin'), (2, 'Editor');
 
 INSERT INTO `users` (`id`, `username`, `password`, `role_id`) VALUES
 (1, 'admin', 'admin123', 1),

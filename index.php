@@ -45,8 +45,12 @@ if (!isset($_SESSION['username'])) {
 
     <!-- Main Content Start -->
     <?php
+    require_once  'class/connection_class.php';
     require_once  'class/supplier_class.php';
-    $supplier = new Supplier;
+
+    $connection=new Connection;
+    $pdo=$connection->getDbConnection();
+    $supplier = new Supplier($pdo);
     $rs = $supplier->fetchAll();
     ?>
 
@@ -390,7 +394,7 @@ if (!isset($_SESSION['username'])) {
                       <li class="page-item"><a href="#" class="page-link">2</a></li>
                       <li class="page-item"><a href="#" class="page-link">3</a></li>
                       <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>
-                    </ul>
+                      
                   </div>
                 </div>
                 <!-- /.card-header -->

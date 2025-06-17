@@ -2,7 +2,7 @@
 // ไม่ต้อง require_once ที่นี่ แต่จะไป require ในไฟล์ที่ใช้งานจริง
 // require_once 'connection_class.php';
 
-class Inspection_Status
+class Menu_Item
 {
     /** @var PDO */
     private $db; // เปลี่ยนเป็น private และใช้ชื่อที่สื่อความหมาย
@@ -18,9 +18,9 @@ class Inspection_Status
     public function fetchAll()
     {
         $sql = <<<EOD
-                    select inspection_status_id, inspection_status_name, is_deleted 
-                    from inspection_status 
-                    where is_deleted = false
+                    SELECT `id`, `parent_id`, `title`, `url`, `icon`, `order_num`
+                    FROM menu_items 
+                    ORDER BY parent_id, order_num
                 EOD;
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
@@ -40,10 +40,10 @@ class Inspection_Status
     public function fetchById($id)
     {
         $sql = <<<EOD
-                select inspection_status_id, inspection_status_name, is_deleted 
-                from inspection_status
-                where is_deleted = false
-                and inspection_status_id = :id
+                    SELECT `id`, `parent_id`, `title`, `url`, `icon`, `order_num`
+                    FROM menu_items 
+                    ORDER BY parent_id, order_num
+                    WHERE id = :id
                 EOD;
 
         $stmt = $this->db->prepare($sql);
@@ -67,18 +67,20 @@ class Inspection_Status
      */
     public function create(array $getData)
     {
-        $sql = "INSERT INTO inspection_status(inspection_status_name)
-                VALUES (:inspection_status_name)";
+        $sql =<<<EOD
+                    INSERT INTO menu_items(department_name)
+                    VALUES (:department_name)
+                EOD;
 
         try {
             $stmt = $this->db->prepare($sql);
             /* //รูปแบบเดิม
-            $stmt->bindParam(':inspection_status_name', $inspection_status_name, PDO::PARAM_STR);
+            $stmt->bindParam(':department_name', $department_name, PDO::PARAM_STR);
             $stmt->execute();
             */
 
             $stmt->execute([
-                ':inspection_status_name'      => $getData['inspection_status_name']
+                ':department_name'      => $getData['department_name']
             ]);
 
             // คืนค่า ID ของแถวที่เพิ่งเพิ่มเข้าไปใหม่
@@ -98,15 +100,15 @@ class Inspection_Status
      */
     public function update(int $getId, array $getData)
     {
-        $sql = "UPDATE inspection_status 
-                SET inspection_status_name = :inspection_status_name
-                WHERE inspection_status_id = :inspection_status_id";
+        $sql = "UPDATE menu_items 
+                SET department_name = :department_name
+                WHERE department_id = :department_id";
 
         try {
             $stmt = $this->db->prepare($sql);
             return $stmt->execute([
-                ':inspection_status_name'     => $getData['inspection_status_name'],
-                ':inspection_status_id'       => $getId
+                ':department_name'     => $getData['department_name'],
+                ':department_id'       => $getId
             ]);
         } catch (PDOException $e) {
             return false;
@@ -122,13 +124,13 @@ class Inspection_Status
     {
         // คำแนะนำ: ในระบบงานจริงส่วนใหญ่นิยมใช้วิธี "Soft Delete"
         // คือการอัปเดต field เช่น is_deleted = 1 แทนการลบข้อมูลจริงออกจากฐานข้อมูล
-        $sql = "UPDATE inspection_status 
+        $sql = "UPDATE menu_items 
                 SET is_deleted = 1
-                WHERE inspection_status_id = :inspection_status_id";
+                WHERE department_id = :department_id";
 
         try {
             $stmt = $this->db->prepare($sql);
-            return $stmt->execute([':inspection_status_id' => $getId]);
+            return $stmt->execute([':department_id' => $getId]);
         } catch (PDOException $e) {
             return false;
         }
@@ -138,42 +140,7 @@ class Inspection_Status
         update() และ delete() คืนค่าเป็น boolean (true/false) เพื่อบอกสถานะความสำเร็จให้โค้ดที่เรียกใช้ทราบได้ง่ายๆ
     */
 
-    public function getHtmlData()
-    {
-        $sql = "select inspection_status_id, inspection_status_name, is_deleted 
-                from inspection_status 
-                where is_deleted = false";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        $rs = $stmt->fetchAll();
-
-        $html = "<p>รายงาน Inspection_Status ทั้งหมด</p>";
-
-        // เรียกใช้งาน ฟังก์ชั่นดึงข้อมูลไฟล์มาใช้งาน
-        $html .= "<style>";
-        $html .= "table, th, td {";
-        $html .= "border: 1px solid black;";
-        $html .= "border-radius: 10px;";
-        $html .= "background-color: #b3ffb3;";
-        $html .= "padding: 5px;}";
-        $html .= "</style>";
-        $html .= "<table cellspacing='0' cellpadding='1' style='width:1100px;'>";
-        $html .= "<tr>";
-        $html .= "<th align='center' bgcolor='F2F2F2'>รหัส Inspection_Status </th>";
-        $html .= "<th align='center' bgcolor='F2F2F2'> Inspection_Status </th>";
-        $html .= "</tr>";
-        foreach ($rs as $row) :
-            $html .=  "<tr bgcolor='#c7c7c7'>";
-            $html .=  "<td>{$row['inspection_status_id']}</td>";
-            $html .=  "<td>{$row['inspection_status_name']}</td>";
-            $html .=  "</tr>";
-        endforeach;
-
-        $html .= "</table>";
-
-        return $html;
-    }
+    
 }
 
 

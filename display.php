@@ -10,7 +10,7 @@ require_once 'class/po_class.php';
 
 $obj = new Po();
 // $rsInspectionFiles = $po->getInspectionFilesByInspectionId($po_id, $period_id, $inspection_id);
-$rsInspectionFiles = $obj->getInspectionFilesByInspectionId(1,1,1);
+// $rsInspectionFiles = $obj->getInspectionFilesByInspectionId(1,1,1);
 
 echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
 // echo 'xxx';

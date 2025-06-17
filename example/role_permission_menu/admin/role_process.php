@@ -1,7 +1,7 @@
 <?php
 session_start();
 require '../db_connection.php';
-if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'Admin' || (!isset($_POST['action']) && !isset($_GET['action']))) {
+if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'System Admin' || (!isset($_POST['action']) && !isset($_GET['action']))) {
     die("Access Denied or Invalid Action.");
 }
 

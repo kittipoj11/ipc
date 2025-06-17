@@ -474,7 +474,7 @@ CREATE TABLE `roles` (
 
 INSERT INTO `roles` (`role_id`, `role_name`) VALUES
 (0, 'System Admin'),
-(1, 'Admin'),
+(1, 'System Admin'),
 (2, 'Assistant Manager'),
 (3, 'Manager'),
 (4, 'Director'),

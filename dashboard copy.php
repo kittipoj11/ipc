@@ -45,8 +45,12 @@ if (!isset($_SESSION['username'])) {
 
         <!-- Main Content Start -->
         <?php
+        require_once  'class/connection_class.php';
         require_once  'class/supplier_class.php';
-        $supplier = new Supplier;
+
+        $connection = new Connection;
+        $pdo=$connection->getDbConnection();
+        $supplier = new Supplier($pdo);
         $rs = $supplier->fetchAll();
         ?>
 

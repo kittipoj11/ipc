@@ -45,8 +45,12 @@ if (!isset($_SESSION['username'])) {
 
         <!-- Main Content Start -->
         <?php
+        require_once  'class/connection_class.php';
         require_once  'class/supplier_class.php';
-        $supplier = new Supplier;
+
+        $connection = new Connection;
+        $pdo = $connection->getDbConnection();
+        $supplier = new Supplier($pdo);
         $rs = $supplier->fetchAll();
         ?>
 
@@ -188,6 +192,8 @@ if (!isset($_SESSION['username'])) {
                                             <li class="page-item"><a href="#" class="page-link">2</a></li>
                                             <li class="page-item"><a href="#" class="page-link">3</a></li>
                                             <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>
+
+                                        </ul>
                                         </ul>
                                     </div>
                                 </div>
@@ -295,6 +301,30 @@ if (!isset($_SESSION['username'])) {
                                                 <i class="fas fa-trash-o"></i>
                                             </div>
                                         </li>
+                                        <?php
+                                        $html = "";
+                                        foreach ($rs as $row) {
+                                            $html = <<<EOD
+                                                        <li>
+                                                            <span class="handle">
+                                                                <i class="fas fa-ellipsis-v"></i>
+                                                                <i class="fas fa-ellipsis-v"></i>
+                                                            </span>
+                                                            <div class="icheck-primary d-inline ml-2">
+                                                                <input type="checkbox" value="" name="todo6" id="todoCheck6">
+                                                                <label for="todoCheck6"></label>
+                                                            </div>
+                                                            <span class="text">{$row['supplier_name']}</span>
+                                                            <small class="badge badge-secondary"><i class="far fa-clock"></i> {$row['supplier_id']} month</small>
+                                                            <div class="tools">
+                                                                <i class="fas fa-edit"></i>
+                                                                <i class="fas fa-trash-o"></i>
+                                                            </div>
+                                                        </li>
+                                                    EOD;
+                                            echo $html;
+                                        }
+                                        ?>
                                     </ul>
                                 </div>
                                 <!-- /.card-body -->

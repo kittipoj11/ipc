@@ -592,7 +592,7 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`role_id`, `role_name`) VALUES
-(1, 'Admin'),
+(1, 'System Admin'),
 (2, 'Assistant Manager'),
 (4, 'Director'),
 (3, 'Manager'),

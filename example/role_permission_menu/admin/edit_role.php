@@ -1,7 +1,7 @@
 <?php
 session_start();
 require '../db_connection.php';
-if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'Admin' || !isset($_GET['id'])) { die("Access Denied."); }
+if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'System Admin' || !isset($_GET['id'])) { die("Access Denied."); }
 
 $role_id = $_GET['id'];
 $stmt = $pdo->prepare("SELECT * FROM roles WHERE id = ?");

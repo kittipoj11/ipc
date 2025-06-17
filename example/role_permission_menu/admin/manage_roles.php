@@ -1,7 +1,7 @@
 <?php
 session_start();
 require '../db_connection.php';
-if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'Admin') {
+if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'System Admin') {
     die("Access Denied.");
 }
 $roles = $pdo->query("SELECT * FROM roles ORDER BY role_name ASC")->fetchAll();
@@ -38,7 +38,7 @@ $roles = $pdo->query("SELECT * FROM roles ORDER BY role_name ASC")->fetchAll();
                 <td><?php echo htmlspecialchars($role['role_name']); ?></td>
                 <td>
                     <a href="edit_role.php?id=<?php echo $role['id']; ?>"><i class="fa-solid fa-pen-to-square"></i> แก้ไข</a>
-                    <?php if ($role['role_name'] !== 'Admin'): ?>
+                    <?php if ($role['role_name'] !== 'System Admin'): ?>
                     <a href="role_process.php?action=delete&id=<?php echo $role['id']; ?>" class="action-delete" onclick="return confirm('คุณแน่ใจหรือไม่ที่จะลบ Role นี้?');"><i class="fa-solid fa-trash"></i> ลบ</a>
                     <?php endif; ?>
                 </td>
