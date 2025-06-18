@@ -23,11 +23,11 @@ $(document).ready(function () {
       if (result.isConfirmed) {
         $.ajax({
           url: "po_crud.php", // ให้ส่งข้อมูลไปตาม url ที่กำหนด
+          method: "POST", //เป็นวิธีการส่ง POST หรือ GET อาจจะใช้เป็น type: 'post'
           data: {
             po_id: po_id,
             action: "delete",
           }, //จะทำการส่งเป็นรูปแบบ java object ->{name: value}
-          method: "POST", //เป็นวิธีการส่ง POST หรือ GET อาจจะใช้เป็น type: 'post'
           success: function (response) {
             console.log(`response=${response}`);
             //ถ้าดึงข้อมูลมาเสร็จเรียบร้อยแล้วข้อมูลจะถูกส่งกลับมาไว้ที่ response
@@ -83,10 +83,7 @@ $(document).ready(function () {
     window.location.href = "po_dml.php?action=update" + "&po_id=" + po_id;
   });
 
-  $("#tableMain #tbody").on(
-    "click",
-    ".tdMain:not(:has(a), .action)",
-    function (e) {
+  $("#tableMain #tbody").on("click", ".tdMain:not(:has(a), .action)", function (e) {
       //, (comma) ภายใน :not(...): ใช้เพื่อรวมเงื่อนไขหลายอย่าง ในที่นี้คือ :has(a), :has(.action)
       // หมายความว่า :not() จะกรอง <td> ที่ ไม่มีทั้ง <a> และ ไม่มีทั้ง .action
       e.preventDefault();
@@ -146,28 +143,28 @@ $(document).ready(function () {
     let tableBody = "";
     $.each(datas, function (index, data) {
       tableBody += `
-                        <tr data-id='${data.po_id}'>
-                                <td class="tdMain p-0 d-none">${data.po_id}</td>
-                                <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='Edit' style='margin: 0px 5px 5px 5px' data-id='${data.po_number}'>${data.po_number}</a></td>
-                                <td class="tdMain p-0">${data.project_name}</td>
-                                <td class="tdMain p-0">${data.supplier_name}</td>
-                                <td class="tdMain p-0">${data.location_name}</td>
-                                <td class="tdMain p-0">${data.working_name_th}</td>
-                                <td class="tdMain p-0 text-right">${data.contract_value_before}</td>
-                                <td class="tdMain p-0 text-right">${data.contract_value}</td>
-                                <td class="tdMain p-0 text-right">${data.number_of_period}</td>
-                                <td class="tdMain p-0 action" align='center'>
-                                    <div class='btn-group-sm'>
-                                        <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-id='${data.po_id}'>
-                                            <i class='fa-regular fa-pen-to-square'></i>
-                                        </a>
-                                        <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-id='${data.po_id}'>
-                                            <i class='fa-regular fa-trash-can'></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                      `;
+                      <tr data-id='${data.po_id}'>
+                          <td class="tdMain p-0 d-none">${data.po_id}</td>
+                          <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='Edit' style='margin: 0px 5px 5px 5px' data-id='${data.po_number}'>${data.po_number}</a></td>
+                          <td class="tdMain p-0">${data.project_name}</td>
+                          <td class="tdMain p-0">${data.supplier_name}</td>
+                          <td class="tdMain p-0">${data.location_name}</td>
+                          <td class="tdMain p-0">${data.working_name_th}</td>
+                          <td class="tdMain p-0 text-right">${data.contract_value_before}</td>
+                          <td class="tdMain p-0 text-right">${data.contract_value}</td>
+                          <td class="tdMain p-0 text-right">${data.number_of_period}</td>
+                          <td class="tdMain p-0 action" align='center'>
+                              <div class='btn-group-sm'>
+                                  <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-id='${data.po_id}'>
+                                      <i class='fa-regular fa-pen-to-square'></i>
+                                  </a>
+                                  <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-id='${data.po_id}'>
+                                      <i class='fa-regular fa-trash-can'></i>
+                                  </a>
+                              </div>
+                          </td>
+                      </tr>
+                    `;  
     });
     return tableBody;
   }

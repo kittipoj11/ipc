@@ -6,42 +6,48 @@ $(document).ready(function () {
     let data_sent = $("#myForm").serializeArray();
     data_sent.push({
       name: "action",
-      value: $("#submit").data("action"),//'create', //หรือ update
+      value: $("#submit").data("action"), //'create', //หรือ update
     });
-    console.log(data_sent);
+    console.log(`data_sent=${data_sent}`);
     $.ajax({
-      type: "POST",
       url: "po_crud.php",
+      type: "POST",
       // data: $(this).serialize(),
       data: data_sent,
       success: function (response) {
-        Swal.fire({
-          icon: "success",
-          title: "Data saved successfully",
-          color: "#716add",
-          allowOutsideClick: false,
-          background: "black",
-          // backdrop: `
-          //                     rgba(0,0,123,0.4)
-          //                     url("_images/paw.gif")
-          //                     left bottom
-          //                     no-repeat
-          //                     `,
-          // showConfirmButton: false,
-          // timer: 15000
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = "po.php";
-            // window.location.reload();
-          }
-        });
-        // window.location.href = 'main.php?page=open_area_schedule';
+        console.log(`response=${response}`);
+        if (response) {
+          Swal.fire({
+            icon: "success",
+            title: "Data saved successfully",
+            color: "#716add",
+            allowOutsideClick: false,
+            background: "black",
+            // backdrop: `
+            //                     rgba(0,0,123,0.4)
+            //                     url("_images/paw.gif")
+            //                     left bottom
+            //                     no-repeat
+            //                     `,
+            // showConfirmButton: false,
+            // timer: 15000
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "po.php";
+              // window.location.reload();
+            }
+            // window.location.href = 'main.php?page=open_area_schedule';
+          });
+        }
       },
+      error: function (xhr, status, error) {
+        console.log("เกิดข้อผิดพลาดในการเชื่อมต่อ:", error);
+        // console.error("เกิดข้อผิดพลาดในการเชื่อมต่อ:", error);
+        // $('#loginError').text('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์');
+      }
     });
-
   });
 
-  
   $("#btnAdd").click(function () {
     let period;
     // console.log($(".firstTr:last").find(".period:last").val());
@@ -131,14 +137,14 @@ $(document).ready(function () {
     let period_number;
     // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-period
     // $("#tbody-period").find("tr:not(:first):last").remove();
-          $("#tbody-period .firstTr[crud!='d']:last")
-            // $("#tbody-period tr:not(:first)[crud!='d']:last")
-            .attr("crud", "d")
-            .addClass("d-none")
+    $("#tbody-period .firstTr[crud!='d']:last")
+      // $("#tbody-period tr:not(:first)[crud!='d']:last")
+      .attr("crud", "d")
+      .addClass("d-none")
 
-            .find("td input.crud")
-            .val("d")
-            .end();
+      .find("td input.crud")
+      .val("d")
+      .end();
   });
 
   // $(".btnDeleteThis").click(function() {
@@ -159,7 +165,7 @@ $(document).ready(function () {
     // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
     window.history.back();
   });
-  
+
   $("#contract_value_before").on("change keyup", function () {
     let contract_value_before = parseFloat($(this).val());
     let vat_rate = parseFloat($("#vat").data("vat_rate"));
@@ -190,7 +196,7 @@ $(document).ready(function () {
     }
   });
 
-  $("#working_date_from, #working_date_to").on("change", function() {
+  $("#working_date_from, #working_date_to").on("change", function () {
     var working_date_from = $("#working_date_from").val();
     var working_date_to = $("#working_date_to").val();
 
@@ -199,10 +205,9 @@ $(document).ready(function () {
       var end = new Date(working_date_to);
       var timeDiff = Math.abs(end.getTime() - start.getTime());
       var working_day = Math.ceil(timeDiff / (1000 * 3600 * 24));
-      $("#working_day").val(working_day+1);
+      $("#working_day").val(working_day + 1);
     } else {
       $("#working_day").val("");
     }
   });
 });
-

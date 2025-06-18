@@ -1,7 +1,11 @@
 <?php
 @session_start();
+require_once  '../class/connection_class.php';
 require_once  '../class/menu_class.php';
-$menu = new Menu;
+
+$connection=new Connection;
+$pdo=$connection->getDbConnection();
+$menu = new Menu_Item($pdo);
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'System Admin') {
     die("Access Denied.");

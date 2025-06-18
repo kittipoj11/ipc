@@ -94,7 +94,7 @@ class Po
     public function create($getData)
     {
         @session_start();
-
+        $this->db->beginTransaction();
         try {
             // กำหนดค่า default สำหรับ workflow step ของ inspection และ ipc (อาจจะมีหน้าจอ config) โดยที่
             // 1. ทำการสร้าง inspection_period_approvals เมื่อมีการ save po เรียบร้อยแล้ว
@@ -309,7 +309,8 @@ class Po
                 }
 
                 $_SESSION['message'] =  'data has been created successfully.';
-                // $this->db->commit();
+                $this->db->commit();
+                return true;
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
@@ -317,9 +318,8 @@ class Po
             } else {
                 $_SESSION['message'] =  $e->getCode() + ' ' + $e->getMessage();
             }
-            // $this->db->rollBack();
-        } catch (Exception $e) {
-            $_SESSION['message'] =  $e->getCode() + ' ' + $e->getMessage();
+            $this->db->rollBack();
+            return false;
         } finally {
             // $stmt->closeCursor();
             // $stmtPoPeriod->closeCursor();
@@ -339,7 +339,7 @@ class Po
         @session_start();
 
         try {
-            // $this->db->beginTransaction();
+            $this->db->beginTransaction();
 
             // กำหนดค่า default สำหรับ workflow step ของ inspection และ ipc (อาจจะมีหน้าจอ config) โดยที่
             // 1. ทำการสร้าง inspection_period_approvals เมื่อมีการ save po เรียบร้อยแล้ว
@@ -360,7 +360,7 @@ class Po
 
             // parameters ในส่วน po_main
             $po_id = $getId;
-            $po_number = $getData['po_number'];
+            // $po_number = $getData['po_number'];
             $project_name = $getData['project_name'];
             $supplier_id = $getData['supplier_id'];
             $location_id = $getData['location_id'];
@@ -370,7 +370,7 @@ class Po
             $contract_value = floatval($getData['contract_value'] ?? 0);
             $contract_value_before = floatval($getData['contract_value_before'] ?? 0);
             $vat = floatval($getData['vat'] ?? 0);
-            $is_deposit = $getData['is_deposit'];
+            $is_deposit = 1;//$getData['is_deposit'];
             $deposit_percent = floatval($getData['deposit_percent'] ?? 0);
             $deposit_value = ($deposit_percent * $contract_value) / 100;
             $working_date_from = $getData['working_date_from'];
@@ -653,10 +653,14 @@ class Po
                     // $stmtInspectionPeriodDelete->closeCursor();
                 }
 
-                $_SESSION['message'] =  'data has been created successfully.';
+                $_SESSION['message'] =  'Data has been created successfully.';
+                $this->db->commit();
+                return true;
             }
         } catch (PDOException $e) {
             $_SESSION['message'] =  $e->getCode() + ' : ' + $e->getMessage();
+            $this->db->rollBack();
+            return false;
         }
     }
 

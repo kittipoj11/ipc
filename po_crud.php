@@ -1,5 +1,8 @@
 <?php
 @session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 require_once 'config.php';
 require_once 'class/connection_class.php';
@@ -13,23 +16,26 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     $id = $po->create($_REQUEST);
     header('Content-Type: application/json');
     echo json_encode($id);
+
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
     $id = $po->update($_REQUEST['po_id'], $_REQUEST);
     header('Content-Type: application/json');
     echo json_encode($id);
+
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
-    // $_SESSION['po id'] = $_REQUEST['po_id'];
-    // exit;
     $id = $po->delete($_REQUEST['po_id']);
     header('Content-Type: application/json');
     echo json_encode($id);
+
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
     $rs = $po->fetchAll();
     header('Content-Type: application/json');
     echo json_encode($rs);
+
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
     $rs = $po->fetchAllPeriodByPoId($_REQUEST['po_id']);
     createPeriodTable($rs);
+
 } else {
     header('Content-Type: application/json');
     echo json_encode($id);
