@@ -49,6 +49,10 @@ class User
         }
     }
 
+    /**
+     * ดึงข้อมูลผู้ใช้ทั้งหมดจากฐานข้อมูล
+     * @return array คืนค่าเป็น array ของข้อมูลผู้ใช้ทั้งหมด หรือ array ว่างหากไม่มีข้อมูล
+     */
     public function fetchAll()
     {
         $sql = <<<EOD
@@ -63,18 +67,11 @@ class User
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
-        $rs = $stmt->fetchAll();
-        if ($rs) {
-            // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูลผู้ใช้ทั้งหมด
-            return $rs;
-            // return true;
-        } else {
-            // ถ้าไม่เจอผู้ใช้ หรือรหัสผ่านไม่ถูก ให้คืนค่า false
-            return false;
-        }
+        $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rs;
     }
 
-    public function fetchByUsername($username)
+    public function fetchByUsername($username):?array
     {
         $sql = <<<EOD
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
@@ -91,16 +88,14 @@ class User
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
+
         $rs = $stmt->fetch();
-        if ($rs) {
-            // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูลผู้ใช้ทั้งหมด
-            return $rs;
-            // return true;
-        } else {
-            // ถ้าไม่เจอผู้ใช้ หรือรหัสผ่านไม่ถูก ให้คืนค่า false
-            return false;
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
         }
+        return $rs;
     }
+
     public function fetchAllPermissions()
     {
         $sql = <<<EOD

@@ -12,7 +12,7 @@ $pdo = $connection->getDbConnection(); // ดึง PDO object ออกมา
 $approval_type = new Approval_Type($pdo);
 
 // 3. 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     $id = $approval_type->create($_REQUEST);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
@@ -20,7 +20,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     // 5. ส่งผลลัพธ์กลับไปเป็น JSON
     echo json_encode($id);
 
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
     $result=$approval_type->update($_REQUEST['approval_type_id'],$_REQUEST);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
@@ -28,7 +28,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     // 5. ส่งผลลัพธ์กลับไปเป็น JSON
     echo json_encode($result);
 
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $result=$approval_type->delete($_REQUEST['approval_type_id']);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');

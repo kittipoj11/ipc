@@ -62,7 +62,7 @@ $(document).ready(function () {
               type: "POST",
               data: {
                 department_id: department_id,
-                action: 'deletedata'
+                action: 'delete'
               },
               success: function (response) {
                 Swal.fire({
@@ -119,9 +119,9 @@ $(document).ready(function () {
     let department_name = $("#department_name").val();
     let action = '';
     if (department_id == '[Autonumber]') {
-      action = 'insertdata';
+      action = 'create';
     } else {
-      action = 'updatedata';
+      action = 'update';
     }
     console.log(`action=${action}`);
     $.ajax({

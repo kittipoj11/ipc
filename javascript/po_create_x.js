@@ -8,7 +8,7 @@ $(document).ready(function () {
       let data_sent = $("#myForm").serializeArray();
       data_sent.push({
         name: "action",
-        value: "insert",
+        value: 'create',
       });
       // console.log(data_sent);
       $.ajax({

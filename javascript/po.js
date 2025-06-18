@@ -2,11 +2,11 @@ $(document).ready(function () {
   // $('.btnDelete').on('click', function() { // แบบนี้ -> ไม่สามารถใช้งานได้เมื่อสร้างปุ่มขึ้นมาที่หลัง
   $("#tableMain #tbody").on("click", ".btnDelete", function (e) {
     e.preventDefault();
-    // const po_id = $(this).data("id");
+
     const tr = $(this).parents("tr");
     const po_id = $(this).parents("tr").data("id");
     const po_number = $(this).parents("tr").find("a:first").data("id");
-
+// console.log(`po_id=${po_id}`);
     Swal.fire({
       title: "Are you sure?",
       text: `You want to delete PO NO: ${po_number}!`,
@@ -19,21 +19,19 @@ $(document).ready(function () {
       // padding: '3em',
       color: "#ff0000",
       background: "black",
-      // backdrop: `
-      //                           rgba(0,0,123,0.4)
-      //                           url("_images/Pyh.gif")
-      //                           left top
-      //                           no-repeat
-      //                           `,
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
           url: "po_crud.php", // ให้ส่งข้อมูลไปตาม url ที่กำหนด
-          data: { action: "delete", po_id: po_id }, //จะทำการส่งเป็นรูปแบบ java object ->{name: value}
+          data: {
+            po_id: po_id,
+            action: "delete",
+          }, //จะทำการส่งเป็นรูปแบบ java object ->{name: value}
           method: "POST", //เป็นวิธีการส่ง POST หรือ GET อาจจะใช้เป็น type: 'post'
           success: function (response) {
+            console.log(`response=${response}`);
             //ถ้าดึงข้อมูลมาเสร็จเรียบร้อยแล้วข้อมูลจะถูกส่งกลับมาไว้ที่ response
-            if (response == "success") {
+            if (response) {
               Swal.fire({
                 title: "Deleted!",
                 text: "Your data has been deleted.",
@@ -44,23 +42,16 @@ $(document).ready(function () {
                 background: "black", //display dialog is black
                 // confirmButtonColor: '#3085d6',
                 confirmButtonText: "OK",
-                // backdrop: `
-                //                 rgba(0,0,123,0.4)
-                //                 url("_images/Pyh.gif")
-                //                 left top
-                //                 no-repeat
-                //                 `,
               }).then((result) => {
                 if (result.isConfirmed) {
                   tr.remove();
                   $("#tbody-period").addClass("d-none");
-
+                  // หรือ
+                  loadDataAll();
                   // window.location.reload(); //เปลี่ยนเป็นโหลด Table Body ใหม่เพื่อไม่ให้หน้าเพจกระพริบ
                 }
               });
             } else {
-              // alert(response);
-              // alert('ไม่สามารถลบรายการนี้ได้');
               Swal.fire({
                 title: "Oops...!",
                 text: `Something went wrong!`,
@@ -69,12 +60,6 @@ $(document).ready(function () {
                 // padding: '3em',
                 color: "#716add",
                 background: "black", //display dialog is black
-                // backdrop: `
-                //                 rgba(0,0,123,0.4)
-                //                 url("_images/Pyh.gif")
-                //                 left top
-                //                 no-repeat
-                //                 `,
               });
             }
           },
@@ -84,13 +69,6 @@ $(document).ready(function () {
     });
   });
 
-  // $('.btnEdit').each(function() {
-  //     $(this).on('click', function(event) {
-  //         event.preventDefault();
-  //         const po_id = $(this).parents("tr").attr("po-id");
-  //         window.location.href = "po_edit.php?id=" + po_id;
-  //     });
-  // });
   $("#tableMain #tbody").on("click", ".btnEdit", function (e) {
     const po_id = $(this).parents("tr").data("id");
     // window.location.href = "po_edit.php?po_id=" + po_id;
@@ -105,19 +83,10 @@ $(document).ready(function () {
     window.location.href = "po_dml.php?action=update" + "&po_id=" + po_id;
   });
 
-  // $(".btnEdit").each(function () {
-  //   // เลือกทุก element ที่มี class 'btnEdit'
-  //   $(this).on("click", function (event) {
-  //     event.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
-  //     const po_id = $(this).data("id"); // อ่านค่า data-id จากลิงก์ที่คลิก
-  //     const po_number = $(this).parents("tr").find("a:first").data("id");
-
-  //     window.location.href = "po_edit.php?po_id=" + po_id;
-  //   });
-
-  // });
-
-  $("#tableMain #tbody").on("click", ".tdMain:not(:has(a), .action)", function (e) {
+  $("#tableMain #tbody").on(
+    "click",
+    ".tdMain:not(:has(a), .action)",
+    function (e) {
       //, (comma) ภายใน :not(...): ใช้เพื่อรวมเงื่อนไขหลายอย่าง ในที่นี้คือ :has(a), :has(.action)
       // หมายความว่า :not() จะกรอง <td> ที่ ไม่มีทั้ง <a> และ ไม่มีทั้ง .action
       e.preventDefault();
@@ -146,37 +115,78 @@ $(document).ready(function () {
   );
 
   // ฟังก์ชันสำหรับโหลดข้อมูลเริ่มต้น
-  function loadAllPurchaseOrder(){
-    console.log("Start");
+  function loadDataAll() {
     $.ajax({
-      url: 'po_crud.php',
-      type: 'POST',
+      url: "po_crud.php",
       data: {
-        dataType: "json",
         action: "select",
       },
-      success: function(response) {
-        console.log("load");
-        console.log(response);
-          $("#tbody").html(response);
-          // attachMenuClickListeners();
-      }
-  });
+      method: "POST",
+      datatype: "json",
+      success: function (data) {
+        //data เป็นข้อมูล json ที่ส่งกลับมา
+        // ฟังก์ชันที่จะทำงานเมื่อการดึงข้อมูลสำเร็จ
+        // console.log(`data=${data}` );
+        if (data.length > 0) {
+          tableBody = createTableBody(data);
+          $("#tbody").html(tableBody); // นำ HTML ของตารางไปใส่ใน div ที่มี id="tbody"
+        } else {
+          $("#tbody").html();
+        }
+      },
+      error: function (xhr, status, error) {
+        // ฟังก์ชันที่จะทำงานเมื่อเกิดข้อผิดพลาดในการดึงข้อมูล
+        console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
+        $("#tbody").html();
+      },
+    });
   }
 
-      // ฟังก์ชันสำหรับเพิ่ม Event Listener ให้กับลิงก์เมนู
-      function attachMenuClickListeners() {
-        // $('#tbody').on('click', 'a', function(event) {
-        //     event.preventDefault();
-        //     const content_filename = $(this).data('content_filename');
-        //     const function_name = $(this).data('function_name');
-        //     if (content_filename) {
-        //         loadContent(content_filename, function_name);
-        //     }
-        // });
-    }
+  function createTableBody(datas) {
+    let tableBody = "";
+    $.each(datas, function (index, data) {
+      tableBody += `
+                        <tr data-id='${data.po_id}'>
+                                <td class="tdMain p-0 d-none">${data.po_id}</td>
+                                <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='Edit' style='margin: 0px 5px 5px 5px' data-id='${data.po_number}'>${data.po_number}</a></td>
+                                <td class="tdMain p-0">${data.project_name}</td>
+                                <td class="tdMain p-0">${data.supplier_name}</td>
+                                <td class="tdMain p-0">${data.location_name}</td>
+                                <td class="tdMain p-0">${data.working_name_th}</td>
+                                <td class="tdMain p-0 text-right">${data.contract_value_before}</td>
+                                <td class="tdMain p-0 text-right">${data.contract_value}</td>
+                                <td class="tdMain p-0 text-right">${data.number_of_period}</td>
+                                <td class="tdMain p-0 action" align='center'>
+                                    <div class='btn-group-sm'>
+                                        <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-id='${data.po_id}'>
+                                            <i class='fa-regular fa-pen-to-square'></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-id='${data.po_id}'>
+                                            <i class='fa-regular fa-trash-can'></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                      `;
+    });
+    return tableBody;
+  }
 
-  loadAllPurchaseOrder();
+  // ฟังก์ชันสำหรับเพิ่ม Event Listener ให้กับลิงก์เมนู
+  function attachMenuClickListeners() {
+    // $('#tbody').on('click', 'a', function(event) {
+    //     event.preventDefault();
+    //     const content_filename = $(this).data('content_filename');
+    //     const function_name = $(this).data('function_name');
+    //     if (content_filename) {
+    //         loadContent(content_filename, function_name);
+    //     }
+    // });
+  }
+
+
+
+  loadDataAll();
 });
 
 // code ข้างล่างไม่เกี่ยวข้อง ใช้อ้างอิงในการทำในส่วนของ event change ของ dropdown

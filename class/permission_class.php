@@ -2,8 +2,12 @@
 // require_once 'config.php';
 require_once 'connection_class.php';
 
-class Permission extends Connection
-{
+class Permission {
+    private $db; 
+    public function __construct(PDO $pdoConnection)
+    {
+        $this->db = $pdoConnection;
+    }
     public function fetchAll()
     {
         $sql = <<<EOD
@@ -11,7 +15,7 @@ class Permission extends Connection
                 from permissions 
                 where is_deleted = false
                 EOD;
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
         // สำหรับใช้ตรวจสอบ SQL Statement เสมือนเป็นการ debug คำสั่ง
@@ -25,7 +29,7 @@ class Permission extends Connection
         return $rs;
     }
 
-    public function fetchById($id)
+    public function fetchById($id):?array
     {
         $sql = <<<EOD
                 select `permission_id`, `permission_name`, `menu_name`, `content_filename`, `function_name`, `is_deleted` 
@@ -34,14 +38,18 @@ class Permission extends Connection
                 and permission_id = :id
                 EOD;
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
+        
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
         return $rs;
     }
 
-    public function insertData($getData)
+    public function create($getData)
     {
         $permission_name = $getData['permission_name'];
         $menu_name = $getData['menu_name'];
@@ -50,7 +58,7 @@ class Permission extends Connection
 
         $sql = "insert into permissions(permission_name, menu_name, content_filename, function_name) 
                 values(:permission_name, :menu_name, :content_filename, :function_name)";
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':permission_name', $permission_name, PDO::PARAM_STR);
         $stmt->bindParam(':menu_name', $menu_name, PDO::PARAM_STR);
         $stmt->bindParam(':content_filename', $content_filename, PDO::PARAM_STR);
@@ -68,7 +76,7 @@ class Permission extends Connection
             }
         }
     }
-    public function updateData($getData)
+    public function update(int $getId, array $getData)
     {
         $permission_id = $getData['permission_id'];
         $permission_name = $getData['permission_name'];
@@ -82,7 +90,7 @@ class Permission extends Connection
                 , function_name = :function_name
                 where permission_id = :permission_id";
         // , update_datetime = CURRENT_TIMESTAMP()
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':permission_id', $permission_id, PDO::PARAM_INT);
         $stmt->bindParam(':permission_name', $permission_name, PDO::PARAM_STR);
         $stmt->bindParam(':menu_name', $menu_name, PDO::PARAM_STR);
@@ -101,14 +109,14 @@ class Permission extends Connection
             }
         }
     }
-    public function deleteData($getData)
+    public function delete(int $getId)
     {
         $permission_id = $getData['permission_id'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
         $sql = "update permissions 
                 set is_deleted = 1
                 where permission_id = :permission_id";
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':permission_id', $permission_id, PDO::PARAM_INT);
 
         try {
@@ -130,7 +138,7 @@ class Permission extends Connection
                 from permissions 
                 where is_deleted = false";
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
 

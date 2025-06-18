@@ -14,8 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($errors)) {
         // 3. ** ส่วนของการ Update ข้อมูลในฐานข้อมูล **
-        // (ตัวอย่างนี้สมมติว่าคุณมีฟังก์ชัน updateData($id, $field1, $field2) ที่ update ข้อมูลใน DB)
-        function updateData($id, $field1, $field2) {
+        // (ตัวอย่างนี้สมมติว่าคุณมีฟังก์ชัน update($id, $field1, $field2) ที่ update ข้อมูลใน DB)
+        function update($id, $field1, $field2) {
             // ** จำลองการ Update ฐานข้อมูล (แทนการ update DB จริง) **
             // ในระบบจริง คุณจะต้องเขียนโค้ดเชื่อมต่อฐานข้อมูล
             // และ execute คำสั่ง SQL UPDATE ที่นี่
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             return true; // สมมติว่า update สำเร็จ
         }
 
-        $updateResult = updateData($id, $field1, $field2);
+        $updateResult = update($id, $field1, $field2);
 
         if ($updateResult) {
             echo "แก้ไขข้อมูลสำเร็จ!";

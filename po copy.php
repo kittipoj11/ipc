@@ -45,8 +45,8 @@ require_once 'auth.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
     $po = new Po;
-    $rsPoMainAll = $po->getPoMainAll();
-    $rsPoPeriod = $po->getPoPeriodByPoId(0);
+    $rsPoMainAll = $po->fetchAll();
+    $rsPoPeriod = $po->fetchAllPeriodByPoId(0);
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -68,7 +68,7 @@ require_once 'auth.php';
               <div class="card">
                 <div class="card-header d-flex">
                   <h6 class="m-1 fw-bold">All Purchase Order</h6>
-                  <a href="po_dml.php?action=insert" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
+                  <a href="po_dml.php?action=create" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
                     <i class="fa-solid fa-plus"></i>
                   </a>
                 </div>

@@ -7,14 +7,14 @@ require_once 'class/permission_class.php';
 $permission = new Permission();
 // print_r($_REQUEST);
 // exit;
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
-    $permission->insertData($_REQUEST);
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
+    $permission->create($_REQUEST);
     // fetchAll($permission);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
-    $permission->updateData($_REQUEST);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
+    $permission->update($_REQUEST);
     // fetchAll($permission);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
-    $permission->deleteData($_REQUEST);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
+    $permission->delete($_REQUEST);
     // fetchAll($permission);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
     $rs = $permission->fetchAll();

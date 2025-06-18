@@ -2,8 +2,12 @@
 // require_once 'config.php';
 require_once 'connection_class.php';
 
-class Inspection extends Connection
-{
+class Inspection {
+    private $db; 
+    public function __construct(PDO $pdoConnection)
+    {
+        $this->db = $pdoConnection;
+    }
     public function getInspectionPeriodAllByPoId($getPoId)
     {
         $sql = <<<EOD
@@ -20,7 +24,7 @@ class Inspection extends Connection
                     WHERE `po_id` = :po_id
                     ORDER BY `period_number`
                 EOD;
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetchAll();
@@ -63,7 +67,7 @@ class Inspection extends Connection
                         AND P1.period_id = :period_id
                     ORDER BY P1.po_id, period_number
                 EOD;
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
         $stmt->execute();
@@ -107,7 +111,7 @@ class Inspection extends Connection
                         AND P1.current_approval_level >1 
                     ORDER BY P1.po_id, period_number
                 EOD;
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':username', $getUsername, PDO::PARAM_STR);
         $stmt->execute();
         $rs = $stmt->fetchAll();
@@ -125,7 +129,7 @@ class Inspection extends Connection
                         AND `inspection_periods`.`period_id` = :period_id
                     ORDER BY `order_no`
                 EOD;
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
         $stmt->execute();
@@ -144,7 +148,7 @@ class Inspection extends Connection
                         AND `inspection_periods`.`period_id` = :period_id
                         AND `inspection_periods`.`po_id` = :po_id
                     EOD;
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
         $stmt->bindParam(':inspection_id', $getInspectionId, PDO::PARAM_INT);
@@ -161,7 +165,7 @@ class Inspection extends Connection
         try {
             // $_SESSION['getData'] =  $getData;
             // exit;
-            // $this->myConnect->beginTransaction();
+            // $this->db->beginTransaction();
 
             // parameters ในส่วน main
             $po_id = $getData['po_id'];
@@ -220,7 +224,7 @@ class Inspection extends Connection
             }
             $number_of_order = count($insert_indexs) + count($update_indexs);
 
-            // $_SESSION['insert'] = $insert_indexs;
+            // $_SESSION['create'] = $insert_indexs;
             // $_SESSION['update'] = $update_indexs;
             // $_SESSION['delete'] = $delete_indexs;
 
@@ -246,7 +250,7 @@ class Inspection extends Connection
                                 AND `period_id` = :period_id
                                 AND `inspection_id` = :inspection_id
                     EOD;
-            $stmtInspectionPeriods = $this->myConnect->prepare($sql);
+            $stmtInspectionPeriods = $this->db->prepare($sql);
             // $stmtInspectionPeriods->bindParam(':po_number', $po_number, PDO::PARAM_STR);
             $stmtInspectionPeriods->bindParam(':po_id', $po_id, PDO::PARAM_INT);
             $stmtInspectionPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
@@ -280,7 +284,7 @@ class Inspection extends Connection
                             INSERT INTO `inspection_period_details`(`inspection_id`, `order_no`, `details`, `remark`) 
                             VALUES (:inspection_id, :order_no, :details, :remark)
                         EOD;
-                $stmtInspectionPeriodDetails = $this->myConnect->prepare($sql);
+                $stmtInspectionPeriodDetails = $this->db->prepare($sql);
                 
                 foreach ($insert_indexs as $i) { //ถ้าต้องการใช้ key ด้วย foreach($insert_indexs as $key=> $value){
                     $stmtInspectionPeriodDetails->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
@@ -300,7 +304,7 @@ class Inspection extends Connection
                             WHERE `inspection_id` = :inspection_id
                                 AND `rec_id` = :rec_id
                         EOD;
-                $stmtInspectionPeriodDetails = $this->myConnect->prepare($sql);
+                $stmtInspectionPeriodDetails = $this->db->prepare($sql);
 
                 foreach ($update_indexs as $i) {
                     $stmtInspectionPeriodDetails->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
@@ -318,7 +322,7 @@ class Inspection extends Connection
                             WHERE `inspection_id` = :inspection_id
                                 AND `rec_id` = :rec_id
                         EOD;
-                $stmtInspectionPeriodDetails = $this->myConnect->prepare($sql);
+                $stmtInspectionPeriodDetails = $this->db->prepare($sql);
 
                 foreach ($delete_indexs as $i) {
                     $stmtInspectionPeriodDetails->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
@@ -353,7 +357,7 @@ class Inspection extends Connection
                             AND `period_id` = :period_id
                             AND `inspection_id` = :inspection_id
                     EOD;
-            $stmtInspectionPeriods = $this->myConnect->prepare($sql);
+            $stmtInspectionPeriods = $this->db->prepare($sql);
             $stmtInspectionPeriods->bindParam(':po_id', $po_id, PDO::PARAM_INT);
             $stmtInspectionPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
             $stmtInspectionPeriods->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
@@ -370,7 +374,7 @@ class Inspection extends Connection
                             WHERE `inspection_id` = :inspection_id
                                 AND `approval_level` = :approval_level
                         EOD;
-                $stmtInspectionApproval = $this->myConnect->prepare($sql);
+                $stmtInspectionApproval = $this->db->prepare($sql);
                 $stmtInspectionApproval->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
                 $stmtInspectionApproval->bindParam(':approval_level', $current_approval_level, PDO::PARAM_INT);
 
@@ -392,7 +396,7 @@ class Inspection extends Connection
         // return;
         try {
             // เริ่ม transaction
-            $this->myConnect->beginTransaction();
+            $this->db->beginTransaction();
 
             $po_id = $getData['po_id'];
             $period_id = $getData['period_id'];
@@ -434,7 +438,7 @@ class Inspection extends Connection
                                     INSERT INTO `inspection_files`(`inspection_id`, `file_name`, `file_path`, `file_type`) 
                                     VALUES(:inspection_id, :file_name, :file_path, :file_type)
                                 EOD;
-                        $stmt = $this->myConnect->prepare($sql);
+                        $stmt = $this->db->prepare($sql);
                         $stmt->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
                         $stmt->bindParam(':file_name', $file_name, PDO::PARAM_STR);
                         $stmt->bindParam(':file_path', $file_path, PDO::PARAM_STR);
@@ -448,14 +452,14 @@ class Inspection extends Connection
                 }
             }
             // commit transaction
-            $this->myConnect->commit();
+            $this->db->commit();
             // $_SESSION['commit'] = 'Completed';
             echo json_encode(['status' => 'success', 'message' => 'Record and files uploaded successfully.']);
             // echo json_encode(["a" => "A", "b" => "B"]);
         } catch (PDOException $e) {
             // $_SESSION['rollBack'] = 'Completed';
             // rollback transaction
-            $this->myConnect->rollBack();
+            $this->db->rollBack();
             if ($e->getCode() == 23000) {
                 $_SESSION['message'] =  'This item could not be added.Because the data has duplicate values!!!';
             } else {
@@ -490,7 +494,7 @@ class Inspection extends Connection
         // }
         try {
             // เริ่ม transaction
-            $this->myConnect->beginTransaction();
+            $this->db->beginTransaction();
 
             // ดึงข้อมูลไฟล์ที่จะลบ
             $sql = <<<EOD
@@ -498,7 +502,7 @@ class Inspection extends Connection
                         FROM `inspection_files`
                         WHERE file_id = :file_id
                     EOD;
-            $stmt = $this->myConnect->prepare($sql);
+            $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':file_id', $file_id, PDO::PARAM_INT);
             $stmt->execute();
             $rs = $stmt->fetchAll();
@@ -516,16 +520,16 @@ class Inspection extends Connection
                         DELETE FROM `inspection_files`
                         WHERE file_id = :file_id
                     EOD;
-            $stmt = $this->myConnect->prepare($sql);
+            $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':file_id', $file_id, PDO::PARAM_INT);
             $stmt->execute();
 
             // commit transaction
-            $this->myConnect->commit();
+            $this->db->commit();
             echo json_encode(['status' => 'success', 'message' => 'Record and associated files deleted successfully.']);
         } catch (Exception $e) {
             // rollback transaction
-            $this->myConnect->rollBack();
+            $this->db->rollBack();
             echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
         }
     }
@@ -536,7 +540,7 @@ class Inspection extends Connection
                 from po
                 where is_deleted = false";
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
 

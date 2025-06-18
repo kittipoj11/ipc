@@ -2,69 +2,40 @@
 @session_start();
 
 require_once 'config.php';
+require_once 'class/connection_class.php';
 require_once 'class/po_class.php';
 
-// $_SESSION['_POST'] = $_POST;
-// if (isset($_REQUEST['submit'])) {
-$po = new Po();
-// print_r($_REQUEST);
-// exit;
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insert') {
-    $po->insertData($_REQUEST);
-    // getPoMainAll($po);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
-    $po->updateData($_REQUEST);
-    // getPoMainAll($po);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
-    $po->deleteData($_REQUEST);
-    // getPoMainAll($po);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $po->getPoMainAll();
-    createTable($rs);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
-    $rs = $po->getPoPeriodByPoId($_REQUEST['po_id']);
-    createPeriodTable($rs);
+$connection = new Connection;
+$pdo = $connection->getDbConnection();
+$po = new Po($pdo);
 
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
+    $id = $po->create($_REQUEST);
+    header('Content-Type: application/json');
+    echo json_encode($id);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
+    $id = $po->update($_REQUEST['po_id'], $_REQUEST);
+    header('Content-Type: application/json');
+    echo json_encode($id);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
+    // $_SESSION['po id'] = $_REQUEST['po_id'];
+    // exit;
+    $id = $po->delete($_REQUEST['po_id']);
+    header('Content-Type: application/json');
+    echo json_encode($id);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
+    $rs = $po->fetchAll();
+    header('Content-Type: application/json');
+    echo json_encode($rs);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
+    $rs = $po->fetchAllPeriodByPoId($_REQUEST['po_id']);
+    createPeriodTable($rs);
 } else {
-    // getPoMainAll($po);
+    header('Content-Type: application/json');
+    echo json_encode($id);
 }
 // }
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function createTable($getRs) {
-    try {
-        $html = '';
-        foreach ($getRs as $row) {
-            $html .= <<<EOD
-                            <tr data-id='{$row['po_id']}'>
-                                <td class="tdMain p-0 d-none">{$row['po_id']}</td>
-                                <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='Edit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_number']}'>{$row['po_number']}</a></td>
-                                <td class="tdMain p-0">{$row['project_name']}</td>
-                                <td class="tdMain p-0">{$row['supplier_name']}</td>
-                                <td class="tdMain p-0">{$row['location_name']}</td>
-                                <td class="tdMain p-0">{$row['working_name_th']}</td>
-                                <td class="tdMain p-0 text-right">{$row['contract_value_before']}</td>
-                                <td class="tdMain p-0 text-right">{$row['contract_value']}</td>
-                                <td class="tdMain p-0 text-right">{$row['number_of_period']}</td>
-                                <td class="tdMain p-0 action" align='center'>
-                                    <div class='btn-group-sm'>
-                                        <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>
-                                            <i class='fa-regular fa-pen-to-square'></i>
-                                        </a>
-                                        <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>
-                                            <i class='fa-regular fa-trash-can'></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        EOD;
-          }
-        echo $html;
-        // print_r($rs);
-    } catch (PDOException $e) {
-        echo 'Data not found!';
-    }
-}
-
 
 function createPeriodTable($getRs)
 {

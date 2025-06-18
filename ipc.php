@@ -62,7 +62,7 @@ require_once 'auth.php';
 
     $ipc = new Ipc;
     $po = new Po;
-    $rsPoMainAll = $po->getPoMainAll();
+    $rsPoMainAll = $po->fetchAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

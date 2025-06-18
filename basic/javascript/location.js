@@ -63,7 +63,7 @@ $(document).ready(function () {
                 type: "POST",
                 data: {
                   location_id: location_id,
-                  action: "deletedata",
+                  action: 'delete',
                 },
                 success: function (data) {
                   // console.log(`data=${JSON.parse(data)}`);
@@ -100,9 +100,9 @@ $(document).ready(function () {
     let location_name = $("#location_name").val();
     let action = "";
     if (location_id == "[Autonumber]") {
-      action = "insertdata";
+      action = 'create';
     } else {
-      action = "updatedata";
+      action = 'update';
     }
     // console.log(`action=${action}`);
     $.ajax({

@@ -6,7 +6,7 @@ require_once 'class/po_class.php';
 
 $po = new Po();
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $po->getPoMainAll();
+    $rs = $po->fetchAll();
     createPOTable($rs);
 }
 function createPOTable($getRs) {

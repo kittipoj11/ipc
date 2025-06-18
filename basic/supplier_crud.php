@@ -12,7 +12,7 @@ $pdo = $connection->getDbConnection(); // ดึง PDO object ออกมา
 $supplier = new Supplier($pdo);
 
 // 3. 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     $id = $supplier->create($_REQUEST);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
@@ -20,7 +20,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     // 5. ส่งผลลัพธ์กลับไปเป็น JSON
     echo json_encode($id);
 
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
     $result=$supplier->update($_REQUEST['supplier_id'],$_REQUEST);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
@@ -28,7 +28,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     // 5. ส่งผลลัพธ์กลับไปเป็น JSON
     echo json_encode($result);
 
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $result=$supplier->delete($_REQUEST['supplier_id']);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');

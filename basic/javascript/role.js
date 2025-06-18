@@ -29,7 +29,6 @@ $(document).ready(function () {
 
   $(document).on("click", ".btnDelete", function (e) {
     e.preventDefault();
-    // let id = $(this).attr("id").slice("delete".length);
     let role_id = $(this).closest("tr").attr("id");
     $.ajax({
       url: "role_crud.php",
@@ -63,7 +62,7 @@ $(document).ready(function () {
               type: "POST",
               data: {
                 role_id: role_id,
-                action: "deletedata",
+                action: 'delete',
               },
               success: function (response) {
                 Swal.fire({
@@ -79,7 +78,7 @@ $(document).ready(function () {
                   /* Read more about isConfirmed, isDenied below */
                   if (result.isConfirmed) {
                     $("#frmOpen")[0].reset();
-                    loadAllRole();
+                    loadDataAll();
                   }
                 });
               },
@@ -97,9 +96,9 @@ $(document).ready(function () {
     let role_name = $("#role_name").val();
     let action = "";
     if (role_id == "[Autonumber]") {
-      action = "insertdata";
+      action = 'create';
     } else {
-      action = "updatedata";
+      action = 'update';
     }
     // console.log(`action=${action}`);
     $.ajax({
@@ -138,7 +137,7 @@ $(document).ready(function () {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
             $("#frmOpen")[0].reset();
-            loadAllRole();
+            loadDataAll();
           }
         });
       },
@@ -146,7 +145,7 @@ $(document).ready(function () {
   });
 
   // ฟังก์ชันสำหรับโหลดข้อมูลเริ่มต้น
-  function loadAllRole() {
+  function loadDataAll() {
     // console.log("Start");
     $.ajax({
       url: "role_crud.php",
@@ -161,5 +160,5 @@ $(document).ready(function () {
     });
   }
 
-  loadAllRole();
+  loadDataAll();
 });

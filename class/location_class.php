@@ -26,18 +26,10 @@ class Location
         $stmt->execute();
 
         $rs = $stmt->fetchAll();
-
-        if ($rs) {
-            // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูล Data ทั้งหมด
-            return $rs;
-            // return true;
-        } else {
-            // ถ้าไม่เจอ Data  หรือรหัสผ่านไม่ถูก ให้คืนค่า false
-            return false;
-        }
+        return $rs;
     }
 
-    public function fetchById($id)
+    public function fetchById($id): ?array
     {
         $sql = <<<EOD
                 select location_id, location_name, is_deleted 
@@ -50,14 +42,22 @@ class Location
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
-        if ($rs) {
-            // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูล Data ทั้งหมด
-            return $rs;
-            // return true;
-        } else {
-            // ถ้าไม่เจอ Data  หรือรหัสผ่านไม่ถูก ให้คืนค่า false
-            return false;
+
+        // แบบใหม่
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
         }
+        return $rs;
+
+        // แบบเก่า
+        // if ($rs) {
+        //     // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูล Data ทั้งหมด
+        //     return $rs;
+        //     // return true;
+        // } else {
+        //     // ถ้าไม่เจอ Data  ให้คืนค่า false
+        //     return false;
+        // }
     }
 
     /**

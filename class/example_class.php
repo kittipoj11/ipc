@@ -2,8 +2,12 @@
 // require_once 'config.php';
 require_once 'connection_class.php';
 
-class Department extends Connection
-{
+class Department {
+    private $db; 
+    public function __construct(PDO $pdoConnection)
+    {
+        $this->db = $pdoConnection;
+    }
     public function fetchAll()
     {
         $sql = <<<EOD
@@ -11,7 +15,7 @@ class Department extends Connection
                 from departments 
                 where is_deleted = false
                 EOD;
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
         // สำหรับใช้ตรวจสอบ SQL Statement เสมือนเป็นการ debug คำสั่ง
@@ -34,20 +38,20 @@ class Department extends Connection
                 and department_id = :id
                 EOD;
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
         return $rs;
     }
 
-    public function insertData($getData)
+    public function create($getData)
     {
         $department_name = $getData['department_name'];
 
         $sql = "insert into departments(department_name) 
                 values(:department_name)";
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':department_name', $department_name, PDO::PARAM_STR);
 
         try {
@@ -62,7 +66,7 @@ class Department extends Connection
             }
         }
     }
-    public function updateData($getData)
+    public function update(int $getId, array $getData)
     {
         $department_id = $getData['department_id'];
         $department_name = $getData['department_name'];
@@ -70,7 +74,7 @@ class Department extends Connection
                 set department_name = :department_name
                 where department_id = :department_id";
         // , update_datetime = CURRENT_TIMESTAMP()
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':department_id', $department_id, PDO::PARAM_INT);
         $stmt->bindParam(':department_name', $department_name, PDO::PARAM_STR);
 
@@ -86,14 +90,14 @@ class Department extends Connection
             }
         }
     }
-    public function deleteData($getData)
+    public function delete(int $getId)
     {
-        $department_id = $getData['department_id'];
+        $department_id = $getId;
         // $is_active = isset($getData['is_active']) ? 1 : 0;
         $sql = "update departments 
                 set is_deleted = 1
                 where department_id = :department_id";
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':department_id', $department_id, PDO::PARAM_INT);
 
         try {
@@ -115,7 +119,7 @@ class Department extends Connection
                 from departments 
                 where is_deleted = false";
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
 

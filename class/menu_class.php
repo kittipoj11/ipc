@@ -2,8 +2,12 @@
 // require_once 'config.php';
 require_once 'connection_class.php';
 
-class Menu extends Connection
-{
+class Menu {
+    private $db; 
+    public function __construct(PDO $pdoConnection)
+    {
+        $this->db = $pdoConnection;
+    }
     public function fetchAll()
     {
         $sql = <<<EOD
@@ -11,7 +15,7 @@ class Menu extends Connection
                 FROM menu_items 
                 ORDER BY parent_id, order_num
                 EOD;
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
         $rs = $stmt->fetchAll();
@@ -19,7 +23,7 @@ class Menu extends Connection
         return $rs;
     }
 
-    public function fetchById($id)
+    public function fetchById($id):?array
     {
         $sql = <<<EOD
                 select `id`, `parent_id`, `title`, `url`, `icon`, `order_num` 
@@ -27,10 +31,14 @@ class Menu extends Connection
                 where role_id = :id
                 EOD;
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
+        
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
         return $rs;
     }
 }

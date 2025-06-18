@@ -14,7 +14,7 @@ $inspection = new Inspection();
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $po->getPoMainAll();
+    $rs = $po->fetchAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectInspectionPeriodAll') {
     $rs = $inspection->getInspectionPeriodAllByPoId($_REQUEST['po_id']);

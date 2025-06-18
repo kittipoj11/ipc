@@ -360,7 +360,7 @@ require_once 'config.php';
                 <div class="modal-body">
                     <form name="frmMemberRegistration" id="frmMemberRegistration" action="" method=""
                         class="row g-3 needs-validation" novalidate>
-                        <!-- <input type="hidden" name="action" id="" value='insertdata'> -->
+                        <!-- <input type="hidden" name="action" id="" value='create'> -->
                         <!-- <div class="col-sm-12 d-none d-md-block" id="image-sub" style="border:1px solid gray;"> -->
                         <div class="col-sm-12 d-none d-md-block mb-3" id="image-sub">
                             <img src="_images/impact-muang-thong-thani.png" class="img-fluid rounded-2" />

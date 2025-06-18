@@ -54,8 +54,8 @@ require_once 'auth.php';
     $po_id = $_REQUEST['po_id'];
 
     $po = new Po;
-    $rsPoMain = $po->getPoMainByPoId($po_id);
-    $rsPoPeriod = $po->getPoPeriodByPoId($po_id);
+    $rsPoMain = $po->fetchByPoId($po_id);
+    $rsPoPeriod = $po->fetchAllPeriodByPoId($po_id);
 
     $supplier = new Supplier;
     $supplier_rs = $supplier->fetchAll();

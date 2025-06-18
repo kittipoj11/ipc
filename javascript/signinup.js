@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
   $("#username").val("");
   $("#password").val("");
 
@@ -7,8 +8,6 @@ $(document).ready(function () {
 
     let username = $("#username").val();
     let password = $("#password").val();
-        // console.log(username);
-        // console.log(password);
     $.ajax({
       url: "check_login.php",
       data: {
@@ -123,8 +122,6 @@ $(document).ready(function () {
   });
 
   // Delete
-
-  // Delete
   $(document).on("click", ".btnEdit", function (e) {
     e.preventDefault();
     let id = $(this).attr("id");
@@ -153,7 +150,7 @@ $(document).ready(function () {
     let data_sent = $("#frmEdit").serialize() + "&action=updatedata";
     // data_sent.push({
     //     name: "action",
-    //     value: "updatedata"
+    //     value: 'update'
     // });
     console.log(data_sent);
     $.ajax({

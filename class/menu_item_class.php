@@ -26,18 +26,10 @@ class Menu_Item
         $stmt->execute();
 
         $rs = $stmt->fetchAll();
-
-        if ($rs) {
-            // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูล Data ทั้งหมด
-            return $rs;
-            // return true;
-        } else {
-            // ถ้าไม่เจอ Data  หรือรหัสผ่านไม่ถูก ให้คืนค่า false
-            return false;
-        }
+        return $rs;
     }
 
-    public function fetchById($id)
+    public function fetchById($id): ?array
     {
         $sql = <<<EOD
                     SELECT `id`, `parent_id`, `title`, `url`, `icon`, `order_num`
@@ -50,14 +42,22 @@ class Menu_Item
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
-        if ($rs) {
-            // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูล Data ทั้งหมด
-            return $rs;
-            // return true;
-        } else {
-            // ถ้าไม่เจอ Data  หรือรหัสผ่านไม่ถูก ให้คืนค่า false
-            return false;
+        
+        // แบบใหม่
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
         }
+        return $rs;
+
+        // แบบเก่า
+        // if ($rs) {
+        //     // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูล Data ทั้งหมด
+        //     return $rs;
+        //     // return true;
+        // } else {
+        //     // ถ้าไม่เจอ Data  ให้คืนค่า false
+        //     return false;
+        // }
     }
 
     /**
@@ -67,7 +67,7 @@ class Menu_Item
      */
     public function create(array $getData)
     {
-        $sql =<<<EOD
+        $sql = <<<EOD
                     INSERT INTO menu_items(department_name)
                     VALUES (:department_name)
                 EOD;
@@ -139,8 +139,6 @@ class Menu_Item
         create() คืนค่า lastInsertId() เพื่อให้เรารู้ว่าข้อมูลใหม่ที่สร้างมี ID อะไร สามารถนำไปใช้ต่อได้ทันที
         update() และ delete() คืนค่าเป็น boolean (true/false) เพื่อบอกสถานะความสำเร็จให้โค้ดที่เรียกใช้ทราบได้ง่ายๆ
     */
-
-    
 }
 
 

@@ -62,7 +62,7 @@ require_once 'auth.php';
     require_once  'class/po_class.php';
 
     $po = new Po;
-    $rsPoMainAll = $po->getPoMainAll();
+    $rsPoMainAll = $po->fetchAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

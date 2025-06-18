@@ -12,7 +12,7 @@ $pdo = $connection->getDbConnection(); // ดึง PDO object ออกมา
 $inspection_status = new Inspection_Status($pdo);
 
 // 3. 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     $id = $inspection_status->create($_REQUEST);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
@@ -20,7 +20,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     // 5. ส่งผลลัพธ์กลับไปเป็น JSON
     echo json_encode($id);
 
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
     $result=$inspection_status->update($_REQUEST['inspection_status_id'],$_REQUEST);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
@@ -28,7 +28,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     // 5. ส่งผลลัพธ์กลับไปเป็น JSON
     echo json_encode($result);
 
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $result=$inspection_status->delete($_REQUEST['inspection_status_id']);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');

@@ -2,8 +2,12 @@
 // require_once 'config.php';
 require_once 'connection_class.php';
 
-class Ipc extends Connection
-{
+class Ipc {
+    private $db; 
+    public function __construct(PDO $pdoConnection)
+    {
+        $this->db = $pdoConnection;
+    }
 
 
     public function getPeriodAll($getPoId)
@@ -17,7 +21,7 @@ class Ipc extends Connection
                 WHERE `po_id` = :po_id
                 ORDER BY `po_id`, `period`
                 EOD;
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetchAll();
@@ -32,7 +36,7 @@ class Ipc extends Connection
                     SELECT * 
                     FROM files
                 EOD;
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         // $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
         // $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
         // $stmt->bindParam(':inspection_id', $getInspectionId, PDO::PARAM_INT);
@@ -44,14 +48,14 @@ class Ipc extends Connection
 
 
     // อาจจะไม่ใช้
-    public function insertData($getData)
+    public function create($getData)
     {
         @session_start();
 
         // $_SESSION['getData'] = $getData;
 
         try {
-            $this->myConnect->beginTransaction();
+            $this->db->beginTransaction();
             // สร้าง id มี prefix ในที่นี่ให้ prefix เป็น PO 
             // $po_id = uniqid('PO', true);
             // ดึงข้อมูล id ที่เป็น Auto Increment หลังจาก Insert ข้อมูล Header แล้ว
@@ -92,7 +96,7 @@ class Ipc extends Connection
                         INSERT INTO `inspect_main`(`po_id`, `remain_value_interim_payment`, `total_retention_value`, `po_status`, `create_by`) 
                         VALUES(:po_id, :remain_value_interim_payment, :total_retention_value, :po_status, :create_by)
                     EOD;
-            $stmt = $this->myConnect->prepare($sql);
+            $stmt = $this->db->prepare($sql);
             // $stmt->bindParam(':id', $headerId, PDO::PARAM_STR);
             $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
             $stmt->bindParam(':remain_value_interim_payment', $remain_value_interim_payment, PDO::PARAM_STR);
@@ -102,13 +106,13 @@ class Ipc extends Connection
 
             if ($stmt->execute()) {
                 $stmt->closeCursor();
-                $po_id = $this->myConnect->lastInsertId();
+                $po_id = $this->db->lastInsertId();
                 $_SESSION['xxx'] = $po_id;
                 $sql = <<<EOD
                         INSERT INTO `po_period`(`po_id`, `period`, `interim_payment`, `interim_payment_percent`, `remark`) 
                         VALUES (:po_id, :period, :interim_payment, :interim_payment_percent, :remark)
                     EOD;
-                $stmtPeriod = $this->myConnect->prepare($sql);
+                $stmtPeriod = $this->db->prepare($sql);
                 // $stmtPeriod->bindParam(':id', $headerId, PDO::PARAM_STR);
                 for ($i = 0; $i < $number_of_period; $i++) {
                     $stmtPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
@@ -122,7 +126,7 @@ class Ipc extends Connection
                 }
 
                 $_SESSION['message'] =  'data has been created successfully.';
-                $this->myConnect->commit();
+                $this->db->commit();
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
@@ -130,7 +134,7 @@ class Ipc extends Connection
             } else {
                 $_SESSION['message'] =  'Something is wrong.Can not add data.';
             }
-            $this->myConnect->rollBack();
+            $this->db->rollBack();
         } finally {
             // $stmt->closeCursor();
             // $stmtPeriod->closeCursor();
@@ -140,7 +144,7 @@ class Ipc extends Connection
         }
     }
 
-    public function updateData($getData)
+    public function update(int $getId, array $getData)
     {
         $po_id = $getData['po_id'];
         $po_name = $getData['po_name'];
@@ -148,7 +152,7 @@ class Ipc extends Connection
                 set po_name = :po_name
                 where po_id = :po_id";
         // , update_datetime = CURRENT_TIMESTAMP()
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
         $stmt->bindParam(':po_name', $po_name, PDO::PARAM_STR);
 
@@ -166,14 +170,14 @@ class Ipc extends Connection
     }
 
     // อาจจะไม่ใช้
-    public function deleteData($getData)
+    public function delete(int $getId)
     {
         $po_id = $getData['delete_id'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
         $sql = "update po
                 set is_deleted = 1
                 where po_id = :po_id";
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
 
         try {
@@ -195,7 +199,7 @@ class Ipc extends Connection
                 from po
                 where is_deleted = false";
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
 

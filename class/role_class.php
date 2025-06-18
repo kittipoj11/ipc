@@ -30,7 +30,7 @@ class Role
         return $rs;
     }
 
-    public function fetchById($getRoleId)
+    public function fetchById($getRoleId):?array
     {
         $sql = <<<EOD
                     SELECT `role_id`, `role_name` 
@@ -42,6 +42,10 @@ class Role
         $stmt->bindParam(':role_id', $role_id, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
+        
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
         return $rs;
     }
 
@@ -75,7 +79,7 @@ class Role
         }
     }
     
-    public function insertData($getData)
+    public function create($getData)
     {
         $username = $getData['username'];
         $fullname = $getData['fullname'];
@@ -111,7 +115,7 @@ class Role
             }
         }
     }
-    public function updateData($getData)
+    public function update(int $getId, array $getData)
     {
         $username = $getData['username'];
         $fullname = $getData['fullname'];
@@ -152,7 +156,7 @@ class Role
             }
         }
     }
-    public function deleteData($getData)
+    public function delete(int $getId)
     {
         $username = $getData['delete_id'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;

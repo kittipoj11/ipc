@@ -58,7 +58,7 @@ require_once 'auth.php';
     // $inspection_id = $_REQUEST['inspection_id'];
 
     $po = new Po;
-    $rsPoMainByPoId = $po->getPoMainByPoId($po_id);
+    $rsPoMainByPoId = $po->fetchByPoId($po_id);
 
     $inspection = new Inspection;
     $rsInspectionPeriod =$inspection->getInspectionPeriodAllByPoId($po_id );

@@ -7,7 +7,6 @@
 
 // ตรวจสอบว่ามีการ login เข้ามาแล้วหรือยังจาก $_SESSION['user_id']
 if(!isset($_SESSION['user_id'])){
-    unset($_SESSION['message']);
     header('Location: login.php');
     // หรือ header('Location: index.php'); //ขึ้นอยู่กับว่าจะให้ไปที่หน้า login ที่ไหน
 }

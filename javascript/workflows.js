@@ -63,7 +63,7 @@ $(document).ready(function () {
               type: "POST",
               data: {
                 workflow_id: workflow_id,
-                action: "deletedata",
+                action: 'delete',
               },
               success: function (response) {
                 Swal.fire({
@@ -126,9 +126,9 @@ $(document).ready(function () {
     let workflow_name = $("#workflow_name").val();
     let action = "";
     if (workflow_id == "[Autonumber]") {
-      action = "insertdata";
+      action = 'create';
     } else {
-      action = "updatedata";
+      action = 'update';
     }
     console.log(`action=${action}`);
     $.ajax({

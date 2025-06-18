@@ -12,7 +12,7 @@ $pdo = $connection->getDbConnection(); // ดึง PDO object ออกมา
 $plan_status = new Plan_Status($pdo);
 
 // 3. 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     $id = $plan_status->create($_REQUEST);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
@@ -20,7 +20,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     // 5. ส่งผลลัพธ์กลับไปเป็น JSON
     echo json_encode($id);
 
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
     $result=$plan_status->update($_REQUEST['plan_status_id'],$_REQUEST);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
@@ -28,7 +28,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
     // 5. ส่งผลลัพธ์กลับไปเป็น JSON
     echo json_encode($result);
 
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $result=$plan_status->delete($_REQUEST['plan_status_id']);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');

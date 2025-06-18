@@ -7,14 +7,14 @@ require_once 'class/workflows_class.php';
 $workflows = new Workflows();
 // print_r($_REQUEST);
 // exit;
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
-    $workflows->insertData($_REQUEST);
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
+    $workflows->create($_REQUEST);
     // fetchAll($workflows);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
-    $workflows->updateData($_REQUEST);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
+    $workflows->update($_REQUEST);
     // fetchAll($workflows);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
-    $workflows->deleteData($_REQUEST);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
+    $workflows->delete($_REQUEST);
     // fetchAll($workflows);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
     $rs = $workflows->fetchAll();

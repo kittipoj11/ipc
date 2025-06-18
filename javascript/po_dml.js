@@ -6,7 +6,7 @@ $(document).ready(function () {
     let data_sent = $("#myForm").serializeArray();
     data_sent.push({
       name: "action",
-      value: $("#submit").data("action"),//"insert", //หรือ update
+      value: $("#submit").data("action"),//'create', //หรือ update
     });
     console.log(data_sent);
     $.ajax({

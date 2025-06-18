@@ -10,14 +10,14 @@ $pdo = $connection->getDbConnection(); // ดึง PDO object ออกมา
 
 $role = new Role($pdo);
 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertdata') {
-    $role->insertData($_REQUEST);
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
+    $role->create($_REQUEST);
     // fetchAll($role);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updatedata') {
-    $role->updateData($_REQUEST);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
+    $role->update($_REQUEST);
     // fetchAll($role);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'deletedata') {
-    $role->deleteData($_REQUEST);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
+    $role->delete($_REQUEST);
     // fetchAll($role);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
     $rs = $role->fetchAll();

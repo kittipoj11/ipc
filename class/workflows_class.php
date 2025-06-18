@@ -2,8 +2,12 @@
 // require_once 'config.php';
 require_once 'connection_class.php';
 
-class Workflows extends Connection
-{
+class Workflows {
+    private $db; 
+    public function __construct(PDO $pdoConnection)
+    {
+        $this->db = $pdoConnection;
+    }
     public function fetchAll()
     {
         $sql = <<<EOD
@@ -11,7 +15,7 @@ class Workflows extends Connection
                 from workflows 
                 where is_deleted = false
                 EOD;
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
         // สำหรับใช้ตรวจสอบ SQL Statement เสมือนเป็นการ debug คำสั่ง
@@ -25,7 +29,7 @@ class Workflows extends Connection
         return $rs;
     }
 
-    public function fetchById($id)
+    public function fetchById($id):?array
     {
         $sql = <<<EOD
                 select workflow_id, workflow_name, is_deleted 
@@ -34,20 +38,24 @@ class Workflows extends Connection
                 and workflow_id = :id
                 EOD;
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
+        
         $rs = $stmt->fetch();
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
         return $rs;
     }
 
-    public function insertData($getData)
+    public function create($getData)
     {
         $workflow_name = $getData['workflow_name'];
 
         $sql = "insert into workflows(workflow_name) 
                 values(:workflow_name)";
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':workflow_name', $workflow_name, PDO::PARAM_STR);
 
         try {
@@ -62,7 +70,7 @@ class Workflows extends Connection
             }
         }
     }
-    public function updateData($getData)
+    public function update(int $getId, array $getData)
     {
         $workflow_id = $getData['workflow_id'];
         $workflow_name = $getData['workflow_name'];
@@ -70,7 +78,7 @@ class Workflows extends Connection
                 set workflow_name = :workflow_name
                 where workflow_id = :workflow_id";
         // , update_datetime = CURRENT_TIMESTAMP()
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
         $stmt->bindParam(':workflow_name', $workflow_name, PDO::PARAM_STR);
 
@@ -86,14 +94,14 @@ class Workflows extends Connection
             }
         }
     }
-    public function deleteData($getData)
+    public function delete(int $getId)
     {
         $workflow_id = $getData['workflow_id'];
         // $is_active = isset($getData['is_active']) ? 1 : 0;
         $sql = "update workflows 
                 set is_deleted = 1
                 where workflow_id = :workflow_id";
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
 
         try {
@@ -115,7 +123,7 @@ class Workflows extends Connection
                 from workflows 
                 where is_deleted = false";
 
-        $stmt = $this->myConnect->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll();
 

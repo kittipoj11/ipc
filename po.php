@@ -52,11 +52,15 @@ require_once 'auth.php';
     <!-- Main Content Start -->
     <?php
     require_once  'class/po_class.php';
+    require_once  'class/connection_class.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
-    $po = new Po;
-    $rsPoMainAll = $po->getPoMainAll();
-    // $rsPoPeriod = $po->getPoPeriodByPoId(0);
+
+    $connection=new Connection;
+    $pdo=$connection->getDbConnection();
+    $po = new Po($pdo);
+    $rsPoMainAll = $po->fetchAll();
+    // $rsPoPeriod = $po->fetchAllPeriodByPoId(0);
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -79,7 +83,7 @@ require_once 'auth.php';
               <div class="card">
                 <div class="card-header d-flex">
                   <h6 class="m-1 fw-bold">All Purchase Order</h6>
-                  <a href="po_dml.php?action=insert" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
+                  <a href="po_dml.php?action=create" class="btn btn-success btn-sm btnNew" title="New" style="margin: 0px 5px 5px 5px;">
                     <i class="fa-solid fa-plus"></i>
                   </a>
                 </div>
@@ -101,32 +105,7 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody">
-                      <!-- < ?php foreach ($rsPoMainAll as $row) {
-                        $html = <<<EOD
-                                        <tr data-id='{$row['po_id']}'>
-                                            <td class="tdMain p-0 d-none">{$row['po_id']}</td>
-                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='Edit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_number']}'>{$row['po_number']}</a></td>
-                                            <td class="tdMain p-0">{$row['project_name']}</td>
-                                            <td class="tdMain p-0">{$row['supplier_name']}</td>
-                                            <td class="tdMain p-0">{$row['location_name']}</td>
-                                            <td class="tdMain p-0">{$row['working_name_th']}</td>
-                                            <td class="tdMain p-0 text-right">{$row['contract_value_before']}</td>
-                                            <td class="tdMain p-0 text-right">{$row['contract_value']}</td>
-                                            <td class="tdMain p-0 text-right">{$row['number_of_period']}</td>
-                                            <td class="tdMain p-0 action" align='center'>
-                                                <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>
-                                                        <i class='fa-regular fa-pen-to-square'></i>
-                                                    </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-id='{$row['po_id']}'>
-                                                        <i class='fa-regular fa-trash-can'></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        EOD;
-                        echo $html;
-                      } ?> -->
+ 
                     </tbody>
                   </table>
                 </div>
@@ -163,18 +142,8 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody-period">
-                      <!-- < ?php foreach ($rsPoPeriod as $row) {
-                        $html = <<<EOD
-                                        <tr>
-                                            <td class="p-0 d-none">{$row['po_periods_id']}</td>
-                                            <td class="text-left py-0 px-1">{$row['period']}</td>
-                                            <td class="text-left py-0 px-1">{$row['interim_payment']}</td>
-                                            <td class="text-left py-0 px-1">{$row['interim_payment_percent']}</td>
-                                            <td class="text-left py-0 px-1">{$row['remark']}</td>
-                                        </tr>
-                                    EOD;
-                        echo $html;
-                      } ?> -->
+
+                    
                     </tbody>
                   </table>
                 </div>

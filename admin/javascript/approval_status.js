@@ -63,7 +63,7 @@ $(document).ready(function () {
                 type: "POST",
                 data: {
                   approval_status_id: approval_status_id,
-                  action: "deletedata",
+                  action: 'delete',
                 },
                 success: function (data) {
                   // console.log(`data=${JSON.parse(data)}`);
@@ -80,7 +80,7 @@ $(document).ready(function () {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                       $("#frmOpen")[0].reset();
-                      loadAllData();
+                      loadDataAll();
                     }
                   });
                 },
@@ -100,9 +100,9 @@ $(document).ready(function () {
     let approval_status_name = $("#approval_status_name").val();
     let action = "";
     if (approval_status_id == "[Autonumber]") {
-      action = "insertdata";
+      action = 'create';
     } else {
-      action = "updatedata";
+      action = 'update';
     }
     // console.log(`action=${action}`);
     $.ajax({
@@ -137,7 +137,7 @@ $(document).ready(function () {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
               $("#frmOpen")[0].reset();
-              loadAllData();
+              loadDataAll();
             }
           });
         }
@@ -146,7 +146,7 @@ $(document).ready(function () {
   });
 
   // ฟังก์ชันสำหรับโหลดข้อมูลเริ่มต้น
-  function loadAllData() {
+  function loadDataAll() {
     $.ajax({
       url: "approval_status_crud.php",
       data: {
@@ -195,5 +195,5 @@ $(document).ready(function () {
     return tableBody;
   }
 
-  loadAllData();
+  loadDataAll();
 });

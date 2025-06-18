@@ -63,10 +63,9 @@ $(document).ready(function () {
                 type: "POST",
                 data: {
                   department_id: department_id,
-                  action: "deletedata",
+                  action: 'delete',
                 },
                 success: function (data) {
-                  // console.log(`data=${JSON.parse(data)}`);
                   Swal.fire({
                     title: "Deleted!",
                     text: "Your data has been deleted.",
@@ -80,7 +79,7 @@ $(document).ready(function () {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                       $("#frmOpen")[0].reset();
-                      loadAllData();
+                      loadDataAll();
                     }
                   });
                 },
@@ -100,9 +99,9 @@ $(document).ready(function () {
     let department_name = $("#department_name").val();
     let action = "";
     if (department_id == "[Autonumber]") {
-      action = "insertdata";
+      action = 'create';
     } else {
-      action = "updatedata";
+      action = 'update';
     }
     // console.log(`action=${action}`);
     $.ajax({
@@ -137,7 +136,7 @@ $(document).ready(function () {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
               $("#frmOpen")[0].reset();
-              loadAllData();
+              loadDataAll();
             }
           });
         }
@@ -146,7 +145,7 @@ $(document).ready(function () {
   });
 
   // ฟังก์ชันสำหรับโหลดข้อมูลเริ่มต้น
-  function loadAllData() {
+  function loadDataAll() {
     $.ajax({
       url: "department_crud.php",
       data: {
@@ -195,5 +194,5 @@ $(document).ready(function () {
     return tableBody;
   }
 
-  loadAllData();
+  loadDataAll();
 });

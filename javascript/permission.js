@@ -69,7 +69,7 @@ $(document).ready(function () {
               type: "POST",
               data: {
                 permission_id: permission_id,
-                action: "deletedata",
+                action: 'delete',
               },
               success: function (response) {
                 Swal.fire({
@@ -138,9 +138,9 @@ $(document).ready(function () {
     let function_name = $("#function_name").val();
     let action = '';
     if (permission_id == '[Autonumber]') {
-      action = 'insertdata';
+      action = 'create';
     } else {
-      action = 'updatedata';
+      action = 'update';
     }
     console.log(`action=${action}`);
     $.ajax({
