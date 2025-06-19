@@ -9,19 +9,8 @@ class Po
     {
         $this->db = $pdoConnection;
     }
-    
-    public function getExampleRecord()
-    {
-        $sql = <<<EOD
-                    SELECT * FROM your_table_name
-                EOD;
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $rs;
-    }
 
-    public function fetchAll():array
+    public function fetchAll(): array
     {
         $sql = <<<EOD
                     SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
@@ -45,44 +34,54 @@ class Po
         return $rs;
     }
 
-    public function fetchByPoId($id):?array
+    public function fetchByPoId($id): ?array
     {
         $po_id = $id;
-        $sql = <<<EOD
-                    SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
-                    , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
-                    , `is_deposit`, `deposit_percent`, `deposit_value`
-                    , `working_date_from`, `working_date_to`, `working_day`
-                    , `create_by`, `create_date`, `number_of_period`
-                    , s.`supplier_name`
-                    , l.`location_name`
-                    FROM `po_main` p
-                    INNER JOIN `suppliers` s
-                        ON s.`supplier_id` = p.`supplier_id`
-                    INNER JOIN `locations` l
-                        ON l.`location_id` = p.`location_id`
-                    WHERE `po_id` = :po_id
-                EOD;
+        // ดึงข้อมูลจากตารางหลัก - po_main
+        $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
+                , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
+                , `is_deposit`, `deposit_percent`, `deposit_value`
+                , `working_date_from`, `working_date_to`, `working_day`
+                , `create_by`, `create_date`, `number_of_period`
+                , s.`supplier_name`
+                , l.`location_name`
+                FROM `po_main` p
+                INNER JOIN `suppliers` s
+                    ON s.`supplier_id` = p.`supplier_id`
+                INNER JOIN `locations` l
+                    ON l.`location_id` = p.`location_id`
+                WHERE `po_id` = :po_id
+                ";
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
         $stmt->execute();
-
         $rs = $stmt->fetch();
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
-        return $rs;
-    }
 
-    public function fetchAllPeriodByPoId($id)
-    {
-        $sql = <<<EOD
-                SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`
+        // ดึงข้อมูลจากตารางรอง
+        $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`
                 FROM `po_periods`
                 WHERE `po_id` = :po_id
                 ORDER BY `po_id`, `period_number`
-                EOD;
+                ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':po_id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs['periods']=$stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $rs;
+    }
+
+    public function fetchAllPeriodByPoId($id):array
+    {
+        $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`
+                FROM `po_periods`
+                WHERE `po_id` = :po_id
+                ORDER BY `po_id`, `period_number`
+                ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -370,7 +369,7 @@ class Po
             $contract_value = floatval($getData['contract_value'] ?? 0);
             $contract_value_before = floatval($getData['contract_value_before'] ?? 0);
             $vat = floatval($getData['vat'] ?? 0);
-            $is_deposit = 1;//$getData['is_deposit'];
+            $is_deposit = 1; //$getData['is_deposit'];
             $deposit_percent = floatval($getData['deposit_percent'] ?? 0);
             $deposit_value = ($deposit_percent * $contract_value) / 100;
             $working_date_from = $getData['working_date_from'];
