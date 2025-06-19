@@ -13,7 +13,7 @@ class OrderRepository
     // ==========================================================
     // 1. การดึงข้อมูลทุกรายการ (Get All Orders)
     // ==========================================================
-    public function getAll(): array
+    public function getAll(): array //array คือการประกาศว่า "ฟังก์ชันนี้จะคืนค่าเป็น array เท่านั้น  ถ้าไม่มีข้อมูลก็จะเป็นอาร์เรย์ว่าง []
     {
         // ดึงเฉพาะข้อมูลหลักของออเดอร์เพื่อประสิทธิภาพ
         $sql = "SELECT order_id, customer_name, order_date, grand_total 
@@ -26,17 +26,20 @@ class OrderRepository
     // ==========================================================
     // 2. การดึงข้อมูลตาม ID ของ Order (Get Order By ID)
     // ==========================================================
-    public function getById(int $orderId): ?array//?array คือการประกาศว่า "ฟังก์ชันนี้จะคืนค่าเป็น array หรือ null เท่านั้น
+    public function getById(int $orderId): ?array //?array คือการประกาศว่า "ฟังก์ชันนี้จะคืนค่าแค่ 2 แบบ คือ array (ถ้าเจอ) หรือ null (ถ้าไม่เจอ)  เท่านั้น
     {
         // 1. ดึงข้อมูล Order หลัก
         $stmt = $this->db->prepare("SELECT * FROM orders WHERE order_id = :id");
         $stmt->execute([':id' => $orderId]);
         $order = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        // ตรวจสอบเงื่อนไขที่ "ไม่พึงประสงค์" ก่อน
         if (!$order) {
-            return null; // ไม่พบออเดอร์
+            return null; // "ไม่มีค่า", "ความว่างเปล่า" หรือ return false; ก็ได้แต่อาจหมายถึง "การทำงานผิดพลาด"
+            // ถ้าเข้าเงื่อนไขนี้ ฟังก์ชันจะจบการทำงานทันที
         }
 
+        // ถ้ามีข้อมูลจะดำเนินการต่อในข้อ 2. และ ข้อ 3.
         // 2. ดึงรายการสินค้า (Order Details)
         $stmt = $this->db->prepare("SELECT * FROM order_details WHERE order_id = :id");
         $stmt->execute([':id' => $orderId]);
@@ -85,7 +88,6 @@ class OrderRepository
 
             $this->db->commit();
             return $orderId;
-
         } catch (PDOException $e) {
             $this->db->rollBack();
             error_log("Order Creation Failed: " . $e->getMessage());
@@ -118,7 +120,7 @@ class OrderRepository
             foreach ($data['details'] as $item) {
                 $stmtDetail->execute([$orderId, $item['item_name'], $item['quantity'], $item['price']]);
             }
-            
+
             $sqlPeriod = "INSERT INTO order_periods (order_id, period_amount, due_date, status) VALUES (?, ?, ?, ?)";
             $stmtPeriod = $this->db->prepare($sqlPeriod);
             foreach ($data['periods'] as $period) {
@@ -127,7 +129,6 @@ class OrderRepository
 
             $this->db->commit();
             return true;
-
         } catch (PDOException $e) {
             $this->db->rollBack();
             error_log("Order Update Failed: " . $e->getMessage());
@@ -149,7 +150,7 @@ class OrderRepository
             // ต้องลบจากตารางลูกก่อนเสมอ เพื่อไม่ให้ผิด Foreign Key Constraint
             $this->db->prepare("DELETE FROM order_details WHERE order_id = ?")->execute([$orderId]);
             $this->db->prepare("DELETE FROM order_periods WHERE order_id = ?")->execute([$orderId]);
-            
+
             // จากนั้นจึงลบจากตารางแม่
             $this->db->prepare("DELETE FROM orders WHERE order_id = ?")->execute([$orderId]);
 

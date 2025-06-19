@@ -9,7 +9,6 @@ class Po
     {
         $this->db = $pdoConnection;
     }
-    
     public function getExampleRecord()
     {
         $sql = <<<EOD
@@ -20,7 +19,6 @@ class Po
         $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $rs;
     }
-
     public function fetchAll():array
     {
         $sql = <<<EOD

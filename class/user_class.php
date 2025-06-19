@@ -71,7 +71,7 @@ class User
         return $rs;
     }
 
-    public function fetchByUsername($username):?array
+    public function fetchByUsername($username): ?array
     {
         $sql = <<<EOD
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
@@ -158,7 +158,7 @@ class User
             /* //รูปแบบเดิม
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->bindParam(':full_name', $full_name, PDO::PARAM_STR);
-            $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $hashedPassword, PDO::PARAM_STR);
             $stmt->bindParam(':role_id', $role_id, PDO::PARAM_INT);
             $stmt->bindParam(':department_id', $department_id, PDO::PARAM_INT);
             $stmt->execute();
@@ -220,7 +220,8 @@ class User
     public function delete(int $userId)
     {
         // คำแนะนำ: ในระบบงานจริงส่วนใหญ่นิยมใช้วิธี "Soft Delete"
-        // คือการอัปเดต field เช่น is_deleted = 1 แทนการลบข้อมูลจริงออกจากฐานข้อมูล
+        // คือการอัปเดต field เช่น is_deleted = 1 แทนการลบข้อมูลจริงออกจากฐานข้อมูล 
+        // ถ้าใช้ DELETE FROM users WHERE user_id = :user_id จะเป็น Hard delete
         $sql = "UPDATE users 
                 SET is_deleted = 1
                 WHERE user_id = :user_id";
@@ -234,10 +235,15 @@ class User
     }
 
     // --- เมธอดอื่นๆ ที่มีอยู่แล้ว เช่น getById, checkLogin, getAll ---
-    public function getById(int $userId)
+    public function getById(int $userId): ?array
     {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE user_id = :user_id");
         $stmt->execute([':user_id' => $userId]);
-        return $stmt->fetch();
+        $rs= $stmt->fetch();
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
+        return $rs;
     }
 }
+

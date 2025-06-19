@@ -48,6 +48,7 @@ $(document).ready(function () {
                   $("#tbody-period").addClass("d-none");
                   // หรือ
                   loadDataAll();
+                  // header('Location: user_list.php');
                   // window.location.reload(); //เปลี่ยนเป็นโหลด Table Body ใหม่เพื่อไม่ให้หน้าเพจกระพริบ
                 }
               });
