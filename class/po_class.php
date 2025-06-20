@@ -12,8 +12,7 @@ class Po
 
     public function fetchAll(): array
     {
-        $sql = <<<EOD
-                    SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
+        $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                     , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
                     , `is_deposit`, `deposit_percent`, `deposit_value`
                     , `working_date_from`, `working_date_to`, `working_day`
@@ -24,9 +23,7 @@ class Po
                     INNER JOIN `suppliers` s
                         ON s.`supplier_id` = p.`supplier_id`
                     INNER JOIN `locations` l
-                        ON l.`location_id` = p.`location_id`
-                    ORDER BY `po_id`
-                EOD;
+                        ON l.`location_id` = p.`location_id`";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
@@ -50,8 +47,7 @@ class Po
                     ON s.`supplier_id` = p.`supplier_id`
                 INNER JOIN `locations` l
                     ON l.`location_id` = p.`location_id`
-                WHERE `po_id` = :po_id
-                ";
+                WHERE `po_id` = :po_id";
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $po_id, PDO::PARAM_INT);
@@ -65,8 +61,7 @@ class Po
         $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`
                 FROM `po_periods`
                 WHERE `po_id` = :po_id
-                ORDER BY `po_id`, `period_number`
-                ";
+                ORDER BY `po_id`, `period_number`";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -80,8 +75,7 @@ class Po
         $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`
                 FROM `po_periods`
                 WHERE `po_id` = :po_id
-                ORDER BY `po_id`, `period_number`
-                ";
+                ORDER BY `po_id`, `period_number`";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -101,12 +95,11 @@ class Po
             // workflow_id = 1 สร้าง inspection_period_approvals
             // workflow_id = 2 สร้าง ipc_period_approvals
             $workflow_id = 1; //ในที่นี้กำหนด workflow_id = 1 ของการสร้าง inspection_period_approvals
-            $sql = <<<EOD
-                        SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`
-                        FROM `workflow_steps`
-                        WHERE `workflow_id` = :workflow_id
-                        ORDER BY approval_level asc
-                    EOD;
+            $sql = "SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`
+                    FROM `workflow_steps`
+                    WHERE `workflow_id` = :workflow_id
+                    ORDER BY approval_level asc";
+
             $stmtWorkflowSteps = $this->db->prepare($sql);
             $stmtWorkflowSteps->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
             $stmtWorkflowSteps->execute();
@@ -119,31 +112,8 @@ class Po
             // $po_id = $this->db->lastInsertId();
 
             // parameters ในส่วน po_main
-            // po_id=auto incremental
-            $po_number = $getData['po_number'];
-            $project_name = $getData['project_name'];
-            $supplier_id = $getData['supplier_id'];
-            $location_id = $getData['location_id'];
-            $working_name_th = $getData['working_name_th'];
-            $working_name_en = $getData['working_name_en'];
             $is_include_vat = 1;
-            $contract_value = floatval($getData['contract_value'] ?? 0);
-            $contract_value_before = floatval($getData['contract_value_before'] ?? 0);
-            $vat = floatval($getData['vat'] ?? 0);
-            $is_deposit = $getData['is_deposit'];
-            $deposit_percent = floatval($getData['deposit_percent'] ?? 0);
-            $deposit_value = ($deposit_percent * $contract_value) / 100;
-            $working_date_from = $getData['working_date_from'];
-            $working_date_to = $getData['working_date_to'];
-
-            // Create DateTime objects from the input strings
-            // $date1 = new DateTime($working_date_from);
-            // $date2 = new DateTime($working_date_to);
-            // Calculate the difference between the two dates
-            // $interval = $date1->diff($date2);
-            // $working_day =  $interval->days + 1;
-            $working_day =  $getData['working_day'];
-            $create_by = $_SESSION['user_code'];
+            $deposit_value = (floatval($getData['deposit_percent'] ?? 0) * floatval($getData['contract_value'] ?? 0)) / 100;
 
             // จัดการตรงจุดนี้ให้เหมือนกับ update function เพราะอาจจะมีการเพิ่ม-ลบ period
             // parameters ในส่วน po_periods
@@ -157,10 +127,6 @@ class Po
                 // echo "ตัวแปร \$period_numbers ไม่ใช่ array หรือเป็น null";
                 $number_of_period = 0; // กำหนดค่าเริ่มต้นให้ $count ในกรณีที่ไม่ใช่ array
             }
-            $workload_planned_percents = $getData['workload_planned_percents'];
-            $interim_payments = $getData['interim_payments'];
-            $interim_payment_percents = $getData['interim_payment_percents'];
-            $remarks = $getData['remarks'];
             $cruds = $getData['cruds'];
             $period_ids = $getData['period_ids'];
 
@@ -182,40 +148,36 @@ class Po
             // จัดการตรงจุดนี้
             $number_of_period = count($insert_indexs) + count($update_indexs);
 
-            // INSERT INTO po_main
-            $sql = <<<EOD
-                        INSERT INTO `po_main`(`po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`
-                        , `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`
-                        , `working_date_from`, `working_date_to`, `working_day`, `create_by`, `number_of_period`, `workflow_id`) 
-                        VALUES(:po_number, :project_name, :supplier_id, :location_id, :working_name_th, :working_name_en
-                        , :is_include_vat, :contract_value, :contract_value_before, :vat, :is_deposit, :deposit_percent, :deposit_value
-                        , :working_date_from, :working_date_to, :working_day, :create_by, :number_of_period, :workflow_id)
-                    EOD;
+            // INSERT INTO po_main"
+            $sql = "INSERT INTO `po_main`(`po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`
+                    , `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`
+                    , `working_date_from`, `working_date_to`, `working_day`, `create_by`, `number_of_period`, `workflow_id`) 
+                    VALUES(:po_number, :project_name, :supplier_id, :location_id, :working_name_th, :working_name_en
+                    , :is_include_vat, :contract_value, :contract_value_before, :vat, :is_deposit, :deposit_percent, :deposit_value
+                    , :working_date_from, :working_date_to, :working_day, :create_by, :number_of_period, :workflow_id)";
 
             $stmtPoMainInsert = $this->db->prepare($sql);
-            $stmtPoMainInsert->bindParam(':po_number', $po_number, PDO::PARAM_STR);
-            $stmtPoMainInsert->bindParam(':project_name', $project_name, PDO::PARAM_STR);
-            $stmtPoMainInsert->bindParam(':supplier_id', $supplier_id,  PDO::PARAM_INT);
-            $stmtPoMainInsert->bindParam(':location_id', $location_id, PDO::PARAM_INT);
-            $stmtPoMainInsert->bindParam(':working_name_th', $working_name_th, PDO::PARAM_STR);
-            $stmtPoMainInsert->bindParam(':working_name_en', $working_name_en, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':po_number', $getData['po_number'], PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':project_name', $getData['project_name'], PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':supplier_id', $getData['supplier_id'],  PDO::PARAM_INT);
+            $stmtPoMainInsert->bindParam(':location_id', $getData['location_id'], PDO::PARAM_INT);
+            $stmtPoMainInsert->bindParam(':working_name_th', $getData['working_name_th'], PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':working_name_en', $getData['working_name_en'], PDO::PARAM_STR);
             $stmtPoMainInsert->bindParam(':is_include_vat', $is_include_vat, PDO::PARAM_BOOL);
-            $stmtPoMainInsert->bindParam(':contract_value_before', $contract_value_before, PDO::PARAM_STR);
-            $stmtPoMainInsert->bindParam(':contract_value', $contract_value, PDO::PARAM_STR);
-            $stmtPoMainInsert->bindParam(':vat', $vat, PDO::PARAM_STR);
-            $stmtPoMainInsert->bindParam(':is_deposit', $is_deposit, PDO::PARAM_BOOL);
-            $stmtPoMainInsert->bindParam(':deposit_percent', $deposit_percent, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':contract_value_before', floatval($getData['contract_value_before'] ?? 0), PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':contract_value', floatval($getData['contract_value'] ?? 0), PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':vat', floatval($getData['vat'] ?? 0), PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':is_deposit', $getData['is_deposit'], PDO::PARAM_BOOL);
+            $stmtPoMainInsert->bindParam(':deposit_percent', floatval($getData['deposit_percent'] ?? 0), PDO::PARAM_STR);
             $stmtPoMainInsert->bindParam(':deposit_value', $deposit_value, PDO::PARAM_STR);
-            $stmtPoMainInsert->bindParam(':working_date_from', $working_date_from, PDO::PARAM_STR);
-            $stmtPoMainInsert->bindParam(':working_date_to', $working_date_to, PDO::PARAM_STR);
-            $stmtPoMainInsert->bindParam(':working_day', $working_day, PDO::PARAM_INT);
+            $stmtPoMainInsert->bindParam(':working_date_from', $getData['working_date_from'], PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':working_date_to', $getData['working_date_to'], PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':working_day', $getData['working_day'], PDO::PARAM_INT);
             $stmtPoMainInsert->bindParam(':number_of_period', $number_of_period, PDO::PARAM_INT);
-            $stmtPoMainInsert->bindParam(':create_by', $create_by, PDO::PARAM_STR);
+            $stmtPoMainInsert->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
             $stmtPoMainInsert->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
 
             if ($stmtPoMainInsert->execute()) {
-                $_SESSION['location_id'] = $location_id;
-
                 // การเรียกใช้ closeCursor() จะช่วยคืนทรัพยากรการเชื่อมต่อฐานข้อมูลที่ถูกใช้โดย Statement นั้นๆ ทำให้การเชื่อมต่อพร้อมสำหรับคำสั่ง SQL อื่นๆ ต่อไป
                 $stmtPoMainInsert->closeCursor();
 
@@ -223,40 +185,32 @@ class Po
                 $po_id = $this->db->lastInsertId();
 
                 // INSERT INTO po_periods
-                $sql = <<<EOD
-                            INSERT INTO `po_periods`(`po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`) 
-                            VALUES (:po_id, :period_number, :workload_planned_percent, :interim_payment, :interim_payment_percent, :remark)
-                        EOD;
+                $sql = "INSERT INTO `po_periods`(`po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`) 
+                        VALUES (:po_id, :period_number, :workload_planned_percent, :interim_payment, :interim_payment_percent, :remark)";
                 $stmtPoPeriod = $this->db->prepare($sql);
 
                 // INSERT INTO inspection_periods
-                $sql = <<<EOD
-                            INSERT INTO `inspection_periods`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `is_paid`, `is_retention`, `workflow_id`) 
-                            VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :is_paid, :is_retention, :workflow_id)
-                        EOD;
+                $sql = "INSERT INTO `inspection_periods`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `is_paid`, `is_retention`, `workflow_id`) 
+                        VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :is_paid, :is_retention, :workflow_id)";
                 $stmtInspectionPeriods = $this->db->prepare($sql);
 
                 // INSERT inspection_period_details
-                $sql = <<<EOD
-                            INSERT INTO `inspection_period_details`(`inspection_id`) 
-                            VALUES (:inspection_id)
-                        EOD;
+                $sql = "INSERT INTO `inspection_period_details`(`inspection_id`) 
+                        VALUES (:inspection_id)";
                 $stmtInspectionPeriodDetails = $this->db->prepare($sql);
 
                 // INSERT inspection_period_approvals
-                $sql = <<<EOD
-                            INSERT INTO `inspection_period_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`) 
-                            VALUES (:inspection_id, :period_id, :po_id, :period_number, :approval_level, :approver_id, :approval_type_id, :approval_type_text, :approval_status_id)
-                        EOD;
+                $sql = "INSERT INTO `inspection_period_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`) 
+                        VALUES (:inspection_id, :period_id, :po_id, :period_number, :approval_level, :approver_id, :approval_type_id, :approval_type_text, :approval_status_id)";
                 $stmtInspectApprovals = $this->db->prepare($sql);
 
                 foreach ($insert_indexs as $i) { //ถ้าต้องการใช้ค่าของ key ให้เขียนแบบนี้ foreach($insert_indexs as $key=> $value){
                     $stmtPoPeriod->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtPoPeriod->bindParam(':period_number', $period_numbers[$i], PDO::PARAM_INT);
-                    $stmtPoPeriod->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
-                    $stmtPoPeriod->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
-                    $stmtPoPeriod->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
-                    $stmtPoPeriod->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
+                    $stmtPoPeriod->bindParam(':workload_planned_percent', $getData['workload_planned_percents'][$i],  PDO::PARAM_STR);
+                    $stmtPoPeriod->bindParam(':interim_payment', $getData['interim_payments'][$i],  PDO::PARAM_STR);
+                    $stmtPoPeriod->bindParam(':interim_payment_percent', $getData['interim_payment_percents'][$i], PDO::PARAM_STR);
+                    $stmtPoPeriod->bindParam(':remark', $getData['remarks'][$i], PDO::PARAM_STR);
 
                     $stmtPoPeriod->execute();
                     $stmtPoPeriod->closeCursor();
@@ -266,9 +220,9 @@ class Po
                     $stmtInspectionPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
                     $stmtInspectionPeriods->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtInspectionPeriods->bindParam(':period_number', $period_numbers[$i], PDO::PARAM_INT);
-                    $stmtInspectionPeriods->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
-                    $stmtInspectionPeriods->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
-                    $stmtInspectionPeriods->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
+                    $stmtInspectionPeriods->bindParam(':workload_planned_percent', $getData['workload_planned_percents'][$i],  PDO::PARAM_STR);
+                    $stmtInspectionPeriods->bindParam(':interim_payment', $getData['interim_payments'][$i],  PDO::PARAM_STR);
+                    $stmtInspectionPeriods->bindParam(':interim_payment_percent', $getData['interim_payment_percents'][$i], PDO::PARAM_STR);
                     $stmtInspectionPeriods->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
                     $stmtInspectionPeriods->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
                     $stmtInspectionPeriods->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
@@ -359,32 +313,20 @@ class Po
 
             // parameters ในส่วน po_main
             $po_id = $getId;
-            // $po_number = $getData['po_number'];
-            $project_name = $getData['project_name'];
-            $supplier_id = $getData['supplier_id'];
-            $location_id = $getData['location_id'];
-            $working_name_th = $getData['working_name_th'];
-            $working_name_en = $getData['working_name_en'];
+            // $getData['po_number'] = $getData['po_number'];
             $is_include_vat = 1;
-            $contract_value = floatval($getData['contract_value'] ?? 0);
-            $contract_value_before = floatval($getData['contract_value_before'] ?? 0);
-            $vat = floatval($getData['vat'] ?? 0);
-            $is_deposit = 1; //$getData['is_deposit'];
-            $deposit_percent = floatval($getData['deposit_percent'] ?? 0);
-            $deposit_value = ($deposit_percent * $contract_value) / 100;
-            $working_date_from = $getData['working_date_from'];
-            $working_date_to = $getData['working_date_to'];
+            $deposit_value = (floatval($getData['deposit_percent'] ?? 0) * floatval($getData['contract_value'] ?? 0)) / 100;
 
             // Create DateTime objects from the input strings
-            // $date1 = new DateTime($working_date_from);
-            // $date2 = new DateTime($working_date_to);
+            // $date1 = new DateTime($getData['working_date_from']);
+            // $date2 = new DateTime($getData['working_date_to']);
             // Calculate the difference between the two dates
             // $interval = $date1->diff($date2);
-            // $working_day =  $interval->days + 1;
-            $working_day =  $getData['working_day'];
+            // $getData['working_day'] =  $interval->days + 1;
+            $getData['working_day'] =  $getData['working_day'];
             // $update_by = $_SESSION['user_code'];
 
-            $remain_value_interim_payment = $contract_value;
+            $remain_value_interim_payment = floatval($getData['contract_value'] ?? 0);
             $po_status = 1; //1:รอตรวจ
 
             // parameters ในส่วน po_periods
@@ -397,10 +339,10 @@ class Po
                 // echo "ตัวแปร \$period_numbers ไม่ใช่ array หรือเป็น null";
                 $number_of_period = 0; // กำหนดค่าเริ่มต้นให้ $count ในกรณีที่ไม่ใช่ array
             }
-            $workload_planned_percents = $getData['workload_planned_percents'];
-            $interim_payments = $getData['interim_payments'];
-            $interim_payment_percents = $getData['interim_payment_percents'];
-            $remarks = $getData['remarks'];
+            $getData['workload_planned_percents'] = $getData['workload_planned_percents'];
+            $getData['interim_payments'] = $getData['interim_payments'];
+            $getData['interim_payment_percents'] = $getData['interim_payment_percents'];
+            $getData['remarks'] = $getData['remarks'];
             $cruds = $getData['cruds'];
             $period_ids = $getData['period_ids'];
 
@@ -444,23 +386,23 @@ class Po
                         WHERE `po_id` = :po_id
                     EOD;
             $stmtPoMainUpdate = $this->db->prepare($sql);
-            // $stmtPoMainUpdate->bindParam(':po_number', $po_number, PDO::PARAM_STR);
+            // $stmtPoMainUpdate->bindParam(':po_number', $getData['po_number'], PDO::PARAM_STR);
             $stmtPoMainUpdate->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-            $stmtPoMainUpdate->bindParam(':project_name', $project_name, PDO::PARAM_STR);
-            $stmtPoMainUpdate->bindParam(':supplier_id', $supplier_id,  PDO::PARAM_INT);
-            $stmtPoMainUpdate->bindParam(':location_id', $location_id, PDO::PARAM_INT);
-            $stmtPoMainUpdate->bindParam(':working_name_th', $working_name_th, PDO::PARAM_STR);
-            $stmtPoMainUpdate->bindParam(':working_name_en', $working_name_en, PDO::PARAM_STR);
+            $stmtPoMainUpdate->bindParam(':project_name', $getData['project_name'], PDO::PARAM_STR);
+            $stmtPoMainUpdate->bindParam(':supplier_id', $getData['supplier_id'],  PDO::PARAM_INT);
+            $stmtPoMainUpdate->bindParam(':location_id', $getData['location_id'], PDO::PARAM_INT);
+            $stmtPoMainUpdate->bindParam(':working_name_th', $getData['working_name_th'], PDO::PARAM_STR);
+            $stmtPoMainUpdate->bindParam(':working_name_en', $getData['working_name_en'], PDO::PARAM_STR);
             $stmtPoMainUpdate->bindParam(':is_include_vat', $is_include_vat, PDO::PARAM_BOOL);
-            $stmtPoMainUpdate->bindParam(':contract_value_before', $contract_value_before, PDO::PARAM_STR);
-            $stmtPoMainUpdate->bindParam(':contract_value', $contract_value, PDO::PARAM_STR);
-            $stmtPoMainUpdate->bindParam(':vat', $vat, PDO::PARAM_STR);
-            $stmtPoMainUpdate->bindParam(':is_deposit', $is_deposit, PDO::PARAM_BOOL);
-            $stmtPoMainUpdate->bindParam(':deposit_percent', $deposit_percent, PDO::PARAM_STR);
+            $stmtPoMainUpdate->bindParam(':contract_value_before', floatval($getData['contract_value_before'] ?? 0), PDO::PARAM_STR);
+            $stmtPoMainUpdate->bindParam(':contract_value', floatval($getData['contract_value'] ?? 0), PDO::PARAM_STR);
+            $stmtPoMainUpdate->bindParam(':vat', floatval($getData['vat'] ?? 0), PDO::PARAM_STR);
+            $stmtPoMainUpdate->bindParam(':is_deposit', $getData['is_deposit'], PDO::PARAM_BOOL);
+            $stmtPoMainUpdate->bindParam(':deposit_percent', floatval($getData['deposit_percent'] ?? 0), PDO::PARAM_STR);
             $stmtPoMainUpdate->bindParam(':deposit_value', $deposit_value, PDO::PARAM_STR);
-            $stmtPoMainUpdate->bindParam(':working_date_from', $working_date_from, PDO::PARAM_STR);
-            $stmtPoMainUpdate->bindParam(':working_date_to', $working_date_to, PDO::PARAM_STR);
-            $stmtPoMainUpdate->bindParam(':working_day', $working_day, PDO::PARAM_INT);
+            $stmtPoMainUpdate->bindParam(':working_date_from', $getData['working_date_from'], PDO::PARAM_STR);
+            $stmtPoMainUpdate->bindParam(':working_date_to', $getData['working_date_to'], PDO::PARAM_STR);
+            $stmtPoMainUpdate->bindParam(':working_day', $getData['working_day'], PDO::PARAM_INT);
             $stmtPoMainUpdate->bindParam(':number_of_period', $number_of_period, PDO::PARAM_INT);
             // $stmtPoMainUpdate->bindParam(':remain_value_interim_payment', $remain_value_interim_payment, PDO::PARAM_STR);
             // $stmtPoMainUpdate->bindParam(':po_status', $po_status, PDO::PARAM_INT);
@@ -505,10 +447,10 @@ class Po
                 foreach ($insert_indexs as $i) { //ถ้าต้องการใช้ค่าของ key ให้เขียนแบบนี้ foreach($insert_indexs as $key=> $value){
                     $stmtPoPeriodInsert->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtPoPeriodInsert->bindParam(':period_number', $period_numbers[$i], PDO::PARAM_INT);
-                    $stmtPoPeriodInsert->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
-                    $stmtPoPeriodInsert->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
-                    $stmtPoPeriodInsert->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
-                    $stmtPoPeriodInsert->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
+                    $stmtPoPeriodInsert->bindParam(':workload_planned_percent', $getData['workload_planned_percents'][$i],  PDO::PARAM_STR);
+                    $stmtPoPeriodInsert->bindParam(':interim_payment', $getData['interim_payments'][$i],  PDO::PARAM_STR);
+                    $stmtPoPeriodInsert->bindParam(':interim_payment_percent', $getData['interim_payment_percents'][$i], PDO::PARAM_STR);
+                    $stmtPoPeriodInsert->bindParam(':remark', $getData['remarks'][$i], PDO::PARAM_STR);
 
                     $stmtPoPeriodInsert->execute();
                     $stmtPoPeriodInsert->closeCursor();
@@ -518,9 +460,9 @@ class Po
                     $stmtInspectionPeriodInsert->bindParam(':period_id', $period_id, PDO::PARAM_INT);
                     $stmtInspectionPeriodInsert->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtInspectionPeriodInsert->bindParam(':period_number', $period_numbers[$i], PDO::PARAM_INT);
-                    $stmtInspectionPeriodInsert->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
-                    $stmtInspectionPeriodInsert->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
-                    $stmtInspectionPeriodInsert->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
+                    $stmtInspectionPeriodInsert->bindParam(':workload_planned_percent', $getData['workload_planned_percents'][$i],  PDO::PARAM_STR);
+                    $stmtInspectionPeriodInsert->bindParam(':interim_payment', $getData['interim_payments'][$i],  PDO::PARAM_STR);
+                    $stmtInspectionPeriodInsert->bindParam(':interim_payment_percent', $getData['interim_payment_percents'][$i], PDO::PARAM_STR);
                     $stmtInspectionPeriodInsert->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
                     $stmtInspectionPeriodInsert->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
                     $stmtInspectionPeriodInsert->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
@@ -587,19 +529,19 @@ class Po
                 foreach ($update_indexs as $i) {
                     $stmtPoPeriodUpdate->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtPoPeriodUpdate->bindParam(':period_id', $period_ids[$i], PDO::PARAM_INT);
-                    $stmtPoPeriodUpdate->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
-                    $stmtPoPeriodUpdate->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
-                    $stmtPoPeriodUpdate->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
-                    $stmtPoPeriodUpdate->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
+                    $stmtPoPeriodUpdate->bindParam(':workload_planned_percent', $getData['workload_planned_percents'][$i],  PDO::PARAM_STR);
+                    $stmtPoPeriodUpdate->bindParam(':interim_payment', $getData['interim_payments'][$i],  PDO::PARAM_STR);
+                    $stmtPoPeriodUpdate->bindParam(':interim_payment_percent', $getData['interim_payment_percents'][$i], PDO::PARAM_STR);
+                    $stmtPoPeriodUpdate->bindParam(':remark', $getData['remarks'][$i], PDO::PARAM_STR);
 
                     $stmtPoPeriodUpdate->execute();
                     $stmtPoPeriodUpdate->closeCursor();
 
                     $stmtInspectionPeriodUpdate->bindParam(':po_id', $po_id, PDO::PARAM_INT);
                     $stmtInspectionPeriodUpdate->bindParam(':period_id', $period_ids[$i], PDO::PARAM_INT);
-                    $stmtInspectionPeriodUpdate->bindParam(':workload_planned_percent', $workload_planned_percents[$i],  PDO::PARAM_STR);
-                    $stmtInspectionPeriodUpdate->bindParam(':interim_payment', $interim_payments[$i],  PDO::PARAM_STR);
-                    $stmtInspectionPeriodUpdate->bindParam(':interim_payment_percent', $interim_payment_percents[$i], PDO::PARAM_STR);
+                    $stmtInspectionPeriodUpdate->bindParam(':workload_planned_percent', $getData['workload_planned_percents'][$i],  PDO::PARAM_STR);
+                    $stmtInspectionPeriodUpdate->bindParam(':interim_payment', $getData['interim_payments'][$i],  PDO::PARAM_STR);
+                    $stmtInspectionPeriodUpdate->bindParam(':interim_payment_percent', $getData['interim_payment_percents'][$i], PDO::PARAM_STR);
                     $stmtInspectionPeriodUpdate->bindParam(':is_paid', $is_paid, PDO::PARAM_BOOL);
                     $stmtInspectionPeriodUpdate->bindParam(':is_retention', $is_retention, PDO::PARAM_BOOL);
 
@@ -746,26 +688,26 @@ class Po
 
 
 // $stmt = $conn->prepare('select ...where :');
-// $stmt->bindParam(':supplier_id', $supplier_id, PDO::PARAM_STR);
+// $stmt->bindParam(':supplier_id', $getData['supplier_id'], PDO::PARAM_STR);
 // $stmt->bindParam(':building_name', $building_name, PDO::PARAM_STR);
 // $stmt->bindParam(':is_active', $is_active, PDO::PARAM_BOOL);
 // $stmt->execute();
 // $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// function calculateVATExcludingVAT($amount, $vatRate)
+// function calculateVATExcludingVAT($amount, floatval($getData['vat'] ?? 0)Rate)
 // {
-//     $vatAmount = $amount * ($vatRate / 100);
-//     return $vatAmount;
+//     floatval($getData['vat'] ?? 0)Amount = $amount * (floatval($getData['vat'] ?? 0)Rate / 100);
+//     return floatval($getData['vat'] ?? 0)Amount;
 // }
 
-// function calculateTotalIncludingVAT($amount, $vatRate)
+// function calculateTotalIncludingVAT($amount, floatval($getData['vat'] ?? 0)Rate)
 // {
-//     $totalAmount = $amount * (1 + ($vatRate / 100));
+//     $totalAmount = $amount * (1 + (floatval($getData['vat'] ?? 0)Rate / 100));
 //     return $totalAmount;
 // }
 
 // $amount_exclude_vat = 1000;
-// $vat_rate = 7;
+// floatval($getData['vat'] ?? 0)_rate = 7;
 
-// $vat = calculateVATExcludingVAT($amount_exclude_vat, $vat_rate);
-// $total_include_vat = calculateTotalIncludingVAT($amount_exclude_vat, $vat_rate);
+// floatval($getData['vat'] ?? 0) = calculateVATExcludingVAT($amount_exclude_vat, floatval($getData['vat'] ?? 0)_rate);
+// $total_include_vat = calculateTotalIncludingVAT($amount_exclude_vat, floatval($getData['vat'] ?? 0)_rate);

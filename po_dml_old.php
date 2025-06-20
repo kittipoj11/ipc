@@ -59,14 +59,12 @@ require_once 'auth.php';
     $connection = new Connection;
     $pdo = $connection->getDbConnection();
     $action = $_REQUEST['action'];
-
     if ($action == 'create') {
-      $card_header_display = 'd-none';
+      $display = 'd-none';
       $disabled = '';
       $content_header = 'Create Purchase Order';
-
     } elseif ($action == 'update') {
-      $card_header_display = 'd-inline';
+      $display = 'd-inline';
       $disabled = 'disabled';
       $po_id = $_REQUEST['po_id'];
       $content_header = 'Edit Purchase Order';
@@ -100,7 +98,7 @@ require_once 'auth.php';
             <div class="col-12">
 
               <div class="card">
-                <div class="card-header <?= $card_header_display ?>">
+                <div class="card-header <?= $display ?>">
                   <h6 class="m-1 fw-bold"><?= (isset($rsPoMain['po_number']) ? $rsPoMain['po_number'] : '') . " : " . (isset($rsPoMain['supplier_id']) ? $rsPoMain['supplier_id'] : '') . " - " . (isset($rsPoMain['supplier_name']) ? $rsPoMain['supplier_name'] : '') ?></h6>
                 </div>
 
@@ -244,16 +242,15 @@ require_once 'auth.php';
                           </thead>
                           <tbody id="tbody-period">
                             <?php if ($action == 'create') {
-
                             } elseif ($action == 'update') {
                               foreach ($rsPoPeriod as $row) { ?>
                                 <tr class="firstTr" crud='s'>
                                   <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                                  <td class="input-group-sm p-0"><input type="number" name="period_numbers[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>
+                                  <td class="input-group-sm p-0"><input type="number" step="0.01" name="period_numbers[]" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly>
                                   </td>
                                   <td class="input-group-sm p-0"><input type="number" step="0.01" name="workload_planned_percents[]" class="form-control workload_planned_percent" value="<?php echo isset($row['workload_planned_percent']) ? htmlspecialchars($row['workload_planned_percent']) : ''; ?>">
                                   </td>
-                                  <td class="input-group-sm p-0"><input type="number" name="interim_payments[]" class="form-control interim_payment" value="<?php echo isset($row['interim_payment']) ? htmlspecialchars($row['interim_payment']) : ''; ?>">
+                                  <td class="input-group-sm p-0"><input type="number" step="0.01" name="interim_payments[]" class="form-control interim_payment" value="<?php echo isset($row['interim_payment']) ? htmlspecialchars($row['interim_payment']) : ''; ?>">
                                   </td>
                                   <td class="input-group-sm p-0"><input type="number" step="0.01" name="interim_payment_percents[]" class="form-control interim_payment_percent" value="<?php echo isset($row['interim_payment_percent']) ? htmlspecialchars($row['interim_payment_percent']) : ''; ?>">
                                   </td>
