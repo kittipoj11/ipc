@@ -49,71 +49,62 @@ $(document).ready(function () {
   });
 
   $("#btnAdd").click(function () {
-    let period;
+    let period_number;
     // console.log($(".firstTr:last").find(".period:last").val());
     // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
     // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
     if ($("#tbody-period").has(".firstTr[crud!='d']").length > 0) {
-      period = $(".firstTr[crud!='d']:last").find(".period_number:last").val();
-      period++;
-      $(".firstTr[crud!='d']:last")
+      //หมายความว่า
+      // 1. เลือก element ที่มี ID เป็น "tbody-period"
+      // 2. เลือกเฉพาะ element ที่มี element ลูกหลาน (descendant) ที่ตรงกับ selector ในวงเล็บ นั่นคือ element ที่มีคลาสเป็น "firstTr" และมี attribute ชื่อ "crud" ซึ่งมีค่าไม่เท่ากับ "d"
+      // 3. .length คือนับจำนวน element ที่ถูกเลือกได้จากการกรองในขั้นตอนก่อนหน้า(ข้อ 2.) ว่ามากกว่า 0 หรือไม่
+
+      period_number = $(".firstTr[crud!='d']:last").find('input[name="period_number"]').val();
+      period_number++;
+      $("#tbody-period tr[crud!='d']:last")
         .clone(false)
         .attr("crud", "i")
         .removeClass("d-none")
 
-        .find(".period_number:last")
-        .val(period)
+        .find('input[name="period_number"]')
+        .val(period_number)
         .end()
 
-        .find(".workload_planned_percent:last")
+        .find('input[name="workload_planned_percent"]')
         .val("")
         .end()
 
-        .find(".interim_payment:last")
+        .find('input[name="interim_payment"]')
         .val("")
         .end()
 
-        .find(".interim_payment_percent:last")
+        .find('input[name="interim_payment_percent"]')
         .val("")
         .end()
 
-        .find(".remark:last")
+        .find('input[name="remark"]')
         .val("")
         .end()
 
-        .find(".period_id:last")
+        .find('input[name="period_id"]')
         .val("")
         .end()
 
-        .find("td input.crud")
+        .find('input[name="crud"]')
         .val("i")
         .end()
-
-        // .find("a:first")
-        // .css("display", "inline")
-        // .css("color", "red")
-        // .end()
-
-        // .find("a:last")
-        // .css("display", "inline")
-        // .css("color", "red")
-        // .end()
-
-        // .find("a:first")
-        // .attr("iid", "" + i + "")
-        // .end()
 
         .appendTo("#tbody-period");
     } else {
       // Create the new tr element using jQuery
       const firstTr = `<tr class='firstTr' crud='i'>
-                            <td class='input-group-sm p-0'><input type='number' name='period_numbers[]' class='form-control period_number' value='1' readonly></td>
-                            <td class='input-group-sm p-0'><input type='number' name='workload_planned_percents[]' class='form-control workload_planned_percent'></td>
-                            <td class='input-group-sm p-0'><input type='number' name='interim_payments[]' class='form-control interim_payment'></td>
-                            <td class='input-group-sm p-0'><input type='number' name='interim_payment_percents[]' class='form-control interim_payment_percent'></td>
-                            <td class='input-group-sm p-0'><input type='text' name='remarks[]' class='form-control remark'></td>
-                            <td class='input-group-sm p-0'><input type='text' name='cruds[]' class='form-control crud' value='i'></td>
-                            <td class='input-group-sm p-0 d-nonex'><input type='text' name='period_id[]' class='form-control period_id' readonly></td>
+                            <td class='input-group-sm p-0'><input type='number' name='period_number' class='form-control period_number' value='1' readonly></td>
+                            <td class='input-group-sm p-0'><input type='number' name='workload_planned_percent' class='form-control workload_planned_percent'></td>
+                            <td class='input-group-sm p-0'><input type='number' name='interim_payment' class='form-control interim_payment'></td>
+                            <td class='input-group-sm p-0'><input type='number' name='interim_payment_percent' class='form-control interim_payment_percent'></td>
+                            <td class='input-group-sm p-0'><input type='text' name='remark' class='form-control remark'></td>
+                            <td class='input-group-sm p-0'><input type='text' name='crud' class='form-control crud' value='i'></td>
+                            <td class='input-group-sm p-0 d-nonex'><input type='text' name='period_id' class='form-control period_id' readonly></td>
                           </tr>`;
 
       $("#tbody-period").append(firstTr);
