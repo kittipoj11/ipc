@@ -53,17 +53,20 @@ $(document).ready(function () {
     // console.log($(".firstTr:last").find(".period:last").val());
     // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
     // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
-    if ($("#tbody-period").has(".firstTr[crud!='d']").length > 0) {
+    if ($("#tbody-period").has("tr[crud!='d']").length > 0) {
       //หมายความว่า
       // 1. เลือก element ที่มี ID เป็น "tbody-period"
       // 2. เลือกเฉพาะ element ที่มี element ลูกหลาน (descendant) ที่ตรงกับ selector ในวงเล็บ นั่นคือ element ที่มีคลาสเป็น "firstTr" และมี attribute ชื่อ "crud" ซึ่งมีค่าไม่เท่ากับ "d"
       // 3. .length คือนับจำนวน element ที่ถูกเลือกได้จากการกรองในขั้นตอนก่อนหน้า(ข้อ 2.) ว่ามากกว่า 0 หรือไม่
 
-      period_number = $(".firstTr[crud!='d']:last").find('input[name="period_number"]').val();
+      period_number = $("#tbody-period tr[crud!='d']:last")
+        .find('input[name="period_number"]')
+        .val();
       period_number++;
       $("#tbody-period tr[crud!='d']:last")
         .clone(false)
         .attr("crud", "i")
+        .attr("data-period-id","")
         .removeClass("d-none")
 
         .find('input[name="period_number"]')
@@ -97,7 +100,7 @@ $(document).ready(function () {
         .appendTo("#tbody-period");
     } else {
       // Create the new tr element using jQuery
-      const firstTr = `<tr class='firstTr' crud='i'>
+      const firstTr = `<tr crud='i' data-period-id=''>
                             <td class='input-group-sm p-0'><input type='number' name='period_number' class='form-control period_number' value='1' readonly></td>
                             <td class='input-group-sm p-0'><input type='number' name='workload_planned_percent' class='form-control workload_planned_percent'></td>
                             <td class='input-group-sm p-0'><input type='number' name='interim_payment' class='form-control interim_payment'></td>
@@ -128,7 +131,7 @@ $(document).ready(function () {
     let period_number;
     // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-period
     // $("#tbody-period").find("tr:not(:first):last").remove();
-    $("#tbody-period .firstTr[crud!='d']:last")
+    $("#tbody-period tr[crud!='d']:last")
       // $("#tbody-period tr:not(:first)[crud!='d']:last")
       .attr("crud", "d")
       .addClass("d-none")
