@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>บันทึกข้อมูลงวดงาน (AJAX)</title>
+    <style>
+        body { font-family: sans-serif; container: 'main'; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        input[type="number"], input[type="text"] { width: 95%; padding: 5px; }
+        .action-cell button { padding: 5px 10px; cursor: pointer; }
+        .delete-btn { color: red; }
+    </style>
+</head>
+<body>
+    <h1>จัดการงวดงานสำหรับ Order ID: 1</h1>
+
+    <form id="periods-form">
+        <table>
+            <thead>
+                <tr>
+                    <th>งวดที่</th>
+                    <th>% งาน</th>
+                    <th>จำนวนเงิน</th>
+                    <th>หมายเหตุ</th>
+                    <th>จัดการ</th>
+                </tr>
+            </thead>
+            <tbody id="periods-tbody">
+                </tbody>
+        </table>
+        
+        <button type="button" id="add-row-btn">เพิ่มงวดงาน</button>
+        <button type="submit" id="save-periods-btn" style="background-color: #28a745; color: white;">บันทึกข้อมูลทั้งหมด</button>
+    </form>
+    
+    <div id="loading-spinner" style="display:none;">กำลังโหลด...</div>
+    <div id="response-message"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="app_periods_jquery.js"></script>
+</body>
+</html>
