@@ -10,10 +10,11 @@ require_once 'config.php';
 require_once 'class/connection_class.php';
 require_once 'class/po_class.php';
 
-
 $connection = new Connection;
 $pdo = $connection->getDbConnection();
 $po = new Po($pdo);
+
+
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     $id = $po->create($_REQUEST);

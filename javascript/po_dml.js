@@ -1,15 +1,46 @@
 $(document).ready(function () {
+  function showMessage(message, isSuccess) {
+    responseMessage
+      .text(message)
+      .removeClass("success error")
+      .addClass(isSuccess ? "success" : "error")
+      .show()
+      .delay(5000)
+      .fadeOut();
+  }
+
   $("#myForm").on("submit", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();
+
+    const poMain = {
+      po_id: $("#po_id").val(),
+      po_number: $("#po_number").val(),
+      project_name: $("#project_name").val(),
+      supplier_id: $("#supplier_id").val(),
+      location_id: $("#location_id").val(),
+      working_name_th: $("#working_name_th").val(),
+      working_name_en: $("#working_name_en").val(),
+      contract_value_before: $("#contract_value_before").val(),
+      contract_value: $("#contract_value").val(),
+      vat: $("#vat").val(),
+      is_deposit: $("#is_deposit").val(),
+      working_date_from: $("#working_date_from").val(),
+      working_date_to: $("#working_date_to").val(),
+      working_day: $("#working_day").val(),
+    };
+
     const periodDatas = [];
 
     $("#tbody-period tr").each(function () {
       const row = $(this);
 
       // สร้าง object สำหรับเก็บข้อมูลของแถวนี้
+      // row.removeData("crud"); ทำการ clear ค่า data-* ที่อยู่ใน cache ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
       const periodRecord = {
-        period_id: row.data("period-id"), // .data() สำหรับดึงค่า data-*
+        period_id: row.attr("data-period-id"), // ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
+        period_crud: row.attr("data-crud"), //
+
         // ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
         period_number: row.find('input[name="period_number"]').val(),
         workload_planned_percent: row
@@ -26,68 +57,132 @@ $(document).ready(function () {
       periodDatas.push(periodRecord);
     });
 
-    console.log("Data to be sent (jQuery):", periodDatas);
+    console.log("Data to be sent (header):", poMain);
+    console.log("Data to be sent (periods):", periodDatas);
 
-    // let data_sent = $("#myForm").serializeArray();
-    // data_sent.push({
-    //   name: "action",
-    //   value: $("#submit").data("action"), //'create', //หรือ update
-    // });
-    // console.log(`data_sent=${data_sent}`);
-    // $.ajax({
-    //   url: "po_crud.php",
-    //   type: "POST",
-    //   // data: $(this).serialize(),
-    //   data: data_sent,
-    //   success: function (response) {
-    //     console.log(`response=${response}`);
-    //     if (response) {
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "Data saved successfully",
-    //         color: "#716add",
-    //         allowOutsideClick: false,
-    //         background: "black",
-    //         // backdrop: `
-    //         //                     rgba(0,0,123,0.4)
-    //         //                     url("_images/paw.gif")
-    //         //                     left bottom
-    //         //                     no-repeat
-    //         //                     `,
-    //         // showConfirmButton: false,
-    //         // timer: 15000
-    //       }).then((result) => {
-    //         if (result.isConfirmed) {
-    //           window.location.href = "po.php";
-    //           // window.location.reload();
-    //         }
-    //         // window.location.href = 'main.php?page=open_area_schedule';
-    //       });
-    //     }
-    //   },
-    //   error: function (xhr, status, error) {
-    //     console.log("เกิดข้อผิดพลาดในการเชื่อมต่อ:", error);
-    //     // console.error("เกิดข้อผิดพลาดในการเชื่อมต่อ:", error);
-    //     // $('#loginError').text('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์');
-    //   },
-    // });
+    const data_sent = { header: poMain, periods: periodDatas };
+
+    $.ajax({
+      url: "po_handler_api.php",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(data_sent),
+    })
+      .done(function (result) {
+        Swal.fire({
+          icon: "success",
+          title: "Data saved successfully",
+          color: "#716add",
+          allowOutsideClick: false,
+          background: "black",
+          // backdrop: `
+          //                     rgba(0,0,123,0.4)
+          //                     url("_images/paw.gif")
+          //                     left bottom
+          //                     no-repeat
+          //                     `,
+          // showConfirmButton: false,
+          // timer: 15000
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // loadData(); // โหลดข้อมูลใหม่ทั้งหมด
+            window.location.href = "po.php";
+          }
+        });
+      })
+      .fail((jqXHR) => {
+        const errorMsg = jqXHR.responseJSON
+          ? jqXHR.responseJSON.message
+          : "เกิดข้อผิดพลาดรุนแรง";
+        showMessage(errorMsg, false);
+      });
   });
 
-    $("#tbody-period").on("input", "input", function () {
+  $("#tbody-period").on("input", "input", function () {
     const row = $(this).closest("tr");
-    // ถ้าแถวไม่ใช่แถวใหม่ (สถานะเป็น clean) ให้เปลี่ยนเป็น update
-    if (row.data("crud") === "select") {
-      row.data("crud", "update");
+    // ถ้าแถวไม่ใช่แถวใหม่ (สถานะเป็น select) ให้เปลี่ยนเป็น update
+    // console.log(`1:${row.attr("data-crud")}`);
+    if (row.attr("data-crud") == "select") {
+      row.attr("data-crud", "update");
       row.find('input[name="crud"]').val("update");
-      
+      // console.log(`2:${row.attr("data-crud")}`);
       // row.find('input[name="crud"]').val("update");
       // console.log(row.find('input[name="crud"]').val());
     }
+    // console.log(`3:${row.attr("data-crud")}`);
   });
   /*Note:
   เมื่อใดก็ตามที่ผู้ใช้ พิมพ์หรือแก้ไขข้อมูล ในช่อง <input> ใดๆ ในตาราง โค้ดนี้จะทำงานทันทีเพื่อตรวจสอบสถานะของ "แถว" (<tr>) นั้นๆ 
 และถ้าแถวนั้นเป็นข้อมูลเก่าที่ยังไม่เคยถูกแก้ไขมาก่อน (มีสถานะเป็น select) มันจะเปลี่ยนสถานะของแถวนั้นให้เป็น update
 */
+
+  //ปุ่มนี้จะใช้ได้แค่ตอนสร้าง po ใหม่เท่านั้น   ถ้าเป็นการ edit จะไม่สามารถใช้งานได้
+  $("#btnClear").click(function () {
+    // ลบ tr ทั้งหมดที่ไม่ใช่ตัวแรกใน #tbody-period
+    // $("#tbody-period tr:gt(0)").remove();
+    // หรือ
+    // $("#tbody-period").find("tr:not(:first)").remove();
+    // หรือ
+    // $("#tbody-period").find("tr:gt(0)").remove();
+
+    // ลบ tr ทั้งหมด
+    $("#tbody-period tr").remove();
+  });
+
+  // $(".btnDeleteThis").click(function() {
+  // สำหรับใช้กับปุ่มที่อยู่ภายใน <td>
+  // $(document).on("click", ".btnDeleteThis", function () {
+  //   // ส่วนสำหรับการลบ
+  //   // let row_id = $(this).attr("iid");
+  //   // console.log("#row" + row_id + "");
+  //   // เมื่อปุ่มนี้ถูกกด(this)จะลบ tr ของปุ่มนี้ออกไป
+  //   // $(this).closest("tr").remove();
+  //   // หรือใช้
+  //   $(this).parents("tr").remove();
+  // });
+
+  // $("#btnDeleteLast").click(function () {
+  //   // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-period
+  //   // $("#tbody-period tr[data-crud!='delete']:last")
+  //   //   // $("#tbody-period tr:not(:first)[crud!='d']:last")
+  //   //   .attr("crud", "d")
+  //   //   .addClass("d-none")
+
+  //   //   .find("td input.crud")
+  //   //   .val("d")
+  //   //   .end();
+
+  //   // const row = $(this).closest("tr");
+  //   const row =$("#tbody-period tr[data-crud!='delete']:last");
+  //   console.log(row.data("crud"));
+  //   if (confirm("คุณต้องการลบงวดงานรายการสุดท้ายใช่หรือไม่?")) {
+  //     // ถ้าเป็นแถวที่ยังไม่เคยบันทึก ให้ลบออกจากหน้าจอเลย
+  //     if (row.data("crud") == "create") {
+  //       row.remove();
+  //     } else {
+  //       // ถ้าเป็นแถวที่มีข้อมูลอยู่แล้ว ให้ซ่อนและเปลี่ยนสถานะเป็น 'delete'
+  //       // row.addClass('d-none').data("crud", "delete");
+  //       row.data("crud", "delete");
+  //     }
+  //   }
+  //   console.log(row.data("crud"));
+  // });
+  // การเปลี่ยนแปลงค่า data-crud ด้วย .data() จะไม่ส่งผลต่อ Selector โดยตรงในทันทีที่ตัว Selector ถูกเรียกใช้อีกครั้งในรอบการทำงานเดียวกันของฟังก์ชัน
+
+  $("#btnDeleteLast").click(function () {
+    const row = $("#tbody-period tr[data-crud!='delete']:last");
+    // console.log(row.attr("data-crud"));
+    if (confirm("คุณต้องการลบงวดงานรายการสุดท้ายใช่หรือไม่?")) {
+      // อ่านค่า data-crud จาก Attribute โดยตรง
+      if (row.attr("data-crud") == "create") {
+        row.remove();
+      } else {
+        row.addClass("d-none").attr("data-crud", "delete");
+        // row.attr("data-crud", "delete");
+      }
+    }
+    // console.log(row.attr("data-crud"));
+  });
 
   $("#btnAdd").click(function () {
     let period_number;
@@ -104,6 +199,7 @@ $(document).ready(function () {
         .find('input[name="period_number"]')
         .val();
       period_number++;
+      // console.log(`period number after = ${period_number}`);
       $("#tbody-period tr[data-crud!='delete']:last")
         .clone(false)
         .attr("data-crud", "create")
@@ -155,58 +251,6 @@ $(document).ready(function () {
     }
   });
 
-
-
-  //ปุ่มนี้จะใช้ได้แค่ตอนสร้าง po ใหม่เท่านั้น   ถ้าเป็นการ edit จะไม่สามารถใช้งานได้
-  $("#btnClear").click(function () {
-    // ลบ tr ทั้งหมดที่ไม่ใช่ตัวแรกใน #tbody-period
-    // $("#tbody-period tr:gt(0)").remove();
-    // หรือ
-    // $("#tbody-period").find("tr:not(:first)").remove();
-    // หรือ
-    // $("#tbody-period").find("tr:gt(0)").remove();
-
-    // ลบ tr ทั้งหมด
-    $("#tbody-period tr").remove();
-  });
-
-  $("#btnDeleteLast").click(function () {
-    // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-period
-    // $("#tbody-period tr[data-crud!='delete']:last")
-    //   // $("#tbody-period tr:not(:first)[crud!='d']:last")
-    //   .attr("crud", "d")
-    //   .addClass("d-none")
-
-    //   .find("td input.crud")
-    //   .val("d")
-    //   .end();
-
-    // const row = $(this).closest("tr");
-    const row =$("#tbody-period tr[data-crud!='delete']:last");
-    if (confirm("คุณต้องการลบงวดงานรายการสุดท้ายใช่หรือไม่?")) {
-      // ถ้าเป็นแถวที่ยังไม่เคยบันทึก ให้ลบออกจากหน้าจอเลย
-      if (row.data("crud") === "create") {
-        row.remove();
-      } else {
-        // ถ้าเป็นแถวที่มีข้อมูลอยู่แล้ว ให้ซ่อนและเปลี่ยนสถานะเป็น 'delete'
-        row.addClass('d-none').data("crud", "delete");
-        
-      }
-    }
-  });
-
-  // $(".btnDeleteThis").click(function() {
-  // สำหรับใช้กับปุ่มที่อยู่ภายใน <td>
-  // $(document).on("click", ".btnDeleteThis", function () {
-  //   // ส่วนสำหรับการลบ
-  //   // let row_id = $(this).attr("iid");
-  //   // console.log("#row" + row_id + "");
-  //   // เมื่อปุ่มนี้ถูกกด(this)จะลบ tr ของปุ่มนี้ออกไป
-  //   // $(this).closest("tr").remove();
-  //   // หรือใช้
-  //   $(this).parents("tr").remove();
-  // });
-
   $(".btnCancel , .btnBack").click(function () {
     // history.go(-1);
     // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
@@ -216,7 +260,7 @@ $(document).ready(function () {
 
   $("#contract_value_before").on("change keyup", function () {
     let contract_value_before = parseFloat($(this).val());
-    let vat_rate = parseFloat($("#vat").data("vat_rate"));
+    let vat_rate = parseFloat($("#vat").attr("data-vat_rate"));
 
     if (!isNaN(contract_value_before) && !isNaN(vat_rate)) {
       var vat_amount = contract_value_before * (vat_rate / 100);
@@ -232,7 +276,7 @@ $(document).ready(function () {
 
   $("#contract_value").on("change keyup", function () {
     let contract_value = parseFloat($(this).val());
-    let vat_rate = parseFloat($("#vat").data("vat_rate"));
+    let vat_rate = parseFloat($("#vat").attr("data-vat_rate"));
 
     if (!isNaN(contract_value) && !isNaN(vat_rate)) {
       var contract_value_before = contract_value / (1 + vat_rate / 100);

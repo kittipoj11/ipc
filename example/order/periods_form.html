@@ -4,39 +4,72 @@
     <meta charset="UTF-8">
     <title>บันทึกข้อมูลงวดงาน (AJAX)</title>
     <style>
-        body { font-family: sans-serif; container: 'main'; margin: 20px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; container: 'main'; margin: 20px; color: #333;}
+        .container { max-width: 900px; margin: auto; }
+        .form-section { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 8px; background-color: #f9f9f9;}
+        h1, h2 { color: #2c3e50; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; }
-        th { background-color: #f2f2f2; }
-        input[type="number"], input[type="text"] { width: 95%; padding: 5px; }
-        .action-cell button { padding: 5px 10px; cursor: pointer; }
-        .delete-btn { color: red; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #e9ecef; }
+        input[type="number"], input[type="text"], input[type="date"] { width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 15px; cursor: pointer; border-radius: 5px; border: none; font-size: 1em; }
+        #add-row-btn { background-color: #007bff; color: white; }
+        #save-periods-btn { background-color: #28a745; color: white; }
+        .delete-btn { background-color: #dc3545; color: white; }
+        .response-message { margin-top: 15px; padding: 10px; border-radius: 5px; }
+        .response-message.success { background-color: #d4edda; color: #155724; }
+        .response-message.error { background-color: #f8d7da; color: #721c24; }
     </style>
 </head>
 <body>
-    <h1>จัดการงวดงานสำหรับ Order ID: 1</h1>
-
-    <form id="periods-form">
-        <table>
-            <thead>
-                <tr>
-                    <th>งวดที่</th>
-                    <th>% งาน</th>
-                    <th>จำนวนเงิน</th>
-                    <th>หมายเหตุ</th>
-                    <th>จัดการ</th>
-                </tr>
-            </thead>
-            <tbody id="periods-tbody">
-                </tbody>
-        </table>
+    <div class="container">
+        <h1>จัดการงวดงานสำหรับ PO ID: <span id="display-po-id"></span></h1>
         
-        <button type="button" id="add-row-btn">เพิ่มงวดงาน</button>
-        <button type="submit" id="save-periods-btn" style="background-color: #28a745; color: white;">บันทึกข้อมูลทั้งหมด</button>
-    </form>
-    
-    <div id="loading-spinner" style="display:none;">กำลังโหลด...</div>
-    <div id="response-message"></div>
+        <div id="response-message"></div>
+
+        <form id="periods-form">
+            <div class="form-section">
+                <h2>ข้อมูลหลัก (Header)</h2>
+                <input type="hidden" id="po_id">
+                <table>
+                    <tr>
+                        <td><label for="po_number">เลขที่ PO:</label></td>
+                        <td><input type="text" id="po_number"></td>
+                        <td><label for="project_name">ชื่อโครงการ:</label></td>
+                        <td><input type="text" id="project_name"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="contract_value">มูลค่าสัญญา:</label></td>
+                        <td><input type="number" id="contract_value"></td>
+                        <td><label for="working_date_from">วันที่เริ่ม-สิ้นสุด:</label></td>
+                        <td>
+                            <input type="date" id="working_date_from" style="width: 45%;">
+                            <input type="date" id="working_date_to" style="width: 45%;">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="form-section">
+                <h2>ข้อมูลงวดงาน (Details)</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>งวดที่</th>
+                            <th>% งาน</th>
+                            <th>จำนวนเงิน</th>
+                            <th>หมายเหตุ</th>
+                            <th>จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="periods-tbody"></tbody>
+                </table>
+                <button type="button" id="add-row-btn">เพิ่มงวดงาน</button>
+            </div>
+            
+            <button type="submit" id="save-periods-btn">บันทึกข้อมูลทั้งหมด</button>
+        </form>
+    </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="app_periods_jquery.js"></script>

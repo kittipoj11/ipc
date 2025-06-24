@@ -1,6 +1,7 @@
 <?php
 // api_period_handler.php (เวอร์ชันปรับปรุง)
 
+// สำหรับการ Debug ในตอนพัฒนา
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -16,31 +17,53 @@ $method = $_SERVER['REQUEST_METHOD'];
 try {
     // 1. สร้าง Connection และ Repository object
     $pdo = (new Connection())->getDbConnection();
-    $periodRepo = new OrderPeriodRepository($pdo);
+    $repo = new OrderPeriodRepository($pdo);
+
+    if ($method === 'POST') {
+        $requestData = json_decode(file_get_contents('php://input'), true);
+
+        if (!isset($requestData['header']) || !isset($requestData['details'])) {
+            throw new Exception('Invalid data structure.');
+        }
+
+        // ★★★ เรียกใช้เมธอด save เดียว จบ! ★★★
+        $savedPoId = $repo->save($requestData['header'], $requestData['details']);
+
+        $response = [
+            'status' => 'success', 
+            'message' => 'บันทึกข้อมูล PO ID: ' . $savedPoId . ' เรียบร้อยแล้ว',
+            'data' => ['po_id' => $savedPoId]
+        ];
+    }
 
     if ($method === 'GET') {
-        // --- ส่วนของการดึงข้อมูล ---
-        $orderId = $_GET['order_id'] ?? 0;
-        
-        // ★★★ เรียกใช้เมธอดจาก Repository ★★★
-        $periods = $periodRepo->getForOrder((int)$orderId);
-        
-        $response = ['status' => 'success', 'data' => $periods];
+        $poId = $_GET['po_id'] ?? 0;
+        if (empty($poId)) throw new Exception("PO ID is required.");
 
+        $header = $repo->getHeader((int)$poId);
+        $details = $repo->getDetails((int)$poId);
+
+        if (!$header) throw new Exception("PO not found.");
+
+        $response = ['status' => 'success', 'data' => ['header' => $header, 'details' => $details]];
     } elseif ($method === 'POST') {
         // --- ส่วนของการบันทึกข้อมูล ---
         $requestData = json_decode(file_get_contents('php://input'), true);
 
-        if (!is_array($requestData)) {
-            throw new Exception('Invalid JSON data provided.');
+        if (!isset($requestData['header']) || !isset($requestData['details'])) {
+            throw new Exception('Invalid data structure.');
         }
 
-        // ในระบบจริง order_id ควรมาจาก session หรือค่าที่น่าเชื่อถือ
-        // ในที่นี้เราจะสมมติว่ามันถูกส่งมาด้วยเพื่อความง่าย
-        $orderId = 1; 
+        // ในระบบจริง poId ควรมาจาก session หรือค่าที่น่าเชื่อถือ
+        $headerData = $requestData['header'];
+        $detailsData = $requestData['details'];
+        $poId = $headerData['po_id'] ?? 0;
+
+
+        if (empty($poId)) throw new Exception("PO ID is missing in header data.");
 
         // ★★★ เรียกใช้เมธอดจาก Repository ★★★
-        $isSuccess = $periodRepo->processBatch($orderId, $requestData);
+        $isSuccess = $repo->processBatch((int)$poId, $headerData, $detailsData);
 
         if ($isSuccess) {
             $response = ['status' => 'success', 'message' => 'บันทึกข้อมูลทั้งหมดเรียบร้อยแล้ว'];
@@ -49,7 +72,6 @@ try {
             $response['message'] = 'การบันทึกล้มเหลวโดยไม่ทราบสาเหตุ';
         }
     }
-
 } catch (Exception $e) {
     // ดักจับ Exception ที่อาจจะโยนมาจาก Repository
     $response['message'] = 'เกิดข้อผิดพลาด: ' . $e->getMessage();
