@@ -61,7 +61,7 @@ class OrderPeriodRepository
                 throw new Exception("Could not create or find a valid PO ID.");
             }
             
-            // 2. จัดการข้อมูล Details (D-U-C Logic เหมือนเดิม)
+            // 2. จัดการข้อมูล Details (D-U-C Logic)
             $deleteItems = array_filter($detailsData, fn($item) => ($item['crud_status'] ?? 'none') === 'delete');
             $updateItems = array_filter($detailsData, fn($item) => ($item['crud_status'] ?? 'none') === 'update');
             $createItems = array_filter($detailsData, fn($item) => ($item['crud_status'] ?? 'none') === 'create');

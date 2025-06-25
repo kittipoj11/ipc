@@ -12,8 +12,8 @@ $(document).ready(function () {
   $("#myForm").on("submit", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();
-
-    const poMain = {
+    const action = { action: "save" };
+    const headerData = {
       po_id: $("#po_id").val(),
       po_number: $("#po_number").val(),
       project_name: $("#project_name").val(),
@@ -21,16 +21,18 @@ $(document).ready(function () {
       location_id: $("#location_id").val(),
       working_name_th: $("#working_name_th").val(),
       working_name_en: $("#working_name_en").val(),
-      contract_value_before: $("#contract_value_before").val(),
-      contract_value: $("#contract_value").val(),
-      vat: $("#vat").val(),
+      contract_value_before: $("#contract_value_before").val() ?? 0,
+      contract_value: $("#contract_value").val() ?? 0,
+      vat: $("#vat").val() ?? 0,
+      is_include_vat: 1,
       is_deposit: $("#is_deposit").val(),
+      $deposit_value: floatval($("#deposit_percent").val() ?? 0) * floatval($("#contract_value").val() ?? 0) / 100,
       working_date_from: $("#working_date_from").val(),
       working_date_to: $("#working_date_to").val(),
       working_day: $("#working_day").val(),
     };
 
-    const periodDatas = [];
+    const periodsData = [];
 
     $("#tbody-period tr").each(function () {
       const row = $(this);
@@ -40,27 +42,30 @@ $(document).ready(function () {
       const periodRecord = {
         period_id: row.attr("data-period-id"), // ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
         period_crud: row.attr("data-crud"), //
-
-        // ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
-        period_number: row.find('input[name="period_number"]').val(),
-        workload_planned_percent: row
-          .find('input[name="workload_planned_percent"]')
-          .val(),
+        period_number: row.find('input[name="period_number"]').val(),// ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
+        workload_planned_percent: row.find('input[name="workload_planned_percent"]').val(),
         interim_payment: row.find('input[name="interim_payment"]').val(),
-        interim_payment_percent: row
-          .find('input[name="interim_payment_percent"]')
-          .val(),
+        interim_payment_percent: row.find('input[name="interim_payment_percent"]').val(),
         remark: row.find('input[name="remark"]').val(),
         crud: row.find('input[name="crud"]').val(),
       };
       // เพิ่ม object ของแถวนี้เข้าไปใน array หลัก
-      periodDatas.push(periodRecord);
+      periodsData.push(periodRecord);
     });
 
-    console.log("Data to be sent (header):", poMain);
-    console.log("Data to be sent (periods):", periodDatas);
+    // if (dataToSend.length === 0) {
+    //   alert("ไม่มีการเปลี่ยนแปลงข้อมูลที่จะบันทึก");
+    //   return;
+    // }
 
-    const data_sent = { header: poMain, periods: periodDatas };
+    // console.log("Data to be sent (action):", action);
+    // console.log("Data to be sent (headerData):", headerData);
+    // console.log("Data to be sent (periods):", periodsData);
+    
+    const data_sent = { headerData: headerData, periods: periodsData, action: action };
+    data_sent['action'] = "save";
+    // console.log("Data to be sent:", JSON.stringify(data_sent));
+    // console.log("Data to be sent:", data_sent);
 
     $.ajax({
       url: "po_handler_api.php",

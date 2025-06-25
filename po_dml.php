@@ -105,7 +105,7 @@ require_once 'auth.php';
 
                 <div class="card-body m-0 p-0">
                   <form name="myForm" id="myForm" action="" method="post">
-                    <input type="text" class="d-none" name="po_id" id="po_id" value=<?= (isset($_REQUEST['po_id']) ? $_REQUEST['po_id'] : '[Autonumber]') ?>>
+                    <input type="text" class="d-nonex" name="po_id" id="po_id" value=<?= (isset($_REQUEST['po_id']) ? $_REQUEST['po_id'] : '') ?>>
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">

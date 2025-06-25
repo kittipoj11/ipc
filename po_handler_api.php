@@ -15,31 +15,45 @@ $pdo = $connection->getDbConnection();
 $po = new Po($pdo);
 
 
+$requestData = json_decode(file_get_contents('php://input'), true);
+$_SESSION['req data']=$requestData;
+$_SESSION['actionx']=$requestData['action'];
+exit;
 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
+if (isset($requestData['action']) && $requestData['action'] == 'save') {
+    // $_SESSION['req data']=$requestData;
+    // exit;
+    if (!isset($requestData['header']) || !isset($requestData['periods'])) {
+        throw new Exception('Invalid data structure.');
+    }
+
+    // ★★★ เรียกใช้เมธอด save เดียว จบ! ★★★
+    $savedPoId = $po->save($requestData['header'], $requestData['periods']);
+
+    $response = [
+        'status' => 'success',
+        'message' => 'บันทึกข้อมูล PO ID: ' . $savedPoId . ' เรียบร้อยแล้ว',
+        'data' => ['po_id' => $savedPoId]
+    ];
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     $id = $po->create($_REQUEST);
     header('Content-Type: application/json');
     echo json_encode($id);
-
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
     $id = $po->update($_REQUEST['po_id'], $_REQUEST);
     header('Content-Type: application/json');
     echo json_encode($id);
-
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $id = $po->delete($_REQUEST['po_id']);
     header('Content-Type: application/json');
     echo json_encode($id);
-
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
     $rs = $po->fetchAll();
     header('Content-Type: application/json');
     echo json_encode($rs);
-
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
     $rs = $po->fetchAllPeriodByPoId($_REQUEST['po_id']);
     createPeriodTable($rs);
-
 } else {
     header('Content-Type: application/json');
     echo json_encode($id);

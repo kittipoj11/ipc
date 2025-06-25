@@ -11,6 +11,7 @@ header('Content-Type: application/json');
 require_once 'class/connection_class.php';
 require_once 'class/OrderPeriodRepository.php'; // ★★★ เรียกใช้ Class ใหม่ ★★★
 
+// เตรียมโครงสร้างการตอบกลับ
 $response = ['status' => 'error', 'message' => 'Invalid Request', 'data' => null];
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -20,6 +21,7 @@ try {
     $repo = new OrderPeriodRepository($pdo);
 
     if ($method === 'POST') {
+        // --- ส่วนของการรับข้อมูลมาบันทึก ---
         $requestData = json_decode(file_get_contents('php://input'), true);
 
         if (!isset($requestData['header']) || !isset($requestData['details'])) {
@@ -37,14 +39,15 @@ try {
     }
 
     if ($method === 'GET') {
+        // --- ส่วนของการดึงข้อมูลไปแสดงตอนเปิดหน้าครั้งแรก ---
         $poId = $_GET['po_id'] ?? 0;
         if (empty($poId)) throw new Exception("PO ID is required.");
 
         $header = $repo->getHeader((int)$poId);
-        $details = $repo->getDetails((int)$poId);
 
         if (!$header) throw new Exception("PO not found.");
 
+        $details = $repo->getDetails((int)$poId);
         $response = ['status' => 'success', 'data' => ['header' => $header, 'details' => $details]];
     } elseif ($method === 'POST') {
         // --- ส่วนของการบันทึกข้อมูล ---
@@ -54,23 +57,13 @@ try {
             throw new Exception('Invalid data structure.');
         }
 
-        // ในระบบจริง poId ควรมาจาก session หรือค่าที่น่าเชื่อถือ
-        $headerData = $requestData['header'];
-        $detailsData = $requestData['details'];
-        $poId = $headerData['po_id'] ?? 0;
+        $savedPoId = $repo->save($requestData['header'], $requestData['details']);
 
-
-        if (empty($poId)) throw new Exception("PO ID is missing in header data.");
-
-        // ★★★ เรียกใช้เมธอดจาก Repository ★★★
-        $isSuccess = $repo->processBatch((int)$poId, $headerData, $detailsData);
-
-        if ($isSuccess) {
-            $response = ['status' => 'success', 'message' => 'บันทึกข้อมูลทั้งหมดเรียบร้อยแล้ว'];
-        } else {
-            // โดยปกติถ้าล้มเหลว มันจะโยน Exception ไปที่ catch block
-            $response['message'] = 'การบันทึกล้มเหลวโดยไม่ทราบสาเหตุ';
-        }
+        $response = [
+            'status' => 'success', 
+            'message' => 'บันทึกข้อมูล PO ID: ' . $savedPoId . ' เรียบร้อยแล้ว',
+            'data' => ['po_id' => $savedPoId]
+        ];
     }
 } catch (Exception $e) {
     // ดักจับ Exception ที่อาจจะโยนมาจาก Repository
