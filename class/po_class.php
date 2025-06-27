@@ -212,25 +212,20 @@ class Po
                 foreach ($deleteItems as $item) {
                     if (!empty($item['period_id'])){
                         $stmtDelete->execute([$item['period_id']]);
+                        $stmtDelete->closeCursor();
                     } 
 
-                    // ดึงข้อมูลไฟล์ที่จะลบ
+                    // // ดึงข้อมูลไฟล์ที่จะลบ
                     $sql = "SELECT file_path
-                            FROM `inspection_files` 
-                            INNER JOIN `inspection_periods`
-                                ON `inspection_files`.`inspection_id` = `inspection_periods`.`inspection_id`
-                            WHERE `period_id` = :period_id";
+                                FROM `inspection_files` 
+                                INNER JOIN `inspection_periods`
+                                    ON `inspection_files`.`inspection_id` = `inspection_periods`.`inspection_id`
+                                WHERE `period_id` = :period_id";
                             
-                    $stmtDeleteFile = $this->db->prepare($sql);
-                    $stmtDeleteFile->bindParam(':period_id', $period_id, PDO::PARAM_INT);
-                    $stmtDeleteFile->execute();
-                    $rs = $stmtDeleteFile->fetchAll();
-
-                    $stmtDeleteFile->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-                    $stmtDeleteFile->bindParam(':period_id', $period_id, PDO::PARAM_INT);
-
-                    $stmtDeleteFile->execute();
-                    $stmtDeleteFile->closeCursor();
+                    $stmt = $this->db->prepare($sql);
+                    $stmt->bindParam(':period_id', $item['period_id'], PDO::PARAM_INT);
+                    $stmt->execute();
+                    $rs = $stmt->fetchAll();
 
                     // ลบไฟล์ออกจาก server
                     foreach ($rs as $row) {
@@ -242,6 +237,7 @@ class Po
                 }
             }
 
+// ************************* ตรวจสอบต่อไป ****************************
             if (!empty($updateItems)) {
                 $stmtUpdate = $this->db->prepare(
                     "UPDATE po_periods SET period_no = ?, work_percent = ?, interim_payments = ?, remarks = ? WHERE period_id = ?"
