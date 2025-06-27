@@ -88,31 +88,30 @@ class Po
     {
         $this->db->beginTransaction();
         try {
-            $poId = $headerData['po_id'] ?? 0;
-
-
-            // 1. ตรวจสอบและจัดการข้อมูล Header (INSERT หรือ UPDATE)
-            if (empty($poId)) {
-                // --- WORKFLOW ---
-                // กำหนดค่า default สำหรับ workflow step ของ inspection และ ipc (อาจจะมีหน้าจอ config) โดยที่
-                // 1. ทำการสร้าง inspection_period_approvals เมื่อมีการ save po เรียบร้อยแล้ว
-                // 2. ทำการสร้าง ipc_period_approvals เมื่อมีการ approve ใน step สุดท้ายของ inspection ในแต่ละ period  
-                // workflow_id = 1 สร้าง inspection_period_approvals
-                // workflow_id = 2 สร้าง ipc_period_approvals
-                $workflow_id = 1; //ในที่นี้กำหนด workflow_id = 1 ของการสร้าง inspection_period_approvals
-                $sql = "SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`
+            // --- WORKFLOW ---
+            // กำหนดค่า default สำหรับ workflow step ของ inspection และ ipc (อาจจะมีหน้าจอ config) โดยที่
+            // 1. ทำการสร้าง inspection_period_approvals เมื่อมีการ save po เรียบร้อยแล้ว
+            // 2. ทำการสร้าง ipc_period_approvals เมื่อมีการ approve ใน step สุดท้ายของ inspection ในแต่ละ period  
+            // workflow_id = 1 สร้าง inspection_period_approvals
+            // workflow_id = 2 สร้าง ipc_period_approvals
+            $workflow_id = 1; //ในที่นี้กำหนด workflow_id = 1 ของการสร้าง inspection_period_approvals
+            $sql = "SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`
                         FROM `workflow_steps`
                         WHERE `workflow_id` = :workflow_id
                         ORDER BY approval_level asc";
 
-                $stmtWorkflowSteps = $this->db->prepare($sql);
-                $stmtWorkflowSteps->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
-                $stmtWorkflowSteps->execute();
-                $rsWorkflowSteps = $stmtWorkflowSteps->fetchAll();
+            $stmtWorkflowSteps = $this->db->prepare($sql);
+            $stmtWorkflowSteps->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
+            $stmtWorkflowSteps->execute();
+            $rsWorkflowSteps = $stmtWorkflowSteps->fetchAll();
 
+            // กำหนดค่าให้ตัวแปร $poId ที่ส่งมา
+            $poId = $headerData['po_id'] ?? 0;
+
+            // 1. ตรวจสอบและจัดการข้อมูล Header (INSERT หรือ UPDATE)
+            if (empty($poId)) {//ถ้าไม่มีค่าหรือมีค่าเป็น 0
                 // --- CREATE MODE ---
-                // ถ้าจะสร้าง id มี prefix ด้วยตนเอง สมมติให้ prefix เป็น PO จะได้ $po_id = uniqid('PO', true);
-
+                // ถ้าจะสร้าง id มี prefix ด้วยตนเอง สมมติให้ prefix เป็น PO เช่น $po_id = uniqid('PO', true);
 
                 // INSERT INTO po_main"
                 $sql = "INSERT INTO `po_main`(`po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`
@@ -145,7 +144,7 @@ class Po
 
                 $stmtPoMain->execute();
 
-                // ดึง ID ของ PO ที่เพิ่งสร้างใหม่
+                // กำหนดค่าให้ตัวแปร $poId จาก ID ของ PO ที่เพิ่งสร้างใหม่ด้วย lastInsertId()
                 $poId = $this->db->lastInsertId();
             } else {
                 // --- UPDATE MODE ---
@@ -156,8 +155,8 @@ class Po
                         , `working_name_th`= :working_name_th
                         , `working_name_en`= :working_name_en
                         , `is_include_vat`= :is_include_vat
-                        , `contract_value`= :contract_value
                         , `contract_value_before`= :contract_value_before
+                        , `contract_value`= :contract_value
                         , `vat`= :vat
                         , `is_deposit`= :is_deposit
                         , `deposit_percent`= :deposit_percent
@@ -169,7 +168,7 @@ class Po
                         WHERE `po_id` = :po_id";
 
                 $stmtPoMain = $this->db->prepare($sql);
-                $stmtPoMain->bindParam(':po_number', $headerData['po_number'], PDO::PARAM_STR);
+                // $stmtPoMain->bindParam(':po_number', $headerData['po_number'], PDO::PARAM_STR);
                 $stmtPoMain->bindParam(':project_name', $headerData['project_name'], PDO::PARAM_STR);
                 $stmtPoMain->bindParam(':supplier_id', $headerData['supplier_id'],  PDO::PARAM_INT);
                 $stmtPoMain->bindParam(':location_id', $headerData['location_id'], PDO::PARAM_INT);
@@ -186,11 +185,9 @@ class Po
                 $stmtPoMain->bindParam(':working_date_to', $headerData['working_date_to'], PDO::PARAM_STR);
                 $stmtPoMain->bindParam(':working_day', $headerData['working_day'], PDO::PARAM_INT);
                 $stmtPoMain->bindParam(':number_of_period', $number_of_period, PDO::PARAM_INT);
-                $stmtPoMain->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
-                $stmtPoMain->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
+                // $stmtPoMain->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
+                // $stmtPoMain->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
                 $stmtPoMain->bindParam(':po_id', $poId, PDO::PARAM_INT);
-            
-
                 $stmtPoMain->execute();
             }
 
@@ -201,27 +198,28 @@ class Po
                 throw new Exception("Could not create or find a valid PO ID.");
             }
 
-            // 2. จัดการข้อมูล Periods (D-U-C Logic)
+            // 2. จัดการข้อมูล Periods ตามลำดับ(D-U-C Logic)
             $deleteItems = array_filter($periodsData, fn($item) => ($item['period_crud'] ?? 'none') === 'delete');
             $updateItems = array_filter($periodsData, fn($item) => ($item['period_crud'] ?? 'none') === 'update');
             $createItems = array_filter($periodsData, fn($item) => ($item['period_crud'] ?? 'none') === 'create');
 
             // 3. ทำงานตามลำดับ D-U-C
+            // 3.1 ************************* ตรวจสอบ deleteItems ****************************
             if (!empty($deleteItems)) {
                 $stmtDelete = $this->db->prepare("DELETE FROM po_periods WHERE period_id = :period_id");
                 foreach ($deleteItems as $item) {
-                    if (!empty($item['period_id'])){
+                    if (!empty($item['period_id'])) {
                         $stmtDelete->execute([$item['period_id']]);
                         $stmtDelete->closeCursor();
-                    } 
+                    }
 
-                    // // ดึงข้อมูลไฟล์ที่จะลบ
+                    // ดึงข้อมูลไฟล์ที่จะลบ
                     $sql = "SELECT file_path
-                                FROM `inspection_files` 
-                                INNER JOIN `inspection_periods`
-                                    ON `inspection_files`.`inspection_id` = `inspection_periods`.`inspection_id`
-                                WHERE `period_id` = :period_id";
-                            
+                            FROM `inspection_files` 
+                            INNER JOIN `inspection_periods`
+                                ON `inspection_files`.`inspection_id` = `inspection_periods`.`inspection_id`
+                            WHERE `period_id` = :period_id";
+
                     $stmt = $this->db->prepare($sql);
                     $stmt->bindParam(':period_id', $item['period_id'], PDO::PARAM_INT);
                     $stmt->execute();
@@ -237,18 +235,56 @@ class Po
                 }
             }
 
-// ************************* ตรวจสอบต่อไป ****************************
+            // 3.2 ************************* ตรวจสอบ updateItems ****************************
             if (!empty($updateItems)) {
-                $stmtUpdate = $this->db->prepare(
-                    "UPDATE po_periods SET period_no = ?, work_percent = ?, interim_payments = ?, remarks = ? WHERE period_id = ?"
-                );
+                // UPDATE po_periods
+                $sql = "UPDATE `po_periods`
+                            SET `workload_planned_percent` = :workload_planned_percent
+                            , `interim_payment` = :interim_payment
+                            , `interim_payment_percent` = :interim_payment_percent
+                            , `remark` = :remark
+                            WHERE `po_id` = :po_id
+                                AND `period_id` = :period_id";
+                $stmtPoPeriodUpdate = $this->db->prepare($sql);
+
+                // UPDATE inspection_periods
+                $sql = "UPDATE `inspection_periods`
+                                SET `workload_planned_percent` = :workload_planned_percent
+                                , `interim_payment` = :interim_payment
+                                , `interim_payment_percent` = :interim_payment_percent
+                                , `is_paid` = :is_paid
+                                , `is_retention` = :is_retention
+                                WHERE `po_id` = :po_id
+                                    AND `period_id` = :period_id";
+                $stmtInspectionPeriodUpdate = $this->db->prepare($sql);
+
                 foreach ($updateItems as $item) {
                     if (!empty($item['period_id'])) {
-                        $stmtUpdate->execute([$item['period_no'], $item['work_percent'], $item['interim_payments'], $item['remarks'], $item['period_id']]);
+                        $stmtPoPeriodUpdate->bindParam(':po_id', $poId, PDO::PARAM_INT);
+                        $stmtPoPeriodUpdate->bindParam(':period_id', $item['period_id'], PDO::PARAM_INT);
+                        $stmtPoPeriodUpdate->bindParam(':workload_planned_percent', $item['workload_planned_percents'],  PDO::PARAM_STR);
+                        $stmtPoPeriodUpdate->bindParam(':interim_payment', $item['interim_payments'],  PDO::PARAM_STR);
+                        $stmtPoPeriodUpdate->bindParam(':interim_payment_percent', $item['interim_payment_percents'], PDO::PARAM_STR);
+                        $stmtPoPeriodUpdate->bindParam(':remark', $item['remarks'], PDO::PARAM_STR);
+
+                        $stmtPoPeriodUpdate->execute();
+                        $stmtPoPeriodUpdate->closeCursor();
+
+                        $stmtInspectionPeriodUpdate->bindParam(':po_id', $po_id, PDO::PARAM_INT);
+                        $stmtInspectionPeriodUpdate->bindParam(':period_id', $item['period_id'], PDO::PARAM_INT);
+                        $stmtInspectionPeriodUpdate->bindParam(':workload_planned_percent', $item['workload_planned_percents'],  PDO::PARAM_STR);
+                        $stmtInspectionPeriodUpdate->bindParam(':interim_payment', $item['interim_payments'],  PDO::PARAM_STR);
+                        $stmtInspectionPeriodUpdate->bindParam(':interim_payment_percent', $item['interim_payment_percents'], PDO::PARAM_STR);
+                        $stmtInspectionPeriodUpdate->bindParam(':is_paid', 0, PDO::PARAM_BOOL);
+                        $stmtInspectionPeriodUpdate->bindParam(':is_retention', 0, PDO::PARAM_BOOL);
+
+                        $stmtInspectionPeriodUpdate->execute();
+                        $stmtInspectionPeriodUpdate->closeCursor();
                     }
                 }
             }
 
+            // 3.3 ************************* ตรวจสอบ createItems ****************************
             if (!empty($createItems)) {
                 $stmtCreate = $this->db->prepare(
                     "INSERT INTO po_periods (po_id, period_no, work_percent, interim_payments, remarks) VALUES (?, ?, ?, ?, ?)"
