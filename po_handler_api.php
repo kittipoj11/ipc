@@ -16,33 +16,23 @@ $po = new Po($pdo);
 
 
 $requestData = json_decode(file_get_contents('php://input'), true);
-$_SESSION['req data']=$requestData;
-$_SESSION['actionx']=$requestData['action'];
-exit;
+// $_SESSION['req data']=$requestData;
+
 
 if (isset($requestData['action']) && $requestData['action'] == 'save') {
-    // $_SESSION['req data']=$requestData;
-    // exit;
-    if (!isset($requestData['header']) || !isset($requestData['periods'])) {
+    if (!isset($requestData['headerData']) || !isset($requestData['periodsData'])) {
         throw new Exception('Invalid data structure.');
     }
-
     // ★★★ เรียกใช้เมธอด save เดียว จบ! ★★★
-    $savedPoId = $po->save($requestData['header'], $requestData['periods']);
+    $savedPoId = $po->save($requestData['headerData'], $requestData['periodsData']);
+    $_SESSION['savedPoId']=$savedPoId;
 
     $response = [
         'status' => 'success',
         'message' => 'บันทึกข้อมูล PO ID: ' . $savedPoId . ' เรียบร้อยแล้ว',
         'data' => ['po_id' => $savedPoId]
     ];
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
-    $id = $po->create($_REQUEST);
-    header('Content-Type: application/json');
-    echo json_encode($id);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
-    $id = $po->update($_REQUEST['po_id'], $_REQUEST);
-    header('Content-Type: application/json');
-    echo json_encode($id);
+    echo "1";
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $id = $po->delete($_REQUEST['po_id']);
     header('Content-Type: application/json');

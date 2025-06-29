@@ -1,6 +1,6 @@
 $(document).ready(function () {
   // $('.btnDelete').on('click', function() { // แบบนี้ -> ไม่สามารถใช้งานได้เมื่อสร้างปุ่มขึ้นมาที่หลัง
-  $("#tableMain #tbody").on("click", ".btnDelete", function (e) {
+  $("#tbody").on("click", ".btnDelete", function (e) {
     e.preventDefault();
 
     const tr = $(this).parents("tr");
@@ -70,21 +70,21 @@ $(document).ready(function () {
     });
   });
 
-  $("#tableMain #tbody").on("click", ".btnEdit", function (e) {
+  $("#tbody").on("click", ".btnEdit", function (e) {
     const po_id = $(this).parents("tr").data("id");
     // window.location.href = "po_edit.php?po_id=" + po_id;
     window.location.href = "po_dml.php?action=update" + "&po_id=" + po_id;
   });
 
   // $(document).on("click", ".tdMain:has(a)", function (e) {
-  $("#tableMain #tbody").on("click", "a.po_number", function (e) {
+  $("#tbody").on("click", "a.po_number", function (e) {
     e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
     const po_id = $(this).parents("tr").data("id");
     // window.location.href = "po_edit.php?po_id=" + po_id;
     window.location.href = "po_dml.php?action=update" + "&po_id=" + po_id;
   });
 
-  $("#tableMain #tbody").on("click", ".tdMain:not(:has(a), .action)", function (e) {
+  $("#tbody").on("click", ".tdMain:not(:has(a), .action)", function (e) {
       //, (comma) ภายใน :not(...): ใช้เพื่อรวมเงื่อนไขหลายอย่าง ในที่นี้คือ :has(a), :has(.action)
       // หมายความว่า :not() จะกรอง <td> ที่ ไม่มีทั้ง <a> และ ไม่มีทั้ง .action
       e.preventDefault();

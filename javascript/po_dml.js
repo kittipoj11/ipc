@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  const responseMessage = $("#response-message");
+
   function showMessage(message, isSuccess) {
     responseMessage
       .text(message)
@@ -9,29 +11,47 @@ $(document).ready(function () {
       .fadeOut();
   }
 
+  // --- ฟังก์ชันสำหรับโหลดข้อมูลเริ่มต้น ---
+  // แก้ไขส่วนนี้ ****************************************************************************
+  function loadPeriods() {
+    const tbody = $("#tbody-period");
+    responseMessage.text("");
+    tbody.html('<tr><td colspan="5">กำลังโหลดข้อมูล...</td></tr>');
+    // console.log($("#po_id").val());
+    // return;
+    const data_sent = {
+      po_id: $("#po_id").val(),
+    };
+
+    $.ajax({
+      url: "po_handler_api.php",
+      type: "POST",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify(data_sent),
+    })
+      .done(function (result) {
+        tbody.empty(); // ล้างข้อมูลเก่า
+        if (result.status === "success" && result.data.length > 0) {
+          result.data.forEach(function (period) {
+            appendPeriodRow(period);
+          });
+        } else {
+          tbody.html('<tr><td colspan="5">ไม่พบข้อมูลงวดงาน</td></tr>');
+        }
+      })
+      .fail(function () {
+        tbody.html(
+          '<tr><td colspan="5">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>'
+        );
+      });
+  }
+
   $("#myForm").on("submit", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();
-    const action = { action: "save" };
-    const headerData = {
-      po_id: $("#po_id").val(),
-      po_number: $("#po_number").val(),
-      project_name: $("#project_name").val(),
-      supplier_id: $("#supplier_id").val(),
-      location_id: $("#location_id").val(),
-      working_name_th: $("#working_name_th").val(),
-      working_name_en: $("#working_name_en").val(),
-      contract_value_before: $("#contract_value_before").val() ?? 0,
-      contract_value: $("#contract_value").val() ?? 0,
-      vat: $("#vat").val() ?? 0,
-      is_include_vat: 1,
-      is_deposit: $("#is_deposit").val(),
-      $deposit_value: floatval($("#deposit_percent").val() ?? 0) * floatval($("#contract_value").val() ?? 0) / 100,
-      working_date_from: $("#working_date_from").val(),
-      working_date_to: $("#working_date_to").val(),
-      working_day: $("#working_day").val(),
-    };
-
+    // const action = { action: "save" };
+    const action = "save";
     const periodsData = [];
 
     $("#tbody-period tr").each(function () {
@@ -42,10 +62,14 @@ $(document).ready(function () {
       const periodRecord = {
         period_id: row.attr("data-period-id"), // ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
         period_crud: row.attr("data-crud"), //
-        period_number: row.find('input[name="period_number"]').val(),// ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
-        workload_planned_percent: row.find('input[name="workload_planned_percent"]').val(),
+        period_number: row.find('input[name="period_number"]').val(), // ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
+        workload_planned_percent: row
+          .find('input[name="workload_planned_percent"]')
+          .val(),
         interim_payment: row.find('input[name="interim_payment"]').val(),
-        interim_payment_percent: row.find('input[name="interim_payment_percent"]').val(),
+        interim_payment_percent: row
+          .find('input[name="interim_payment_percent"]')
+          .val(),
         remark: row.find('input[name="remark"]').val(),
         crud: row.find('input[name="crud"]').val(),
       };
@@ -53,27 +77,83 @@ $(document).ready(function () {
       periodsData.push(periodRecord);
     });
 
+    const headerData = {
+      po_id: $("#po_id").val(),
+      po_number: $("#po_number").val(),
+      project_name: $("#project_name").val(),
+      supplier_id: $("#supplier_id").val(),
+      location_id: $("#location_id").val(),
+      working_name_th: $("#working_name_th").val(),
+      working_name_en: $("#working_name_en").val(),
+      contract_value_before: $("#contract_value_before").val() ?? 0,
+      contract_value: parseFloat($("#contract_value").val() ?? 0),
+      vat: $("#vat").val() ?? 0,
+      is_include_vat: 1,
+      is_deposit: $("#is_deposit").val(),
+      deposit_value:
+        (parseFloat($("#deposit_percent").val() ?? 0) *
+          parseFloat($("#contract_value").val() ?? 0)) /
+        100,
+      working_date_from: $("#working_date_from").val(),
+      working_date_to: $("#working_date_to").val(),
+      working_day: parseFloat($("#working_day").val() ?? 0),
+      number_of_period: $("#tbody-period tr").not('[data-crud="delete"]')
+        .length, //จำนวนตรงนี้จะไม่เอารายการที่ลบไป
+    };
+
     // if (dataToSend.length === 0) {
     //   alert("ไม่มีการเปลี่ยนแปลงข้อมูลที่จะบันทึก");
     //   return;
     // }
 
+    // console.log("Data to be sent (number_of_period):", periodsData.length);
     // console.log("Data to be sent (action):", action);
     // console.log("Data to be sent (headerData):", headerData);
     // console.log("Data to be sent (periods):", periodsData);
-    
-    const data_sent = { headerData: headerData, periods: periodsData, action: action };
-    data_sent['action'] = "save";
+
+    const data_sent = {
+      headerData: headerData,
+      periodsData: periodsData,
+      action: action,
+    };
+    // data_sent['action'] = "save";
     // console.log("Data to be sent:", JSON.stringify(data_sent));
     // console.log("Data to be sent:", data_sent);
-
+    // return;
     $.ajax({
       url: "po_handler_api.php",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(data_sent),
+      //   success: function (result) {
+      //     // console.log(`result: ${result}`);
+      //     Swal.fire({
+      //       icon: "success",
+      //       title: "Data saved successfully",
+      //       color: "#716add",
+      //       allowOutsideClick: false,
+      //       background: "black",
+      //       // backdrop: `
+      //       //                     rgba(0,0,123,0.4)
+      //       //                     url("_images/paw.gif")
+      //       //                     left bottom
+      //       //                     no-repeat
+      //       //                     `,
+      //       // showConfirmButton: false,
+      //       // timer: 15000
+      //     }).then((result) => {
+      //       if (result.isConfirmed) {
+      //         window.location.href = "po.php";
+      //         // window.location.reload();
+      //       }
+      //     });
+      //     // window.location.href = 'main.php?page=open_area_schedule';
+      //   },
+      // });
     })
       .done(function (result) {
+        // console.log(`result: ${result}`);
+        responseMessage.text(result.message).css("color", "green");
         Swal.fire({
           icon: "success",
           title: "Data saved successfully",
@@ -106,15 +186,15 @@ $(document).ready(function () {
   $("#tbody-period").on("input", "input", function () {
     const row = $(this).closest("tr");
     // ถ้าแถวไม่ใช่แถวใหม่ (สถานะเป็น select) ให้เปลี่ยนเป็น update
-    // console.log(`1:${row.attr("data-crud")}`);
     if (row.attr("data-crud") == "select") {
       row.attr("data-crud", "update");
       row.find('input[name="crud"]').val("update");
-      // console.log(`2:${row.attr("data-crud")}`);
-      // row.find('input[name="crud"]').val("update");
-      // console.log(row.find('input[name="crud"]').val());
     }
-    // console.log(`3:${row.attr("data-crud")}`);
+    console.log(
+      `row3 = ${row.attr("data-crud")} input=${row
+        .find('input[name="crud"]')
+        .val()}`
+    );
   });
   /*Note:
   เมื่อใดก็ตามที่ผู้ใช้ พิมพ์หรือแก้ไขข้อมูล ในช่อง <input> ใดๆ ในตาราง โค้ดนี้จะทำงานทันทีเพื่อตรวจสอบสถานะของ "แถว" (<tr>) นั้นๆ 
@@ -146,33 +226,7 @@ $(document).ready(function () {
   //   $(this).parents("tr").remove();
   // });
 
-  // $("#btnDeleteLast").click(function () {
-  //   // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-period
-  //   // $("#tbody-period tr[data-crud!='delete']:last")
-  //   //   // $("#tbody-period tr:not(:first)[crud!='d']:last")
-  //   //   .attr("crud", "d")
-  //   //   .addClass("d-none")
-
-  //   //   .find("td input.crud")
-  //   //   .val("d")
-  //   //   .end();
-
-  //   // const row = $(this).closest("tr");
-  //   const row =$("#tbody-period tr[data-crud!='delete']:last");
-  //   console.log(row.data("crud"));
-  //   if (confirm("คุณต้องการลบงวดงานรายการสุดท้ายใช่หรือไม่?")) {
-  //     // ถ้าเป็นแถวที่ยังไม่เคยบันทึก ให้ลบออกจากหน้าจอเลย
-  //     if (row.data("crud") == "create") {
-  //       row.remove();
-  //     } else {
-  //       // ถ้าเป็นแถวที่มีข้อมูลอยู่แล้ว ให้ซ่อนและเปลี่ยนสถานะเป็น 'delete'
-  //       // row.addClass('d-none').data("crud", "delete");
-  //       row.data("crud", "delete");
-  //     }
-  //   }
-  //   console.log(row.data("crud"));
-  // });
-  // การเปลี่ยนแปลงค่า data-crud ด้วย .data() จะไม่ส่งผลต่อ Selector โดยตรงในทันทีที่ตัว Selector ถูกเรียกใช้อีกครั้งในรอบการทำงานเดียวกันของฟังก์ชัน
+  // Note: การเปลี่ยนแปลงค่า data-crud ด้วย .data() จะไม่ส่งผลต่อ Selector โดยตรงในทันทีที่ตัว Selector ถูกเรียกใช้อีกครั้งในรอบการทำงานเดียวกันของฟังก์ชัน
 
   $("#btnDeleteLast").click(function () {
     const row = $("#tbody-period tr[data-crud!='delete']:last");
@@ -182,16 +236,21 @@ $(document).ready(function () {
       if (row.attr("data-crud") == "create") {
         row.remove();
       } else {
+        row.find('input[name="crud"]').val("delete");
         row.addClass("d-none").attr("data-crud", "delete");
         // row.attr("data-crud", "delete");
       }
     }
+    console.log(
+      `row3 = ${row.attr("data-crud")} input=${row
+        .find('input[name="crud"]')
+        .val()}`
+    );
     // console.log(row.attr("data-crud"));
   });
 
   $("#btnAdd").click(function () {
     let period_number;
-    // console.log($(".firstTr:last").find(".period:last").val());
     // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
     // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
     if ($("#tbody-period").has("tr[data-crud!='delete']").length > 0) {
@@ -216,22 +275,18 @@ $(document).ready(function () {
         .end()
 
         .find('input[name="workload_planned_percent"]')
-        .val("")
+        .val("0")
         .end()
 
         .find('input[name="interim_payment"]')
-        .val("")
+        .val("0")
         .end()
 
         .find('input[name="interim_payment_percent"]')
-        .val("")
+        .val("0")
         .end()
 
         .find('input[name="remark"]')
-        .val("")
-        .end()
-
-        .find('input[name="period_id"]')
         .val("")
         .end()
 
@@ -244,12 +299,11 @@ $(document).ready(function () {
       // Create the new tr element using jQuery
       const firstTr = `<tr data-crud='create' data-period-id=''>
                             <td class='input-group-sm p-0'><input type='number' name='period_number' class='form-control period_number' value='1' readonly></td>
-                            <td class='input-group-sm p-0'><input type='number' name='workload_planned_percent' class='form-control workload_planned_percent'></td>
-                            <td class='input-group-sm p-0'><input type='number' name='interim_payment' class='form-control interim_payment'></td>
-                            <td class='input-group-sm p-0'><input type='number' name='interim_payment_percent' class='form-control interim_payment_percent'></td>
+                            <td class='input-group-sm p-0'><input type='number' name='workload_planned_percent' class='form-control workload_planned_percent' value='0'></td>
+                            <td class='input-group-sm p-0'><input type='number' name='interim_payment' class='form-control interim_payment' value='0'></td>
+                            <td class='input-group-sm p-0'><input type='number' name='interim_payment_percent' class='form-control interim_payment_percent' value='0'></td>
                             <td class='input-group-sm p-0'><input type='text' name='remark' class='form-control remark'></td>
                             <td class='input-group-sm p-0'><input type='text' name='crud' class='form-control crud' value='create'></td>
-                            <td class='input-group-sm p-0 d-nonex'><input type='text' name='period_id' class='form-control period_id' readonly></td>
                           </tr>`;
 
       $("#tbody-period").append(firstTr);
@@ -304,7 +358,9 @@ $(document).ready(function () {
       var working_day = Math.ceil(timeDiff / (1000 * 3600 * 24));
       $("#working_day").val(working_day + 1);
     } else {
-      $("#working_day").val("");
+      $("#working_day").val("0");
     }
   });
+
+  // loadPeriods();
 });

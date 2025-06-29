@@ -90,6 +90,7 @@ require_once 'auth.php';
           <h6 class="m-1 fw-bold text-uppercase"><?= $content_header ?></h6>
         </div>
         <!-- /.container-fluid -->
+        <div id="response-message">x</div>
       </section>
 
       <!-- Main content -->
@@ -238,7 +239,6 @@ require_once 'auth.php';
                               <th class="p-1">เงื่อนไขการจ่ายเงิน</th>
                               <th class="p-1 d-none" width="5%">Action</th>
                               <th class="p-1" width="5%">Crud</th>
-                              <th class="p-1 d-nonex" width="5%">period_id</th>
                             </tr>
                           </thead>
                           <tbody id="tbody-period">
@@ -248,12 +248,11 @@ require_once 'auth.php';
                                 <tr data-crud='select' data-period-id=<?php echo isset($row['period_id']) ? htmlspecialchars($row['period_id']) : ''; ?>>
                                   <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
                                   <td class="input-group-sm p-0"><input type="number" name="period_number" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly></td>
-                                  <td class="input-group-sm p-0"><input type="number"name="workload_planned_percent" step="0.01"  class="form-control workload_planned_percent" value="<?php echo isset($row['workload_planned_percent']) ? htmlspecialchars($row['workload_planned_percent']) : ''; ?>"></td>
-                                  <td class="input-group-sm p-0"><input type="number" name="interim_payment" class="form-control interim_payment" value="<?php echo isset($row['interim_payment']) ? htmlspecialchars($row['interim_payment']) : ''; ?>"></td>
-                                  <td class="input-group-sm p-0"><input type="number" name="interim_payment_percent" step="0.01" class="form-control interim_payment_percent" value="<?php echo isset($row['interim_payment_percent']) ? htmlspecialchars($row['interim_payment_percent']) : ''; ?>"></td>
+                                  <td class="input-group-sm p-0"><input type="number" name="workload_planned_percent" step="0.01" class="form-control workload_planned_percent" value="<?php echo isset($row['workload_planned_percent']) ? htmlspecialchars($row['workload_planned_percent']) : '0'; ?>"></td>
+                                  <td class="input-group-sm p-0"><input type="number" name="interim_payment" class="form-control interim_payment" value="<?php echo isset($row['interim_payment']) ? htmlspecialchars($row['interim_payment']) : '0'; ?>"></td>
+                                  <td class="input-group-sm p-0"><input type="number" name="interim_payment_percent" step="0.01" class="form-control interim_payment_percent" value="<?php echo isset($row['interim_payment_percent']) ? htmlspecialchars($row['interim_payment_percent']) : '0'; ?>"></td>
                                   <td class="input-group-sm p-0"><input type="text" name="remark" class="form-control remark" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>"></td>
                                   <td class="input-group-sm p-0"><input type="text" name="crud" class="form-control crud" value="select"></td>
-                                  <td class="input-group-sm p-0 d-nonex"><input type="text" name="period_id" class="form-control period_id" value="<?php echo isset($row['period_id']) ? htmlspecialchars($row['period_id']) : ''; ?>" readonly></td>
                                 </tr>
                             <?php }
                             } ?>

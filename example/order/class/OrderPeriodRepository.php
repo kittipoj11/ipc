@@ -105,4 +105,22 @@ class OrderPeriodRepository
             throw $e;
         }
     }
+
+    public function delete(int $poId): bool
+    {
+        // เนื่องจากเราตั้งค่า ON DELETE CASCADE ไว้
+        // เราจึงสามารถลบแค่จากตารางแม่ `purchase_orders` ได้โดยตรง
+        // แล้วฐานข้อมูลจะลบข้อมูลใน order_items และ order_periods ที่เกี่ยวข้องให้เอง
+
+        $sql = "DELETE FROM purchase_orders WHERE po_id = ?";
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            // execute() จะคืนค่า true หากสำเร็จ
+            return $stmt->execute([$poId]);
+        } catch (Exception $e) {
+            // โยน Exception ออกไปให้ Controller จัดการ
+            throw $e;
+        }
+    }
 }
