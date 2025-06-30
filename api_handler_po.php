@@ -35,17 +35,17 @@ if (isset($requestData['action']) && $requestData['action'] == 'save') {
     echo "1";
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete') {
     $id = $po->delete($_REQUEST['po_id']);
-    header('Content-Type: application/json');
+    // header('Content-Type: application/json');//ประกาศอยู่ด้านบนแล้ว
     echo json_encode($id);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
     $rs = $po->fetchAll();
-    header('Content-Type: application/json');
+    // header('Content-Type: application/json');//ประกาศอยู่ด้านบนแล้ว
     echo json_encode($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
     $rs = $po->fetchAllPeriodByPoId($_REQUEST['po_id']);
     createPeriodTable($rs);
 } else {
-    header('Content-Type: application/json');
+    // header('Content-Type: application/json');//ประกาศอยู่ด้านบนแล้ว
     echo json_encode($id);
 }
 // }

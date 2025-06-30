@@ -1,23 +1,25 @@
 $(document).ready(function () {
-
   $("#username").val("");
   $("#password").val("");
 
   $("#frmLogin").submit(function (e) {
     e.preventDefault();
 
-    let username = $("#username").val();
-    let password = $("#password").val();
+    const data_sent = {
+      username: $("#username").val(),
+      password: $("#password").val(),
+    };
+
+    console.log(data_sent);
+    // return;
     $.ajax({
-      url: "check_login.php",
-      data: {
-        username: username,
-        password: password,
-      },
-      method: "POST",
-      datatype: "json",
-      success: function (response) {
-        if (response) {
+      url: "api_handler_role.php",
+      type: "POST",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify(data_sent),
+    }).done(function(result){
+        if (result) {
           // return;
           window.location = "dashboard.php";
         } else {
@@ -32,21 +34,18 @@ $(document).ready(function () {
             left top
             no-repeat
             `,
-            // confirmButtonText: "555",
-            // showConfirmButton: false,
-            // timer: 1500
           }).then((result) => {
             if (result.isConfirmed) {
               window.location = "login.php";
             }
           });
         }
-      },
-      error: function (xhr, status, error) {
-        console.error("เกิดข้อผิดพลาดในการเชื่อมต่อ:", error);
-        $("#loginError").text("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
-      },
-    });
+    })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        console.error("เกิดข้อผิดพลาดในการเชื่อมต่อ:", errorThrown);
+        alert('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์: ' + textStatus)
+        // $("#loginError").text("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
+      });
   });
 
   $("#frmMemberRegistration").submit(function (e) {

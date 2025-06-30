@@ -303,7 +303,7 @@ require_once 'config.php';
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form name="frmLogin" id="frmLogin" action="check_login.php" method="POST">
+                        <form name="frmLogin" id="frmLogin" action="api_handler_role.php" method="POST">
                             <div class="col-sm-12 d-none d-md-block mb-4" id="image-sub">
                                 <img src="_images/impact-muang-thong-thani.png" class="img-fluid rounded-2" />
                             </div>

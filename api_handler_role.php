@@ -1,22 +1,33 @@
 <?php
 @session_start();
-require_once 'config.php';
-require_once 'class/connection_class.php';
-require_once 'class/user_class.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+header('Content-Type: application/json');
 
 function buildMenuForRole(PDO $pdo, int $role_id): array
 {
-    $sql = <<<EOD
-                SELECT m.`id`, m.`parent_id`, m.`title`, m.`url`, m.`icon`, m.`order_num`
-                FROM menu_items m
-                JOIN role_menu_permissions p ON m.id = p.menu_item_id
-                WHERE p.role_id = :role_id
-                ORDER BY m.parent_id, m.order_num
-            EOD;
+    $sql = "SELECT m.`id`, m.`parent_id`, m.`title`, m.`url`, m.`icon`, m.`order_num`
+            FROM menu_items m
+            JOIN role_menu_permissions p ON m.id = p.menu_item_id
+            WHERE p.role_id = :role_id
+            ORDER BY m.parent_id, m.order_num";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['role_id' => $role_id]);
     $menuItems = $stmt->fetchAll();
+    /*
+        // จะได้ข้อมูลแบบนี้
+        $menuItems = [
+        0 => ['id' => 1, 'parent_id' => NULL, 'title' => 'แดชบอร์ด', ...],
+        1 => ['id' => 2, 'parent_id' => NULL, 'title' => 'จัดการบทความ', ...],
+        2 => ['id' => 5, 'parent_id' => NULL, 'title' => 'จัดการผู้ใช้', ...],
+        3 => ['id' => 6, 'parent_id' => NULL, 'title' => 'ตั้งค่าระบบ', ...],
+        4 => ['id' => 3, 'parent_id' => 2,    'title' => 'บทความทั้งหมด', ...],
+        5 => ['id' => 4, 'parent_id' => 2,    'title' => 'เขียนบทความใหม่', ...]
+        ];
+    */
 
     // สร้าง Array โดยใช้ id ของเมนูเป็น Key เพื่อให้ง่ายต่อการค้นหา
     $itemsById = [];
@@ -26,6 +37,7 @@ function buildMenuForRole(PDO $pdo, int $role_id): array
         $itemsById[$item['id']]['sub_menus'] = []; // เตรียม Array สำหรับเมนูย่อย
     }
     /*
+        // จะได้ข้อมูลแบบนี้
         $itemsById = [
         1 => ['id' => 1, 'parent_id' => NULL, 'title' => 'แดชบอร์ด',       'sub_menus' => []],
         2 => ['id' => 2, 'parent_id' => NULL, 'title' => 'จัดการบทความ',   'sub_menus' => []],
@@ -42,8 +54,10 @@ function buildMenuForRole(PDO $pdo, int $role_id): array
     foreach ($itemsById as $id => &$item) { // ใช้ & เพื่ออ้างอิงถึง Array ต้นฉบับ
         //เป็นการเช็คว่า "ฉันมีแม่หรือไม่?" (parent_id ไม่ใช่ค่าว่าง)
         if ($item['parent_id'] && isset($itemsById[$item['parent_id']])) {
+            // ถ้ามีแม่(parent_id)
             $itemsById[$item['parent_id']]['sub_menus'][] = &$item;
         } else {
+            // ถ้าไม่มีแม่(Null)
             $structuredMenu[] = &$item;
         }
     }
@@ -163,23 +177,35 @@ function buildMenuForRole(PDO $pdo, int $role_id): array
     */
 }
 
+
+require_once 'config.php';
+require_once 'class/connection_class.php';
+require_once 'class/user_class.php';
+
 try {
     // ตรวจสอบว่ามีการส่งข้อมูล username และ password มาหรือไม่
-    if (isset($_POST['username']) && isset($_POST['password'])) {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-    // 1. สร้าง Connection
-    $connection = new Connection();
-    $pdo = $connection->getDbConnection(); // ดึง PDO object ออกมา
+    $requestData = json_decode(file_get_contents('php://input'), true);
+    $_SESSION['requestD']=$requestData;
+    $_SESSION['username']=$requestData['username'];
+    $_SESSION['password']=$requestData['password'];
+    $_SESSION['if']=isset($requestData['username']) && isset($requestData['password']);
+// return;
 
-    // 2. "ส่ง" PDO object เข้าไปใน User class
-    $user = new User($pdo);
+    if (isset($requestData['username']) && isset($requestData['password'])) {
+        $username = $requestData['username'] ?? '';
+        $password = $requestData['password'] ?? '';
+        // 1. สร้าง Connection
+        $connection = new Connection();
+        $pdo = $connection->getDbConnection(); // ดึง PDO object ออกมา
 
-    // 3. ตรวจสอบการ login และรับผลลัพธ์ (จะเป็น array ข้อมูลผู้ใช้ หรือ false)
-    $loggedInUser = $user->checkLogin($username, $password);
-}
+        // 2. "ส่ง" PDO object เข้าไปใน User class
+        $user = new User($pdo);
+
+        // 3. ตรวจสอบการ login และรับผลลัพธ์ (จะเป็น array ข้อมูลผู้ใช้ หรือ false)
+        $loggedInUser = $user->checkLogin($username, $password);
+    }
     // 4. กำหนด Content-Type เป็น application/json
-    header('Content-Type: application/json');
+    // header('Content-Type: application/json');///ประกาศอยู่ด้านบนแล้ว
 
     // ส่งผลลัพธ์กลับไปเป็น JSON
     if ($loggedInUser) {
@@ -192,14 +218,16 @@ try {
         $_SESSION['user_code'] = $loggedInUser['user_code'];
         $_SESSION['username'] = $loggedInUser['username'];
         $_SESSION['full_name'] = $loggedInUser['full_name'];
+        $_SESSION['role_id'] = $loggedInUser['role_id'];
         $_SESSION['role_name'] = $loggedInUser['role_name'];
         $_SESSION['department_name'] = $loggedInUser['department_name'];
         $_SESSION['logged_in'] = true; // สร้างตัวแปรเช็คสถานะ login
 
-        // $_SESSION['user_menu'] = buildMenuForRole($pdo, $user['role_id']);
+        $_SESSION['user_menu'] = buildMenuForRole($pdo, $loggedInUser['role_id']);
 
         // 3. ส่งผู้ใช้ไปยังหน้า dashboard
         // header('Location: dashboard.php'); // สมมติว่า dashboard อยู่นอกโฟลเดอร์นี้
+        header('Content-Type: application/json');
         echo json_encode($loggedInUser);
         // exit();
     } else {

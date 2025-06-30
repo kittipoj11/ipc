@@ -1,22 +1,16 @@
 <?php
-session_start();
-require 'db_connection.php';
+@session_start();
+require_once 'config.php';
+require_once 'class/connection_class.php';
+require_once 'class/user_class.php';
 
-/**
- * ฟังก์ชันสำหรับดึงเมนูตามสิทธิ์และสร้างเป็น Array แบบมีลำดับชั้น
- * @param PDO $pdo - Object การเชื่อมต่อฐานข้อมูล
- * @param int $role_id - ID ของสิทธิ์ผู้ใช้
- * @return array - Array ของเมนูที่พร้อมใช้งาน
- */
 function buildMenuForRole(PDO $pdo, int $role_id): array
 {
-    $sql = <<<EOD
-                SELECT m.`id`, m.`parent_id`, m.`title`, m.`url`, m.`icon`, m.`order_num`
-                FROM menu_items m
-                JOIN role_menu_permissions p ON m.id = p.menu_item_id
-                WHERE p.role_id = :role_id
-                ORDER BY m.parent_id, m.order_num
-            EOD;
+    $sql = "SELECT m.`id`, m.`parent_id`, m.`title`, m.`url`, m.`icon`, m.`order_num`
+            FROM menu_items m
+            JOIN role_menu_permissions p ON m.id = p.menu_item_id
+            WHERE p.role_id = :role_id
+            ORDER BY m.parent_id, m.order_num";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['role_id' => $role_id]);
@@ -181,49 +175,55 @@ function buildMenuForRole(PDO $pdo, int $role_id): array
     */
 }
 
+try {
+    // ตรวจสอบว่ามีการส่งข้อมูล username และ password มาหรือไม่
+    if (isset($_POST['username']) && isset($_POST['password'])) {
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
+    // 1. สร้าง Connection
+    $connection = new Connection();
+    $pdo = $connection->getDbConnection(); // ดึง PDO object ออกมา
 
-// --- ส่วนประมวลผลการล็อกอิน ---
-$username = $_POST['username'] ?? '';
-$password = $_POST['password'] ?? '';
+    // 2. "ส่ง" PDO object เข้าไปใน User class
+    $user = new User($pdo);
 
-// **คำเตือนด้านความปลอดภัย**: ในระบบจริงต้องใช้ password_verify() กับ hash ที่เก็บใน DB
-// $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-// $stmt->execute([$username]);
-// $user = $stmt->fetch();
-// if ($user && password_verify($password, $user['password'])) { ... }
-
-// ตัวอย่างแบบง่าย (ไม่ปลอดภัย)
-$stmt = $pdo->prepare("SELECT u.*, r.role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE u.username = ? AND u.password = ?");
-$stmt->execute([$username, $password]);
-$user = $stmt->fetch();
-
-if ($user) {
-    // ล็อกอินสำเร็จ
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['username'] = $user['username'];
-    $_SESSION['role_name'] = $user['role_name'];
-
-    // สร้างเมนูสำหรับ Role นี้และเก็บลง Session
-    $_SESSION['user_menu'] = buildMenuForRole($pdo, $user['role_id']);
-
-    // ไปยังหน้า Dashboard
-    header("Location: dashboard.php");
-    exit();
-} else {
-    // ล็อกอินไม่สำเร็จ
-    echo "Username หรือ Password ไม่ถูกต้อง";
-    header("Location: login.html?error=1");
-    exit();
+    // 3. ตรวจสอบการ login และรับผลลัพธ์ (จะเป็น array ข้อมูลผู้ใช้ หรือ false)
+    $loggedInUser = $user->checkLogin($username, $password);
 }
+    // 4. กำหนด Content-Type เป็น application/json
+    header('Content-Type: application/json');
 
-/*
-วิธีที่ 1: เก็บใน Session (แบบปัจจุบันที่เราทำอยู่)
-หลักการทำงาน: คำนวณและสร้าง Array เมนูที่ซับซ้อน เพียงครั้งเดียว ตอนที่ผู้ใช้ล็อกอินสำเร็จ 
-จากนั้นเก็บ Array นั้นไว้ใน $_SESSION['user_menu'] 
-ทุกๆ หน้าที่ผู้ใช้เปิดหลังจากนั้น ก็แค่ดึง Array ที่สร้างเสร็จแล้วจาก Session มาใช้งานได้เลย ไม่ต้องคุยกับฐานข้อมูลอีก
+    // ส่งผลลัพธ์กลับไปเป็น JSON
+    if ($loggedInUser) {
+        // --- Login สำเร็จ ---
+        // 1. ป้องกัน Session Fixation Attack
+        session_regenerate_id(true);
 
-วิธีที่ 2: ไม่เก็บใน Session (สร้างใหม่ทุกครั้ง)
-หลักการทำงาน: ตอนล็อกอิน จะเก็บแค่ข้อมูลพื้นฐานของผู้ใช้ เช่น user_id, role_id ไว้ใน Session 
-แต่ จะไม่เก็บ Array เมนู ในทุกๆ ครั้งที่ผู้ใช้เปิดหน้าใหม่ (เช่น dashboard.php, profile.php) 
-จะต้องเรียกฟังก์ชัน buildMenuForRole() เพื่อคุยกับฐานข้อมูลและสร้าง Array เมนูขึ้นมาใหม่สดๆ ทุกครั้ง
-*/
+        // 2. เก็บข้อมูลที่จำเป็นจาก $loggedInUser ลงใน $_SESSION
+        $_SESSION['user_id'] = $loggedInUser['user_id'];
+        $_SESSION['user_code'] = $loggedInUser['user_code'];
+        $_SESSION['username'] = $loggedInUser['username'];
+        $_SESSION['full_name'] = $loggedInUser['full_name'];
+        $_SESSION['role_name'] = $loggedInUser['role_name'];
+        $_SESSION['department_name'] = $loggedInUser['department_name'];
+        $_SESSION['logged_in'] = true; // สร้างตัวแปรเช็คสถานะ login
+
+        // $_SESSION['user_menu'] = buildMenuForRole($pdo, $user['role_id']);
+
+        // 3. ส่งผู้ใช้ไปยังหน้า dashboard
+        // header('Location: dashboard.php'); // สมมติว่า dashboard อยู่นอกโฟลเดอร์นี้
+        echo json_encode($loggedInUser);
+        // exit();
+    } else {
+        // --- Login ล้มเหลว ---
+        // ส่งกลับไปหน้า login พร้อมกับแสดงข้อความผิดพลาด
+        // header('Location: ../login.php?error=1'); // ส่ง parameter ไปกับ URL
+        echo json_encode(false);
+        // exit();
+    }
+} catch (PDOException $e) {
+    // หากเกิดปัญหากับฐานข้อมูล (เช่น ต่อไม่ได้)
+    // ใน production จริงๆ ควรจะ log error เก็บไว้ แทนที่จะแสดงผลให้ user เห็น
+    error_log("Database Error: " . $e->getMessage());
+    die("ระบบเกิดข้อผิดพลาดร้ายแรง กรุณาลองใหม่อีกครั้ง");
+}

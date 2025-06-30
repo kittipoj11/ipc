@@ -24,7 +24,7 @@ $(document).ready(function () {
     };
 
     $.ajax({
-      url: "po_handler_api.php",
+      url: "api_handler_po.php",
       type: "POST",
       contentType: "application/json",
       dataType: "json",
@@ -121,7 +121,7 @@ $(document).ready(function () {
     // console.log("Data to be sent:", data_sent);
     // return;
     $.ajax({
-      url: "po_handler_api.php",
+      url: "api_handler_po.php",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(data_sent),
@@ -183,6 +183,15 @@ $(document).ready(function () {
       });
   });
 
+    /*
+โค้ดส่วนนี้ทำหน้าที่สำคัญอย่างหนึ่งคือ: "คอยติดตามการเปลี่ยนแปลงข้อมูลในแต่ละแถวโดยอัตโนมัติ"
+
+เมื่อใดก็ตามที่ผู้ใช้ พิมพ์หรือแก้ไขข้อมูล ในช่อง <input> ใดๆ ในตาราง โค้ดนี้จะทำงานทันทีเพื่อตรวจสอบสถานะของ "แถว" (<tr>) นั้นๆ 
+และถ้าแถวนั้นเป็นข้อมูลเก่าที่ยังไม่เคยถูกแก้ไขมาก่อน (มีสถานะเป็น clean) มันจะเปลี่ยนสถานะของแถวนั้นให้เป็น update ทันที
+
+เป้าหมาย: เพื่อให้ตอนที่เรากดปุ่ม "บันทึกข้อมูลทั้งหมด" เราจะรู้ได้ว่าแถวไหนบ้างที่ถูกผู้ใช้แก้ไข และจำเป็นต้องส่งไปให้เซิร์ฟเวอร์ทำการ UPDATE ข้อมูล 
+ซึ่งช่วยให้เราส่งเฉพาะข้อมูลที่มีการเปลี่ยนแปลงจริงๆ ไปเท่านั้น ทำให้ระบบมีประสิทธิภาพมากขึ้น
+*/
   $("#tbody-period").on("input", "input", function () {
     const row = $(this).closest("tr");
     // ถ้าแถวไม่ใช่แถวใหม่ (สถานะเป็น select) ให้เปลี่ยนเป็น update

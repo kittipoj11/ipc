@@ -6,7 +6,7 @@ $(document).ready(function () {
 
 
     $.ajax({
-      url: 'check_login.php',
+      url: 'api_handler_role.php',
       // data: $(this).serialize(),
       data: $(this).serialize(),
       method: 'POST',

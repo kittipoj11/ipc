@@ -322,7 +322,7 @@ require_once 'config.php';
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form name="frmLogin" id="frmLogin" action="check_login.php" method="POST">
+                    <form name="frmLogin" id="frmLogin" action="api_handler_role.php" method="POST">
                         <!-- Username input -->
                         <div class="form-outline mb-2">
                             <label class="form-label" for="username">User Name</label>
