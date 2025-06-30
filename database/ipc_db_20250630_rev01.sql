@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 30, 2025 at 12:54 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.1.17
+-- Generation Time: Jun 30, 2025 at 05:14 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -196,9 +196,9 @@ CREATE TABLE `inspection_periods` (
 --
 
 INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `workload_accumulated_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status_id`, `is_paid`, `is_retention`, `remark`, `inspection_status`, `current_approval_level`, `disbursement`, `workflow_id`) VALUES
-(1, 1, 1, 1, 30.00, 30.00, 70.00, 0.00, 20000.00, 20.00, 0.00, 0.00, 20000.00, 18.69, 87000.00, 81.31, 0.00, 1, 0, 0, '', 1, 1, -1, 1),
-(2, 2, 1, 2, 30.00, NULL, NULL, 0.00, 30000.00, 30.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0, NULL, 1, 1, -1, 1),
-(3, 3, 1, 3, 40.00, NULL, NULL, 0.00, 50000.00, 50.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0, NULL, 1, 1, -1, 1);
+(1, 1, 1, 1, '30.00', '30.00', '70.00', '0.00', '20000.00', '20.00', '0.00', '0.00', '20000.00', '18.69', '87000.00', '81.31', '0.00', 1, 0, 0, '', 1, 1, -1, 1),
+(2, 2, 1, 2, '30.00', NULL, NULL, '0.00', '30000.00', '30.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0, NULL, 1, 1, -1, 1),
+(3, 3, 1, 3, '40.00', NULL, NULL, '0.00', '50000.00', '50.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0, NULL, 1, 1, -1, 1);
 
 -- --------------------------------------------------------
 
@@ -390,9 +390,9 @@ INSERT INTO `menu_items` (`id`, `parent_id`, `title`, `url`, `icon`, `order_num`
 (13, 1, 'Approval Status', 'approval_status.php', 'fa-solid fa-gears', 5),
 (14, 1, 'Action Type', 'action_type.php', 'fa-solid fa-gears', 6),
 (15, 1, 'Document Type', 'document_type.php', 'fa-solid fa-gears', 7),
-(16, 2, 'Department', 'department.php', 'fa-solid fa-gears', 1),
-(17, 2, 'Location', 'location.php', 'fa-solid fa-gears', 2),
-(18, 2, 'Supplier', 'supplier.php', 'fa-solid fa-gears', 3),
+(16, 2, 'Department', 'basic/department.php', 'fa-solid fa-gears', 1),
+(17, 2, 'Location', 'basic/location.php', 'fa-solid fa-gears', 2),
+(18, 2, 'Supplier', 'basic/supplier.php', 'fa-solid fa-gears', 3),
 (19, 3, 'All purchase orders', 'po.php', 'fa-solid fa-gears', 1),
 (20, 4, 'All Inspection', 'inspection.php', 'fa-solid fa-gears', 1),
 (21, 5, 'All IPC', 'ipc.php', 'fa-solid fa-gears', 1),
@@ -402,13 +402,6 @@ INSERT INTO `menu_items` (`id`, `parent_id`, `title`, `url`, `icon`, `order_num`
 (25, 7, 'รายงาน #2', '#', 'fa-solid fa-gears', 2),
 (26, 7, 'รายงาน #3', '#', 'fa-solid fa-gears', 3),
 (27, 8, 'All User', 'user.php', 'fa-solid fa-gears', 1);
-
--- --------------------------------------------------------
-
---
---
-
-
 
 -- --------------------------------------------------------
 
@@ -469,7 +462,8 @@ CREATE TABLE `po_main` (
 --
 
 INSERT INTO `po_main` (`po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`, `working_date_from`, `working_date_to`, `working_day`, `create_by`, `create_date`, `number_of_period`, `remain_value_interim_payment`, `total_retention_value`, `po_status`, `workflow_id`) VALUES
-(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, 107000.00, 100000.00, 7000.00, NULL, 0.00, 0.00, '2025-06-02', '2025-06-07', 6, '05389', NULL, 3, 0.00, 0.00, 1, 1);
+(1, 'IMPO001', 'Statue of Load Indra Riding on Erawan Elephant', 1, 1, 'งานติดตั้งโคมไฟตกแต่ง LED และวางระบบควบคุม', 'Install of LED decoration lamps', 1, '107000.00', '100000.00', '7000.00', 0, NULL, NULL, '2025-06-02', '2025-06-07', 6, '05389', NULL, 3, '0.00', '0.00', 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -492,9 +486,9 @@ CREATE TABLE `po_periods` (
 --
 
 INSERT INTO `po_periods` (`period_id`, `po_id`, `period_number`, `interim_payment`, `interim_payment_percent`, `period_status`, `remark`, `workload_planned_percent`) VALUES
-(1, 1, 1, 20000.00, 20.00, NULL, 'QR', 30.00),
-(2, 1, 2, 30000.00, 30.00, NULL, 'QR', 30.00),
-(3, 1, 3, 50000.00, 50.00, NULL, 'Cash', 40.00);
+(1, 1, 1, '20000.00', '20.00', NULL, 'QR', '30.00'),
+(2, 1, 2, '30000.00', '30.00', NULL, 'QR', '30.00'),
+(3, 1, 3, '50000.00', '50.00', NULL, 'Cash', '40.00');
 
 -- --------------------------------------------------------
 
@@ -640,14 +634,6 @@ INSERT INTO `role_menu_permissions` (`role_id`, `menu_item_id`) VALUES
 (6, 20),
 (6, 21),
 (6, 22);
-
--- --------------------------------------------------------
-
---
---
-
-
-
 
 -- --------------------------------------------------------
 
@@ -910,9 +896,6 @@ ALTER TABLE `menu_items`
   ADD KEY `parent_id` (`parent_id`);
 
 --
---
-
---
 -- Indexes for table `plan_status`
 --
 ALTER TABLE `plan_status`
@@ -957,10 +940,6 @@ ALTER TABLE `roles`
 ALTER TABLE `role_menu_permissions`
   ADD PRIMARY KEY (`role_id`,`menu_item_id`),
   ADD KEY `menu_item_id` (`menu_item_id`);
-
---
---
-
 
 --
 -- Indexes for table `suppliers`
@@ -1086,8 +1065,6 @@ ALTER TABLE `locations`
 ALTER TABLE `menu_items`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
---
---
 --
 -- AUTO_INCREMENT for table `po_main`
 --
