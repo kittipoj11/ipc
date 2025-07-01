@@ -1,13 +1,42 @@
 $(document).ready(function () {
-  $(document).on("click", "a.po_number", function (e) {
-      e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
-      const po_id = $(this).closest("tr").data("id");
-      // window.location.href = "po_edit.php?po_id=" + po_id + "&href=inspect.php";
-      window.location.href = "inspection_view.php?po_id=" + po_id;
-  });
-});
 
-$(document).ready(function () {
+    // ฟังก์ชันสำหรับโหลดข้อมูลเริ่มต้น
+  function loadDataAll() {
+    const data_sent = {
+      action: "select",
+    };
+    $.ajax({
+      url: "api_handler_inspection.php",
+      type: "POST",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify(data_sent),
+    })
+      .done(function (result) {
+        console.log(`result: ${result}`);
+        // responseMessage.text(result.message).css("color", "green");
+        if (result.length > 0) {
+          tableBody = createTableBody(result);
+          $("#tbody").html(tableBody); // นำ HTML ของตารางไปใส่ใน div ที่มี id="tbody"
+        } else {
+          $("#tbody").html();
+        }
+      })
+      .fail((jqXHR) => {
+        const errorMsg = jqXHR.responseJSON
+          ? jqXHR.responseJSON.message
+          : "เกิดข้อผิดพลาดในการดึงข้อมูล";
+        // showMessage(errorMsg, false);
+        $("#tbody").html();
+      });
+  }
+
+  $(document).on("click", "a.po_number", function (e) {
+    e.preventDefault();
+    const po_id = $(this).closest("tr").data("id");
+    window.location.href = "inspection_view.php?po_id=" + po_id;
+  });
+
   // Click ที่รายการใดๆ
   $(document).on("click", ".tdMain:not(:has(a))", function (e) {
     e.preventDefault();
@@ -29,10 +58,6 @@ $(document).ready(function () {
       },
       dataType: "json",
       success: function (response) {
-        // console.log(`response=${response}`);
-        // data = JSON.parse(response);
-        // console.log(data);
-
         $("#tbody-period").html(response);
       },
     });
@@ -40,37 +65,16 @@ $(document).ready(function () {
 
   $(document).on("click", ".tdPeriod", function (e) {
     e.preventDefault();
-    // การใช้ตัวแปรในการเก็บค่า
-    // // ค้นหา tr ที่ปุ่ม a.period อยู่
-    // let row = $(this).closest('tr');
-    // // ค้น input ที่มี class po_id
-    // let inputPoId = row.find('input.po_id');
-    // // ดึงค่าจาก inputPoId
-    // let po_id = inputPoId.val();
-    // // ค้น input ที่มี class period_id
-    // let inputPoPeriodId = row.find('input.period_id');
-    // // ดึงค่าจาก inputPoPeriodId
-    // let period_id = inputPoPeriodId.val();
 
     const po_id = $(this).closest("tr").data("po_id");
     const period_id = $(this).closest("tr").data("period_id");
     const inspection_id = $(this).closest("tr").data("inspection_id");
-    // const po_id = $(this).closest("tr").find(".po_id").data("id");
-    // const period_id = $(this).closest("tr").find(".period_id").data("id");
-    // const inspection_id = $(this).closest("tr").find(".inspection_id").val("id");
-    // let po_id=1;
-    // let period_id=1;
-    console.log(`po_id = ${po_id}`);
-    console.log(`period_id = ${period_id}`);
-    console.log(`inspection_id = ${inspection_id}`);
     window.location.href = `inspection_edit.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
   });
 
   $("#btnCancel").click(function () {
     window.history.back();
-    // window.location.href = "inspection_view.php";
-    // window.history.go(-1);
-    // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
-    // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
   });
+
+// loadDataAll();
 });

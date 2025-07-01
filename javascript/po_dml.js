@@ -51,7 +51,6 @@ $(document).ready(function () {
     // $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();
     // const action = { action: "save" };
-    const action = "save";
     const periodsData = [];
 
     $("#tbody-period tr").each(function () {
@@ -114,7 +113,7 @@ $(document).ready(function () {
     const data_sent = {
       headerData: headerData,
       periodsData: periodsData,
-      action: action,
+      action: "save",
     };
     // data_sent['action'] = "save";
     // console.log("Data to be sent:", JSON.stringify(data_sent));
@@ -125,31 +124,6 @@ $(document).ready(function () {
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(data_sent),
-      //   success: function (result) {
-      //     // console.log(`result: ${result}`);
-      //     Swal.fire({
-      //       icon: "success",
-      //       title: "Data saved successfully",
-      //       color: "#716add",
-      //       allowOutsideClick: false,
-      //       background: "black",
-      //       // backdrop: `
-      //       //                     rgba(0,0,123,0.4)
-      //       //                     url("_images/paw.gif")
-      //       //                     left bottom
-      //       //                     no-repeat
-      //       //                     `,
-      //       // showConfirmButton: false,
-      //       // timer: 15000
-      //     }).then((result) => {
-      //       if (result.isConfirmed) {
-      //         window.location.href = "po.php";
-      //         // window.location.reload();
-      //       }
-      //     });
-      //     // window.location.href = 'main.php?page=open_area_schedule';
-      //   },
-      // });
     })
       .done(function (result) {
         // console.log(`result: ${result}`);

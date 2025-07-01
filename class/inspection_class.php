@@ -4,131 +4,124 @@ require_once 'connection_class.php';
 
 class Inspection {
     private $db; 
+
     public function __construct(PDO $pdoConnection)
     {
         $this->db = $pdoConnection;
     }
-    public function getInspectionPeriodAllByPoId($getPoId)
+    public function getInspectionPeriodAllByPoId($poId): array
     {
-        $sql = <<<EOD
-                    SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
-                    , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
-                    , P1.interim_payment, P1.interim_payment_percent
-                    , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
-                    , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
-                    , P1.interim_payment_remain, P1.interim_payment_remain_percent
-                    , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
-                    , P1.remark, P1.inspection_status, P1.current_approval_level
-                    , P1.disbursement, P1.workflow_id
-                    FROM `inspection_periods` P1
-                    WHERE `po_id` = :po_id
-                    ORDER BY `period_number`
-                EOD;
+        $sql = "SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
+                , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
+                , P1.interim_payment, P1.interim_payment_percent
+                , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
+                , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
+                , P1.interim_payment_remain, P1.interim_payment_remain_percent
+                , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
+                , P1.remark, P1.inspection_status, P1.current_approval_level
+                , P1.disbursement, P1.workflow_id
+                FROM `inspection_periods` P1
+                WHERE `po_id` = :po_id
+                ORDER BY `period_number`";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
+        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetchAll();
         return $rs;
     }
 
-    public function getInspectionPeriodByPeriodId($getPoId, $getPeriodId)
+    public function getInspectionPeriodByPeriodId($poId, $periodId): array
     {
-        $sql = <<<EOD
-                    SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
-                    , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
-                    , P1.interim_payment, P1.interim_payment_percent
-                    , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
-                    , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
-                    , P1.interim_payment_remain, P1.interim_payment_remain_percent
-                    , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
-                    , P1.remark, P1.inspection_status, P1.current_approval_level, P1.disbursement, P1.workflow_id
-                    , po_main.supplier_id, po_main.location_id , po_main.po_number, po_main.project_name
-                    , po_main.working_name_th, po_main.working_name_en
-                    , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
-                    , working_date_from, working_date_to, working_day
-                    , suppliers.supplier_name, locations.location_name
-                    , inspection_period_approvals.approver_id, inspection_period_approvals.approval_level 
-                    , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
-                    FROM inspection_periods P1
-                    INNER JOIN po_main
-                        ON P1.po_id = po_main.po_id
-                    INNER JOIN suppliers
-                        ON suppliers.supplier_id = po_main.supplier_id
-                    INNER JOIN locations
-                        ON locations.location_id = po_main.location_id   
-                    LEFT JOIN inspection_period_approvals
-                        ON inspection_period_approvals.approval_level = P1.current_approval_level
-                        AND inspection_period_approvals.inspection_id = P1.inspection_id
-                    LEFT JOIN approval_status
-                        ON approval_status.approval_status_id = inspection_period_approvals.approval_status_id
-                    LEFT JOIN inspection_periods P2 
-                        ON P2.po_id = P1.po_id AND P2.period_number = P1.period_number - 1
-                    WHERE P1.po_id = :po_id
-                        AND P1.period_id = :period_id
-                    ORDER BY P1.po_id, period_number
-                EOD;
+        $sql = "SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
+                , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
+                , P1.interim_payment, P1.interim_payment_percent
+                , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
+                , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
+                , P1.interim_payment_remain, P1.interim_payment_remain_percent
+                , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
+                , P1.remark, P1.inspection_status, P1.current_approval_level, P1.disbursement, P1.workflow_id
+                , po_main.supplier_id, po_main.location_id , po_main.po_number, po_main.project_name
+                , po_main.working_name_th, po_main.working_name_en
+                , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
+                , working_date_from, working_date_to, working_day
+                , suppliers.supplier_name, locations.location_name
+                , inspection_period_approvals.approver_id, inspection_period_approvals.approval_level 
+                , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
+                FROM inspection_periods P1
+                INNER JOIN po_main
+                    ON P1.po_id = po_main.po_id
+                INNER JOIN suppliers
+                    ON suppliers.supplier_id = po_main.supplier_id
+                INNER JOIN locations
+                    ON locations.location_id = po_main.location_id   
+                LEFT JOIN inspection_period_approvals
+                    ON inspection_period_approvals.approval_level = P1.current_approval_level
+                    AND inspection_period_approvals.inspection_id = P1.inspection_id
+                LEFT JOIN approval_status
+                    ON approval_status.approval_status_id = inspection_period_approvals.approval_status_id
+                LEFT JOIN inspection_periods P2 
+                    ON P2.po_id = P1.po_id AND P2.period_number = P1.period_number - 1
+                WHERE P1.po_id = :po_id
+                    AND P1.period_id = :period_id
+                ORDER BY P1.po_id, period_number";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
-        $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
-        $stmt->execute();
-        $rs = $stmt->fetch();
-        return $rs;
-    }
-
-    public function getInspectionPeriodAssignToMe($getUsername)
-    {
-        $sql = <<<EOD
-                    SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
-                    , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
-                    , P1.interim_payment, P1.interim_payment_percent
-                    , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
-                    , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
-                    , P1.interim_payment_remain, P1.interim_payment_remain_percent
-                    , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
-                    , P1.remark, P1.inspection_status, P1.current_approval_level, P1.disbursement, P1.workflow_id
-                    , po_main.supplier_id, po_main.location_id , po_main.po_number, po_main.project_name
-                    , po_main.working_name_th, po_main.working_name_en
-                    , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
-                    , working_date_from, working_date_to, working_day
-                    , suppliers.supplier_name, locations.location_name
-                    , inspection_period_approvals.approver_id, inspection_period_approvals.approval_level 
-                    , U.username, U.full_name
-                    FROM inspection_periods P1
-                    INNER JOIN po_main
-                        ON P1.po_id = po_main.po_id
-                    INNER JOIN suppliers
-                        ON suppliers.supplier_id = po_main.supplier_id
-                    INNER JOIN locations
-                        ON locations.location_id = po_main.location_id   
-                    INNER JOIN inspection_period_approvals
-                        ON inspection_period_approvals.approval_level = P1.current_approval_level
-                        AND inspection_period_approvals.inspection_id = P1.inspection_id
-                    INNER JOIN approval_status
-                        ON approval_status.approval_status_id = inspection_period_approvals.approval_status_id
-                    INNER JOIN users U 
-                        ON U.user_id = inspection_period_approvals.approver_id
-                    WHERE U.username = :username
-                        AND P1.current_approval_level >1 
-                    ORDER BY P1.po_id, period_number
-                EOD;
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':username', $getUsername, PDO::PARAM_STR);
+        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
+        $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetchAll();
         return $rs;
     }
 
-    public function getInspectionPeriodDetailByPeriodId($getPoId, $getPeriodId)
+    public function getInspectionPeriodAssignToMe($username): array
     {
-        $sql = <<<EOD
-                    SELECT `rec_id`, `inspection_period_details`.`inspection_id`, `order_no`, `details`, `inspection_period_details`.`remark`
-                    FROM `inspection_period_details`
-                    INNER JOIN `inspection_periods`
-                        ON `inspection_periods`.`inspection_id` = `inspection_period_details`.`inspection_id`
-                    WHERE `po_id` = :po_id
-                        AND `inspection_periods`.`period_id` = :period_id
-                    ORDER BY `order_no`
-                EOD;
+        $sql = "SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
+                , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
+                , P1.interim_payment, P1.interim_payment_percent
+                , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
+                , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
+                , P1.interim_payment_remain, P1.interim_payment_remain_percent
+                , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
+                , P1.remark, P1.inspection_status, P1.current_approval_level, P1.disbursement, P1.workflow_id
+                , po_main.supplier_id, po_main.location_id , po_main.po_number, po_main.project_name
+                , po_main.working_name_th, po_main.working_name_en
+                , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
+                , working_date_from, working_date_to, working_day
+                , suppliers.supplier_name, locations.location_name
+                , inspection_period_approvals.approver_id, inspection_period_approvals.approval_level 
+                , U.username, U.full_name
+                FROM inspection_periods P1
+                INNER JOIN po_main
+                    ON P1.po_id = po_main.po_id
+                INNER JOIN suppliers
+                    ON suppliers.supplier_id = po_main.supplier_id
+                INNER JOIN locations
+                    ON locations.location_id = po_main.location_id   
+                INNER JOIN inspection_period_approvals
+                    ON inspection_period_approvals.approval_level = P1.current_approval_level
+                    AND inspection_period_approvals.inspection_id = P1.inspection_id
+                INNER JOIN approval_status
+                    ON approval_status.approval_status_id = inspection_period_approvals.approval_status_id
+                INNER JOIN users U 
+                    ON U.user_id = inspection_period_approvals.approver_id
+                WHERE U.username = :username
+                    AND P1.current_approval_level >1 
+                ORDER BY P1.po_id, period_number";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+        $rs = $stmt->fetchAll();
+        return $rs;
+    }
+
+    public function getInspectionPeriodDetailByPeriodId($getPoId, $getPeriodId): array
+    {
+        $sql = "SELECT `rec_id`, `inspection_period_details`.`inspection_id`, `order_no`, `details`, `inspection_period_details`.`remark`
+                FROM `inspection_period_details`
+                INNER JOIN `inspection_periods`
+                    ON `inspection_periods`.`inspection_id` = `inspection_period_details`.`inspection_id`
+                WHERE `po_id` = :po_id
+                    AND `inspection_periods`.`period_id` = :period_id
+                ORDER BY `order_no`";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
@@ -137,17 +130,15 @@ class Inspection {
         return $rs;
     }
 
-    public function getInspectionFilesByInspectionId($getPoId, $getPeriodId, $getInspectionId)
+    public function getInspectionFilesByInspectionId($getPoId, $getPeriodId, $getInspectionId):array
     {
-        $sql = <<<EOD
-                    SELECT `file_id`, `inspection_files`.`inspection_id`, `file_name`, `file_path`, `file_type`, `uploaded_at` 
-                    FROM `inspection_files` 
-                    INNER JOIN `inspection_periods`
-                        ON `inspection_periods`.`inspection_id` = `inspection_files`.`inspection_id`
-                    WHERE `inspection_periods`.`inspection_id` = :inspection_id
-                        AND `inspection_periods`.`period_id` = :period_id
-                        AND `inspection_periods`.`po_id` = :po_id
-                    EOD;
+        $sql = "SELECT `file_id`, `inspection_files`.`inspection_id`, `file_name`, `file_path`, `file_type`, `uploaded_at` 
+                FROM `inspection_files` 
+                INNER JOIN `inspection_periods`
+                    ON `inspection_periods`.`inspection_id` = `inspection_files`.`inspection_id`
+                WHERE `inspection_periods`.`inspection_id` = :inspection_id
+                    AND `inspection_periods`.`period_id` = :period_id
+                    AND `inspection_periods`.`po_id` = :po_id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
@@ -338,6 +329,7 @@ class Inspection {
             $_SESSION['Transaction'] =  $e->getCode() + ' : ' + $e->getMessage();
         }
     }
+    
     public function updateCurrentApprovalLevel($getData)
     {
         @session_start();

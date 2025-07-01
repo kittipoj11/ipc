@@ -6,6 +6,7 @@ require_once 'connection_class.php';
 class Po
 {
     private $db;
+    
     public function __construct(PDO $pdoConnection)
     {
         $this->db = $pdoConnection;

@@ -47,26 +47,27 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
+    require_once  'class/connection_class.php';
     require_once  'class/po_class.php';
     require_once  'class/inspection_class.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
 
-    // $_SESSION['Request'] = $_REQUEST;
     $po_id = $_REQUEST['po_id'];
-    // $period_id = $_REQUEST['period_id'];
-    // $inspection_id = $_REQUEST['inspection_id'];
 
-    $po = new Po;
+    $connection=new Connection();
+    $pdo=$connection->getDbConnection();
+
+    $po = new Po($pdo);
     $rsPoMainByPoId = $po->fetchByPoId($po_id);
 
-    $inspection = new Inspection;
+    $inspection = new Inspection($pdo);
     $rsInspectionPeriod =$inspection->getInspectionPeriodAllByPoId($po_id );
 
-    $supplier = new Supplier;
+    $supplier = new Supplier($pdo);
     $supplier_rs = $supplier->fetchAll();
 
-    $location = new Location;
+    $location = new Location($pdo);
     $location_rs = $location->fetchAll();
 
     ?>
@@ -230,10 +231,6 @@ require_once 'auth.php';
                 <tbody>
                   <?php foreach ($rsInspectionPeriod as $row) { ?>
                     <tr data-po_id=<?= $row['po_id'] ?> data-period_id=<?= $row['period_id'] ?> data-inspection_id=<?= $row['inspection_id'] ?>>
-                      <!-- <td class="tdPeriod text-right text-primary input-group-sm p-0 po_id d-none" data-id=<?= $row['po_id'] ?>><?= $row['po_id'] ?></td>
-                      <td class="tdPeriod text-right text-primary input-group-sm p-0 period_id d-none" data-id=<?= $row['period_id'] ?>><?= $row['period_id'] ?></td>
-                      <td class="tdPeriod text-right text-primary input-group-sm p-0 inspection_id d-none" data-id=<?= $row['inspection_id'] ?>><?= $row['inspection_id'] ?></td> -->
-
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['period_number'] ?></td>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_planned_percent'] ?></td>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_actual_completed_percent'] ?></td>

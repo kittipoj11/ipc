@@ -57,13 +57,16 @@ require_once 'auth.php';
     <?php include 'navbar.php'; ?>
 
     <!-- Main Content Start -->
-    <?php
+    <!-- < ?php
+    require_once  'class/connection_class.php';
     require_once  'class/inspection_class.php';
     require_once  'class/po_class.php';
 
-    $po = new Po;
+    $connection=new Connection();
+    $pdo=$connection->getDbConnection();
+    $po = new Po($pdo);
     $rsPoMainAll = $po->fetchAll();
-    ?>
+    ?> -->
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -103,31 +106,7 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody">
-                      <!-- < ?php foreach ($rsPoMainAll as $row) {
-                        $html = <<<EOD
-                                        <tr data-po_id='{$row['po_id']}'>
-                                            <td class="tdMain p-0 d-none">{$row['po_id']}</td>
-                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='Edit' style='margin: 0px 5px 5px 5px' data-po_number='{$row['po_number']}'>{$row['po_number']}</a></td>
-                                            <td class="tdMain p-0">{$row['project_name']}</td>
-                                            <td class="tdMain p-0">{$row['supplier_name']}</td>
-                                            <td class="tdMain p-0">{$row['location_name']}</td>
-                                            <td class="tdMain p-0">{$row['working_name_th']}</td>
-                                            <td class="tdMain p-0 text-right">{$row['contract_value']}</td>
-                                            <td class="tdMain p-0 text-right">{$row['number_of_period']}</td>
-                                            <td class="tdMain p-0 action d-none" align='center'>
-                                                <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-po_id='{$row['po_id']}'>
-                                                        <i class='fa-regular fa-pen-to-square'></i>
-                                                    </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-po_id='{$row['po_id']}'>
-                                                        <i class='fa-regular fa-trash-can'></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        EOD;
-                        echo $html;
-                      } ?> -->
+                      
                     </tbody>
                   </table>
                 </div>
@@ -174,18 +153,7 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody-period">
-                      <!-- <tr>
-                        <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_id" value="{$row['po_id']}" readonly></td>
-                        <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_periods_id" value="{$row['po_periods_id']}" readonly></td>
-                        <td class="tdPeriod text-right py-0 px-1"><a class='link-opacity-100 pe-auto' style='margin: 0px 5px 5px 5px'>{$row['period']}</a></td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['workload_planned_percent']}</td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['workload_actual_completed_percent']}</td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['workload_remaining_percent']}</td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['interim_payment']}</td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['interim_payment_less_previous']}</td>
-                        <td class="tdPeriod text-right py-0 px-1">{$row['interim_payment_remain']}</td>
-                        <td class="tdPeriod text-left py-0 px-1">{$row['remark']}</td>
-                      </tr> -->
+
                     </tbody>
                   </table>
                 </div>
