@@ -31,13 +31,7 @@ $(document).ready(function () {
       });
   }
 
-  $(document).on("click", "a.po_number", function (e) {
-    e.preventDefault();
-    const po_id = $(this).closest("tr").data("po-id");
-    window.location.href = "inspection_view.php?po_id=" + po_id;
-  });
-
-  // Click ที่รายการใดๆ
+  // *** ไม่ใช้
   $(document).on("click", ".tdMain:not(:has(a))", function (e) {
     e.preventDefault();
     $(".content-period").removeClass("d-none");
@@ -66,9 +60,10 @@ $(document).ready(function () {
   $(document).on("click", ".tdPeriod", function (e) {
     e.preventDefault();
 
-    const po_id = $(this).closest("tr").data("po_id");
-    const period_id = $(this).closest("tr").data("period_id");
-    const inspection_id = $(this).closest("tr").data("inspection_id");
+    const po_id = $(this).closest("tr").data("po-id");
+    const period_id = $(this).closest("tr").data("period-id");
+    const inspection_id = $(this).closest("tr").data("inspection-id");
+    console.log(`po_id=${po_id}`);
     window.location.href = `inspection_period_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
   });
 

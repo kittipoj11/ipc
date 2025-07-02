@@ -68,7 +68,7 @@ class Inspection {
         $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
         $stmt->execute();
-        $rs = $stmt->fetchAll();
+        $rs = $stmt->fetch();
         return $rs;
     }
 

@@ -202,7 +202,7 @@ require_once 'auth.php';
       </section>
       <!-- /.content -->
 
-      <section class="content-period d-nonex">
+      <section class="content-period">
         <div class="container-fluid">
           <div class="card border border-1 border-dark m-1">
             <h6 class="m-1 fw-bold">รายการงวดงาน</h6>
