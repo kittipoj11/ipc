@@ -68,30 +68,33 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
+    require_once  'class/connection_class.php';
     require_once  'class/po_class.php';
     require_once  'class/inspection_class.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
     require_once  'class/plan_status_class.php';
 
-    // $_SESSION['Request'] = $_REQUEST;
+    $_SESSION['Request'] = $_REQUEST;
+    $connection = new Connection();
+    $pdo = $connection->getDbConnection();
     $po_id = $_REQUEST['po_id'];
     $period_id = $_REQUEST['period_id'];
     $inspection_id = $_REQUEST['inspection_id'];
 
-    $po = new Po;
+    $po = new Po($pdo);
 
-    $inspection = new Inspection;
+    $inspection = new Inspection($pdo);
     $rsInspectionPeriod = $inspection->getInspectionPeriodByPeriodId($po_id, $period_id);
     $rsInspectionPeriodDetail = $inspection->getInspectionPeriodDetailByPeriodId($po_id, $period_id);
 
-    $supplier = new Supplier;
+    $supplier = new Supplier($pdo);
     $supplier_rs = $supplier->fetchAll();
 
-    $location = new Location;
+    $location = new Location($pdo);
     $location_rs = $location->fetchAll();
 
-    $plan_status = new Plan_status;
+    $plan_status = new Plan_status($pdo);
     $plan_status_rs = $plan_status->fetchAll();
 
     // 
@@ -512,4 +515,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/inspection_edit.js"></script>
+    <script src="javascript/inspection_period_form.js"></script>

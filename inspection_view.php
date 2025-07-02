@@ -230,7 +230,7 @@ require_once 'auth.php';
                 </thead>
                 <tbody>
                   <?php foreach ($rsInspectionPeriod as $row) { ?>
-                    <tr data-po_id=<?= $row['po_id'] ?> data-period_id=<?= $row['period_id'] ?> data-inspection_id=<?= $row['inspection_id'] ?>>
+                    <tr data-po-id=<?= $row['po_id'] ?> data-period-id=<?= $row['period_id'] ?> data-inspection-id=<?= $row['inspection_id'] ?>>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['period_number'] ?></td>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_planned_percent'] ?></td>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_actual_completed_percent'] ?></td>

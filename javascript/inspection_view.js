@@ -6,7 +6,7 @@ $(document).ready(function () {
       action: "select",
     };
     $.ajax({
-      url: "api_handler_inspection.php",
+      url: "inspection_handler_api.php",
       type: "POST",
       contentType: "application/json",
       dataType: "json",
@@ -33,7 +33,7 @@ $(document).ready(function () {
 
   $(document).on("click", "a.po_number", function (e) {
     e.preventDefault();
-    const po_id = $(this).closest("tr").data("id");
+    const po_id = $(this).closest("tr").data("po-id");
     window.location.href = "inspection_view.php?po_id=" + po_id;
   });
 
@@ -44,7 +44,7 @@ $(document).ready(function () {
     // หรือ
     // $(".content-period").removeClass('d-none').addClass('d-flex');
 
-    let po_id = $(this).closest("tr").data("id"); //$(this).closest("tr")
+    let po_id = $(this).closest("tr").data("po-id"); //$(this).closest("tr")
     let po_number = $(this).closest("tr").find("a:first").html();
     // let po_id = $(this).closest('tr').attr('po-id');
     $(".card-title").html(po_number);
@@ -69,7 +69,7 @@ $(document).ready(function () {
     const po_id = $(this).closest("tr").data("po_id");
     const period_id = $(this).closest("tr").data("period_id");
     const inspection_id = $(this).closest("tr").data("inspection_id");
-    window.location.href = `inspection_edit.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
+    window.location.href = `inspection_period_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
   });
 
   $("#btnCancel").click(function () {

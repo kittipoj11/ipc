@@ -68,7 +68,7 @@ const inspection_id = $(this).closest("tr").find("input.inspection_id").val();
 console.log(`po_id = ${po_id}`);
 console.log(`period_id = ${period_id}`);
 console.log(`inspection_id = ${inspection_id}`);
-    window.location.href = `inspection_edit.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
+    window.location.href = `inspection_period_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
   });
 });
 

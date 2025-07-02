@@ -24,7 +24,7 @@ $(document).ready(function () {
     };
 
     $.ajax({
-      url: "api_handler_po.php",
+      url: "po_handler_api.php",
       type: "POST",
       contentType: "application/json",
       dataType: "json",
@@ -120,7 +120,7 @@ $(document).ready(function () {
     // console.log("Data to be sent:", data_sent);
     // return;
     $.ajax({
-      url: "api_handler_po.php",
+      url: "po_handler_api.php",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(data_sent),

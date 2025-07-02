@@ -15,7 +15,7 @@ $(document).ready(function () {
       action: "select",
     };
     $.ajax({
-      url: "api_handler_inspection.php",
+      url: "inspection_handler_api.php",
       type: "POST",
       contentType: "application/json",
       dataType: "json",
@@ -113,7 +113,7 @@ $(document).ready(function () {
       action: "selectInspectionPeriodAll",
     };
     $.ajax({
-      url: "api_handler_inspection.php",
+      url: "inspection_handler_api.php",
       type: "POST",
       contentType: "application/json",
       dataType: "json",
@@ -163,7 +163,7 @@ $(document).ready(function () {
       // console.log(`po_id = ${po_id}`);
       // console.log(`period_id = ${period_id}`);
       // console.log(`inspection_id = ${inspection_id}`);
-      window.location.href = `inspection_edit.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
+      window.location.href = `inspection_period_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
     });
 
   // loadAllInspection();

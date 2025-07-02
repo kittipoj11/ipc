@@ -272,4 +272,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/inspection_attach.js"></script>
+    <script src="javascript/inspection_period_attach.js"></script>

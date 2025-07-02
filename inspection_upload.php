@@ -1,24 +1,28 @@
+inspection_upload.php
+---------------------------
 <?php
 @session_start();
 
 require_once 'config.php';
+require_once 'class/connection_class.php';
 require_once 'class/po_class.php';
 
 //$_SESSION['_REQUEST'] = $_REQUEST;
-
-$po = new Po();
+$connection = new Connection();
+$pdo=$connection->getDbConnection();
+$po = new Po($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['record_name'])) {
   $recordName = $_POST['record_name'];
   
   try {
     // เริ่ม transaction
-    $po->myConnect->beginTransaction();
+    $pdo->beginTransaction();
 
     // บันทึก record หลัก
-    $stmtRecord = $po->myConnect->prepare("INSERT INTO records (record_name) VALUES (?)");
+    $stmtRecord = $pdo->prepare("INSERT INTO records (record_name) VALUES (?)");
     $stmtRecord->execute([$recordName]);
-    $recordId = $po->myConnect->lastInsertId();
+    $recordId = $pdo->lastInsertId();
     if (isset($_FILES['files'])) {
       $uploadDir = 'uploads/'; // โฟลเดอร์สำหรับเก็บไฟล์
 
@@ -48,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['record_name'])) {
 
         if (move_uploaded_file($tmp_name, $filePath)) {
           // บันทึกข้อมูลไฟล์ลงฐานข้อมูล
-          $stmtFile = $po->myConnect->prepare("INSERT INTO files (record_id, file_name, file_path, file_type) VALUES (?, ?, ?, ?)");
+          $stmtFile = $pdo->prepare("INSERT INTO files (record_id, file_name, file_path, file_type) VALUES (?, ?, ?, ?)");
           $stmtFile->execute([$recordId, $originalFileName, $filePath, $fileType]);
         } else {
           throw new Exception("Failed to upload file.");
@@ -56,11 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['record_name'])) {
       }
     }
     // commit transaction
-    $po->myConnect->commit();
+    $pdo->commit();
     echo json_encode(['status' => 'success', 'message' => 'Record and files uploaded successfully.']);
   } catch (Exception $e) {
     // rollback transaction
-    $po->myConnect->rollBack();
+    $pdo->rollBack();
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
   }
 } else {

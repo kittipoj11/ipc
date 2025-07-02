@@ -15,7 +15,7 @@ $(document).ready(function () {
       action: "select",
     };
     $.ajax({
-      url: "api_handler_po.php",
+      url: "po_handler_api.php",
       type: "POST",
       contentType: "application/json",
       dataType: "json",
@@ -111,7 +111,7 @@ $(document).ready(function () {
       action: "selectperiod",
     };
     $.ajax({
-      url: "api_handler_po.php",
+      url: "po_handler_api.php",
       type: "POST",
       contentType: "application/json",
       dataType: "json",
