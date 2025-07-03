@@ -92,7 +92,7 @@ $(document).ready(function () {
     e.preventDefault(); // ป้องกันการทำงาน default ของลิงก์ (ไม่ต้องเปลี่ยนหน้า)
     const po_id = $(this).parents("tr").data("id");
     // window.location.href = "po_edit.php?po_id=" + po_id;
-    window.location.href = "po_dml.php?action=update" + "&po_id=" + po_id;
+    window.location.href = "po_form.php?action=update" + "&po_id=" + po_id;
   });
 
   $("#tbody").on("click", ".tdMain:not(:has(a), .action)", function (e) {
@@ -221,7 +221,7 @@ $(document).ready(function () {
   $("#tbody").on("click", ".btnEdit", function (e) {
     const po_id = $(this).parents("tr").data("id");
     // window.location.href = "po_edit.php?po_id=" + po_id;
-    window.location.href = "po_dml.php?action=update" + "&po_id=" + po_id;
+    window.location.href = "po_form.php?action=update" + "&po_id=" + po_id;
   });
 
   loadDataAll();

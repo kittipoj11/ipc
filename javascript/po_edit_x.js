@@ -34,7 +34,7 @@ $(document).ready(function () {
             // timer: 15000
           }).then((result) => {
             if (result.isConfirmed) {
-              window.location.href = "po.php";
+              window.location.href = "po_list.php";
               // window.location.reload();
             }
           });
@@ -142,7 +142,7 @@ $(document).ready(function () {
   $(".btnCancel , .btnBack").click(function () {
     window.history.back();
     // window.history.go(-1);
-    // window.location.href = "po.php";
+    // window.location.href = "po_list.php";
   });
 
   $("#contract_value_before").on("change keyup", function () {

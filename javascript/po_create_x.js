@@ -33,7 +33,7 @@ $(document).ready(function () {
             // timer: 15000
           }).then((result) => {
             if (result.isConfirmed) {
-              window.location.href = "po.php";
+              window.location.href = "po_list.php";
               // window.location.reload();
             }
           });

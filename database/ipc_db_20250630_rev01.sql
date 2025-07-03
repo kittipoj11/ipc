@@ -393,7 +393,7 @@ INSERT INTO `menu_items` (`id`, `parent_id`, `title`, `url`, `icon`, `order_num`
 (16, 2, 'Department', 'basic/department.php', 'fa-solid fa-gears', 1),
 (17, 2, 'Location', 'basic/location.php', 'fa-solid fa-gears', 2),
 (18, 2, 'Supplier', 'basic/supplier.php', 'fa-solid fa-gears', 3),
-(19, 3, 'All purchase orders', 'po.php', 'fa-solid fa-gears', 1),
+(19, 3, 'All purchase orders', 'po_list.php', 'fa-solid fa-gears', 1),
 (20, 4, 'All Inspection', 'inspection_list.php', 'fa-solid fa-gears', 1),
 (21, 5, 'All IPC', 'ipc.php', 'fa-solid fa-gears', 1),
 (22, 6, 'Inspection', 'inspection_list.php', 'fa-solid fa-gears', 1),

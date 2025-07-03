@@ -1,0 +1,25 @@
+po_list.php
+- แสดงรายการ po ในรูปแบบตาราง
+po_view.php
+- แสดงรายการ po ที่เลือกเพียง 1 รายการแบบ readonly
+po_form.php
+- หน้าจอเพิ่มหรือแก้ไขข้อมูล
+- โหมดเพิ่ม ไม่มีการส่ง id มาใน URL เช่น order_form.php
+- โหมดแก้ไข จะมีการส่ง id มาใน URL เช่น order_form.php?id=123
+po.js
+- ทำหน้าที่: เป็นผู้ "ส่ง" คำขอ Ajax ไปให้ผู้รับ(po_handler_api.php) 
+po_handler_api.php หรือ po_action.php
+- ทำหน้าที่: เป็นผู้ "รับ" และ "ประมวลผล" คำขอที่ถูกส่งมาจาก po.js
+
+------------------------------------------------------
+inspection.php -> inspection_list.php
+=>	inspection_view.php (แสดงข้อมูล header และ period)
+=>	inspection_view.js 
+=>	inspection_view_handler_api.php(new)
+	=>	inspection_edit.php -> inspection_period_form.php(แก้ไขข้อมูล period เพียงอย่างเดียว)
+	=>	inspection_edit.js -> inspection_period_form.js
+	=>	inspection_period_handler_api.php(new)
+		=> inspection_attach.php -> inspection_period_attach_form.php
+		=> inspection_crud.php -> inspection_period_attach_handler_api.php
+		=> inspection_attach.js -> inspection_period_attach.js
+			=> inspection_upload.php -> inspection_period_upload.php

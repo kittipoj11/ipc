@@ -358,12 +358,12 @@ CREATE TABLE `permissions` (
 INSERT INTO `permissions` (`permission_id`, `permission_name`, `menu_name`, `content_filename`, `function_name`, `is_deleted`) VALUES
 (1, 'ข้อมูลระบบ', 'system', 'content_filename', 'system', 0),
 (2, 'ข้อมูลพื้นฐานทั่วไป', 'general_basic', 'content_filename', 'function_name', 0),
-(3, 'Purchase Order', 'purchase_order', 'po.php', 'po', 0),
+(3, 'Purchase Order', 'purchase_order', 'po_list.php', 'po', 0),
 (4, 'ตรวจรับงาน', 'inspection', 'content_filename', 'function_name', 0),
 (5, 'IPC', 'ipc', 'content_filename', 'function_name', 0),
 (6, 'การจัดการผู้ใช้', 'manage_user', 'content_filename', 'function_name', 0),
 (7, 'รายงาน', 'report', 'report', 'function_name', 0),
-(8, 'po', 'po', 'po.php', 'po', 0);
+(8, 'po', 'po', 'po_list.php', 'po', 0);
 
 -- --------------------------------------------------------
 

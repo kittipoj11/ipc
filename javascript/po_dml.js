@@ -145,7 +145,7 @@ $(document).ready(function () {
         }).then((result) => {
           if (result.isConfirmed) {
             // loadData(); // โหลดข้อมูลใหม่ทั้งหมด
-            window.location.href = "po.php";
+            window.location.href = "po_list.php";
           }
         });
       })

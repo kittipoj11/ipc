@@ -149,7 +149,7 @@
                     </a>
                     <ul class="nav nav-treeview bg-primary text-white py-2 collapse-inner rounded">
                         <li class="nav-item">
-                            <a href="po.php" class="nav-link text-dark">
+                            <a href="po_list.php" class="nav-link text-dark">
                                 <i class="nav-icon fi fi-rr-calendar-days d-none"></i>
                                 <p>All purchase orders</p>
                             </a>

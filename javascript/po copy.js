@@ -61,7 +61,7 @@ $(document).ready(function () {
   $tableMainTbody.on("click", ".btnEdit, a.po_number", function (e) {
     e.preventDefault();
     const poId = $(this).closest("tr").data("id");
-    window.location.href = `po_dml.php?action=update&po_id=${poId}`; // ใช้ Template Literal
+    window.location.href = `po_form.php?action=update&po_id=${poId}`; // ใช้ Template Literal
   });
 
   // Event handler สำหรับคลิกที่ Row เพื่อแสดงงวดงาน

@@ -75,7 +75,7 @@ require_once 'auth.php';
     require_once  'class/location_class.php';
     require_once  'class/plan_status_class.php';
 
-    $_SESSION['Request'] = $_REQUEST;
+    // $_SESSION['Request'] = $_REQUEST;
     $connection = new Connection();
     $pdo = $connection->getDbConnection();
     $po_id = $_REQUEST['po_id'];
