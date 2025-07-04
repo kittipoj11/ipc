@@ -43,7 +43,7 @@ class Po
         return $rs;
     }
 
-    public function fetchByPoId($id):?array
+    public function fetchByPoId_old($id):?array
     {
         $po_id = $id;
         $sql = <<<EOD

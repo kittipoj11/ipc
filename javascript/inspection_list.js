@@ -53,16 +53,6 @@ $(document).ready(function () {
                           <td class="tdMain p-0">${data.working_name_th}</td>
                           <td class="tdMain p-0 text-right">${data.contract_value}</td>
                           <td class="tdMain p-0 text-right">${data.number_of_period}</td>
-                          <td class="tdMain p-0 action d-none" align='center'>
-                              <div class='btn-group-sm'>
-                                  <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-po-id='${data.po_id}'>
-                                      <i class='fa-regular fa-pen-to-square'></i>
-                                  </a>
-                                  <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-po-id='${data.po_id}'>
-                                      <i class='fa-regular fa-trash-can'></i>
-                                  </a>
-                              </div>
-                          </td>
                       </tr>
                             
                     `;
@@ -74,10 +64,7 @@ $(document).ready(function () {
     let tableBody = "";
     $.each(datas, function (index, data) {
       tableBody += `
-                    <tr data-po-id=${data.po_id} data-inspection-id=${data.inspection_id}>
-                      <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right po_id" value="${data.po_id}" readonly></td>
-                      <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right period_id" value="${data.period_id}" readonly></td>
-                      <td class="tdPeriod text-right input-group-sm p-0 d-none"><input type="number" class="form-control text-right inspection_id" value="${data.inspection_id}" readonly></td>
+                    <tr data-po-id=${data.po_id} data-period-id=${data.period_id} data-inspection-id=${data.inspection_id}>
                       <td class="tdPeriod text-right py-0 px-1"><a class="link-opacity-100 pe-auto period_number" style="margin: 0px 5px 5px 5px">${data.period_number}</a></td>
                       <td class="tdPeriod text-right py-0 px-1">${data.workload_planned_percent}</td>
                       <td class="tdPeriod text-right py-0 px-1">${data.workload_actual_completed_percent}</td>
@@ -136,7 +123,7 @@ $(document).ready(function () {
       });
   });
 
-    $(document).on("click", ".period_number", function (e) {
+    $(document).on("click", "a.period_number", function (e) {
       e.preventDefault();
       // การใช้ตัวแปรในการเก็บค่า
       // // ค้นหา tr ที่ปุ่ม a.period อยู่
@@ -150,13 +137,10 @@ $(document).ready(function () {
       // // ดึงค่าจาก inputPoPeriodId
       // let period_id = inputPoPeriodId.val();
 
-      const po_id = $(this).closest("tr").find("input.po_id").val();
+      const po_id = $(this).closest("tr").data("po-id");
       // console.log(`po_id = ${po_id}`);
-      const period_id = $(this).closest("tr").find("input.period_id").val();
-      const inspection_id = $(this)
-        .closest("tr")
-        .find("input.inspection_id")
-        .val();
+      const period_id = $(this).closest("tr").data("period-id");
+      const inspection_id = $(this).closest("tr").data("inspection-id");
       // console.log(`period_id = ${period_id}`);
       // let po_id=1;
       // let period_id=1;

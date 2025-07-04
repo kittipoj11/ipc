@@ -31,39 +31,12 @@ $(document).ready(function () {
       });
   }
 
-  // *** ไม่ใช้
-  $(document).on("click", ".tdMain:not(:has(a))", function (e) {
-    e.preventDefault();
-    $(".content-period").removeClass("d-none");
-    // หรือ
-    // $(".content-period").removeClass('d-none').addClass('d-flex');
-
-    let po_id = $(this).closest("tr").data("po-id"); //$(this).closest("tr")
-    let po_number = $(this).closest("tr").find("a:first").html();
-    // let po_id = $(this).closest('tr').attr('po-id');
-    $(".card-title").html(po_number);
-
-    $.ajax({
-      url: "inspection_crud.php",
-      type: "POST",
-      data: {
-        po_id: po_id,
-        action: "selectInspectionPeriodAll",
-      },
-      dataType: "json",
-      success: function (response) {
-        $("#tbody-period").html(response);
-      },
-    });
-  });
-
   $(document).on("click", ".tdPeriod", function (e) {
     e.preventDefault();
 
     const po_id = $(this).closest("tr").data("po-id");
     const period_id = $(this).closest("tr").data("period-id");
     const inspection_id = $(this).closest("tr").data("inspection-id");
-    console.log(`po_id=${po_id}`);
     window.location.href = `inspection_period_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
   });
 

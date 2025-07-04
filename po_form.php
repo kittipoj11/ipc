@@ -71,7 +71,9 @@ require_once 'auth.php';
 
       $po = new Po($pdo);
       $rsPoMain = $po->fetchByPoId($_REQUEST['po_id']);
-      $rsPoPeriod = $po->fetchAllPeriodByPoId($_REQUEST['po_id']);
+
+      // เปลี่ยนไปใช้ $rsPoMain[periods] cmo rsPoPeriod
+      // $rsPoPeriod = $po->fetchAllPeriodByPoId($_REQUEST['po_id']);
     }
 
     $supplier = new Supplier($pdo);
@@ -243,7 +245,7 @@ require_once 'auth.php';
                           <tbody id="tbody-period">
                             <?php if ($_REQUEST['action'] == 'create') {
                             } elseif ($_REQUEST['action'] == 'update') {
-                              foreach ($rsPoPeriod as $row) { ?>
+                              foreach ($rsPoMain['periods'] as $row) { ?>
                                 <tr data-crud='select' data-period-id=<?php echo isset($row['period_id']) ? htmlspecialchars($row['period_id']) : ''; ?>>
                                   <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
                                   <td class="input-group-sm p-0"><input type="number" name="period_number" class="form-control period_number" value="<?php echo isset($row['period_number']) ? htmlspecialchars($row['period_number']) : ''; ?>" readonly></td>

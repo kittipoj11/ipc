@@ -56,18 +56,6 @@ require_once 'auth.php';
     <?php include 'sidebar.php'; ?>
     <?php include 'navbar.php'; ?>
 
-    <!-- Main Content Start -->
-    <!-- < ?php
-    require_once  'class/connection_class.php';
-    require_once  'class/inspection_class.php';
-    require_once  'class/po_class.php';
-
-    $connection=new Connection();
-    $pdo=$connection->getDbConnection();
-    $po = new Po($pdo);
-    $rsPoMainAll = $po->fetchAll();
-    ?> -->
-
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
@@ -94,7 +82,6 @@ require_once 'auth.php';
                   <table id="tableMain" class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
-                        <th class="text-center p-1 d-none">#</th>
                         <th class="text-center p-1" style="width: 150px;">เลขที่ PO</th>
                         <th class="text-center p-1">โครงการ</th>
                         <th class="text-center p-1">ผู้รับเหมา</th>
@@ -102,7 +89,6 @@ require_once 'auth.php';
                         <th class="text-center p-1">งาน</th>
                         <th class="text-center p-1">มูลค่า PO</th>
                         <th class="text-center p-1">จำนวนงวดงาน</th>
-                        <th class="text-center p-1 d-none" style="width: 120px;">Action</th>
                       </tr>
                     </thead>
                     <tbody id="tbody">
@@ -135,9 +121,6 @@ require_once 'auth.php';
                   <table class="table table-bordered justify-content-center text-center" id="tablePeriod">
                     <thead>
                       <tr>
-                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po_id</th>
-                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">period_id</th>
-                        <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">inspection_id</th>
                         <th class="text-center align-content-center p-1" rowspan="2" width="5%">งวดงาน</th>
                         <th class="text-center p-1" colspan="3">ปริมาณงาน</th>
                         <th class="text-center p-1" colspan="3">ยอดเบิกเงินงวด</th>
@@ -198,4 +181,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/inspection.js"></script>
+    <script src="javascript/inspection_list.js"></script>

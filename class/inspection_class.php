@@ -9,6 +9,25 @@ class Inspection {
     {
         $this->db = $pdoConnection;
     }
+
+    public function fetchHeaderByPoId($poId): ?array
+    {
+        $sql = "SELECT `po_id`, `po_number`, `project_name`, `supplier_id`, `location_id`
+                    , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
+                    , `is_deposit`, `deposit_percent`, `deposit_value`
+                    , `working_date_from`, `working_date_to`, `working_day`
+                    , `create_by`, `create_date`, `number_of_period`
+                    FROM `po_main`
+                    WHERE `po_id` = :po_id
+                    ORDER BY `po_id`";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $rs ?: null;
+    }
+
     public function getInspectionPeriodAllByPoId($poId): array
     {
         $sql = "SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number

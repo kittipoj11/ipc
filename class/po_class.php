@@ -59,6 +59,7 @@ class Po
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
+        // return $rs ?: null;
 
         // ดึงข้อมูลจากตารางรอง
         $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`

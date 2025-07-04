@@ -69,7 +69,7 @@ require_once 'auth.php';
 
     $location = new Location($pdo);
     $location_rs = $location->fetchAll();
-
+    // เปลี่ยนไปใช้ $rsPoMain[periods] แบบ po_form.php
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -211,9 +211,6 @@ require_once 'auth.php';
               <table class="table table-bordered justify-content-center text-center">
                 <thead>
                   <tr>
-                    <!-- <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po_id</th>
-                    <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">period_id</th>
-                    <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">inspection_id</th> -->
                     <th class="text-center align-content-center p-1" rowspan="2" width="5%">งวดงาน</th>
                     <th class="text-center p-1" colspan="3">ปริมาณงาน</th>
                     <th class="text-center p-1" colspan="3">ยอดเบิกเงินงวด</th>
