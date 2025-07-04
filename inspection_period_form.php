@@ -76,13 +76,14 @@ require_once 'auth.php';
     require_once  'class/plan_status_class.php';
 
     // $_SESSION['Request'] = $_REQUEST;
-    $connection = new Connection();
+    $connection = new Connection;
     $pdo = $connection->getDbConnection();
     $po_id = $_REQUEST['po_id'];
     $period_id = $_REQUEST['period_id'];
     $inspection_id = $_REQUEST['inspection_id'];
 
     $po = new Po($pdo);
+    $rsPoMainByPoId = $po->fetchByPoId($po_id);
 
     $inspection = new Inspection($pdo);
     $rsInspectionPeriod = $inspection->getInspectionPeriodByPeriodId($po_id, $period_id);

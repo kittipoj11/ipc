@@ -55,7 +55,6 @@ require_once 'auth.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
 
-
     $connection = new Connection;
     $pdo = $connection->getDbConnection();
     // $action = $_REQUEST['action'];
@@ -90,7 +89,7 @@ require_once 'auth.php';
           <h6 class="m-1 fw-bold text-uppercase"><?= $content_header ?></h6>
         </div>
         <!-- /.container-fluid -->
-        <div id="response-message">x</div>
+        <div id="response-message"></div>
       </section>
 
       <!-- Main content -->
@@ -106,7 +105,7 @@ require_once 'auth.php';
 
                 <div class="card-body m-0 p-0">
                   <form name="myForm" id="myForm" action="" method="post">
-                    <input type="text" class="d-nonex" name="po_id" id="po_id" value=<?= (isset($_REQUEST['po_id']) ? $_REQUEST['po_id'] : '') ?>>
+                    <input type="text" class="d-none" name="po_id" id="po_id" value=<?= (isset($_REQUEST['po_id']) ? $_REQUEST['po_id'] : '') ?>>
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
@@ -316,4 +315,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/po_dml.js"></script>
+    <script src="javascript/po_form.js"></script>
