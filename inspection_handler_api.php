@@ -13,18 +13,17 @@ require_once 'class/inspection_class.php';
 
 $connection = new Connection();
 $pdo = $connection->getDbConnection();
-$po = new Po($pdo);
 $inspection = new Inspection($pdo);
 
 $requestData = json_decode(file_get_contents('php://input'), true);
 // $_SESSION['req data1']=$requestData;
 
 if (isset($requestData['action']) && $requestData['action'] == 'select') {
-    $rs = $po->fetchAll();
+    $rs = $inspection->fetchAll();
     echo json_encode($rs);
 
 } elseif (isset($requestData['action']) && $requestData['action'] == 'selectInspectionPeriodAll') {
-    $rs = $inspection->getInspectionPeriodAllByPoId($requestData['po_id']);
+    $rs = $inspection->fetchAllPeriodByPoId($requestData['po_id']);
     echo json_encode($rs);
 
 } elseif (isset($requestData['action']) && $requestData['action'] == 'updateInspectionPeriod') {

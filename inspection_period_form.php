@@ -82,23 +82,16 @@ require_once 'auth.php';
     $period_id = $_REQUEST['period_id'];
     $inspection_id = $_REQUEST['inspection_id'];
 
-    $po = new Po($pdo);
-    $rsPoMainByPoId = $po->fetchByPoId($po_id);
-
     $inspection = new Inspection($pdo);
-    $rsInspectionHeader = $inspection->fetchHeaderByPoId($po_id);
-    $rsInspectionPeriod = $inspection->getInspectionPeriodByPeriodId($po_id, $period_id);
+    $rsInspection = $inspection->fetchByPoId($po_id);
+    $rsInspectionPeriod = $inspection->fetchPeriodByPeriodId($period_id);
+
+    $rsInspectionPeriod_old = $inspection->getInspectionPeriodByPeriodId($po_id, $period_id);
     $rsInspectionPeriodDetail = $inspection->getInspectionPeriodDetailByPeriodId($po_id, $period_id);
-
-    $supplier = new Supplier($pdo);
-    $supplier_rs = $supplier->fetchAll();
-
-    $location = new Location($pdo);
-    $location_rs = $location->fetchAll();
 
     $plan_status = new Plan_status($pdo);
     $plan_status_rs = $plan_status->fetchAll();
-
+ 
     // 
     // ถ้า approval_level ตรงกับ current_approval_level และ approver_id ตรงกับ user_id ที่ login
     // 

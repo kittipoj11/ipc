@@ -62,14 +62,14 @@ class Po
         // return $rs ?: null;
 
         // ดึงข้อมูลจากตารางรอง
-        $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`
-                FROM `po_periods`
-                WHERE `po_id` = :po_id
-                ORDER BY `po_id`, `period_number`";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $rs['periods'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`
+        //         FROM `po_periods`
+        //         WHERE `po_id` = :po_id
+        //         ORDER BY `po_id`, `period_number`";
+        // $stmt = $this->db->prepare($sql);
+        // $stmt->bindParam(':po_id', $id, PDO::PARAM_INT);
+        // $stmt->execute();
+        $rs['periods'] = $this->fetchAllPeriodByPoId($poId);
 
         return $rs;
     }

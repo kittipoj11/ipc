@@ -20,7 +20,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
     $rs = $po->fetchAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectInspectionPeriodAll') {
-    $rs = $inspection->getInspectionPeriodAllByPoId($_REQUEST['po_id']);
+    $rs = $inspection->fetchAllPeriodByPoId($_REQUEST['po_id']);
     createPeriodTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updateInspectionPeriod') {
     $rs = $inspection->updateInspectionPeriod($_REQUEST);
