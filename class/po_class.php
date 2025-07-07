@@ -412,42 +412,6 @@ class Po
 
 
 
-    public function getHtmlData()
-    {
-        $sql = "select po_id, po_name, is_deleted 
-                from po
-                where is_deleted = false";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        $rs = $stmt->fetchAll();
-
-        $html = "<p>รายงาน Location ทั้งหมด</p>";
-
-        // เรียกใช้งาน ฟังก์ชั่นดึงข้อมูลไฟล์มาใช้งาน
-        $html .= "<style>";
-        $html .= "table, th, td {";
-        $html .= "border: 1px solid black;";
-        $html .= "border-radius: 10px;";
-        $html .= "background-color: #b3ffb3;";
-        $html .= "padding: 5px;}";
-        $html .= "</style>";
-        $html .= "<table cellspacing='0' cellpadding='1' style='width:1100px;'>";
-        $html .= "<tr>";
-        $html .= "<th align='center' bgcolor='F2F2F2'>รหัส Location </th>";
-        $html .= "<th align='center' bgcolor='F2F2F2'> Location </th>";
-        $html .= "</tr>";
-        foreach ($rs as $row) :
-            $html .=  "<tr bgcolor='#c7c7c7'>";
-            $html .=  "<td>{$row['po_id']}</td>";
-            $html .=  "<td>{$row['po_name']}</td>";
-            $html .=  "</tr>";
-        endforeach;
-
-        $html .= "</table>";
-
-        return $html;
-    }
 }
 
 

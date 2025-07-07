@@ -1,25 +1,56 @@
 $(document).ready(function () {
-  
-  let contract_value = isNaN(parseFloat($("#contract_value").val())) ? 0 : parseFloat($("#contract_value").val());
-  let interim_payment = parseFloat($("#interim_payment").val());
-  let interim_payment_less_previous = isNaN(parseFloat($("#interim_payment_less_previous").val())) ? 0 : parseFloat($("#interim_payment_less_previous").val());
-  let interim_payment_accumulated = isNaN(parseFloat($("#interim_payment_accumulated").val())) ? 0 : parseFloat($("#interim_payment_accumulated").val());
-  let interim_payment_remain = isNaN(parseFloat($("#interim_payment_remain").val())) ? 0 : parseFloat($("#interim_payment_remain").val());
-  
-  let interim_payment_percent = isNaN(parseFloat($("#interim_payment_percent").val())) ? 0 : parseFloat($("#interim_payment_percent").val());
-  let interim_payment_less_previous_percent = isNaN(parseFloat($("#interim_payment_less_previous_percent").val())) ? 0 : parseFloat($("#interim_payment_less_previous_percent").val());
-  let interim_payment_accumulated_percent = isNaN(parseFloat($("#interim_payment_accumulated_percent").val())) ? 0 : parseFloat($("#interim_payment_accumulated_percent").val());
-  let interim_payment_remain_percent = isNaN(parseFloat($("#interim_payment_remain_percent").val())) ? 0 : parseFloat($("#interim_payment_remain_percent").val());
-  
+  const responseMessage = $("#response-message");
 
-  // let workload_planned_percent = isNaN(parseFloat($("#workload_planned_percent").val())) ? 0 : parseFloat($("#workload_planned_percent").val());
-  // let workload_actual_completed_percent = isNaN(parseFloat($("#workload_actual_completed_percent").val())) ? 0 : parseFloat($("#workload_actual_completed_percent").val());
-  // let workload_remaining_percent = isNaN(parseFloat($("#workload_remaining_percent").val())) ? 0 : parseFloat($("#workload_remaining_percent").val());
-  // let workload_accumulated_percent = isNaN(parseFloat($("#workload_accumulated_percent").val())) ? 0 : parseFloat($("#workload_accumulated_percent").val());
-  
-  // interim_payment_less_previous = interim_payment_accumulated;
-  // let interim_payment_less_previous_old = interim_payment_less_previous;
-  // let interim_payment_accumulated_old = interim_payment_accumulated;
+  function showMessage(message, isSuccess) {
+    responseMessage
+      .text(message)
+      .removeClass("success error")
+      .addClass(isSuccess ? "success" : "error")
+      .show()
+      .delay(5000)
+      .fadeOut();
+  }
+
+  let contract_value = isNaN(parseFloat($("#contract_value").val()))
+    ? 0
+    : parseFloat($("#contract_value").val());
+  let interim_payment = parseFloat($("#interim_payment").val());
+  let interim_payment_less_previous = isNaN(
+    parseFloat($("#interim_payment_less_previous").val())
+  )
+    ? 0
+    : parseFloat($("#interim_payment_less_previous").val());
+  let interim_payment_accumulated = isNaN(
+    parseFloat($("#interim_payment_accumulated").val())
+  )
+    ? 0
+    : parseFloat($("#interim_payment_accumulated").val());
+  let interim_payment_remain = isNaN(
+    parseFloat($("#interim_payment_remain").val())
+  )
+    ? 0
+    : parseFloat($("#interim_payment_remain").val());
+
+  let interim_payment_percent = isNaN(
+    parseFloat($("#interim_payment_percent").val())
+  )
+    ? 0
+    : parseFloat($("#interim_payment_percent").val());
+  let interim_payment_less_previous_percent = isNaN(
+    parseFloat($("#interim_payment_less_previous_percent").val())
+  )
+    ? 0
+    : parseFloat($("#interim_payment_less_previous_percent").val());
+  let interim_payment_accumulated_percent = isNaN(
+    parseFloat($("#interim_payment_accumulated_percent").val())
+  )
+    ? 0
+    : parseFloat($("#interim_payment_accumulated_percent").val());
+  let interim_payment_remain_percent = isNaN(
+    parseFloat($("#interim_payment_remain_percent").val())
+  )
+    ? 0
+    : parseFloat($("#interim_payment_remain_percent").val());
 
   $("#btnAdd").click(function () {
     let order_no;
@@ -94,44 +125,44 @@ $(document).ready(function () {
 
   $("#interim_payment").on("change keyup", function () {
     interim_payment = parseFloat($(this).val());
-    // let contract_value = isNaN(parseFloat($("#contract_value").val())) ? 0 : parseFloat($("#contract_value").val());
-    // let interim_payment_percent = isNaN(parseFloat($("#interim_payment_percent").val())) ? 0 : parseFloat($("#interim_payment_percent").val());
-    // let interim_payment_less_previous = isNaN(parseFloat($("#interim_payment_less_previous").val())) ? 0 : parseFloat($("#interim_payment_less_previous").val());
-    // let interim_payment_less_previous_percent = isNaN(parseFloat($("#interim_payment_less_previous_percent").val())) ? 0 : parseFloat($("#interim_payment_less_previous_percent").val());
-    // let interim_payment_remain = isNaN(parseFloat($("#interim_payment_remain").val())) ? 0 : parseFloat($("#interim_payment_remain").val());
-    // let interim_payment_remain_percent = isNaN(parseFloat($("#interim_payment_remain_percent").val())) ? 0 : parseFloat($("#interim_payment_remain_percent").val());
-    
-    // console.clear();
-    // console.log(`interim_payment = ${interim_payment}`);
-    // console.log(`interim_payment_percent = ${interim_payment_percent}`);
-    // console.log(`interim_payment_less_previous = ${interim_payment_less_previous}`);
-    // console.log(`interim_payment_less_previous_percent = ${interim_payment_less_previous_percent}`);
-    // console.log(`interim_payment_remain = ${interim_payment_remain}`);
-    // console.log(`interim_payment_remain_percent = ${interim_payment_remain_percent}`);
-    
+
     if (!isNaN(interim_payment) && !isNaN(contract_value)) {
       // interim_payment_less_previous = interim_payment_accumulated;
-      interim_payment_accumulated	= interim_payment + interim_payment_less_previous;//(คือ Total Value Of Interim Payment))
+      interim_payment_accumulated =
+        interim_payment + interim_payment_less_previous; //(คือ Total Value Of Interim Payment))
       interim_payment_remain = contract_value - interim_payment_accumulated;
 
-      interim_payment_less_previous_percent = (interim_payment_less_previous * 100) / contract_value;
+      interim_payment_less_previous_percent =
+        (interim_payment_less_previous * 100) / contract_value;
       interim_payment_percent = (interim_payment * 100) / contract_value;
-      interim_payment_accumulated_percent	=(interim_payment_accumulated * 100) / contract_value;	//เปอร์เซ็นต์ของยอดเบิกเงินงวดสะสม
-      interim_payment_remain_percent = (interim_payment_remain * 100) / contract_value;
+      interim_payment_accumulated_percent =
+        (interim_payment_accumulated * 100) / contract_value; //เปอร์เซ็นต์ของยอดเบิกเงินงวดสะสม
+      interim_payment_remain_percent =
+        (interim_payment_remain * 100) / contract_value;
 
-      $("#interim_payment_less_previous").val(interim_payment_less_previous.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_accumulated").val(interim_payment_accumulated.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_less_previous").val(
+        interim_payment_less_previous.toFixed(2)
+      ); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_accumulated").val(
+        interim_payment_accumulated.toFixed(2)
+      ); // (ทศนิยม 2 ตำแหน่ง)
       $("#interim_payment_remain").val(interim_payment_remain.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
-      
-      $("#interim_payment_less_previous_percent").val(interim_payment_less_previous_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+
+      $("#interim_payment_less_previous_percent").val(
+        interim_payment_less_previous_percent.toFixed(2)
+      ); // (ทศนิยม 2 ตำแหน่ง)
       $("#interim_payment_percent").val(interim_payment_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_accumulated_percent").val(interim_payment_accumulated_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_remain_percent").val(interim_payment_remain_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_accumulated_percent").val(
+        interim_payment_accumulated_percent.toFixed(2)
+      ); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_remain_percent").val(
+        interim_payment_remain_percent.toFixed(2)
+      ); // (ทศนิยม 2 ตำแหน่ง)
     } else {
       $("#interim_payment_less_previous").val("0"); // (ทศนิยม 2 ตำแหน่ง)
       $("#interim_payment_accumulated").val("0"); // (ทศนิยม 2 ตำแหน่ง)
       $("#interim_payment_remain").val("0"); // (ทศนิยม 2 ตำแหน่ง)
-      
+
       $("#interim_payment_less_previous_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
       $("#interim_payment_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
       $("#interim_payment_accumulated_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
@@ -139,48 +170,40 @@ $(document).ready(function () {
     }
   });
 
-  // $("#contract_value").on("change keyup", function () {
-  //   let contract_value = parseFloat($(this).val());
-  //   let vat_rate = parseFloat($("#vat").data("vat_rate"));
-
-  //   if (!isNaN(contract_value) && !isNaN(vat_rate)) {
-  //     var contract_value_before = contract_value / (1 + vat_rate / 100);
-  //     $("#contract_value_before").val(contract_value_before.toFixed(2)); // แสดงผลลัพธ์ (ทศนิยม 2 ตำแหน่ง)
-  //     $("#vat").val((contract_value - contract_value_before).toFixed(2)); // แสดงผลรวม VAT (ทศนิยม 2 ตำแหน่ง)
-  //   } else {
-  //     $("#contract_value_before").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
-  //     $("#vat").val(""); // ล้างค่าถ้าป้อนไม่ถูกต้อง
-  //   }
-  // });
-
-  $("#workload_actual_completed_percent").on("keypress", function(event) {
+  $("#workload_actual_completed_percent").on("keypress", function (event) {
     // Check if the pressed key is Enter (keyCode 13)
     if (event.which === 13) {
       calculateAndDisplay();
     }
   });
 
-  $("#workload_actual_completed_percent").on("blur", function() {
+  $("#workload_actual_completed_percent").on("blur", function () {
     calculateAndDisplay();
   });
 
   function calculateAndDisplay() {
-    let workload_actual_completed_percent = $("#workload_actual_completed_percent").val();
-    
-    if (!isNaN(workload_actual_completed_percent) && workload_actual_completed_percent !== "") {
-      workload_remaining_percent	= 100-workload_actual_completed_percent;//(คือ Total Value Of Interim Payment))
-      $("#workload_remaining_percent").val(workload_remaining_percent.toFixed(2));
+    let workload_actual_completed_percent = $(
+      "#workload_actual_completed_percent"
+    ).val();
+
+    if (
+      !isNaN(workload_actual_completed_percent) &&
+      workload_actual_completed_percent !== ""
+    ) {
+      workload_remaining_percent = 100 - workload_actual_completed_percent; //(คือ Total Value Of Interim Payment))
+      $("#workload_remaining_percent").val(
+        workload_remaining_percent.toFixed(2)
+      );
     } else {
       $("#workload_remaining_percent").val("");
     }
   }
-  
+
   $("#myForm").on("submit", function (e) {
-    // $(document).on("click", "#btnSave", function (e) {
-    // console.log('submit');
-    const radioButtons = document.querySelectorAll('input[name="disbursement"]');
+    const radioButtons = document.querySelectorAll(
+      'input[name="disbursement"]'
+    );
     e.preventDefault();
-    let can_save = true;
     let disbursement = 0; // กำหนดค่าเริ่มต้นเป็น 0
     for (const radioButton of radioButtons) {
       if (radioButton.checked) {
@@ -189,104 +212,95 @@ $(document).ready(function () {
       }
     }
 
-    // const data = {
-    //   disbursement: disbursement,
-    //   // ข้อมูลอื่นๆ ที่ต้องการส่ง
-    // };
-    
-    if (can_save == true) {
-      let data_sent = $("#myForm").serializeArray();
-      data_sent.push({
-        // disbursement: disbursement,
-        name: "action",
-        value: "updateInspectionPeriod",
-      });
-      // console.log(data_sent);
-      // return;
-      $.ajax({
-        type: "POST",
-        url: "inspection_crud.php",
-        // data: $(this).serialize(),
-        data: data_sent,
-        success: function (response) {
-          Swal.fire({
-            icon: "success",
-            title: "Data saved successfully",
-            color: "#716add",
-            allowOutsideClick: false,
-            background: "black",
-            // backdrop: `
-            //                     rgba(0,0,123,0.4)
-            //                     url("_images/paw.gif")
-            //                     left bottom
-            //                     no-repeat
-            //                     `,
-            // showConfirmButton: false,
-            // timer: 15000
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = "inspection_list.php";
-              // window.location.reload();
-            }
-          });
-          // window.location.href = 'main.php?page=open_area_schedule';
-        },
-      });
-    }
-  });
+    const headerData = {
+      po_id: $("#po_id").val(),
+      po_number: $("#po_number").val(),
+      project_name: $("#project_name").val(),
+      supplier_id: $("#supplier_id").val(),
+      location_id: $("#location_id").val(),
+      working_name_th: $("#working_name_th").val(),
+      working_name_en: $("#working_name_en").val(),
+      contract_value_before: $("#contract_value_before").val() ?? 0,
+      contract_value: parseFloat($("#contract_value").val() ?? 0),
+      vat: $("#vat").val() ?? 0,
+      is_include_vat: 1,
+      is_deposit: $("#is_deposit").val(),
+      deposit_value:
+        (parseFloat($("#deposit_percent").val() ?? 0) *
+          parseFloat($("#contract_value").val() ?? 0)) /
+        100,
+      working_date_from: $("#working_date_from").val(),
+      working_date_to: $("#working_date_to").val(),
+      working_day: parseFloat($("#working_day").val() ?? 0),
+      number_of_period: $("#tbody-period tr").not('[data-crud="delete"]')
+        .length, //จำนวนตรงนี้จะไม่เอารายการที่ลบไป
+    };
 
-  $(".approval_next").on("click", function (e) {
-    // $(document).on("click", "#btnSave", function (e) {
-    console.log("click");
-    e.preventDefault();
-    let current_approval_level = $(this).closest("ul").data("current_approval_level");
-    let new_approval_level = current_approval_level + 1;
+    const periodsData = [];
+    $("#tbody-period tr").each(function () {
+      const row = $(this);
 
-      let data_sent = $("#myForm").serializeArray();
-      data_sent.push(
-        {
-          name: "action",
-          value: "updateCurrentApprovalLevel",
-        },
-        {
-          name: "new_approval_level",
-          value: new_approval_level,
-        },
-        {
-          name: "current_approval_level",
-          value: current_approval_level,
-        }
-      );
-      // console.log(data_sent);
-      // return;
-      $.ajax({
-        type: "POST",
-        url: "inspection_crud.php",
-        // data: $(this).serialize(),
-        data: data_sent,
-        success: function (response) {
-          Swal.fire({
-            icon: "success",
-            title: "Approved successfully",
-            color: "#716add",
-            allowOutsideClick: false,
-            background: "black",
-            // backdrop: `
-            //                     rgba(0,0,123,0.4)
-            //                     url("_images/paw.gif")
-            //                     left bottom
-            //                     no-repeat
-            //                     `,
-            // showConfirmButton: false,
-            // timer: 15000
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = "inspection_list.php";
-              // window.location.reload();
-            }
-          });
-          // window.location.href = 'main.php?page=open_area_schedule';
-        },
+      // สร้าง object สำหรับเก็บข้อมูลของแถวนี้
+      // row.removeData("crud"); ทำการ clear ค่า data-* ที่อยู่ใน cache ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
+      const periodRecord = {
+        period_id: row.attr("data-period-id"), // ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
+        period_crud: row.attr("data-crud"), //
+        period_number: row.find('input[name="period_number"]').val(), // ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
+        workload_planned_percent: row
+          .find('input[name="workload_planned_percent"]')
+          .val(),
+        interim_payment: row.find('input[name="interim_payment"]').val(),
+        interim_payment_percent: row
+          .find('input[name="interim_payment_percent"]')
+          .val(),
+        remark: row.find('input[name="remark"]').val(),
+        crud: row.find('input[name="crud"]').val(),
+      };
+      // เพิ่ม object ของแถวนี้เข้าไปใน array หลัก
+      periodsData.push(periodRecord);
+    });
+
+    const data_sent = {
+      headerData: headerData,
+      periodsData: periodsData,
+      action: "save",
+    };
+
+    $.ajax({
+      url: "inspection_handler_api.php",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(data_sent),
+    })
+      .done(function (result) {
+        // console.log(`result: ${result}`);
+        responseMessage.text(result.message).css("color", "green");
+        Swal.fire({
+          icon: "success",
+          title: "Data saved successfully",
+          color: "#716add",
+          allowOutsideClick: false,
+          background: "black",
+          // backdrop: `
+          //                     rgba(0,0,123,0.4)
+          //                     url("_images/paw.gif")
+          //                     left bottom
+          //                     no-repeat
+          //                     `,
+          // showConfirmButton: false,
+          // timer: 15000
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // loadData(); // โหลดข้อมูลใหม่ทั้งหมด
+            window.location.href = "inspection_list.php";
+          }
+        });
+      })
+      .fail((jqXHR) => {
+        const errorMsg = jqXHR.responseJSON
+          ? jqXHR.responseJSON.message
+          : "เกิดข้อผิดพลาดรุนแรง";
+        showMessage(errorMsg, false);
       });
   });
 
@@ -310,9 +324,66 @@ $(document).ready(function () {
     // console.log(`inspection_id = ${inspection_id}`);
     window.location.href = `inspection_period_attach_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}&mode=`;
   });
-  
+
   $("#floatingTextarea").on("click", function () {
-  console.log($(this).val());  
+    console.log($(this).val());
+  });
+
+  $(".approval_next").on("click", function (e) {
+    // $(document).on("click", "#btnSave", function (e) {
+    console.log("click");
+    e.preventDefault();
+    let current_approval_level = $(this)
+      .closest("ul")
+      .data("current_approval_level");
+    let new_approval_level = current_approval_level + 1;
+
+    let data_sent = $("#myForm").serializeArray();
+    data_sent.push(
+      {
+        name: "action",
+        value: "updateCurrentApprovalLevel",
+      },
+      {
+        name: "new_approval_level",
+        value: new_approval_level,
+      },
+      {
+        name: "current_approval_level",
+        value: current_approval_level,
+      }
+    );
+    // console.log(data_sent);
+    // return;
+    $.ajax({
+      type: "POST",
+      url: "inspection_crud.php",
+      // data: $(this).serialize(),
+      data: data_sent,
+      success: function (response) {
+        Swal.fire({
+          icon: "success",
+          title: "Approved successfully",
+          color: "#716add",
+          allowOutsideClick: false,
+          background: "black",
+          // backdrop: `
+          //                     rgba(0,0,123,0.4)
+          //                     url("_images/paw.gif")
+          //                     left bottom
+          //                     no-repeat
+          //                     `,
+          // showConfirmButton: false,
+          // timer: 15000
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "inspection_list.php";
+            // window.location.reload();
+          }
+        });
+        // window.location.href = 'main.php?page=open_area_schedule';
+      },
+    });
   });
 
   function loadPage() {
@@ -333,8 +404,6 @@ $(document).ready(function () {
       $("#submit").removeClass("d-none");
       $(".btn-group").removeClass("d-none");
     }
-
-
   }
 
   loadPage();
