@@ -17,10 +17,10 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     $workflows->delete($_REQUEST);
     // fetchAll($workflows);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $workflows->fetchAll();
+    $rs = $workflows->getAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $workflows->fetchById($_REQUEST['workflow_id']);
+    $rs = $workflows->getById($_REQUEST['workflow_id']);
     echo json_encode($rs);
 } else {
     fetchAll($workflows);
@@ -56,10 +56,10 @@ function createTable($getRs) {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function fetchAll($getObj)
+function getAll($getObj)
 {
     try {
-        $rs = $getObj->fetchAll();
+        $rs = $getObj->getAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

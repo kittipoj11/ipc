@@ -17,7 +17,7 @@ class Role
         $this->db = $pdoConnection;
     }
 
-    public function fetchAll()
+    public function getAll()
     {
         $sql = <<<EOD
                     SELECT `role_id`, `role_name` 
@@ -30,7 +30,7 @@ class Role
         return $rs;
     }
 
-    public function fetchById($getRoleId):?array
+    public function getById($getRoleId):?array
     {
         $sql = <<<EOD
                     SELECT `role_id`, `role_name` 

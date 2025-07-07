@@ -15,7 +15,7 @@ class Department
         $this->db = $pdoConnection;
     }
 
-    public function fetchAll()
+    public function getAll()
     {
         $sql = <<<EOD
                     select department_id, department_name, is_deleted 
@@ -29,7 +29,7 @@ class Department
         return $rs;
     }
 
-    public function fetchById($id): ?array
+    public function getById($id): ?array
     {
         $sql = <<<EOD
                     select department_id, department_name, is_deleted 

@@ -37,7 +37,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     echo json_encode($result);
 
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $po_status->fetchAll();
+    $rs = $po_status->getAll();
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
 
@@ -45,7 +45,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     echo json_encode($rs);
 
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $po_status->fetchById($_REQUEST['po_status_id']);
+    $rs = $po_status->getById($_REQUEST['po_status_id']);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
 
@@ -57,10 +57,10 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function fetchAll($getObj)
+function getAll($getObj)
 {
     try {
-        $rs = $getObj->fetchAll();
+        $rs = $getObj->getAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

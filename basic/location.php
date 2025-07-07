@@ -48,7 +48,7 @@ require_once '../auth.php';
     $pdo = $connection->getDbConnection();
 
     $location = new Location($pdo);
-    $rs = $location->fetchAll();
+    $rs = $location->getAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

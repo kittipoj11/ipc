@@ -15,7 +15,7 @@ class Menu_Item
         $this->db = $pdoConnection;
     }
 
-    public function fetchAll()
+    public function getAll()
     {
         $sql = <<<EOD
                     SELECT `id`, `parent_id`, `title`, `url`, `icon`, `order_num`
@@ -29,7 +29,7 @@ class Menu_Item
         return $rs;
     }
 
-    public function fetchById($id): ?array
+    public function getById($id): ?array
     {
         $sql = <<<EOD
                     SELECT `id`, `parent_id`, `title`, `url`, `icon`, `order_num`

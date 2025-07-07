@@ -70,17 +70,17 @@ require_once 'auth.php';
       $content_header = 'Edit Purchase Order';
 
       $po = new Po($pdo);
-      $rsPoMain = $po->fetchByPoId($_REQUEST['po_id']);
+      $rsPoMain = $po->getByPoId($_REQUEST['po_id']);
 
       // เปลี่ยนไปใช้ $rsPoMain[periods] cmo rsPoPeriod
-      // $rsPoPeriod = $po->fetchAllPeriodByPoId($_REQUEST['po_id']);
+      // $rsPoPeriod = $po->getAllPeriodByPoId($_REQUEST['po_id']);
     }
 
     $supplier = new Supplier($pdo);
-    $supplier_rs = $supplier->fetchAll();
+    $supplier_rs = $supplier->getAll();
 
     $location = new Location($pdo);
-    $location_rs = $location->fetchAll();
+    $location_rs = $location->getAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

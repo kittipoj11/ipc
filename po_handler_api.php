@@ -37,11 +37,11 @@ if (isset($requestData['action']) && $requestData['action'] == 'save') {
     // header('Content-Type: application/json');//ประกาศอยู่ด้านบนแล้ว
     echo json_encode($id);
 } elseif (isset($requestData['action']) && $requestData['action'] == 'select') {
-    $rs = $po->fetchAll();
+    $rs = $po->getAll();
     // header('Content-Type: application/json');//ประกาศอยู่ด้านบนแล้ว
     echo json_encode($rs);
 } elseif (isset($requestData['action']) && $requestData['action'] == 'selectperiod') {
-    $rs = $po->fetchAllPeriodByPoId($requestData['po_id']);
+    $rs = $po->getAllPeriodByPoId($requestData['po_id']);
     echo json_encode($rs);
 } else {
     // header('Content-Type: application/json');//ประกาศอยู่ด้านบนแล้ว

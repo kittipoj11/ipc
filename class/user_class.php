@@ -53,7 +53,7 @@ class User
      * ดึงข้อมูลผู้ใช้ทั้งหมดจากฐานข้อมูล
      * @return array คืนค่าเป็น array ของข้อมูลผู้ใช้ทั้งหมด หรือ array ว่างหากไม่มีข้อมูล
      */
-    public function fetchAll()
+    public function getAll()
     {
         $sql = <<<EOD
                     select user_id, user_code, username, password, full_name, u.role_id, u.department_id 
@@ -71,7 +71,7 @@ class User
         return $rs;
     }
 
-    public function fetchByUsername($username): ?array
+    public function getByUsername($username): ?array
     {
         $sql = <<<EOD
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
@@ -96,7 +96,7 @@ class User
         return $rs;
     }
 
-    public function fetchAllPermissions()
+    public function getAllPermissions()
     {
         $sql = <<<EOD
                     SELECT P.permission_id, P.permission_name, P.menu_name
@@ -109,7 +109,7 @@ class User
         $rs = $stmt->fetchAll();
         return $rs;
     }
-    public function fetchAllPermissionByUsername($username)
+    public function getAllPermissionByUsername($username)
     {
         // $sql = <<<EOD
         //             SELECT P.permission_id, P.permission_name, P.menu_name

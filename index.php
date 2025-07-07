@@ -51,7 +51,7 @@ if (!isset($_SESSION['username'])) {
     $connection=new Connection;
     $pdo=$connection->getDbConnection();
     $supplier = new Supplier($pdo);
-    $rs = $supplier->fetchAll();
+    $rs = $supplier->getAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

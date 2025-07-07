@@ -8,7 +8,7 @@ class Permission {
     {
         $this->db = $pdoConnection;
     }
-    public function fetchAll()
+    public function getAll()
     {
         $sql = <<<EOD
                 select `permission_id`, `permission_name`, `menu_name`, `content_filename`, `function_name`, `is_deleted` 
@@ -29,7 +29,7 @@ class Permission {
         return $rs;
     }
 
-    public function fetchById($id):?array
+    public function getById($id):?array
     {
         $sql = <<<EOD
                 select `permission_id`, `permission_name`, `menu_name`, `content_filename`, `function_name`, `is_deleted` 

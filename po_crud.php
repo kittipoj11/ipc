@@ -31,12 +31,12 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     echo json_encode($id);
 
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $po->fetchAll();
+    $rs = $po->getAll();
     header('Content-Type: application/json');
     echo json_encode($rs);
 
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectperiod') {
-    $rs = $po->fetchAllPeriodByPoId($_REQUEST['po_id']);
+    $rs = $po->getAllPeriodByPoId($_REQUEST['po_id']);
     createPeriodTable($rs);
 
 } else {

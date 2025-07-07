@@ -19,7 +19,7 @@ class Po
         $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $rs;
     }
-    public function fetchAll():array
+    public function getAll():array
     {
         $sql = <<<EOD
                     SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
@@ -43,7 +43,7 @@ class Po
         return $rs;
     }
 
-    public function fetchByPoId_old($id):?array
+    public function getByPoId_old($id):?array
     {
         $po_id = $id;
         $sql = <<<EOD
@@ -73,7 +73,7 @@ class Po
         return $rs;
     }
 
-    public function fetchAllPeriodByPoId($id)
+    public function getAllPeriodByPoId($id)
     {
         $sql = <<<EOD
                 SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`

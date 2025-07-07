@@ -9,7 +9,7 @@ require_once '../class/role_class.php';
     $pdo = $connection->getDbConnection(); // ดึง PDO object ออกมา
 
     $role = new Role($pdo);
-    $rs = $role->fetchAll();
+    $rs = $role->getAll();
 ?>
 
 <!DOCTYPE html>

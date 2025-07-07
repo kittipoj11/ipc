@@ -48,7 +48,7 @@ require_once '../auth.php';
     $pdo = $connection->getDbConnection();
 
     $supplier = new Supplier($pdo);
-    $rs = $supplier->fetchAll();
+    $rs = $supplier->getAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

@@ -45,8 +45,8 @@ require_once 'auth.php';
     require_once  'class/supplier_class.php';
     require_once  'class/location_class.php';
     $po = new Po;
-    $rsPoMainAll = $po->fetchAll();
-    $rsPoPeriod = $po->fetchAllPeriodByPoId(0);
+    $rsPoMainAll = $po->getAll();
+    $rsPoPeriod = $po->getAllPeriodByPoId(0);
     ?>
 
     <!-- Content Wrapper. Contains page content -->

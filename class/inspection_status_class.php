@@ -15,7 +15,7 @@ class Inspection_Status
         $this->db = $pdoConnection;
     }
 
-    public function fetchAll()
+    public function getAll()
     {
         $sql = <<<EOD
                     select inspection_status_id, inspection_status_name, is_deleted 
@@ -29,7 +29,7 @@ class Inspection_Status
         return $rs;
     }
 
-    public function fetchById($id): ?array
+    public function getById($id): ?array
     {
         $sql = <<<EOD
                 select inspection_status_id, inspection_status_name, is_deleted 

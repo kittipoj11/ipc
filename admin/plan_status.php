@@ -48,7 +48,7 @@ require_once '../auth.php';
     $pdo = $connection->getDbConnection();
 
     $plan_status = new Plan_Status($pdo);
-    $rs = $plan_status->fetchAll();
+    $rs = $plan_status->getAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

@@ -17,10 +17,10 @@ $inspection = new Inspection($pdo);
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $po->fetchAll();
+    $rs = $po->getAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectInspectionPeriodAll') {
-    $rs = $inspection->fetchAllPeriodByPoId($_REQUEST['po_id']);
+    $rs = $inspection->getAllPeriodByPoId($_REQUEST['po_id']);
     createPeriodTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updateInspectionPeriod') {
     $rs = $inspection->updateInspectionPeriod($_REQUEST);

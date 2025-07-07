@@ -56,7 +56,7 @@ require_once 'auth.php';
     $pdo=$connection->getDbConnection();
 
     $inspection = new Inspection($pdo);
-    $rsInspection =$inspection->fetchByPoId($po_id);
+    $rsInspection =$inspection->getHeaderByPoId($po_id);
 
     // เปลี่ยนไปใช้ $rsPoMain[periods] แบบ po_form.php
     ?>

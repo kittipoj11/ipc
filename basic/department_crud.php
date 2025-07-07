@@ -48,7 +48,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     // 6. จบการทำงานทันที
 
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $department->fetchAll();
+    $rs = $department->getAll();
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
 
@@ -56,7 +56,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     echo json_encode($rs);
 
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $department->fetchById($_REQUEST['department_id']);
+    $rs = $department->getById($_REQUEST['department_id']);
     // 4. กำหนด Content-Type เป็น application/json
     header('Content-Type: application/json');
 

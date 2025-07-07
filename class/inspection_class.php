@@ -2,15 +2,16 @@
 // require_once 'config.php';
 require_once 'connection_class.php';
 
-class Inspection {
-    private $db; 
+class Inspection
+{
+    private $db;
 
     public function __construct(PDO $pdoConnection)
     {
         $this->db = $pdoConnection;
     }
 
-    public function fetchAll(): array
+    public function getHeaderAll(): array
     {
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                     , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
@@ -32,7 +33,7 @@ class Inspection {
         return $rs;
     }
 
-    public function fetchByPoId($poId): ?array
+    public function getHeaderByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
@@ -59,23 +60,51 @@ class Inspection {
         // return $rs ?: null;
 
         // ดึงข้อมูลจากตารางรอง
-        $rs['periods'] = $this->fetchAllPeriodByPoId($poId);
+        $rs['periods'] = $this->getAllPeriodByPoId($poId);
 
         return $rs;
     }
 
-    public function fetchAllPeriodByPoId($poId): array
+    public function getHeaderByPeriodId($periodId): ?array
     {
-        $sql = "SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
-                , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
-                , P1.interim_payment, P1.interim_payment_percent
-                , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
-                , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
-                , P1.interim_payment_remain, P1.interim_payment_remain_percent
-                , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
-                , P1.remark, P1.inspection_status, P1.current_approval_level
-                , P1.disbursement, P1.workflow_id
-                FROM `inspection_periods` P1
+        // ดึงข้อมูลจากตารางหลัก - po_main
+        $sql = "SELECT O.supplier_id, O.location_id , O.po_number, O.project_name, O.working_name_th, O.working_name_en
+                , O.is_include_vat, O.contract_value, O.contract_value_before, O.vat, O.is_deposit, O.deposit_percent, O.deposit_value
+                , O.working_date_from, O.working_date_to, O.working_day
+                , S.supplier_name, L.location_name
+                FROM po_main O
+                INNER JOIN inspection_periods P
+                    ON P.po_id = O.po_id
+                INNER JOIN suppliers S
+                    ON S.supplier_id = O.supplier_id
+                INNER JOIN locations L
+                    ON L.location_id = O.location_id   
+                WHERE P.period_id = :period_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs = $stmt->fetch();
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
+        // return $rs ?: null;
+
+        return $rs;
+    }
+
+    public function getAllPeriodByPoId($poId): array
+    {
+        $sql = "SELECT P.inspection_id, P.period_id, P.po_id, P.period_number
+                , P.workload_planned_percent, P.workload_actual_completed_percent, P.workload_remaining_percent
+                , P.interim_payment, P.interim_payment_percent
+                , P.interim_payment_less_previous, P.interim_payment_less_previous_percent
+                , P.interim_payment_accumulated, P.interim_payment_accumulated_percent
+                , P.interim_payment_remain, P.interim_payment_remain_percent
+                , P.retention_value, P.plan_status_id, P.is_paid, P.is_retention
+                , P.remark, P.inspection_status, P.current_approval_level
+                , P.disbursement, P.workflow_id
+                FROM `inspection_periods` P
                 WHERE `po_id` = :po_id
                 ORDER BY `period_number`";
         $stmt = $this->db->prepare($sql);
@@ -85,119 +114,79 @@ class Inspection {
         return $rs;
     }
 
-    public function fetchPeriodByPeriodId_new($poId, $periodId): ?array
+    /**
+     * ดึงข้อมูลทั้งหมดที่เกี่ยวข้องกับ Period ที่ระบุ
+     * (ข้อมูล po_main หลัก, ข้อมูล inspection_periods, และข้อมูล inspection_period_details)
+     *
+     * @param int $period_id ID ของ Period ที่ต้องการ
+     * @return array|null คืนค่าเป็น array ที่มีข้อมูลทั้งหมด หรือ null ถ้าไม่พบ
+     */
+    public function getPeriodByPeriodId(int $period_id): ?array
     {
-        // ดึงข้อมูลจากตารางหลัก - po_main
-        $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
-                , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
-                , `is_deposit`, `deposit_percent`, `deposit_value`
-                , `working_date_from`, `working_date_to`, `working_day`
-                , `create_by`, `create_date`, `number_of_period`
-                , s.`supplier_name`
-                , l.`location_name`
-                FROM `po_main` p
-                INNER JOIN `suppliers` s
-                    ON s.`supplier_id` = p.`supplier_id`
-                INNER JOIN `locations` l
-                    ON l.`location_id` = p.`location_id`
-                WHERE `po_id` = :po_id";
+        // 1. ดึงข้อมูลของ inspection_periods ที่ต้องการ
+        $sql = "SELECT P.inspection_id, P.period_id, P.po_id, P.period_number
+                , P.workload_planned_percent, P.workload_actual_completed_percent, P.workload_remaining_percent
+                , P.interim_payment, P.interim_payment_percent
+                , P.interim_payment_less_previous, P.interim_payment_less_previous_percent
+                , P.interim_payment_accumulated, P.interim_payment_accumulated_percent
+                , P.interim_payment_remain, P.interim_payment_remain_percent
+                , P.retention_value, P.plan_status_id, P.is_paid, P.is_retention
+                , P.remark, P.inspection_status, P.current_approval_level, P.disbursement, P.workflow_id
+                , A.approver_id, A.approval_level 
+                , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
+                FROM inspection_periods P
+                INNER JOIN po_main O
+                    ON P.po_id = O.po_id
+                LEFT JOIN inspection_period_approvals A
+                    ON A.approval_level = P.current_approval_level
+                    AND A.inspection_id = P.inspection_id
+                LEFT JOIN approval_status S
+                    ON S.approval_status_id = A.approval_status_id
+                LEFT JOIN inspection_periods P2 
+                    ON P2.po_id = P.po_id AND P2.period_number = P.period_number - 1
+                WHERE P.period_id = :period_id
+                ORDER BY P.po_id, P.period_number";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
-        $stmt->execute();
-        $rs = $stmt->fetch();
-        if (!$rs) {
-            return null; // ไม่พบข้อมูล
+        $stmt->execute([$period_id]);
+        $rsPeriods = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // 2. ถ้าไม่พบข้อมูล Period ให้คืนค่า null ทันที
+        if (!$rsPeriods) {
+            return null;
         }
-        // return $rs ?: null;
 
-        // ดึงข้อมูลจากตารางรอง
-        $rs['periods'] = $this->fetchAllPeriodByPoId($poId);
+        // 3. ดึงข้อมูลของ po_main ของ period_id ที่ต้องการ
+        $rsPoMain = $this->getHeaderByPeriodId($period_id);
 
-        return $rs;
-    }
-    // ถ้าเรามีการ click ที่ period = 1 แล้ว ต้องการให้แสดงข้อมูลจาก order, order period และ task ของ period จะต้องสร้างฟังก์ชั่นอย่างไร
+        // 4. ดึงข้อมูล PeriodDetails ทั้งหมดของ Period นี้ 
+        $rsPeriodDetails = $this->getPeriodDetailsByPeriodId($period_id);
 
-    public function fetchPeriodByPeriodId($periodId): array
-    {
-        $sql = "SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
-                , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
-                , P1.interim_payment, P1.interim_payment_percent
-                , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
-                , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
-                , P1.interim_payment_remain, P1.interim_payment_remain_percent
-                , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
-                , P1.remark, P1.inspection_status, P1.current_approval_level, P1.disbursement, P1.workflow_id
-                , po_main.supplier_id, po_main.location_id , po_main.po_number, po_main.project_name
-                , po_main.working_name_th, po_main.working_name_en
-                , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
-                , working_date_from, working_date_to, working_day
-                , suppliers.supplier_name, locations.location_name
-                , inspection_period_approvals.approver_id, inspection_period_approvals.approval_level 
-                , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
-                FROM inspection_periods P1
-                INNER JOIN po_main
-                    ON P1.po_id = po_main.po_id
-                INNER JOIN suppliers
-                    ON suppliers.supplier_id = po_main.supplier_id
-                INNER JOIN locations
-                    ON locations.location_id = po_main.location_id   
-                LEFT JOIN inspection_period_approvals
-                    ON inspection_period_approvals.approval_level = P1.current_approval_level
-                    AND inspection_period_approvals.inspection_id = P1.inspection_id
-                LEFT JOIN approval_status
-                    ON approval_status.approval_status_id = inspection_period_approvals.approval_status_id
-                LEFT JOIN inspection_periods P2 
-                    ON P2.po_id = P1.po_id AND P2.period_number = P1.period_number - 1
-                WHERE P1.period_id = :period_id
-                ORDER BY P1.po_id, period_number";
-        $stmt = $this->db->prepare($sql);
-        // $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
-        $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
-        $stmt->execute();
-        $rs = $stmt->fetch();
-        return $rs;
+        // 5. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
+        $result = [
+            'header' => $rsPoMain,
+            'period' => $rsPeriods,
+            'PeriodDetails' => $rsPeriodDetails, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
+        ];
+
+        return $result;
     }
 
-    public function getInspectionPeriodByPeriodId($poId, $periodId): array
+    public function getPeriodDetailsByPeriodId($periodId): ?array
     {
-        $sql = "SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
-                , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
-                , P1.interim_payment, P1.interim_payment_percent
-                , P1.interim_payment_less_previous, P1.interim_payment_less_previous_percent
-                , P1.interim_payment_accumulated, P1.interim_payment_accumulated_percent
-                , P1.interim_payment_remain, P1.interim_payment_remain_percent
-                , P1.retention_value, P1.plan_status_id, P1.is_paid, P1.is_retention
-                , P1.remark, P1.inspection_status, P1.current_approval_level, P1.disbursement, P1.workflow_id
-                , po_main.supplier_id, po_main.location_id , po_main.po_number, po_main.project_name
-                , po_main.working_name_th, po_main.working_name_en
-                , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
-                , working_date_from, working_date_to, working_day
-                , suppliers.supplier_name, locations.location_name
-                , inspection_period_approvals.approver_id, inspection_period_approvals.approval_level 
-                , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
-                FROM inspection_periods P1
-                INNER JOIN po_main
-                    ON P1.po_id = po_main.po_id
-                INNER JOIN suppliers
-                    ON suppliers.supplier_id = po_main.supplier_id
-                INNER JOIN locations
-                    ON locations.location_id = po_main.location_id   
-                LEFT JOIN inspection_period_approvals
-                    ON inspection_period_approvals.approval_level = P1.current_approval_level
-                    AND inspection_period_approvals.inspection_id = P1.inspection_id
-                LEFT JOIN approval_status
-                    ON approval_status.approval_status_id = inspection_period_approvals.approval_status_id
-                LEFT JOIN inspection_periods P2 
-                    ON P2.po_id = P1.po_id AND P2.period_number = P1.period_number - 1
-                WHERE P1.po_id = :po_id
-                    AND P1.period_id = :period_id
-                ORDER BY P1.po_id, period_number";
+        $sql = "SELECT I.`rec_id`, I.`inspection_id`, I.`order_no`, I.`details`, I.`remark` 
+                FROM `inspection_period_details`I
+                INNER JOIN inspection_periods P
+                    ON P.`inspection_id` = I.`inspection_id`
+                WHERE P.`period_id` = :period_id
+                ORDER BY I.`order_no`";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
         $stmt->execute();
-        $rs = $stmt->fetch();
+        $rs = $stmt->fetchAll();
+        if (!$rs) {
+            return null;
+        }
         return $rs;
     }
 
@@ -242,24 +231,7 @@ class Inspection {
         return $rs;
     }
 
-    public function getInspectionPeriodDetailByPeriodId($getPoId, $getPeriodId): array
-    {
-        $sql = "SELECT `rec_id`, `inspection_period_details`.`inspection_id`, `order_no`, `details`, `inspection_period_details`.`remark`
-                FROM `inspection_period_details`
-                INNER JOIN `inspection_periods`
-                    ON `inspection_periods`.`inspection_id` = `inspection_period_details`.`inspection_id`
-                WHERE `po_id` = :po_id
-                    AND `inspection_periods`.`period_id` = :period_id
-                ORDER BY `order_no`";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
-        $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
-        $stmt->execute();
-        $rs = $stmt->fetchAll();
-        return $rs;
-    }
-
-    public function getInspectionFilesByInspectionId($getPoId, $getPeriodId, $getInspectionId):array
+    public function getInspectionFilesByInspectionId($getPoId, $getPeriodId, $getInspectionId): array
     {
         $sql = "SELECT `file_id`, `inspection_files`.`inspection_id`, `file_name`, `file_path`, `file_type`, `uploaded_at` 
                 FROM `inspection_files` 
@@ -277,7 +249,6 @@ class Inspection {
         return $rs;
     }
 
-    
     public function updateInspectionPeriod($getData)
     {
         @session_start();
@@ -295,22 +266,22 @@ class Inspection {
             $plan_status_id = floatval($getData['plan_status_id'] ?? -1);
             $disbursement = floatval($getData['disbursement'] ?? -1);
 
-            $workload_planned_percent=floatval($getData['workload_planned_percent'] ?? 0);
-            $workload_actual_completed_percent=floatval($getData['workload_actual_completed_percent'] ?? 0);
-            $workload_remaining_percent=floatval($getData['workload_remaining_percent'] ?? 0);
-            $interim_payment=floatval($getData['interim_payment'] ?? 0);
-            $interim_payment_less_previous=floatval($getData['interim_payment_less_previous'] ?? 0);
-            $interim_payment_accumulated=floatval($getData['interim_payment_accumulated'] ?? 0);
-            $interim_payment_remain=floatval($getData['interim_payment_remain'] ?? 0);
-            $retention_value=floatval($getData['retention_value'] ?? 0);
-            
-            $interim_payment_percent=floatval($getData['interim_payment_percent'] ?? 0);
-            $interim_payment_less_previous_percent=floatval($getData['interim_payment_less_previous_percent'] ?? 0);
-            $interim_payment_accumulated_percent=floatval($getData['interim_payment_accumulated_percent'] ?? 0);
-            $interim_payment_remain_percent=floatval($getData['interim_payment_remain_percent'] ?? 0);
+            $workload_planned_percent = floatval($getData['workload_planned_percent'] ?? 0);
+            $workload_actual_completed_percent = floatval($getData['workload_actual_completed_percent'] ?? 0);
+            $workload_remaining_percent = floatval($getData['workload_remaining_percent'] ?? 0);
+            $interim_payment = floatval($getData['interim_payment'] ?? 0);
+            $interim_payment_less_previous = floatval($getData['interim_payment_less_previous'] ?? 0);
+            $interim_payment_accumulated = floatval($getData['interim_payment_accumulated'] ?? 0);
+            $interim_payment_remain = floatval($getData['interim_payment_remain'] ?? 0);
+            $retention_value = floatval($getData['retention_value'] ?? 0);
+
+            $interim_payment_percent = floatval($getData['interim_payment_percent'] ?? 0);
+            $interim_payment_less_previous_percent = floatval($getData['interim_payment_less_previous_percent'] ?? 0);
+            $interim_payment_accumulated_percent = floatval($getData['interim_payment_accumulated_percent'] ?? 0);
+            $interim_payment_remain_percent = floatval($getData['interim_payment_remain_percent'] ?? 0);
             $remark = trim($getData['remark']);
             $_SESSION['remark'] = $remark;
-            
+
             // parameters ในส่วน period
             $order_nos = $getData['order_nos'];
             $details = $getData['details'];
@@ -405,13 +376,13 @@ class Inspection {
                             VALUES (:inspection_id, :order_no, :details, :remark)
                         EOD;
                 $stmtInspectionPeriodDetails = $this->db->prepare($sql);
-                
+
                 foreach ($insert_indexs as $i) { //ถ้าต้องการใช้ key ด้วย foreach($insert_indexs as $key=> $value){
                     $stmtInspectionPeriodDetails->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
                     $stmtInspectionPeriodDetails->bindParam(':order_no', $order_nos[$i], PDO::PARAM_INT);
                     $stmtInspectionPeriodDetails->bindParam(':details', $details[$i],  PDO::PARAM_STR);
                     $stmtInspectionPeriodDetails->bindParam(':remark', $remarks[$i], PDO::PARAM_STR);
-                    
+
                     $stmtInspectionPeriodDetails->execute();
                     $stmtInspectionPeriodDetails->closeCursor();
                 }
@@ -458,7 +429,7 @@ class Inspection {
             $_SESSION['Transaction'] =  $e->getCode() + ' : ' + $e->getMessage();
         }
     }
-    
+
     public function updateCurrentApprovalLevel($getData)
     {
         @session_start();
@@ -653,43 +624,6 @@ class Inspection {
             $this->db->rollBack();
             echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
         }
-    }
-
-    public function getHtmlData()
-    {
-        $sql = "select po_id, po_name, is_deleted 
-                from po
-                where is_deleted = false";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        $rs = $stmt->fetchAll();
-
-        $html = "<p>รายงาน Location ทั้งหมด</p>";
-
-        // เรียกใช้งาน ฟังก์ชั่นดึงข้อมูลไฟล์มาใช้งาน
-        $html .= "<style>";
-        $html .= "table, th, td {";
-        $html .= "border: 1px solid black;";
-        $html .= "border-radius: 10px;";
-        $html .= "background-color: #b3ffb3;";
-        $html .= "padding: 5px;}";
-        $html .= "</style>";
-        $html .= "<table cellspacing='0' cellpadding='1' style='width:1100px;'>";
-        $html .= "<tr>";
-        $html .= "<th align='center' bgcolor='F2F2F2'>รหัส Location </th>";
-        $html .= "<th align='center' bgcolor='F2F2F2'> Location </th>";
-        $html .= "</tr>";
-        foreach ($rs as $row) :
-            $html .=  "<tr bgcolor='#c7c7c7'>";
-            $html .=  "<td>{$row['po_id']}</td>";
-            $html .=  "<td>{$row['po_name']}</td>";
-            $html .=  "</tr>";
-        endforeach;
-
-        $html .= "</table>";
-
-        return $html;
     }
 }
 

@@ -12,7 +12,7 @@ class Po
         $this->db = $pdoConnection;
     }
 
-    public function fetchAll(): array
+    public function getAll(): array
     {
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                     , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
@@ -34,9 +34,8 @@ class Po
         return $rs;
     }
 
-    public function fetchByPoId($id): ?array
+    public function getByPoId($poId): ?array
     {
-        $poId = $id;
         // ดึงข้อมูลจากตารางหลัก - po_main
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                 , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
@@ -62,26 +61,19 @@ class Po
         // return $rs ?: null;
 
         // ดึงข้อมูลจากตารางรอง
-        // $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`
-        //         FROM `po_periods`
-        //         WHERE `po_id` = :po_id
-        //         ORDER BY `po_id`, `period_number`";
-        // $stmt = $this->db->prepare($sql);
-        // $stmt->bindParam(':po_id', $id, PDO::PARAM_INT);
-        // $stmt->execute();
-        $rs['periods'] = $this->fetchAllPeriodByPoId($poId);
+        $rs['periods'] = $this->getAllPeriodByPoId($poId);
 
         return $rs;
     }
 
-    public function fetchAllPeriodByPoId($id): array
+    public function getAllPeriodByPoId($poId): array
     {
         $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`
                 FROM `po_periods`
                 WHERE `po_id` = :po_id
                 ORDER BY `po_id`, `period_number`";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
         $stmt->execute();
 
         $rs = $stmt->fetchAll();

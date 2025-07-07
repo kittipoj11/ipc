@@ -17,10 +17,10 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     $permission->delete($_REQUEST);
     // fetchAll($permission);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
-    $rs = $permission->fetchAll();
+    $rs = $permission->getAll();
     createTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectdata') {
-    $rs = $permission->fetchById($_REQUEST['permission_id']);
+    $rs = $permission->getById($_REQUEST['permission_id']);
     echo json_encode($rs);
 } else {
     fetchAll($permission);
@@ -56,10 +56,10 @@ function createTable($getRs) {
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่
-function fetchAll($getObj)
+function getAll($getObj)
 {
     try {
-        $rs = $getObj->fetchAll();
+        $rs = $getObj->getAll();
 
         // foreach ($rs as $key => $row) :
         $html = <<<EOD

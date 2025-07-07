@@ -59,8 +59,8 @@ require_once 'auth.php';
     $connection=new Connection;
     $pdo=$connection->getDbConnection();
     $po = new Po($pdo);
-    $rsPoMainAll = $po->fetchAll();
-    // $rsPoPeriod = $po->fetchAllPeriodByPoId(0);
+    $rsPoMainAll = $po->getAll();
+    // $rsPoPeriod = $po->getAllPeriodByPoId(0);
     ?>
 
     <!-- Content Wrapper. Contains page content -->

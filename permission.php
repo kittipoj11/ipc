@@ -43,7 +43,7 @@ require_once 'auth.php';
     <?php
     require_once  'class/permission_class.php';
     $permission = new Permission;
-    $rs = $permission->fetchAll();
+    $rs = $permission->getAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

@@ -48,7 +48,7 @@ require_once '../auth.php';
     $pdo = $connection->getDbConnection();
 
     $department = new Department($pdo);
-    $rs = $department->fetchAll();
+    $rs = $department->getAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

@@ -48,7 +48,7 @@ require_once '../auth.php';
     $pdo = $connection->getDbConnection();
 
     $approval_status = new Approval_Status($pdo);
-    $rs = $approval_status->fetchAll();
+    $rs = $approval_status->getAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

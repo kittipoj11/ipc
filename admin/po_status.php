@@ -48,7 +48,7 @@ require_once '../auth.php';
     $pdo = $connection->getDbConnection();
 
     $po_status = new Po_Status($pdo);
-    $rs = $po_status->fetchAll();
+    $rs = $po_status->getAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

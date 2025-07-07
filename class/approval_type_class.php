@@ -15,7 +15,7 @@ class Approval_Type
         $this->db = $pdoConnection;
     }
 
-    public function fetchAll()
+    public function getAll()
     {
         $sql = <<<EOD
                     SELECT approval_type_id, approval_type_name, is_deleted 
@@ -44,7 +44,7 @@ class Approval_Type
         // }
     }
 
-    public function fetchById($id)
+    public function getById($id)
     {
         $sql = <<<EOD
                 select approval_type_id, approval_type_name, is_deleted 

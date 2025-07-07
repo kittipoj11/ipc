@@ -8,7 +8,7 @@ class Workflows {
     {
         $this->db = $pdoConnection;
     }
-    public function fetchAll()
+    public function getAll()
     {
         $sql = <<<EOD
                 select workflow_id, workflow_name, is_deleted 
@@ -29,7 +29,7 @@ class Workflows {
         return $rs;
     }
 
-    public function fetchById($id):?array
+    public function getById($id):?array
     {
         $sql = <<<EOD
                 select workflow_id, workflow_name, is_deleted 

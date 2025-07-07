@@ -15,7 +15,7 @@ class Plan_Status
         $this->db = $pdoConnection;
     }
 
-    public function fetchAll()
+    public function getAll()
     {
         $sql = <<<EOD
                     select plan_status_id, plan_status_name, is_deleted 
@@ -29,7 +29,7 @@ class Plan_Status
         return $rs;
     }
 
-    public function fetchById($id): ?array
+    public function getById($id): ?array
     {
         $sql = <<<EOD
                 select plan_status_id, plan_status_name, is_deleted 

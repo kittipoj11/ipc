@@ -48,7 +48,7 @@ require_once '../auth.php';
     $pdo = $connection->getDbConnection();
 
     $inspection_status = new Inspection_Status($pdo);
-    $rs = $inspection_status->fetchAll();
+    $rs = $inspection_status->getAll();
     ?>
 
     <!-- Content Wrapper. Contains page content -->

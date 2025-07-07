@@ -14,7 +14,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role_name'] !== 'System Admin') {
 // --- ดึงข้อมูลและฟังก์ชัน ---
 
 // 1. ดึงเมนูทั้งหมดมาสร้างเป็น Tree
-$all_menus_raw = $menu->fetchAll();
+$all_menus_raw = $menu->getAll();
 $all_menus_structured = [];
 $itemsById = [];
 foreach ($all_menus_raw as $item) {

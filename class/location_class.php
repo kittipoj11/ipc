@@ -15,7 +15,7 @@ class Location
         $this->db = $pdoConnection;
     }
 
-    public function fetchAll()
+    public function getAll()
     {
         $sql = <<<EOD
                     select location_id, location_name, is_deleted 
@@ -29,7 +29,7 @@ class Location
         return $rs;
     }
 
-    public function fetchById($id): ?array
+    public function getById($id): ?array
     {
         $sql = <<<EOD
                 select location_id, location_name, is_deleted 

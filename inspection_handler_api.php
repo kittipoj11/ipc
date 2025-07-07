@@ -19,11 +19,11 @@ $requestData = json_decode(file_get_contents('php://input'), true);
 // $_SESSION['req data1']=$requestData;
 
 if (isset($requestData['action']) && $requestData['action'] == 'select') {
-    $rs = $inspection->fetchAll();
+    $rs = $inspection->getHeaderAll();
     echo json_encode($rs);
 
 } elseif (isset($requestData['action']) && $requestData['action'] == 'selectInspectionPeriodAll') {
-    $rs = $inspection->fetchAllPeriodByPoId($requestData['po_id']);
+    $rs = $inspection->getAllPeriodByPoId($requestData['po_id']);
     echo json_encode($rs);
 
 } elseif (isset($requestData['action']) && $requestData['action'] == 'updateInspectionPeriod') {
