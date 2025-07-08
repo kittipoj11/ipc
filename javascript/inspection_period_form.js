@@ -33,10 +33,6 @@ $(document).ready(function () {
         .attr("data-rec-id", "")
         .removeClass("d-none")
 
-        .find(".rec_id:last")
-        .val("")
-        .end()
-
         .find('input[name="order_no"]')
         .val(order_no)
         .end()
@@ -51,6 +47,10 @@ $(document).ready(function () {
 
         .find('input[name="crud"]')
         .val("create")
+        .end()
+
+        .find('input[name="rec_id"]')
+        .val("")
         .end()
 
         .appendTo("#tbody-order");
@@ -221,6 +221,7 @@ $(document).ready(function () {
       // สร้าง object สำหรับเก็บข้อมูลของแถวนี้
       // row.removeData("crud"); ทำการ clear ค่า data-* ที่อยู่ใน cache ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
       const detailRecord = {
+        inspection_id: $("#inspection_id").val(),
         rec_id: row.attr("data-rec-id"), // ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
         order_crud: row.attr("data-crud"), //
         order_no: row.find('input[name="order_no"]').val(), // ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
@@ -237,8 +238,8 @@ $(document).ready(function () {
       action: "save",
     };
 
-    console.log(data_sent);
-    return;
+    // console.log(data_sent);
+    // return;
     $.ajax({
       url: "inspection_handler_api.php",
       type: "POST",

@@ -27,15 +27,15 @@ if (isset($requestData['action']) && $requestData['action'] == 'select') {
     echo json_encode($rs);
 
 } elseif (isset($requestData['action']) && $requestData['action'] == 'save') {
-    if (!isset($requestData['headerData']) || !isset($requestData['periodsData'])) {
+    if (!isset($requestData['periodData']) || !isset($requestData['detailsData'])) {
         throw new Exception('Invalid data structure.');
     }
-    $savedPoId = $po->save($requestData['headerData'], $requestData['periodsData']);
+    $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
     
     $response = [
         'status' => 'success',
-        'message' => 'บันทึกข้อมูล PO ID: ' . $savedPoId . ' เรียบร้อยแล้ว',
-        'data' => ['po_id' => $savedPoId]
+        'message' => 'บันทึกข้อมูล PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
+        'data' => ['inspection_id' => $savedInspectionId]
     ];
     // echo "1";
     echo json_encode($response);

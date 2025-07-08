@@ -368,7 +368,7 @@ require_once 'auth.php';
                           </thead>
 
                           <tbody id="tbody-order">
-                            <?php foreach ($rsInspection['PeriodDetails'] as $row) { ?>
+                            <?php foreach ($rsInspection['periodDetails'] as $row) { ?>
                               <tr data-crud='select' data-rec-id=<?php echo isset($row['rec_id']) ? htmlspecialchars($row['rec_id']) : ''; ?>>
                                 <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
                                 <td class="input-group-sm p-0"><input type="number" name="order_no" class="form-control" value="<?php echo isset($row['order_no']) ? htmlspecialchars($row['order_no']) : ''; ?>" readonly>

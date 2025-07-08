@@ -1,4 +1,5 @@
 <?php
+@session_start();
 // require_once 'config.php';
 require_once 'connection_class.php';
 
@@ -249,15 +250,15 @@ class Inspection
         return $rs;
     }
 
-    public function save(array $headerData, array $detailsData): int
+    public function save(array $periodData, array $detailsData): int
     {
         $this->db->beginTransaction();
         try {
-            // กำหนดค่าให้ตัวแปร $poId ที่ส่งมา
-            $poId = $headerData['po_id'] ?? 0;
-
+            // กำหนดค่าให้ตัวแปร $inspectionId ที่ส่งมา
+            $inspectionId = $periodData['inspection_id'] ?? 0;
+            
             // 1. ตรวจสอบและจัดการข้อมูล Header (INSERT หรือ UPDATE)
-            if (empty($poId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
+            if (empty($inspectionId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
 
             } else {
                 // --- UPDATE MODE ---
@@ -291,24 +292,24 @@ class Inspection
 
                 $stmtInspectionPeriods = $this->db->prepare($sql);
                 // $stmtInspectionPeriods->bindParam(':po_number', $po_number, PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':po_id', $headerData['po_id'], PDO::PARAM_INT);
-                $stmtInspectionPeriods->bindParam(':period_id', $headerData['period_id'], PDO::PARAM_INT);
-                $stmtInspectionPeriods->bindParam(':inspection_id', $headerData['inspection_id'], PDO::PARAM_INT);
-                $stmtInspectionPeriods->bindParam(':workload_actual_completed_percent', $headerData['workload_actual_completed_percent'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':workload_remaining_percent', $headerData['workload_remaining_percent'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':workload_planned_percent', $headerData['workload_planned_percent'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':interim_payment', $headerData['interim_payment'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':interim_payment_percent', $headerData['interim_payment_percent'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':interim_payment_less_previous', $headerData['interim_payment_less_previous'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':interim_payment_less_previous_percent', $headerData['interim_payment_less_previous_percent'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':interim_payment_accumulated', $headerData['interim_payment_accumulated'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':interim_payment_accumulated_percent', $headerData['interim_payment_accumulated_percent'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':interim_payment_remain', $headerData['interim_payment_remain'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':interim_payment_remain_percent', $headerData['interim_payment_remain_percent'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':plan_status_id', $headerData['plan_status_id'], PDO::PARAM_INT);
-                $stmtInspectionPeriods->bindParam(':disbursement', $headerData['disbursement'], PDO::PARAM_INT);
-                $stmtInspectionPeriods->bindParam(':retention_value', $headerData['retention_value'], PDO::PARAM_STR);
-                $stmtInspectionPeriods->bindParam(':remark', $headerData['remark'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':po_id', $periodData['po_id'], PDO::PARAM_INT);
+                $stmtInspectionPeriods->bindParam(':period_id', $periodData['period_id'], PDO::PARAM_INT);
+                $stmtInspectionPeriods->bindParam(':inspection_id', $periodData['inspection_id'], PDO::PARAM_INT);
+                $stmtInspectionPeriods->bindParam(':workload_actual_completed_percent', $periodData['workload_actual_completed_percent'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':workload_remaining_percent', $periodData['workload_remaining_percent'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':interim_payment', $periodData['interim_payment'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':interim_payment_less_previous', $periodData['interim_payment_less_previous'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':interim_payment_less_previous_percent', $periodData['interim_payment_less_previous_percent'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':interim_payment_accumulated', $periodData['interim_payment_accumulated'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':interim_payment_accumulated_percent', $periodData['interim_payment_accumulated_percent'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':interim_payment_remain', $periodData['interim_payment_remain'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':interim_payment_remain_percent', $periodData['interim_payment_remain_percent'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':plan_status_id', $periodData['plan_status_id'], PDO::PARAM_INT);
+                $stmtInspectionPeriods->bindParam(':disbursement', $periodData['disbursement'], PDO::PARAM_INT);
+                $stmtInspectionPeriods->bindParam(':retention_value', $periodData['retention_value'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':remark', $periodData['remark'], PDO::PARAM_STR);
 
                 // $stmtUpdatePoMain->execute();
                 $stmtInspectionPeriods->execute();
@@ -317,9 +318,9 @@ class Inspection
             }
 
             // 2. จัดการข้อมูล Periods ตามลำดับ(D-U-C Logic)
-            $deleteItems = array_filter($detailsData, fn($item) => ($item['period_crud'] ?? 'none') === 'delete');
-            $updateItems = array_filter($detailsData, fn($item) => ($item['period_crud'] ?? 'none') === 'update');
-            $createItems = array_filter($detailsData, fn($item) => ($item['period_crud'] ?? 'none') === 'create');
+            $deleteItems = array_filter($detailsData, fn($item) => ($item['order_crud'] ?? 'none') === 'delete');
+            $updateItems = array_filter($detailsData, fn($item) => ($item['order_crud'] ?? 'none') === 'update');
+            $createItems = array_filter($detailsData, fn($item) => ($item['order_crud'] ?? 'none') === 'create');
 
             $_SESSION['delete'] = $deleteItems;
             $_SESSION['update'] = $updateItems;
@@ -331,10 +332,16 @@ class Inspection
             // 3. ทำงานตามลำดับ D-U-C
             // 3.1 ************************* ตรวจสอบ deleteItems ****************************
             if (!empty($deleteItems)) {
-                $stmtDelete = $this->db->prepare("DELETE FROM inspection_period_details WHERE period_id = :period_id");
+                $sql = "DELETE FROM inspection_period_details 
+                        WHERE inspection_id = :inspection_id 
+                            AND `rec_id` = :rec_id";
+                $stmtDelete = $this->db->prepare($sql);
                 foreach ($deleteItems as $item) {
-                    if (!empty($item['period_id'])) {
-                        $stmtDelete->execute([$item['period_id']]);
+                    if (!empty($item['rec_id'])) {
+                        $stmtDelete->bindParam(':inspection_id', $item['inspection_id'], PDO::PARAM_INT);
+                        $stmtDelete->bindParam(':rec_id', $item['rec_id'], PDO::PARAM_INT);
+                        $stmtDelete->execute();
+                        $_SESSION['delete detail[' . $item["rec_id"] . ']:'] = $item['detail'];
                         $stmtDelete->closeCursor();
                     }
                 }
@@ -344,21 +351,22 @@ class Inspection
             if (!empty($updateItems)) {
                 // UPDATE inspection_period_details
                 $sql = "UPDATE `inspection_period_details`
-                        SET `details` = :details
+                        SET `details` = :detail
                         , `remark` = :remark
                         WHERE `inspection_id` = :inspection_id
                             AND `rec_id` = :rec_id";
                 $stmtUpdate = $this->db->prepare($sql);
 
                 foreach ($updateItems as $item) {
-                    if (!empty($item['period_id'])) {
-                        $stmtUpdate->bindParam(':inspection_id', $item['period_id'], PDO::PARAM_INT);
+                    if (!empty($item['rec_id'])) {
+                        $stmtUpdate->bindParam(':inspection_id', $item['inspection_id'], PDO::PARAM_INT);
                         $stmtUpdate->bindParam(':rec_id', $item['rec_id'], PDO::PARAM_INT);
-                        $stmtUpdate->bindParam(':details', $item['details'],  PDO::PARAM_STR);
+                        $stmtUpdate->bindParam(':detail', $item['detail'],  PDO::PARAM_STR);
                         $stmtUpdate->bindParam(':remark', $item['remark'], PDO::PARAM_STR);
 
                         $stmtUpdate->execute();
-                        $stmtUpdate->closeCursor();
+                        $_SESSION['update detail[' . $item["rec_id"] . ']:'] = $item['detail'];
+                            $stmtUpdate->closeCursor();
                     }
                 }
             }
@@ -367,16 +375,17 @@ class Inspection
             if (!empty($createItems)) {
                 // INSERT inspection_period_details
                 $sql = "INSERT INTO `inspection_period_details`(`inspection_id`, `order_no`, `details`, `remark`) 
-                        VALUES (:inspection_id, :order_no, :details, :remark)";
+                        VALUES (:inspection_id, :order_no, :detail, :remark)";
                 $stmtCreate = $this->db->prepare($sql);
 
                 foreach ($createItems as $item) {
                     $stmtCreate->bindParam(':inspection_id', $item['inspection_id'], PDO::PARAM_INT);
                     $stmtCreate->bindParam(':order_no', $item['order_no'], PDO::PARAM_INT);
-                    $stmtCreate->bindParam(':details', $item['details'],  PDO::PARAM_STR);
+                    $stmtCreate->bindParam(':detail', $item['detail'],  PDO::PARAM_STR);
                     $stmtCreate->bindParam(':remark', $item['remark'], PDO::PARAM_STR);
 
                     $stmtCreate->execute();
+                    $_SESSION['insert detail['. $this->db->lastInsertId() .']:'] = $item['detail'];
                     $stmtCreate->closeCursor();
 
                     // $periodId = $this->db->lastInsertId();
@@ -385,7 +394,7 @@ class Inspection
 
             $this->db->commit();
             // คืนค่า PO ID ที่บันทึกสำเร็จกลับไป
-            return (int)$poId;
+            return (int)$inspectionId;
         } catch (Exception $e) {
             $_SESSION['error'] = $e->getMessage();
             if ($this->db->inTransaction()) {
