@@ -11,92 +11,60 @@ $(document).ready(function () {
       .fadeOut();
   }
 
-  let contract_value = isNaN(parseFloat($("#contract_value").val()))
-    ? 0
-    : parseFloat($("#contract_value").val());
+  let contract_value = isNaN(parseFloat($("#contract_value").val())) ? 0 : parseFloat($("#contract_value").val());
   let interim_payment = parseFloat($("#interim_payment").val());
-  let interim_payment_less_previous = isNaN(
-    parseFloat($("#interim_payment_less_previous").val())
-  )
-    ? 0
-    : parseFloat($("#interim_payment_less_previous").val());
-  let interim_payment_accumulated = isNaN(
-    parseFloat($("#interim_payment_accumulated").val())
-  )
-    ? 0
-    : parseFloat($("#interim_payment_accumulated").val());
-  let interim_payment_remain = isNaN(
-    parseFloat($("#interim_payment_remain").val())
-  )
-    ? 0
-    : parseFloat($("#interim_payment_remain").val());
+  let interim_payment_less_previous = isNaN(parseFloat($("#interim_payment_less_previous").val())) ? 0 : parseFloat($("#interim_payment_less_previous").val());
+  let interim_payment_accumulated = isNaN(parseFloat($("#interim_payment_accumulated").val())) ? 0 : parseFloat($("#interim_payment_accumulated").val());
+  let interim_payment_remain = isNaN(parseFloat($("#interim_payment_remain").val())) ? 0 : parseFloat($("#interim_payment_remain").val());
 
-  let interim_payment_percent = isNaN(
-    parseFloat($("#interim_payment_percent").val())
-  )
-    ? 0
-    : parseFloat($("#interim_payment_percent").val());
-  let interim_payment_less_previous_percent = isNaN(
-    parseFloat($("#interim_payment_less_previous_percent").val())
-  )
-    ? 0
-    : parseFloat($("#interim_payment_less_previous_percent").val());
-  let interim_payment_accumulated_percent = isNaN(
-    parseFloat($("#interim_payment_accumulated_percent").val())
-  )
-    ? 0
-    : parseFloat($("#interim_payment_accumulated_percent").val());
-  let interim_payment_remain_percent = isNaN(
-    parseFloat($("#interim_payment_remain_percent").val())
-  )
-    ? 0
-    : parseFloat($("#interim_payment_remain_percent").val());
+  let interim_payment_percent = isNaN(parseFloat($("#interim_payment_percent").val())) ? 0 : parseFloat($("#interim_payment_percent").val());
+  let interim_payment_less_previous_percent = isNaN(parseFloat($("#interim_payment_less_previous_percent").val())) ? 0 : parseFloat($("#interim_payment_less_previous_percent").val());
+  let interim_payment_accumulated_percent = isNaN(parseFloat($("#interim_payment_accumulated_percent").val())) ? 0 : parseFloat($("#interim_payment_accumulated_percent").val());
+  let interim_payment_remain_percent = isNaN(parseFloat($("#interim_payment_remain_percent").val())) ? 0 : parseFloat($("#interim_payment_remain_percent").val());
 
   $("#btnAdd").click(function () {
     let order_no;
-    // console.log($(".firstTr:last").find(".order_no:last").val());
-    // $(".firstTr:has(.crud:not([value='d'])):last")//แบบที่ 1
-    // $(".firstTr").has(".crud:not([value='d'])").last()//แบบที่ 2
-    if ($("#tbody-order").has(".firstTr[crud!='d']").length > 0) {
-      order_no = $(".firstTr[crud!='d']:last").find(".order_no:last").val();
+    if ($("#tbody-order").has("tr[data-crud!='delete']").length > 0) {
+      order_no = $("#tbody-order tr[data-crud!='delete']:last").find('input[name="order_no"]').val();
       order_no++;
-      $(".firstTr[crud!='d']:last")
+      $("#tbody-order tr[data-crud!='delete']:last")
         .clone(false)
-        .attr("crud", "i")
+        .attr("data-crud", "create")
+        .attr("data-rec-id", "")
         .removeClass("d-none")
-
-        .find(".order_no:last")
-        .val(order_no)
-        .end()
-
-        .find(".detail:last")
-        .val("")
-        .end()
-
-        .find(".remark:last")
-        .val("")
-        .end()
 
         .find(".rec_id:last")
         .val("")
         .end()
 
-        .find("td input.crud")
-        .val("i")
+        .find('input[name="order_no"]')
+        .val(order_no)
+        .end()
+
+        .find('input[name="detail"]')
+        .val("")
+        .end()
+
+        .find('input[name="remark"]')
+        .val("")
+        .end()
+
+        .find('input[name="crud"]')
+        .val("create")
         .end()
 
         .appendTo("#tbody-order");
     } else {
       // Create the new tr element using jQuery
-      const firstTr = `<tr class='firstTr' crud='i'>
-                        <td class='input-group-sm p-0'><input type='number' name='order_nos[]' class='form-control order_no' value='1' readonly></td>
-                        <td class='input-group-sm p-0'><input type='text' name='details[]' class='form-control detail'></td>
-                        <td class='input-group-sm p-0'><input type='text' name='remarks[]' class='form-control remark'></td>
-                        <td class='input-group-sm p-0'><input type='text' name='cruds[]' class='form-control crud' value='i'></td>
-                        <td class='input-group-sm p-0 d-nonex'><input type='text' name='rec_id[]' class='form-control rec_id' readonly></td>
+      const addTr = `<tr data-crud='create' data-rec-id=''>
+                        <td class='input-group-sm p-0'><input type='number' name='order_no' class='form-control' value='1' readonly></td>
+                        <td class='input-group-sm p-0'><input type='text' name='detail' class='form-control'></td>
+                        <td class='input-group-sm p-0'><input type='text' name='remark' class='form-control'></td>
+                        <td class='input-group-sm p-0'><input type='text' name='crud' class='form-control' value='i'></td>
+                        <td class='input-group-sm p-0 d-nonex'><input type='text' name='rec_i' class='form-control' readonly></td>
                       </tr>`;
 
-      $("#tbody-order").append(firstTr);
+      $("#tbody-order").append(addTr);
     }
   });
 
@@ -106,28 +74,42 @@ $(document).ready(function () {
     // หรือ
     // $("#tbody-order").find("tr:not(:first)").remove();
     // หรือ
-    $("#tbody-order").find("tr:gt(0)").remove();
+    $("#tbody-order tr").remove();
   });
 
   $("#btnDeleteLast").click(function () {
-    let order;
-    // ลบ tr ตัวล่างสุดที่ไม่ใช่ tr ตัวแรก ใน #tbody-order
-    // $("#tbody-order").find("tr:not(:first):last").remove();
-    // $("#tbody-order tr:not(:first):last").remove();
-    $("#tbody-order .firstTr[crud!='d']:last")
-      .attr("crud", "d")
-      .addClass("d-none")
+    const row = $("#tbody-order tr[data-crud!='delete']:last");
+    if (confirm("คุณต้องการลบรายละเอียดการตรวจสอบรายการสุดท้ายใช่หรือไม่?")) {
+      // อ่านค่า data-crud จาก Attribute โดยตรง
+      if (row.attr("data-crud") == "create") {
+        row.remove();
+      } else {
+        row.find('input[name="crud"]').val("delete");
+        row.addClass("d-none").attr("data-crud", "delete");
+        // row.attr("data-crud", "delete");
+      }
+    }
+    // console.log(`row = ${row.attr("data-crud")} input=${row.find('input[name="crud"]').val()}`);
+  });
 
-      .find("td input.crud")
-      .val("d")
-      .end();
+    $("#tbody-order").on("input", "input", function () {
+    const row = $(this).closest("tr");
+    // ถ้าแถวไม่ใช่แถวใหม่ (สถานะเป็น select) ให้เปลี่ยนเป็น update
+    if (row.attr("data-crud") == "select") {
+      row.attr("data-crud", "update");
+      row.find('input[name="crud"]').val("update");
+    }
+    console.log(
+      `row = ${row.attr("data-crud")} input=${row
+        .find('input[name="crud"]')
+        .val()}`
+    );
   });
 
   $("#interim_payment").on("change keyup", function () {
     interim_payment = parseFloat($(this).val());
 
     if (!isNaN(interim_payment) && !isNaN(contract_value)) {
-      // interim_payment_less_previous = interim_payment_accumulated;
       interim_payment_accumulated =
         interim_payment + interim_payment_less_previous; //(คือ Total Value Of Interim Payment))
       interim_payment_remain = contract_value - interim_payment_accumulated;
@@ -200,10 +182,9 @@ $(document).ready(function () {
   }
 
   $("#myForm").on("submit", function (e) {
-    const radioButtons = document.querySelectorAll(
-      'input[name="disbursement"]'
-    );
+    const radioButtons = document.querySelectorAll('input[name="disbursement"]');
     e.preventDefault();
+
     let disbursement = 0; // กำหนดค่าเริ่มต้นเป็น 0
     for (const radioButton of radioButtons) {
       if (radioButton.checked) {
@@ -212,60 +193,52 @@ $(document).ready(function () {
       }
     }
 
-    const headerData = {
+    const periodData = {
       po_id: $("#po_id").val(),
-      po_number: $("#po_number").val(),
-      project_name: $("#project_name").val(),
-      supplier_id: $("#supplier_id").val(),
-      location_id: $("#location_id").val(),
-      working_name_th: $("#working_name_th").val(),
-      working_name_en: $("#working_name_en").val(),
-      contract_value_before: $("#contract_value_before").val() ?? 0,
-      contract_value: parseFloat($("#contract_value").val() ?? 0),
-      vat: $("#vat").val() ?? 0,
-      is_include_vat: 1,
-      is_deposit: $("#is_deposit").val(),
-      deposit_value:
-        (parseFloat($("#deposit_percent").val() ?? 0) *
-          parseFloat($("#contract_value").val() ?? 0)) /
-        100,
-      working_date_from: $("#working_date_from").val(),
-      working_date_to: $("#working_date_to").val(),
-      working_day: parseFloat($("#working_day").val() ?? 0),
-      number_of_period: $("#tbody-period tr").not('[data-crud="delete"]')
-        .length, //จำนวนตรงนี้จะไม่เอารายการที่ลบไป
+      period_id: $("#period_id").val(),
+      inspection_id: $("#inspection_id").val(),
+      workload_actual_completed_percent: $("#workload_actual_completed_percent").val() ?? 0,
+      workload_remaining_percent : $("workload_remaining_percent").val() ?? 0,
+      workload_planned_percent : $("workload_planned_percent").val() ?? 0,
+      interim_payment : $("interim_payment").val() ?? 0,
+      interim_payment_percent : $("interim_payment_percent").val() ?? 0,
+      interim_payment_less_previous : $("interim_payment_less_previous").val() ?? 0,
+      interim_payment_less_previous_percent : $("interim_payment_less_previous_percent").val() ?? 0,
+      interim_payment_accumulated : $("interim_payment_accumulated").val() ?? 0,
+      interim_payment_accumulated_percent : $("interim_payment_accumulated_percent").val() ?? 0,
+      interim_payment_remain : $("interim_payment_remain").val() ?? 0,
+      interim_payment_remain_percent : $("interim_payment_remain_percent").val() ?? 0,
+      retention_value : $("retention_value").val() ?? 0,
+      plan_status_id : $("plan_status_id").val() ?? 0,
+      disbursement : $("disbursement").val() ?? 0,
+      remark : $("remark").val() ?? 0,
     };
 
-    const periodsData = [];
-    $("#tbody-period tr").each(function () {
+    const detailsData = [];
+    $("#tbody-order tr").each(function () {
       const row = $(this);
 
       // สร้าง object สำหรับเก็บข้อมูลของแถวนี้
       // row.removeData("crud"); ทำการ clear ค่า data-* ที่อยู่ใน cache ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
-      const periodRecord = {
-        period_id: row.attr("data-period-id"), // ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
-        period_crud: row.attr("data-crud"), //
-        period_number: row.find('input[name="period_number"]').val(), // ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
-        workload_planned_percent: row
-          .find('input[name="workload_planned_percent"]')
-          .val(),
-        interim_payment: row.find('input[name="interim_payment"]').val(),
-        interim_payment_percent: row
-          .find('input[name="interim_payment_percent"]')
-          .val(),
+      const detailRecord = {
+        rec_id: row.attr("data-rec-id"), // ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
+        order_crud: row.attr("data-crud"), //
+        order_no: row.find('input[name="order_no"]').val(), // ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
+        detail: row.find('input[name="detail"]').val(),
         remark: row.find('input[name="remark"]').val(),
-        crud: row.find('input[name="crud"]').val(),
       };
       // เพิ่ม object ของแถวนี้เข้าไปใน array หลัก
-      periodsData.push(periodRecord);
+      detailsData.push(detailRecord);
     });
 
     const data_sent = {
-      headerData: headerData,
-      periodsData: periodsData,
+      periodData: periodData,
+      detailsData: detailsData,
       action: "save",
     };
 
+    console.log(data_sent);
+    return;
     $.ajax({
       url: "inspection_handler_api.php",
       type: "POST",
@@ -312,6 +285,9 @@ $(document).ready(function () {
     // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
   });
 
+
+
+// รอตรวจสอบ 3 ฟังก์ชัน
   $(document).on("click", "#btnAttach", function (e) {
     e.preventDefault();
 

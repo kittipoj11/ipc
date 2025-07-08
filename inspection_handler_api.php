@@ -26,6 +26,19 @@ if (isset($requestData['action']) && $requestData['action'] == 'select') {
     $rs = $inspection->getAllPeriodByPoId($requestData['po_id']);
     echo json_encode($rs);
 
+} elseif (isset($requestData['action']) && $requestData['action'] == 'save') {
+    if (!isset($requestData['headerData']) || !isset($requestData['periodsData'])) {
+        throw new Exception('Invalid data structure.');
+    }
+    $savedPoId = $po->save($requestData['headerData'], $requestData['periodsData']);
+    
+    $response = [
+        'status' => 'success',
+        'message' => 'บันทึกข้อมูล PO ID: ' . $savedPoId . ' เรียบร้อยแล้ว',
+        'data' => ['po_id' => $savedPoId]
+    ];
+    // echo "1";
+    echo json_encode($response);
 } elseif (isset($requestData['action']) && $requestData['action'] == 'updateInspectionPeriod') {
     $rs = $inspection->updateInspectionPeriod($requestData);
     

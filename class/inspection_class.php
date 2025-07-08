@@ -166,7 +166,7 @@ class Inspection
         $result = [
             'header' => $rsPoMain,
             'period' => $rsPeriods,
-            'PeriodDetails' => $rsPeriodDetails, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
+            'periodDetails' => $rsPeriodDetails, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
         ];
 
         return $result;
@@ -261,6 +261,14 @@ class Inspection
 
             } else {
                 // --- UPDATE MODE ---
+                /*
+                SELECT `inspection_id`, `period_id`, `po_id`, `period_number`
+                , `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`
+                , `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`
+                , `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`
+                , `retention_value`, `plan_status_id`, `is_paid`, `is_retention`, `remark`, `inspection_status`, `current_approval_level`
+                , `disbursement`, `workflow_id` FROM `inspection_periods`
+                */
                 $sql = "UPDATE `inspection_periods`
                         SET `workload_actual_completed_percent` = :workload_actual_completed_percent
                         , `workload_remaining_percent` = :workload_remaining_percent
@@ -360,16 +368,16 @@ class Inspection
                 // INSERT inspection_period_details
                 $sql = "INSERT INTO `inspection_period_details`(`inspection_id`, `order_no`, `details`, `remark`) 
                         VALUES (:inspection_id, :order_no, :details, :remark)";
-                $stmtCreatePoPeriods = $this->db->prepare($sql);
+                $stmtCreate = $this->db->prepare($sql);
 
                 foreach ($createItems as $item) {
-                    $stmtCreatePoPeriods->bindParam(':inspection_id', $item['inspection_id'], PDO::PARAM_INT);
-                    $stmtCreatePoPeriods->bindParam(':order_no', $item['order_no'], PDO::PARAM_INT);
-                    $stmtCreatePoPeriods->bindParam(':details', $item['details'],  PDO::PARAM_STR);
-                    $stmtCreatePoPeriods->bindParam(':remark', $item['remark'], PDO::PARAM_STR);
+                    $stmtCreate->bindParam(':inspection_id', $item['inspection_id'], PDO::PARAM_INT);
+                    $stmtCreate->bindParam(':order_no', $item['order_no'], PDO::PARAM_INT);
+                    $stmtCreate->bindParam(':details', $item['details'],  PDO::PARAM_STR);
+                    $stmtCreate->bindParam(':remark', $item['remark'], PDO::PARAM_STR);
 
-                    $stmtCreatePoPeriods->execute();
-                    $stmtCreatePoPeriods->closeCursor();
+                    $stmtCreate->execute();
+                    $stmtCreate->closeCursor();
 
                     // $periodId = $this->db->lastInsertId();
                 }

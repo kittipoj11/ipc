@@ -78,23 +78,21 @@ require_once 'auth.php';
     // $_SESSION['Request'] = $_REQUEST;
     $connection = new Connection;
     $pdo = $connection->getDbConnection();
+
     $po_id = $_REQUEST['po_id'];
     $period_id = $_REQUEST['period_id'];
     $inspection_id = $_REQUEST['inspection_id'];
 
     $inspection = new Inspection($pdo);
-    $rsInspection = $inspection->getHeaderByPoId($po_id);
-    $rsInspectionPeriod = $inspection->getPeriodByPeriodId($period_id);
-
-    // $rsInspectionPeriod_old = $inspection->getInspectionPeriodByPeriodId($po_id, $period_id);
-    // $rsInspectionPeriodDetail = $inspection->getInspectionPeriodDetailByPeriodId($po_id, $period_id);
+    $rsInspection = $inspection->getPeriodByPeriodId($period_id);
 
     $plan_status = new Plan_status($pdo);
-    $plan_status_rs = $plan_status->getAll();
- 
+    $rsPlanStatus = $plan_status->getAll();
+
     // 
     // ถ้า approval_level ตรงกับ current_approval_level และ approver_id ตรงกับ user_id ที่ login
     // 
+    $content_header = 'Inspection(ตรวจรับงาน)';
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -102,7 +100,7 @@ require_once 'auth.php';
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
         <div class="col-sm-12  d-flex justify-content-between">
-          <h6 class="m-1 fw-bold text-uppercase">Inspection(ตรวจรับงาน)</h6>
+          <h6 class="m-1 fw-bold text-uppercase"><?= $content_header ?></h6>
         </div>
       </section>
       <!-- /.container-fluid content-header-->
@@ -114,35 +112,35 @@ require_once 'auth.php';
             <div class="col-12">
               <form name="myForm" id="myForm" action="" method="post">
                 <div class="card">
-                <div class="card-header d-flex justify-content-between">
+                  <div class="card-header d-flex justify-content-between">
                     <div class="col d-flex align-items-center">
-                      <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspectionPeriod['period']['inspection_id'] ?>">
-                      <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspectionPeriod['period']['period_id'] ?>">
-                      <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspectionPeriod['period']['po_id'] ?>">
+                      <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspection['period']['inspection_id'] ?>">
+                      <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspection['period']['period_id'] ?>">
+                      <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspection['period']['po_id'] ?>">
 
-                      <h6 class="m-1 fw-bold"><?= $rsInspectionPeriod['header']['po_number'] . " : " . $rsInspectionPeriod['header']['supplier_id'] . " - " . $rsInspectionPeriod['header']['supplier_name'] ?></h6>
-                      <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspectionPeriod['period']['period_number'] . "]" ?></h6>
+                      <h6 class="m-1 fw-bold"><?= $rsInspection['header']['po_number'] . " : " . $rsInspection['header']['supplier_id'] . " - " . $rsInspection['header']['supplier_name'] ?></h6>
+                      <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspection['period']['period_number'] . "]" ?></h6>
                       <button type="button" name="btnAttach" id="btnAttach" class="btn btn-primary btn-sm m-1">
                         <i class="fi fi-rr-clip"></i>
                       </button>
                     </div>
-                    
+
                     <!-- <div class="dropdown"> -->
                     <div class="btn-group" role="group">
                       <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Action
                       </button>
-                      <ul class="dropdown-menu py-0" id="action_type" data-current_approval_level="<?= $rsInspectionPeriod['period']['current_approval_level'] ?>">
+                      <ul class="dropdown-menu py-0" id="action_type" data-current_approval_level="<?= $rsInspection['period']['current_approval_level'] ?>">
                         <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
-                        <?php if (strtoupper($rsInspectionPeriod['period']['action_type_name']) == strtoupper('submit')) { ?>
+                        <?php if (strtoupper($rsInspection['period']['action_type_name']) == strtoupper('submit')) { ?>
                           <!-- <li><a class="dropdown-item" href="#">Submit</a></li> -->
                           <li><button class="dropdown-item approval_next" id="document_submit">Submit</a>
                           </li>
                         <?php } else { ?>
-                          <?php if (strtoupper($rsInspectionPeriod['period']['action_type_name']) == strtoupper('verify')) { ?>
+                          <?php if (strtoupper($rsInspection['period']['action_type_name']) == strtoupper('verify')) { ?>
                             <!-- <li><a class="dropdown-item" href="#">Verify</a></li> -->
                             <li><button class="dropdown-item approval_next" id="document_verify">Verify</button></li>
-                          <?php } elseif (strtoupper($rsInspectionPeriod['period']['action_type_name']) == strtoupper('approval')) { ?>
+                          <?php } elseif (strtoupper($rsInspection['period']['action_type_name']) == strtoupper('approval')) { ?>
                             <!-- <li><a class="dropdown-item" href="#">Approve</a></li> -->
                             <li><button class="dropdown-item approval_next" id="document_approve">Approve</button></li>
                           <?php } ?>
@@ -163,26 +161,26 @@ require_once 'auth.php';
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
                         <label for="supplier_name" class="input-group-text">ผู้รับเหมา</label>
-                        <input type="text" class="form-control" name="supplier_name" id="supplier_name" value="<?= $rsInspectionPeriod['header']['supplier_name'] ?>" readonly>
+                        <input type="text" class="form-control" name="supplier_name" id="supplier_name" value="<?= $rsInspection['header']['supplier_name'] ?>" readonly>
                       </div>
                     </div>
 
                     <div class="row m-1">
                       <div class="col-6 input-group input-group-sm">
                         <label for="project_name" class="input-group-text">โครงการ</label>
-                        <input type="text" class="form-control" name="project_name" id="project_name" readonly value="<?= $rsInspectionPeriod['header']['project_name'] ?>">
+                        <input type="text" class="form-control" name="project_name" id="project_name" readonly value="<?= $rsInspection['header']['project_name'] ?>">
                       </div>
 
                       <div class="col-6 input-group input-group-sm">
                         <label for="location_name" class="input-group-text">สถานที่</label>
-                        <input type="text" class="form-control" name="location_name" id="location_name" readonly value="<?= $rsInspectionPeriod['header']['location_name'] ?>">
+                        <input type="text" class="form-control" name="location_name" id="location_name" readonly value="<?= $rsInspection['header']['location_name'] ?>">
                       </div>
                     </div>
 
                     <div class="row m-1">
                       <div class="col-6 input-group input-group-sm">
                         <label for="working_name_th" class="input-group-text">งาน</label>
-                        <input type="text" class="form-control" name="working_name_th" id="working_name_th" readonly value="<?= $rsInspectionPeriod['header']['working_name_th'] ?> (<?= $rsInspectionPeriod['header']['working_name_en'] ?>)">
+                        <input type="text" class="form-control" name="working_name_th" id="working_name_th" readonly value="<?= $rsInspection['header']['working_name_th'] ?> (<?= $rsInspection['header']['working_name_en'] ?>)">
                       </div>
 
                     </div>
@@ -191,20 +189,20 @@ require_once 'auth.php';
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="working_date_from" class="input-group-text">ระยะเวลาดำเนินการ</label>
-                          <input type="date" class="form-control" name="working_date_from" id="working_date_from" readonly value="<?php echo isset($rsInspectionPeriod['header']['working_date_from']) ? htmlspecialchars($rsInspectionPeriod['header']['working_date_from']) : ''; ?>">
+                          <input type="date" class="form-control" name="working_date_from" id="working_date_from" readonly value="<?php echo isset($rsInspection['header']['working_date_from']) ? htmlspecialchars($rsInspection['header']['working_date_from']) : ''; ?>">
 
                         </div>
                       </div>
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="working_date_to" class="input-group-text "> ถึง </label>
-                          <input type="date" class="form-control" name="working_date_to" id="working_date_to" readonly value="<?php echo isset($rsInspectionPeriod['header']['working_date_to']) ? htmlspecialchars($rsInspectionPeriod['header']['working_date_to']) : ''; ?>">
+                          <input type="date" class="form-control" name="working_date_to" id="working_date_to" readonly value="<?php echo isset($rsInspection['header']['working_date_to']) ? htmlspecialchars($rsInspection['header']['working_date_to']) : ''; ?>">
                         </div>
                       </div>
 
                       <div class="col-2 input-group input-group-sm">
                         <label for="working_day" class="input-group-text">รวม</label>
-                        <input type="number" class="form-control" name="working_day" id="working_day" readonly value="<?php echo isset($rsInspectionPeriod['header']['working_day']) ? htmlspecialchars($rsInspectionPeriod['header']['working_day']) : ''; ?>">
+                        <input type="number" class="form-control" name="working_day" id="working_day" readonly value="<?php echo isset($rsInspection['header']['working_day']) ? htmlspecialchars($rsInspection['header']['working_day']) : ''; ?>">
                       </div>
                     </div>
 
@@ -213,17 +211,17 @@ require_once 'auth.php';
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
                         <label for="po_number" class="input-group-text">เลขที่ PO</label>
-                        <input type="text" class="form-control" name="po_number" id="po_number" value=<?= $rsInspectionPeriod['header']['po_number'] ?> readonly>
+                        <input type="text" class="form-control" name="po_number" id="po_number" value=<?= $rsInspection['header']['po_number'] ?> readonly>
                       </div>
 
                       <div class="col-4 input-group input-group-sm">
                         <label for="contract_value" class="input-group-text">มูลค่างานตาม PO</label>
-                        <input type="number" class="form-control" name="contract_value" id="contract_value" readonly value=<?= $rsInspectionPeriod['header']['contract_value'] ?>>
+                        <input type="number" class="form-control" name="contract_value" id="contract_value" readonly value=<?= $rsInspection['header']['contract_value'] ?>>
                       </div>
 
                       <div class="col-2 input-group input-group-sm">
                         <?php
-                        $display_include_vat = $rsInspectionPeriod['header']['is_include_vat'] ? "(Including VAT 7% )" : "";
+                        $display_include_vat = $rsInspection['header']['is_include_vat'] ? "(Including VAT 7% )" : "";
                         ?>
                         <label for="vat" class="input-group-text d-none">(Includeing VAT</label>
                         <input type="text" class="form-control border border-0" name="vat" id="vat" readonly value="<?= $display_include_vat ?>">
@@ -237,19 +235,19 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="period_number" class="input-group-text">เบิกงวดงานที่ </label>
-                            <input type="text" class="form-control" name="period_number" readonly value="<?= $rsInspectionPeriod['period']['period_number'] ?>">
+                            <input type="text" class="form-control" name="period_number" readonly value="<?= $rsInspection['period']['period_number'] ?>">
                           </div>
                         </div>
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <div class="form-check">
                               <?php
-                              $checked_attr = $rsInspectionPeriod['header']['is_deposit'] ? "checked" : "";
+                              $checked_attr = $rsInspection['header']['is_deposit'] ? "checked" : "";
                               ?>
                               <input class="form-check-input" type="checkbox" name="is_deposit" readonly <?= $checked_attr ?>>
                             </div>
                             <label class="form-check-label" for="deposit_percent">มีเงินมัดจำ </label>
-                            <input type="number" class="form-control" name="deposit_percent" id="deposit_percent" readonly value=<?= $rsInspectionPeriod['header']['deposit_percent'] ?>>%
+                            <input type="number" class="form-control" name="deposit_percent" id="deposit_percent" readonly value=<?= $rsInspection['header']['deposit_percent'] ?>>%
                           </div>
                         </div>
                       </div>
@@ -258,13 +256,13 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment" class="col-3 input-group-text">ยอดเบิกเงินงวดปัจจุบัน</label>
-                            <input type="number" step="0.01" class="col-3 form-control" name="interim_payment" id="interim_payment" value="<?= $rsInspectionPeriod['period']['interim_payment'] ?>">
+                            <input type="number" step="1.00" class="col-3 form-control" name="interim_payment" id="interim_payment" value="<?= $rsInspection['period']['interim_payment'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_percent" id="interim_payment_percent" readonly value=<?= $rsInspectionPeriod['period']['interim_payment_percent'] ?>>
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_percent" id="interim_payment_percent" readonly value=<?= $rsInspection['period']['interim_payment_percent'] ?>>
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
@@ -272,13 +270,13 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment_less_previous" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</label>
-                            <input type="number" step="0.01" class="col-3 form-control" name="interim_payment_less_previous" id="interim_payment_less_previous" readonly value="<?= $rsInspectionPeriod['period']['previous_interim_payment_accumulated'] ?>">
+                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_less_previous" id="interim_payment_less_previous" readonly value="<?= $rsInspection['period']['previous_interim_payment_accumulated'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_less_previous_percent" id="interim_payment_less_previous_percent" readonly value="<?= $rsInspectionPeriod['period']['interim_payment_less_previous_percent'] ?>">
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_less_previous_percent" id="interim_payment_less_previous_percent" readonly value="<?= $rsInspection['period']['interim_payment_less_previous_percent'] ?>">
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
@@ -286,13 +284,13 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment_accumulated" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</label>
-                            <input type="number" step="0.01" class="col-3 form-control" name="interim_payment_accumulated" id="interim_payment_accumulated" readonly value="<?= $rsInspectionPeriod['period']['interim_payment_accumulated'] ?>">
+                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_accumulated" id="interim_payment_accumulated" readonly value="<?= $rsInspection['period']['interim_payment_accumulated'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_accumulated_percent" id="interim_payment_accumulated_percent" readonly value="<?= $rsInspectionPeriod['period']['interim_payment_accumulated_percent'] ?>">
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_accumulated_percent" id="interim_payment_accumulated_percent" readonly value="<?= $rsInspection['period']['interim_payment_accumulated_percent'] ?>">
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
@@ -300,13 +298,13 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment_remain" class="col-3 input-group-text">ยอดเงินงวดคงเหลือ</label>
-                            <input type="number" step="0.01" class="col-3 form-control" name="interim_payment_remain" id="interim_payment_remain" readonly value="<?= $rsInspectionPeriod['period']['interim_payment_remain'] ?>">
+                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_remain" id="interim_payment_remain" readonly value="<?= $rsInspection['period']['interim_payment_remain'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_remain_percent" id="interim_payment_remain_percent" readonly value="<?= $rsInspectionPeriod['period']['interim_payment_remain_percent'] ?>">
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_remain_percent" id="interim_payment_remain_percent" readonly value="<?= $rsInspection['period']['interim_payment_remain_percent'] ?>">
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
@@ -319,14 +317,14 @@ require_once 'auth.php';
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="workload_planned_percent" class="input-group-text ">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</label>
-                          <input type="number" step="0.01" class="form-control " name="workload_planned_percent" id="workload_planned_percent" readonly value="<?php echo isset($rsInspectionPeriod['period']['workload_planned_percent']) ? htmlspecialchars($rsInspectionPeriod['period']['workload_planned_percent']) : ''; ?>">
+                          <input type="number" step="0.01" class="form-control " name="workload_planned_percent" id="workload_planned_percent" readonly value="<?php echo isset($rsInspection['period']['workload_planned_percent']) ? htmlspecialchars($rsInspection['period']['workload_planned_percent']) : ''; ?>">
                           <label for="workload_planned_percent" class="input-group-text ">%</label>
                         </div>
                       </div>
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="workload_actual_completed_percent" class="input-group-text ">ปริมาณที่แล้วเสร็จจริง</label>
-                          <input type="number" step="0.01" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsInspectionPeriod['period']['workload_actual_completed_percent']) ? htmlspecialchars($rsInspectionPeriod['period']['workload_actual_completed_percent']) : ''; ?>">
+                          <input type="number" step="0.01" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsInspection['period']['workload_actual_completed_percent']) ? htmlspecialchars($rsInspection['period']['workload_actual_completed_percent']) : ''; ?>">
                           <label for="workload_actual_completed_percent" class="input-group-text ">%</label>
                         </div>
                       </div>
@@ -334,7 +332,7 @@ require_once 'auth.php';
                       <div class="col-4">
                         <div class="row-1 input-group input-group-sm">
                           <label for="workload_remaining_percent" class="input-group-text">ปริมาณงานคงเหลือ</label>
-                          <input type="number" step="0.01" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsInspectionPeriod['period']['workload_remaining_percent']) ? htmlspecialchars($rsInspectionPeriod['period']['workload_remaining_percent']) : ''; ?>">
+                          <input type="number" step="0.01" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsInspection['period']['workload_remaining_percent']) ? htmlspecialchars($rsInspection['period']['workload_remaining_percent']) : ''; ?>">
                           <label for="workload_remaining_percent" class="input-group-text ">%</label>
                         </div>
                       </div>
@@ -370,19 +368,19 @@ require_once 'auth.php';
                           </thead>
 
                           <tbody id="tbody-order">
-                            <?php foreach ($rsInspectionPeriod['PeriodDetails'] as $row) { ?>
-                              <tr class="firstTr">
+                            <?php foreach ($rsInspection['PeriodDetails'] as $row) { ?>
+                              <tr data-crud='select' data-rec-id=<?php echo isset($row['rec_id']) ? htmlspecialchars($row['rec_id']) : ''; ?>>
                                 <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                                <td class="input-group-sm p-0"><input type="number" name="order_nos[]" class="form-control order_no" value="<?php echo isset($row['order_no']) ? htmlspecialchars($row['order_no']) : ''; ?>" readonly>
+                                <td class="input-group-sm p-0"><input type="number" name="order_no" class="form-control" value="<?php echo isset($row['order_no']) ? htmlspecialchars($row['order_no']) : ''; ?>" readonly>
                                 </td>
-                                <td class="input-group-sm p-0"><input type="text" name="details[]" class="form-control detail" value="<?php echo isset($row['details']) ? htmlspecialchars($row['details']) : ''; ?>">
+                                <td class="input-group-sm p-0"><input type="text" name="detail" class="form-control" value="<?php echo isset($row['details']) ? htmlspecialchars($row['details']) : ''; ?>">
                                 </td>
-                                <td class="input-group-sm p-0"><input type="text" name="remarks[]" class="form-control remark" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">
+                                <td class="input-group-sm p-0"><input type="text" name="remark" class="form-control" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">
                                 </td>
                                 <td class="input-group-sm p-0">
-                                  <input type="text" name="cruds[]" class="form-control crud" value="s">
+                                  <input type="text" name="crud" class="form-control" value="select">
                                 </td>
-                                <td class="input-group-sm p-0 d-nonex"><input type="text" name="rec_ids[]" class="form-control rec_id" value="<?php echo isset($row['rec_id']) ? htmlspecialchars($row['rec_id']) : ''; ?>" readonly></td>
+                                <td class="input-group-sm p-0 d-nonex"><input type="text" name="rec_id" class="form-control" value="<?php echo isset($row['rec_id']) ? htmlspecialchars($row['rec_id']) : ''; ?>" readonly></td>
                               </tr>
                             <?php } ?>
                           </tbody>
@@ -401,20 +399,20 @@ require_once 'auth.php';
                             <select class="form-select form-control" name="plan_status_id" id="plan_status_id">
                               <option value="-1" selected>...</option>
                               <?php
-                              foreach ($plan_status_rs as $row) :
-                                $selected_attr = ($rsInspectionPeriod['period']['plan_status_id'] == $row['plan_status_id']) ? " selected" : "";
+                              foreach ($rsPlanStatus as $row) :
+                                $selected_attr = ($rsInspection['period']['plan_status_id'] == $row['plan_status_id']) ? " selected" : "";
                                 echo "<option value='{$row['plan_status_id']}' {$selected_attr}>{$row['plan_status_name']}</option>";
                               endforeach ?>
                             </select>
                           </div>
                         </div>
                         <div class="form-floating">
-                          <textarea name="remark" class="form-control" id="floatingTextarea" placeholder="Leave a comment here" rows="4" style="min-height: 4em;height: auto;"><?php echo isset($rsInspectionPeriod['period']['remark']) ? trim(htmlspecialchars($rsInspectionPeriod['period']['remark'])) : ''; ?></textarea>
+                          <textarea name="remark" class="form-control" id="floatingTextarea" placeholder="Leave a comment here" rows="4" style="min-height: 4em;height: auto;"><?php echo isset($rsInspection['period']['remark']) ? trim(htmlspecialchars($rsInspection['period']['remark'])) : ''; ?></textarea>
                           <label for="floatingTextarea">หมายเหตุ:</label>
                         </div>
 
                         <?php
-                        $disbursement = $rsInspectionPeriod['period']['disbursement']; // ตัวอย่างค่า
+                        $disbursement = $rsInspection['period']['disbursement']; // ตัวอย่างค่า
 
                         $checked0 = '';
                         $checked1 = '';
@@ -453,23 +451,15 @@ require_once 'auth.php';
                   </div>
                   <!-- /.card-body -->
 
-
-
-
                   <div class="container-fluid  p-0 d-flex justify-content-between">
                     <button type="button" name="btnCancel" class="btn btn-primary btn-sm m-1 btnCancel"> <i class="fi fi-rr-left"></i> </button>
                     <div>
-                      <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsInspectionPeriod['period']['current_approval_level'] ?>">
+                      <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsInspection['period']['current_approval_level'] ?>">
                       <button type="button" name="btnCancel" class="btn btn-warning btn-sm m-1 btnCancel">ยกเลิก</button>
                     </div>
                   </div>
-                  <!-- <button type="submit" name="btnSave" id="btnSave" class="btn btn-primary btn-sm m-1">บันทึก</button> -->
-
-                  <!-- <div class="container-fluid card-footer p-0 d-flex justify-content-start">
-                  </div> -->
 
                 </div>
-
 
                 <!-- /.card -->
 
