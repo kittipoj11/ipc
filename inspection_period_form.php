@@ -69,10 +69,7 @@ require_once 'auth.php';
     <!-- Main Content Start -->
     <?php
     require_once  'class/connection_class.php';
-    require_once  'class/po_class.php';
     require_once  'class/inspection_class.php';
-    require_once  'class/supplier_class.php';
-    require_once  'class/location_class.php';
     require_once  'class/plan_status_class.php';
 
     // $_SESSION['Request'] = $_REQUEST;

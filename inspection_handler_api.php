@@ -39,8 +39,6 @@ if (isset($requestData['action']) && $requestData['action'] == 'select') {
     ];
     // echo "1";
     echo json_encode($response);
-} elseif (isset($requestData['action']) && $requestData['action'] == 'updateInspectionPeriod') {
-    $rs = $inspection->updateInspectionPeriod($requestData);
     
 } elseif (isset($requestData['action']) && $requestData['action'] == 'updateCurrentApprovalLevel') {
     $rs = $inspection->updateCurrentApprovalLevel($requestData);

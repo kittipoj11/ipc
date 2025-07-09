@@ -92,7 +92,7 @@ $(document).ready(function () {
     // console.log(`row = ${row.attr("data-crud")} input=${row.find('input[name="crud"]').val()}`);
   });
 
-    $("#tbody-order").on("input", "input", function () {
+  $("#tbody-order").on("input", "input", function () {
     const row = $(this).closest("tr");
     // ถ้าแถวไม่ใช่แถวใหม่ (สถานะเป็น select) ให้เปลี่ยนเป็น update
     if (row.attr("data-crud") == "select") {
@@ -381,6 +381,8 @@ $(document).ready(function () {
       $("#submit").removeClass("d-none");
       $(".btn-group").removeClass("d-none");
     }
+    // $("#submit").addClass("d-none");
+    // $(".btn-group").addClass("d-none");
   }
 
   loadPage();

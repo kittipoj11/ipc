@@ -82,10 +82,8 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/po_class.php';
+    require_once  'class/connection_class.php';
     require_once  'class/inspection_class.php';
-    require_once  'class/supplier_class.php';
-    require_once  'class/location_class.php';
 
     // $_SESSION['Request'] = $_REQUEST;
     $po_id = $_REQUEST['po_id'];
@@ -93,17 +91,11 @@ require_once 'auth.php';
     $inspection_id = $_REQUEST['inspection_id'];
     $mode = $_REQUEST['mode'];
 
-    $po = new Po;
+    $connection = new Connection;
+    $pdo=$connection->getDbConnection();
 
-    $inspection = new Inspection;
-    $rsInspectionPeriod = $inspection->getInspectionPeriodByPeriodId($po_id, $period_id);
-    $rsInspectionPeriodDetail = $inspection->getInspectionPeriodDetailByPeriodId($po_id, $period_id);
-
-    $supplier = new Supplier;
-    $supplier_rs = $supplier->getAll();
-
-    $location = new Location;
-    $location_rs = $location->getAll();
+    $inspection = new Inspection($pdo);
+    $rsInspection = $inspection->getPeriodByPeriodId($period_id);
 
     ?>
 
@@ -134,12 +126,12 @@ require_once 'auth.php';
               <form id="uploadForm" enctype="multipart/form-data">
                 <div class="card">
                   <div class="card-header d-flex align-items-center">
-                    <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspectionPeriod['inspection_id'] ?>">
-                    <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspectionPeriod['period_id'] ?>">
-                    <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspectionPeriod['po_id'] ?>">
+                    <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspection['period']['inspection_id'] ?>">
+                    <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspection['period']['period_id'] ?>">
+                    <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspection['period']['po_id'] ?>">
 
-                    <h6 class="m-1 fw-bold"><?= $rsInspectionPeriod['po_number'] . " : " . $rsInspectionPeriod['supplier_id'] . " - " . $rsInspectionPeriod['supplier_name'] ?></h6>
-                    <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspectionPeriod['period_number'] . "]" ?></h6>
+                    <h6 class="m-1 fw-bold"><?= $rsInspection['header']['po_number'] . " : " . $rsInspection['header']['supplier_id'] . " - " . $rsInspection['header']['supplier_name'] ?></h6>
+                    <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspection['period']['period_number'] . "]" ?></h6>
                   </div>
 
                   <div class="card-header d-flex" id="mode" data-mode="<?= $mode ?>">
@@ -199,12 +191,14 @@ require_once 'auth.php';
                           <div class="card-body m-0 p-0">
                             <div class="form-group">
                               <label for="recordName">Record Name:</label>
-                              <input type="text" class="form-control" id="recordName" name="record_name" value="test">
+                              <input type="text" class="form-control" id="recordName" name="record_name" value="">
                             </div>
                             <div class="form-group">
                               <label for="files">Upload Files (PDF or Images):</label>
-                              <input type="file" class="form-control-file" id="files" name="files[]" multiple accept="image/*,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" required>
-                              <small class="form-text text-muted">อนุญาตเฉพาะไฟล์ PDF, JPG, PNG, Word (.doc, .docx), Excel (.xls, .xlsx), PowerPoint (.ppt, .pptx) และขนาดไม่เกิน 2MB ต่อไฟล์</small>
+                              <!-- <input type="file" class="form-control-file" id="files" name="files[]" multiple accept="image/*,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation" required> -->
+                              <!-- <small class="form-text text-muted">อนุญาตเฉพาะไฟล์ PDF, JPG, PNG, Word (.doc, .docx), Excel (.xls, .xlsx), PowerPoint (.ppt, .pptx) และขนาดไม่เกิน 2MB ต่อไฟล์</small> -->
+                              <input type="file" class="form-control-file" id="files" name="files[]" multiple accept="image/*,application/pdf" required>
+                              <small class="form-text text-muted">อนุญาตเฉพาะไฟล์ PDF, JPG, PNG</small>
                             </div>
                             <div id="uploadStatus" class="mt-3">
 

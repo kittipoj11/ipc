@@ -95,9 +95,10 @@ $(document).ready(function () {
     window.location.href = "po_form.php?action=update" + "&po_id=" + po_id;
   });
 
-  $("#tbody").on("click", ".tdMain:not(:has(a), .action)", function (e) {
+  // $("#tbody").on("click", ".tdMain:not(:has(a), .action)", function (e) {
     //, (comma) ภายใน :not(...): ใช้เพื่อรวมเงื่อนไขหลายอย่าง ในที่นี้คือ :has(a), :has(.action)
     // หมายความว่า :not() จะกรอง <td> ที่ ไม่มีทั้ง <a> และ ไม่มีทั้ง .action
+    $("#tbody").on("click", ".tdMain", function (e) {
     e.preventDefault();
     $(".content-period").removeClass("d-none");
 

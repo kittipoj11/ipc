@@ -86,7 +86,8 @@ $(document).ready(function () {
   });
 
   // Click ที่รายการงวดงานใดๆใน tdMain ที่ไม่มี <a></a>
-  $(document).on("click", ".tdMain:not(:has(a))", function (e) {
+  // $(document).on("click", ".tdMain:not(:has(a))", function (e) {
+  $(document).on("click", ".tdMain", function (e) {
     e.preventDefault();
     $(".content-period").removeClass("d-none");
 
