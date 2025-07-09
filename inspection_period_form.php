@@ -404,8 +404,8 @@ require_once 'auth.php';
                           </div>
                         </div>
                         <div class="form-floating">
-                          <textarea name="remark" class="form-control" id="floatingTextarea" placeholder="Leave a comment here" rows="4" style="min-height: 4em;height: auto;"><?php echo isset($rsInspection['period']['remark']) ? trim(htmlspecialchars($rsInspection['period']['remark'])) : ''; ?></textarea>
-                          <label for="floatingTextarea">หมายเหตุ:</label>
+                          <textarea name="remark" class="form-control" id="remark" placeholder="Leave a comment here" rows="4" style="min-height: 4em;height: auto;"><?php echo isset($rsInspection['period']['remark']) ? trim(htmlspecialchars($rsInspection['period']['remark'])) : ''; ?></textarea>
+                          <label for="remark">หมายเหตุ:</label>
                         </div>
 
                         <?php

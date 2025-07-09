@@ -315,7 +315,7 @@ class Inspection
 
                 // $stmtUpdatePoMain->execute();
                 $stmtInspectionPeriods->execute();
-
+$_SESSION['period data']= $periodData;
                 $stmtInspectionPeriods->closeCursor();
             }
 

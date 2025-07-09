@@ -110,36 +110,22 @@ $(document).ready(function () {
     interim_payment = parseFloat($(this).val());
 
     if (!isNaN(interim_payment) && !isNaN(contract_value)) {
-      interim_payment_accumulated =
-        interim_payment + interim_payment_less_previous; //(คือ Total Value Of Interim Payment))
+      interim_payment_accumulated = interim_payment + interim_payment_less_previous; //(คือ Total Value Of Interim Payment))
       interim_payment_remain = contract_value - interim_payment_accumulated;
 
-      interim_payment_less_previous_percent =
-        (interim_payment_less_previous * 100) / contract_value;
+      interim_payment_less_previous_percent = (interim_payment_less_previous * 100) / contract_value;
       interim_payment_percent = (interim_payment * 100) / contract_value;
-      interim_payment_accumulated_percent =
-        (interim_payment_accumulated * 100) / contract_value; //เปอร์เซ็นต์ของยอดเบิกเงินงวดสะสม
-      interim_payment_remain_percent =
-        (interim_payment_remain * 100) / contract_value;
+      interim_payment_accumulated_percent = (interim_payment_accumulated * 100) / contract_value; //เปอร์เซ็นต์ของยอดเบิกเงินงวดสะสม
+      interim_payment_remain_percent = (interim_payment_remain * 100) / contract_value;
 
-      $("#interim_payment_less_previous").val(
-        interim_payment_less_previous.toFixed(2)
-      ); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_accumulated").val(
-        interim_payment_accumulated.toFixed(2)
-      ); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_less_previous").val(interim_payment_less_previous.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_accumulated").val(interim_payment_accumulated.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
       $("#interim_payment_remain").val(interim_payment_remain.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
 
-      $("#interim_payment_less_previous_percent").val(
-        interim_payment_less_previous_percent.toFixed(2)
-      ); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_less_previous_percent").val(interim_payment_less_previous_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
       $("#interim_payment_percent").val(interim_payment_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_accumulated_percent").val(
-        interim_payment_accumulated_percent.toFixed(2)
-      ); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_remain_percent").val(
-        interim_payment_remain_percent.toFixed(2)
-      ); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_accumulated_percent").val(interim_payment_accumulated_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+      $("#interim_payment_remain_percent").val(interim_payment_remain_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
     } else {
       $("#interim_payment_less_previous").val("0"); // (ทศนิยม 2 ตำแหน่ง)
       $("#interim_payment_accumulated").val("0"); // (ทศนิยม 2 ตำแหน่ง)
@@ -198,22 +184,22 @@ $(document).ready(function () {
       period_id: $("#period_id").val(),
       inspection_id: $("#inspection_id").val(),
       workload_actual_completed_percent: $("#workload_actual_completed_percent").val() ?? 0,
-      workload_remaining_percent : $("workload_remaining_percent").val() ?? 0,
-      workload_planned_percent : $("workload_planned_percent").val() ?? 0,
-      interim_payment : $("interim_payment").val() ?? 0,
-      interim_payment_percent : $("interim_payment_percent").val() ?? 0,
-      interim_payment_less_previous : $("interim_payment_less_previous").val() ?? 0,
-      interim_payment_less_previous_percent : $("interim_payment_less_previous_percent").val() ?? 0,
-      interim_payment_accumulated : $("interim_payment_accumulated").val() ?? 0,
-      interim_payment_accumulated_percent : $("interim_payment_accumulated_percent").val() ?? 0,
-      interim_payment_remain : $("interim_payment_remain").val() ?? 0,
-      interim_payment_remain_percent : $("interim_payment_remain_percent").val() ?? 0,
-      retention_value : $("retention_value").val() ?? 0,
-      plan_status_id : $("plan_status_id").val() ?? 0,
-      disbursement : $("disbursement").val() ?? 0,
-      remark : $("remark").val() ?? 0,
+      workload_remaining_percent : $("#workload_remaining_percent").val() ?? 0,
+      workload_planned_percent : $("#workload_planned_percent").val() ?? 0,
+      interim_payment : $("#interim_payment").val() ?? 0,
+      interim_payment_percent : $("#interim_payment_percent").val() ?? 0,
+      interim_payment_less_previous : $("#interim_payment_less_previous").val() ?? 0,
+      interim_payment_less_previous_percent : $("#interim_payment_less_previous_percent").val() ?? 0,
+      interim_payment_accumulated : $("#interim_payment_accumulated").val() ?? 0,
+      interim_payment_accumulated_percent : $("#interim_payment_accumulated_percent").val() ?? 0,
+      interim_payment_remain : $("#interim_payment_remain").val() ?? 0,
+      interim_payment_remain_percent : $("#interim_payment_remain_percent").val() ?? 0,
+      retention_value : $("#retention_value").val() ?? 0,
+      plan_status_id : $("#plan_status_id").val() ?? 0,
+      disbursement : $("#disbursement").val() ?? 0,
+      remark : $("#remark").val() ?? '',
     };
-
+console.log(periodData);
     const detailsData = [];
     $("#tbody-order tr").each(function () {
       const row = $(this);
