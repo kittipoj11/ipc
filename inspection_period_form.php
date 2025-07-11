@@ -409,16 +409,10 @@ require_once 'auth.php';
                         </div>
 
                         <?php
-                        $disbursement = $rsInspection['period']['disbursement']; // ตัวอย่างค่า
+                        // savedPaymentMethod = data.payment_method || 'Cash'; // กำหนดค่าดีฟอลต์เป็น Cash
+                        // $disbursement = $rsInspection['period']['disbursement'] ?? 0; // ถ้าเป็น null กำหนดค่าดีฟอลต์เป็น 0
+                        $disbursement = $rsInspection['period']['disbursement']; // ถ้าเป็น null ไม่ต้องกำหนดค่าดีฟอลต์
 
-                        $checked0 = '';
-                        $checked1 = '';
-
-                        if ($disbursement == 0) {
-                          $checked0 = 'checked';
-                        } elseif ($disbursement == 1) {
-                          $checked1 = 'checked';
-                        }
                         ?>
 
                         <div class="row m-1 mb-3">
@@ -426,13 +420,13 @@ require_once 'auth.php';
                             <label for="disbursement" class="input-group-text">การเบิกจ่าย</label>
                           </div>
                           <div class="col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="disbursement" id="disbursement1" value="1" <?php echo $checked1; ?>>
+                            <input class="form-check-input" type="radio" name="disbursement" id="disbursement1" value="1" <?php echo ($disbursement == 1 ? 'checked':''); ?>>
                             <label class="form-check-label" for="disbursement1">
                               อนุมัติ
                             </label>
                           </div>
                           <div class="col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="disbursement" id="disbursement2" value="0" <?php echo $checked0; ?>>
+                            <input class="form-check-input" type="radio" name="disbursement" id="disbursement2" value="0" <?php echo ($disbursement == 0 ? 'checked':''); ?>>
                             <label class="form-check-label" for="disbursement2">
                               ไม่อนุมัติ
                             </label>

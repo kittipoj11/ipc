@@ -168,16 +168,20 @@ $(document).ready(function () {
   }
 
   $("#myForm").on("submit", function (e) {
-    const radioButtons = document.querySelectorAll('input[name="disbursement"]');
     e.preventDefault();
+    // const radioButtons = document.querySelectorAll('input[name="disbursement"]');
 
-    let disbursement = 0; // กำหนดค่าเริ่มต้นเป็น 0
-    for (const radioButton of radioButtons) {
-      if (radioButton.checked) {
-        disbursement = radioButton.value; // ดึงค่าจาก value
-        break;
-      }
-    }
+    // let disbursement = 0; // กำหนดค่าเริ่มต้นเป็น 0
+    // for (const radioButton of radioButtons) {
+    //   if (radioButton.checked) {
+    //     disbursement = radioButton.value; // ดึงค่าจาก value
+    //     break;
+    //   }
+    // }
+
+    // ★★★ ดึงค่าจาก radio button ที่ถูก ":checked" ของแถวนี้ ★★★
+    // ใช้ [name^="disbursement"] เพื่อเลือก radio button ทั้งหมดที่ชื่อขึ้นต้นด้วย "disbursement"
+    const disbursement = $('input[name^="disbursement"]:checked').val() || null; // ถ้าไม่มีการเลือก ให้เป็น null
 
     const periodData = {
       po_id: $("#po_id").val(),
@@ -196,10 +200,11 @@ $(document).ready(function () {
       interim_payment_remain_percent : $("#interim_payment_remain_percent").val() ?? 0,
       retention_value : $("#retention_value").val() ?? 0,
       plan_status_id : $("#plan_status_id").val() ?? 0,
-      disbursement : $("#disbursement").val() ?? 0,
+      disbursement : disbursement,//$("#disbursement").val() ?? 0,
       remark : $("#remark").val() ?? '',
     };
-console.log(periodData);
+// console.log(periodData);
+// return;
     const detailsData = [];
     $("#tbody-order tr").each(function () {
       const row = $(this);
