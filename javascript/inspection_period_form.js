@@ -325,7 +325,7 @@ $(document).ready(function () {
     // return;
     $.ajax({
       type: "POST",
-      url: "inspection_crud.php",
+      url: "inspection_handler_api.php",
       // data: $(this).serialize(),
       data: data_sent,
       success: function (response) {

@@ -122,7 +122,7 @@ class Inspection
      * @param int $period_id ID ของ Period ที่ต้องการ
      * @return array|null คืนค่าเป็น array ที่มีข้อมูลทั้งหมด หรือ null ถ้าไม่พบ
      */
-    public function getPeriodByPeriodId(int $period_id): ?array
+    public function getPeriodByPeriodId(int $periodId): ?array
     {
         // 1. ดึงข้อมูลของ inspection_periods ที่ต้องการ
         $sql = "SELECT P.inspection_id, P.period_id, P.po_id, P.period_number
@@ -149,7 +149,7 @@ class Inspection
                 ORDER BY P.po_id, P.period_number";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([$period_id]);
+        $stmt->execute([$periodId]);
         $rsPeriods = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // 2. ถ้าไม่พบข้อมูล Period ให้คืนค่า null ทันที
@@ -158,16 +158,29 @@ class Inspection
         }
 
         // 3. ดึงข้อมูลของ po_main ของ period_id ที่ต้องการ
-        $rsPoMain = $this->getHeaderByPeriodId($period_id);
+        $rsPoMain = $this->getHeaderByPeriodId($periodId);
 
         // 4. ดึงข้อมูล PeriodDetails ทั้งหมดของ Period นี้ 
-        $rsPeriodDetails = $this->getPeriodDetailsByPeriodId($period_id);
+        $rsPeriodDetails = $this->getPeriodDetailsByPeriodId($periodId);
 
-        // 5. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
+        // 5. ดึงข้อมูล Period Approvals ของ period_id ที่มี approval_level = current_approval_level
+                $sql = "SELECT `inspection_approval_id`, `inspection_id`, `period_id`, `po_id`, `period_number`
+                , `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`, `approval_date`, `approval_comment` 
+                FROM `inspection_period_approvals` 
+                WHERE period_id = :period_id
+                AND approval_level = :approval_level";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
+        $stmt->bindParam(':approval_level', $rsPeriods['current_approval_level'], PDO::PARAM_INT);
+        $stmt->execute();
+        $rsPeriodApprovals = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        
+        // 6. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
         $result = [
             'header' => $rsPoMain,
             'period' => $rsPeriods,
             'periodDetails' => $rsPeriodDetails, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
+            'periodApprovals' => $rsPeriodApprovals, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
         ];
 
         return $result;
@@ -315,7 +328,7 @@ class Inspection
 
                 // $stmtUpdatePoMain->execute();
                 $stmtInspectionPeriods->execute();
-$_SESSION['period data']= $periodData;
+                $_SESSION['period data']= $periodData;
                 $stmtInspectionPeriods->closeCursor();
             }
 
