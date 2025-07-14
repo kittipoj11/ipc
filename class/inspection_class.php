@@ -164,7 +164,7 @@ class Inspection
         $rsPeriodDetails = $this->getPeriodDetailsByPeriodId($periodId);
 
         // 5. ดึงข้อมูล Period Approvals ของ period_id ที่มี approval_level = current_approval_level
-                $sql = "SELECT `inspection_approval_id`, `inspection_id`, `period_id`, `po_id`, `period_number`
+        $sql = "SELECT `inspection_approval_id`, `inspection_id`, `period_id`, `po_id`, `period_number`
                 , `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`, `approval_date`, `approval_comment` 
                 FROM `inspection_period_approvals` 
                 WHERE period_id = :period_id
@@ -174,7 +174,7 @@ class Inspection
         $stmt->bindParam(':approval_level', $rsPeriods['current_approval_level'], PDO::PARAM_INT);
         $stmt->execute();
         $rsPeriodApprovals = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
-        
+
         // 6. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
         $result = [
             'header' => $rsPoMain,
@@ -271,7 +271,7 @@ class Inspection
         try {
             // กำหนดค่าให้ตัวแปร $inspectionId ที่ส่งมา
             $inspectionId = $periodData['inspection_id'] ?? 0;
-            
+
             // 1. ตรวจสอบและจัดการข้อมูล Header (INSERT หรือ UPDATE)
             if (empty($inspectionId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
 
@@ -328,7 +328,7 @@ class Inspection
 
                 // $stmtUpdatePoMain->execute();
                 $stmtInspectionPeriods->execute();
-                $_SESSION['period data']= $periodData;
+                // $_SESSION['period data']= $periodData;
                 $stmtInspectionPeriods->closeCursor();
             }
 
@@ -381,7 +381,7 @@ class Inspection
 
                         $stmtUpdate->execute();
                         $_SESSION['update detail[' . $item["rec_id"] . ']:'] = $item['detail'];
-                            $stmtUpdate->closeCursor();
+                        $stmtUpdate->closeCursor();
                     }
                 }
             }
@@ -400,7 +400,7 @@ class Inspection
                     $stmtCreate->bindParam(':remark', $item['remark'], PDO::PARAM_STR);
 
                     $stmtCreate->execute();
-                    $_SESSION['insert detail['. $this->db->lastInsertId() .']:'] = $item['detail'];
+                    $_SESSION['insert detail[' . $this->db->lastInsertId() . ']:'] = $item['detail'];
                     $stmtCreate->closeCursor();
 
                     // $periodId = $this->db->lastInsertId();
@@ -408,7 +408,7 @@ class Inspection
             }
 
             $this->db->commit();
-            // คืนค่า PO ID ที่บันทึกสำเร็จกลับไป
+            // คืนค่า Inspection ID ที่บันทึกสำเร็จกลับไป
             return (int)$inspectionId;
         } catch (Exception $e) {
             $_SESSION['error'] = $e->getMessage();
@@ -418,54 +418,45 @@ class Inspection
             throw $e;
         }
     }
-    
-    public function updateCurrentApprovalLevel($getData)
+
+    public function updateCurrentApprovalLevel(array $approvalData): int
     {
-        @session_start();
-
+        $this->db->beginTransaction();
         try {
-            $po_id = $getData['po_id'];
-            $period_id = $getData['period_id'];
-            $inspection_id = $getData['inspection_id'];
-            $current_approval_level = $getData['current_approval_level'];
-            $new_approval_level = $getData['new_approval_level'];
-
             // UPDATE inspection_periods
-            $sql = <<<EOD
-                        UPDATE `inspection_periods`
-                        SET `current_approval_level` = :new_approval_level
-                        WHERE `po_id` = :po_id
-                            AND `period_id` = :period_id
-                            AND `inspection_id` = :inspection_id
-                    EOD;
+            $sql = "UPDATE `inspection_periods`
+                    SET `current_approval_level` = :new_approval_level
+                    WHERE `po_id` = :po_id
+                        AND `period_id` = :period_id
+                        AND `inspection_id` = :inspection_id";
             $stmtInspectionPeriods = $this->db->prepare($sql);
-            $stmtInspectionPeriods->bindParam(':po_id', $po_id, PDO::PARAM_INT);
-            $stmtInspectionPeriods->bindParam(':period_id', $period_id, PDO::PARAM_INT);
-            $stmtInspectionPeriods->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
-            $stmtInspectionPeriods->bindParam(':new_approval_level', $new_approval_level, PDO::PARAM_INT);
+            $stmtInspectionPeriods->bindParam(':po_id', $approvalData['po_id'], PDO::PARAM_INT);
+            $stmtInspectionPeriods->bindParam(':period_id', $approvalData['period_id'], PDO::PARAM_INT);
+            $stmtInspectionPeriods->bindParam(':inspection_id', $approvalData['inspection_id'], PDO::PARAM_INT);
+            $stmtInspectionPeriods->bindParam(':new_approval_level', $approvalData['new_approval_level'], PDO::PARAM_INT);
 
-            if ($stmtInspectionPeriods->execute()) {
-                // $_SESSION['remark'] = $remark;
-                $stmtInspectionPeriods->closeCursor();
+            $stmtInspectionPeriods->execute();
+            $stmtInspectionPeriods->closeCursor();
 
-                // UPDATE inspection_period_approvals
-                $sql = <<<EOD
-                            UPDATE `inspection_period_approvals`
-                            SET `approval_date` = NOW()
-                            WHERE `inspection_id` = :inspection_id
-                                AND `approval_level` = :approval_level
-                        EOD;
-                $stmtInspectionApproval = $this->db->prepare($sql);
-                $stmtInspectionApproval->bindParam(':inspection_id', $inspection_id, PDO::PARAM_INT);
-                $stmtInspectionApproval->bindParam(':approval_level', $current_approval_level, PDO::PARAM_INT);
+            // UPDATE inspection_period_approvals
+            $sql = "UPDATE `inspection_period_approvals`
+                    SET `approval_date` = NOW()
+                    WHERE `inspection_id` = :inspection_id
+                        AND `approval_level` = :approval_level";
+            $stmtInspectionApproval = $this->db->prepare($sql);
+            $stmtInspectionApproval->bindParam(':inspection_id', $approvalData['inspection_id'], PDO::PARAM_INT);
+            $stmtInspectionApproval->bindParam(':approval_level', $approvalData['current_approval_level'], PDO::PARAM_INT);
 
-                $stmtInspectionApproval->execute();
-                $stmtInspectionApproval->closeCursor();
+            $stmtInspectionApproval->execute();
+            $stmtInspectionApproval->closeCursor();
 
-                $_SESSION['Transaction'] =  'data has been updated successfully.';
+            $this->db->commit();
+            return (int)$approvalData['inspection_id'];
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
             }
-        } catch (PDOException $e) {
-            $_SESSION['Transaction'] =  $e->getCode() + ' : ' + $e->getMessage();
+            throw $e;
         }
     }
 

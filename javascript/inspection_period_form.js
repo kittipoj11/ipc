@@ -299,36 +299,35 @@ $(document).ready(function () {
 
   $(".approval_next").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
-    console.log("click");
-    e.preventDefault();
-    let current_approval_level = $(this)
-      .closest("ul")
-      .data("current_approval_level");
+      e.preventDefault();
+    // console.log("click");
+    let current_approval_level = $(this).closest("ul").data("current_approval_level");
     let new_approval_level = current_approval_level + 1;
 
-    let data_sent = $("#myForm").serializeArray();
-    data_sent.push(
-      {
-        name: "action",
-        value: "updateCurrentApprovalLevel",
-      },
-      {
-        name: "new_approval_level",
-        value: new_approval_level,
-      },
-      {
-        name: "current_approval_level",
-        value: current_approval_level,
-      }
-    );
-    // console.log(data_sent);
+    const approvalData = {
+      po_id: $("#po_id").val(),
+      period_id: $("#period_id").val(),
+      inspection_id: $("#inspection_id").val(),
+      current_approval_level: current_approval_level,
+      new_approval_level : new_approval_level,
+    };
+
+    const data_sent = {
+      approvalData: approvalData,
+      action: "updateCurrentApprovalLevel",
+    };
+
+    // console.log(`data_sent: ${JSON.stringify(data_sent)}`);
     // return;
     $.ajax({
-      type: "POST",
       url: "inspection_handler_api.php",
-      // data: $(this).serialize(),
-      data: data_sent,
-      success: function (response) {
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(data_sent),
+    })
+      .done(function (result) {
+        // console.log(`result: ${result}`);
+        responseMessage.text(result.message).css("color", "green");
         Swal.fire({
           icon: "success",
           title: "Approved successfully",
@@ -345,13 +344,17 @@ $(document).ready(function () {
           // timer: 15000
         }).then((result) => {
           if (result.isConfirmed) {
+            // loadData(); // โหลดข้อมูลใหม่ทั้งหมด
             window.location.href = "inspection_list.php";
-            // window.location.reload();
           }
         });
-        // window.location.href = 'main.php?page=open_area_schedule';
-      },
-    });
+      })
+      .fail((jqXHR) => {
+        const errorMsg = jqXHR.responseJSON
+          ? jqXHR.responseJSON.message
+          : "เกิดข้อผิดพลาดรุนแรง";
+        showMessage(errorMsg, false);
+      });
   });
 
   function loadPage() {

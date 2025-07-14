@@ -75,11 +75,11 @@ require_once 'auth.php';
     // $_SESSION['Request'] = $_REQUEST;
     $connection = new Connection;
     $pdo = $connection->getDbConnection();
-    
+
     $po_id = $_REQUEST['po_id'];
     $period_id = $_REQUEST['period_id'];
     $inspection_id = $_REQUEST['inspection_id'];
-    
+
     $inspection = new Inspection($pdo);
     $rsInspection = $inspection->getPeriodByPeriodId($period_id);
     // $_SESSION['current_approval_level isset'] =  isset($rsInspection['period']['current_approval_level']);
@@ -127,37 +127,37 @@ require_once 'auth.php';
                     </div>
 
                     <!-- <div class="dropdown"> -->
-                    <div class="btn-group" role="group">
-                      <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Action
-                      </button>
-                      
+                    <?php
+                    if (
+                      array_key_exists('approval_date', $rsInspection['periodApprovals']) && is_null($rsInspection['periodApprovals']['approval_date'])
+                      && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id'] == $_SESSION['user_id']
+                    ):
+                    ?>
+                      <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          Action
+                        </button>
 
-                      <ul class="dropdown-menu py-0" id="action_type" data-current_approval_level="<?= $rsInspection['period']['current_approval_level'] ?>">
-                        <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
-                        
-                      <?php
-                        if (isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 1
-                        && array_key_exists('approval_date', $rsInspection['periodApprovals']) && is_null($rsInspection['periodApprovals']['approval_date'])
-                        && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id']==$_SESSION['user_id']):
-                      ?>
-                        <li><button class="dropdown-item approval_next" id="document_submit">Submit</a>
-                        </li>
-                      <?php endif; ?>
 
-                      <?php
-                        if (isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 2
-                        && array_key_exists('approval_date', $rsInspection['periodApprovals']) && is_null($rsInspection['periodApprovals']['approval_date'])
-                        && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id']==$_SESSION['user_id']):
-                      ?>
-                        <li><button class="dropdown-item approval_next" id="document_submit">Approve</a>
-                        </li>
-                        <li><button class="dropdown-item approval_reject" id="document_reject">Reject</button>
-                        </li>
-                      <?php endif; ?>
+                        <ul class="dropdown-menu py-0" id="action_type" data-current_approval_level="<?= $rsInspection['period']['current_approval_level'] ?>">
+                          <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
+                          <?php
+                          if (isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 1):
+                          ?>
+                            <li><button class="dropdown-item approval_next" id="document_submit">Submit</a>
+                            </li>
+                          <?php
+                          elseif (isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 2):
+                          ?>
+                            <li><button class="dropdown-item approval_next" id="document_approve">Approve</a>
+                            </li>
+                            <li><button class="dropdown-item approval_reject" id="document_reject">Reject</button>
+                            </li>
+                          <?php endif; ?>
 
-                      </ul>
-                    </div>
+                        </ul>
+                      </div>
+                    <?php endif; ?>
                   </div>
 
                   <div class="card-body m-0 p-0">
@@ -427,7 +427,7 @@ require_once 'auth.php';
                             <label for="disbursement" class="input-group-text">การเบิกจ่าย</label>
                           </div>
                           <div class="col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="disbursement" id="disbursement1" value="1" <?php echo ($disbursement == 1 ? 'checked' : ''); ?>>
+                            <input class=" form-check-input" type="radio" name="disbursement" id="disbursement1" value="1" <?php echo ($disbursement == 1 ? 'checked' : ''); ?>>
                             <label class="form-check-label" for="disbursement1">
                               อนุมัติ
                             </label>
@@ -453,9 +453,11 @@ require_once 'auth.php';
                     <button type="button" name="btnCancel" class="btn btn-primary btn-sm m-1 btnCancel"> <i class="fi fi-rr-left"></i> </button>
                     <div>
                       <?php
-                      if (isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 1
-                      && array_key_exists('approval_date', $rsInspection['periodApprovals']) && is_null($rsInspection['periodApprovals']['approval_date'])
-                      && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id']==$_SESSION['user_id']):
+                      if (
+                        isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 1
+                        && array_key_exists('approval_date', $rsInspection['periodApprovals']) && is_null($rsInspection['periodApprovals']['approval_date'])
+                        && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id'] == $_SESSION['user_id']
+                      ):
                       ?>
                         <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsInspection['period']['current_approval_level'] ?>">
                       <?php

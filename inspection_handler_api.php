@@ -41,7 +41,16 @@ if (isset($requestData['action']) && $requestData['action'] == 'select') {
     echo json_encode($response);
     
 } elseif (isset($requestData['action']) && $requestData['action'] == 'updateCurrentApprovalLevel') {
-    $rs = $inspection->updateCurrentApprovalLevel($requestData);
+    $savedInspectionId = $inspection->updateCurrentApprovalLevel($requestData['approvalData']);
+
+    $response = [
+        'status' => 'success',
+        'message' => 'บันทึกข้อมูล PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
+        'data' => ['inspection_id' => $savedInspectionId]
+    ];
+    // echo "1";
+    echo json_encode($response);
+
 
 } elseif (isset($requestData['action']) && $requestData['action'] == 'selectInspectionFiles') {
     $rsInspectionFiles = $inspection->getInspectionFilesByInspectionId($requestData['po_id'], $requestData['period_id'], $requestData['inspection_id']);
