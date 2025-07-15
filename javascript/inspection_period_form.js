@@ -301,8 +301,11 @@ $(document).ready(function () {
     // $(document).on("click", "#btnSave", function (e) {
       e.preventDefault();
     // console.log("click");
-    let current_approval_level = $(this).closest("ul").data("current_approval_level");
-    let new_approval_level = current_approval_level + 1;
+    const max_approval_level = $(this).closest("ul").data("max-approval-level");
+    const current_approval_level = $(this).closest("ul").data("current-approval-level");
+    const new_approval_level = (current_approval_level==max_approval_level) ? current_approval_level : current_approval_level + 1;
+    const inspection_status = (current_approval_level==max_approval_level) ? 3 : 2;
+    const create_ipc = (current_approval_level==max_approval_level) ? true : false;
 
     const approvalData = {
       po_id: $("#po_id").val(),
@@ -310,6 +313,86 @@ $(document).ready(function () {
       inspection_id: $("#inspection_id").val(),
       current_approval_level: current_approval_level,
       new_approval_level : new_approval_level,
+      inspection_status : inspection_status,
+      is_approve : true,
+      create_ipc : create_ipc,
+    };
+
+    const ipcData = {
+      po_id: $("#po_id").val(),
+      period_id: $("#period_id").val(),
+      inspection_id: $("#inspection_id").val(),
+      period_number: $("#period_number").val(),
+      contract_value: $("#contract_value").val(),
+      interim_payment: $("#interim_payment").val(),
+      interim_payment_less_previous: $("#interim_payment_less_previous").val(),
+      interim_payment_accumulated: $("#interim_payment_accumulated").val(),
+      interim_payment_remain: $("#interim_payment_remain").val(),
+    };
+
+    const data_sent = {
+      approvalData: approvalData,
+      ipcData: ipcData,
+      action: "updateCurrentApprovalLevel",
+    };
+
+    console.log(`data_sent: ${JSON.stringify(data_sent)}`);
+    return;
+    $.ajax({
+      url: "inspection_handler_api.php",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(data_sent),
+    })
+      .done(function (result) {
+        // console.log(`result: ${result}`);
+        responseMessage.text(result.message).css("color", "green");
+        Swal.fire({
+          icon: "success",
+          title: "Approved successfully",
+          color: "#716add",
+          allowOutsideClick: false,
+          background: "black",
+          // backdrop: `
+          //                     rgba(0,0,123,0.4)
+          //                     url("_images/paw.gif")
+          //                     left bottom
+          //                     no-repeat
+          //                     `,
+          // showConfirmButton: false,
+          // timer: 15000
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // loadData(); // โหลดข้อมูลใหม่ทั้งหมด
+            window.location.href = "inspection_list.php";
+          }
+        });
+      })
+      .fail((jqXHR) => {
+        const errorMsg = jqXHR.responseJSON
+          ? jqXHR.responseJSON.message
+          : "เกิดข้อผิดพลาดรุนแรง";
+        showMessage(errorMsg, false);
+      });
+  });
+  $(".approval_reject").on("click", function (e) {
+    // $(document).on("click", "#btnSave", function (e) {
+      e.preventDefault();
+    // console.log("click");
+    let max_approval_level = $(this).closest("ul").data("max-approval-level");
+    let current_approval_level = $(this).closest("ul").data("current_approval_level");
+    let new_approval_level = current_approval_level - 1;
+    let inspection_status = 1;
+
+    const approvalData = {
+      po_id: $("#po_id").val(),
+      period_id: $("#period_id").val(),
+      inspection_id: $("#inspection_id").val(),
+      current_approval_level: current_approval_level,
+      new_approval_level : new_approval_level,
+      inspection_status : inspection_status,
+      isApprove : false,
+      create_ipc : false,
     };
 
     const data_sent = {

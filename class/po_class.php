@@ -315,9 +315,9 @@ class Po
                 $stmtCreateInspectApprovals = $this->db->prepare($sql);
 
                 foreach ($createItems as $item) {
-                    $_SESSION['=== interim_payment ===']= $item['interim_payment'];
-                    $_SESSION['=== interim_payment_percent ===']= $item['interim_payment_percent'];
-                    $_SESSION['=== workload_planned_percents ===']= $item['workload_planned_percent'];
+                    // $_SESSION['=== interim_payment ===']= $item['interim_payment'];
+                    // $_SESSION['=== interim_payment_percent ===']= $item['interim_payment_percent'];
+                    // $_SESSION['=== workload_planned_percents ===']= $item['workload_planned_percent'];
                     $stmtCreatePoPeriods->bindParam(':po_id', $poId, PDO::PARAM_INT);
                     $stmtCreatePoPeriods->bindParam(':period_number', $item['period_number'], PDO::PARAM_INT);
                     $stmtCreatePoPeriods->bindParam(':workload_planned_percent', $item['workload_planned_percent'],  PDO::PARAM_STR);

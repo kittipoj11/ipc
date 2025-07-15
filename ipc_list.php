@@ -1,4 +1,7 @@
 <?php
+
+use Dba\Connection;
+
 @session_start();
 
 require_once 'config.php';
@@ -54,18 +57,7 @@ require_once 'auth.php';
     <?php include 'sidebar.php'; ?>
     <?php include 'navbar.php'; ?>
 
-    <!-- Main Content Start -->
-    <?php
-    require_once  'class/inspection_class.php';
-    require_once  'class/po_class.php';
-    require_once  'class/ipc_class.php';
-
-    $ipc = new Ipc;
-    $po = new Po;
-    $rsPoMainAll = $po->getAll();
-    ?>
-
-    <!-- Content Wrapper. Contains page content -->
+     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
       <section class="container-fluid content-header">
@@ -103,31 +95,7 @@ require_once 'auth.php';
                       </tr>
                     </thead>
                     <tbody id="tbody">
-                      <?php foreach ($rsPoMainAll as $row) {
-                        $html = <<<EOD
-                                        <tr data-po_id='{$row['po_id']}'>
-                                            <td class="tdMain p-0 d-none">{$row['po_id']}</td>
-                                            <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='Edit' style='margin: 0px 5px 5px 5px' data-po_number='{$row['po_number']}'>{$row['po_number']}</a></td>
-                                            <td class="tdMain p-0">{$row['project_name']}</td>
-                                            <td class="tdMain p-0">{$row['supplier_name']}</td>
-                                            <td class="tdMain p-0">{$row['location_name']}</td>
-                                            <td class="tdMain p-0">{$row['working_name_th']}</td>
-                                            <td class="tdMain p-0 text-right">{$row['contract_value']}</td>
-                                            <td class="tdMain p-0 text-right">{$row['number_of_period']}</td>
-                                            <td class="tdMain p-0 action d-none" align='center'>
-                                                <div class='btn-group-sm'>
-                                                    <a class='btn btn-warning btn-sm btnEdit' style='margin: 0px 5px 5px 5px' data-po_id='{$row['po_id']}'>
-                                                        <i class='fa-regular fa-pen-to-square'></i>
-                                                    </a>
-                                                    <a class='btn btn-danger btn-sm btnDelete' style='margin: 0px 5px 5px 5px' data-po_id='{$row['po_id']}'>
-                                                        <i class='fa-regular fa-trash-can'></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        EOD;
-                        echo $html;
-                      } ?>
+                      
                     </tbody>
                   </table>
                 </div>
@@ -170,20 +138,7 @@ require_once 'auth.php';
                         <th class="text-center align-content-center p-1">หมายเหตุ</th>
                     </thead>
                     <tbody id="tbody-period">
-                      <tr>
-                      <th class="text-center align-content-center p-1 d-none">po_id</th>
-                        <td class="text-center align-content-center p-1 d-none">period_id</td>
-                        <td class="text-center align-content-center p-1 d-none">ipc_id</td>
-                        <td class="text-center align-content-center p-1" width="5%">no.</td>
-                        <td class="text-center p-1">ยอดเบิกในงวด(บาท)</td>
-                        <td class="text-center p-1">retention ในงวด(บาท)</td>
-                        <td class="text-center p-1">retention สะสม(บาท)</td>
-                        <td class="text-center p-1">ยอดเงินจ่ายจริง(บาท)</td>
-                        <td class="text-center p-1">ยอดเงินจ่ายจริงสะสม(บาท)</td>
-                        <td class="text-center p-1">paid</td>
-                        <td class="text-center p-1">paid date</td>
-                        <td class="text-center align-content-center p-1">หมายเหตุ</td>
-                      </tr>
+
                     </tbody>
                   </table>
                 </div>
@@ -233,4 +188,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/ipc.js"></script>
+    <script src="javascript/ipc_list.js"></script>

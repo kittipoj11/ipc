@@ -139,7 +139,8 @@ require_once 'auth.php';
                         </button>
 
 
-                        <ul class="dropdown-menu py-0" id="action_type" data-current_approval_level="<?= $rsInspection['period']['current_approval_level'] ?>">
+                        <ul class="dropdown-menu py-0" id="action_type" data-current-approval-level="<?= $rsInspection['period']['current_approval_level'] ?>" 
+                        data-max-approval-level="<?= $rsInspection['maxPeriodApproval']['max_approval_level'] ?>">
                           <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
                           <?php
                           if (isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 1):

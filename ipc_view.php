@@ -1,4 +1,5 @@
 <?php
+
 @session_start();
 
 require_once 'config.php';
@@ -47,25 +48,13 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
-    require_once  'class/po_class.php';
-    // require_once  'class/inspection_class.php';
-    require_once  'class/supplier_class.php';
-    require_once  'class/location_class.php';
+    require_once  'class/connection_class.php';
+    require_once  'class/ipc_class.php';
 
-    // $_SESSION['Request'] = $_REQUEST;
     $po_id = $_REQUEST['po_id'];
-    // $period_id = $_REQUEST['period_id'];
-    // $inspection_id = $_REQUEST['inspection_id'];
 
-    $po = new Po;
-    $rsPo = $po->getByPoId($po_id);
-    $rsInspectionPeriod = $po->getInspectionAllPeriod($po_id);
-
-    $supplier = new Supplier;
-    $supplier_rs = $supplier->getAll();
-
-    $location = new Location;
-    $location_rs = $location->getAll();
+    $connection=new Connection();
+    $pdo=$connection->getDbConnection();
 
     ?>
 

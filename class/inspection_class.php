@@ -175,12 +175,23 @@ class Inspection
         $stmt->execute();
         $rsPeriodApprovals = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
-        // 6. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
+        // 6. ดึงข้อมูล max ของ approval_level ใน Period Approvals ของ period_id
+        $sql = "SELECT `inspection_id`, `period_id`, `po_id`, max(`approval_level`) as max_approval_level
+                FROM `inspection_period_approvals` 
+                WHERE period_id = :period_id
+                GROUP by `inspection_id`, `period_id`, `po_id`";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rsMaxPeriodApproval = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        // 7. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
         $result = [
             'header' => $rsPoMain,
             'period' => $rsPeriods,
             'periodDetails' => $rsPeriodDetails, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
             'periodApprovals' => $rsPeriodApprovals, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
+            'maxPeriodApproval' => $rsMaxPeriodApproval, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
         ];
 
         return $result;
@@ -421,35 +432,77 @@ class Inspection
 
     public function updateCurrentApprovalLevel(array $approvalData): int
     {
+        $isApprove = $approvalData['is_approve'];
+        $approvalLevel = $isApprove ? $approvalData['current_approval_level'] : $approvalData['new_approval_level'];
+
         $this->db->beginTransaction();
         try {
             // UPDATE inspection_periods
             $sql = "UPDATE `inspection_periods`
                     SET `current_approval_level` = :new_approval_level
+                    , inspection_status = :inspection_status
                     WHERE `po_id` = :po_id
                         AND `period_id` = :period_id
                         AND `inspection_id` = :inspection_id";
-            $stmtInspectionPeriods = $this->db->prepare($sql);
-            $stmtInspectionPeriods->bindParam(':po_id', $approvalData['po_id'], PDO::PARAM_INT);
-            $stmtInspectionPeriods->bindParam(':period_id', $approvalData['period_id'], PDO::PARAM_INT);
-            $stmtInspectionPeriods->bindParam(':inspection_id', $approvalData['inspection_id'], PDO::PARAM_INT);
-            $stmtInspectionPeriods->bindParam(':new_approval_level', $approvalData['new_approval_level'], PDO::PARAM_INT);
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':po_id', $approvalData['po_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':period_id', $approvalData['period_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':inspection_id', $approvalData['inspection_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':new_approval_level', $approvalData['new_approval_level'], PDO::PARAM_INT);
+            $stmt->bindParam(':inspection_status', $approvalData['inspection_status'], PDO::PARAM_INT);
 
-            $stmtInspectionPeriods->execute();
-            $stmtInspectionPeriods->closeCursor();
+            $stmt->execute();
+            $stmt->closeCursor();
 
             // UPDATE inspection_period_approvals
             $sql = "UPDATE `inspection_period_approvals`
-                    SET `approval_date` = NOW()
+                    SET `approval_date` = IF(:isApprove, NOW(), NULL)
                     WHERE `inspection_id` = :inspection_id
                         AND `approval_level` = :approval_level";
-            $stmtInspectionApproval = $this->db->prepare($sql);
-            $stmtInspectionApproval->bindParam(':inspection_id', $approvalData['inspection_id'], PDO::PARAM_INT);
-            $stmtInspectionApproval->bindParam(':approval_level', $approvalData['current_approval_level'], PDO::PARAM_INT);
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':inspection_id', $approvalData['inspection_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':approval_level', $approvalLevel, PDO::PARAM_INT);
+            $stmt->bindParam(':isApprove', $isApprove, PDO::PARAM_BOOL);
 
-            $stmtInspectionApproval->execute();
-            $stmtInspectionApproval->closeCursor();
+            $stmt->execute();
+            $stmt->closeCursor();
+            
+            if($approvalData['create_ipc']){
 
+            // INSERT ipc_periods
+            $sql = "INSERT INTO ipc_periods(inspection_id, period_id, po_id, period_number, project_name, contractor, contract_value, total_value_of_interim_payment, less_previous_interim_payment, net_value_of_current_claim, less_retension_exclude_vat, net_amount_due_for_payment, total_value_of_retention, total_value_of_certification_made, resulting_balance_of_contract_sum_outstanding, workflow_id)
+                    VALUES(:inspection_id, :period_id, :po_id, :period_number, :project_name, :contractor, :contract_value, :total_value_of_interim_payment, :less_previous_interim_payment, :net_value_of_current_claim, :less_retension_exclude_vat, :net_amount_due_for_payment, :total_value_of_retention, :total_value_of_certification_made, :resulting_balance_of_contract_sum_outstanding, :workflow_id)";
+            $stmt->bindParam(':inspection_id', $periodId, PDO::PARAM_INT);
+            $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
+            $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
+            $stmt->bindParam(':po_number', $headerData['po_number'], PDO::PARAM_STR);
+            $stmt->bindParam(':project_name', $headerData['project_name'], PDO::PARAM_STR);
+            $stmt->bindParam(':supplier_id', $headerData['supplier_id'],  PDO::PARAM_INT);
+            $stmt->bindParam(':location_id', $headerData['location_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':working_name_th', $headerData['working_name_th'], PDO::PARAM_STR);
+            $stmt->bindParam(':working_name_en', $headerData['working_name_en'], PDO::PARAM_STR);
+            $stmt->bindParam(':is_include_vat', $headerData['is_include_vat'], PDO::PARAM_BOOL);
+            $stmt->bindParam(':contract_value_before', $headerData['contract_value_before'], PDO::PARAM_STR);
+            $stmt->bindParam(':contract_value', $headerData['contract_value'], PDO::PARAM_STR);
+            $stmt->bindParam(':vat', $headerData['vat'], PDO::PARAM_STR);
+            $stmt->bindParam(':is_deposit', $headerData['is_deposit'], PDO::PARAM_BOOL);
+            $stmt->bindParam(':deposit_percent', $headerData['deposit_percent'], PDO::PARAM_STR);
+            $stmt->bindParam(':deposit_value', $deposit_value, PDO::PARAM_STR);
+            $stmt->bindParam(':working_date_from', $headerData['working_date_from'], PDO::PARAM_STR);
+            $stmt->bindParam(':working_date_to', $headerData['working_date_to'], PDO::PARAM_STR);
+            $stmt->bindParam(':working_day', $headerData['working_day'], PDO::PARAM_INT);
+            $stmt->bindParam(':number_of_period', $headerData['number_of_period'], PDO::PARAM_INT);
+            $stmt->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
+            $stmt->bindParam(':workflow_id', $workflowId, PDO::PARAM_INT);
+
+            $stmt->execute();
+            $stmt->closeCursor();
+
+            $inspectionId = $this->db->lastInsertId();
+
+            // INSERT ipc_period_approvals
+
+            }
             $this->db->commit();
             return (int)$approvalData['inspection_id'];
         } catch (Exception $e) {
