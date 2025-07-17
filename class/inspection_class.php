@@ -431,7 +431,7 @@ class Inspection
     }
 
     // เพิ่มเติมในส่วน ipc_periods
-    public function updateCurrentApprovalLevel(array $approvalData): int
+    public function updateCurrentApprovalLevel(array $approvalData,array $ipcData): int
     {
         $isApprove = $approvalData['is_approve'];
         $approvalLevel = $isApprove ? $approvalData['current_approval_level'] : $approvalData['new_approval_level'];
@@ -467,41 +467,42 @@ class Inspection
 
             $stmt->execute();
             $stmt->closeCursor();
-            
-            if($approvalData['create_ipc']){
 
-            // INSERT ipc_periods
-            $sql = "INSERT INTO ipc_periods(inspection_id, period_id, po_id, period_number, project_name, contractor, contract_value, total_value_of_interim_payment, less_previous_interim_payment, net_value_of_current_claim, less_retension_exclude_vat, net_amount_due_for_payment, total_value_of_retention, total_value_of_certification_made, resulting_balance_of_contract_sum_outstanding, workflow_id)
-                    VALUES(:inspection_id, :period_id, :po_id, :period_number, :project_name, :contractor, :contract_value, :total_value_of_interim_payment, :less_previous_interim_payment, :net_value_of_current_claim, :less_retension_exclude_vat, :net_amount_due_for_payment, :total_value_of_retention, :total_value_of_certification_made, :resulting_balance_of_contract_sum_outstanding, :workflow_id)";
-            $stmt->bindParam(':inspection_id', $periodId, PDO::PARAM_INT);
-            $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
-            $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
-            $stmt->bindParam(':po_number', $headerData['po_number'], PDO::PARAM_STR);
-            $stmt->bindParam(':project_name', $headerData['project_name'], PDO::PARAM_STR);
-            $stmt->bindParam(':supplier_id', $headerData['supplier_id'],  PDO::PARAM_INT);
-            $stmt->bindParam(':location_id', $headerData['location_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':working_name_th', $headerData['working_name_th'], PDO::PARAM_STR);
-            $stmt->bindParam(':working_name_en', $headerData['working_name_en'], PDO::PARAM_STR);
-            $stmt->bindParam(':is_include_vat', $headerData['is_include_vat'], PDO::PARAM_BOOL);
-            $stmt->bindParam(':contract_value_before', $headerData['contract_value_before'], PDO::PARAM_STR);
-            $stmt->bindParam(':contract_value', $headerData['contract_value'], PDO::PARAM_STR);
-            $stmt->bindParam(':vat', $headerData['vat'], PDO::PARAM_STR);
-            $stmt->bindParam(':is_deposit', $headerData['is_deposit'], PDO::PARAM_BOOL);
-            $stmt->bindParam(':deposit_percent', $headerData['deposit_percent'], PDO::PARAM_STR);
-            $stmt->bindParam(':deposit_value', $deposit_value, PDO::PARAM_STR);
-            $stmt->bindParam(':working_date_from', $headerData['working_date_from'], PDO::PARAM_STR);
-            $stmt->bindParam(':working_date_to', $headerData['working_date_to'], PDO::PARAM_STR);
-            $stmt->bindParam(':working_day', $headerData['working_day'], PDO::PARAM_INT);
-            $stmt->bindParam(':number_of_period', $headerData['number_of_period'], PDO::PARAM_INT);
-            $stmt->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
-            $stmt->bindParam(':workflow_id', $workflowId, PDO::PARAM_INT);
+            if ($approvalData['create_ipc']) {
 
-            $stmt->execute();
-            $stmt->closeCursor();
+                // INSERT ipc_periods
+                $sql = "INSERT INTO ipc_periods(inspection_id, period_id, po_id, period_number, project_name, contractor, contract_value
+                        , total_value_of_interim_payment, less_previous_interim_payment, net_value_of_current_claim, less_retension_exclude_vat
+                        , net_amount_due_for_payment, total_value_of_retention, total_value_of_certification_made
+                        , resulting_balance_of_contract_sum_outstanding, workflow_id)
+                        VALUES(:inspection_id, :period_id, :po_id, :period_number, :project_name, :contractor, :contract_value
+                        , :total_value_of_interim_payment, :less_previous_interim_payment, :net_value_of_current_claim, :less_retension_exclude_vat
+                        , :net_amount_due_for_payment, :total_value_of_retention, :total_value_of_certification_made
+                        , :resulting_balance_of_contract_sum_outstanding, :workflow_id)";
 
-            $inspectionId = $this->db->lastInsertId();
+                $stmt->bindParam(':inspection_id', $ipcData['inspection_id'], PDO::PARAM_INT);
+                $stmt->bindParam(':po_id', $ipcData['po_id'], PDO::PARAM_INT);
+                $stmt->bindParam(':period_id', $ipcData['period_id'], PDO::PARAM_INT);
+                $stmt->bindParam(':period_number', $ipcData['period_number'], PDO::PARAM_STR);
+                $stmt->bindParam(':project_name', $ipcData['project_name'], PDO::PARAM_STR);
+                $stmt->bindParam(':contractor', $ipcData['contractor'],  PDO::PARAM_INT);
+                $stmt->bindParam(':contract_value', $ipcData['contract_value'], PDO::PARAM_STR);
+                $stmt->bindParam(':total_value_of_interim_payment', $ipcData['total_value_of_interim_payment'], PDO::PARAM_STR);
+                $stmt->bindParam(':less_previous_interim_payment', $ipcData['less_previous_interim_payment'], PDO::PARAM_STR);
+                $stmt->bindParam(':net_value_of_current_claim', $ipcData['net_value_of_current_claim'], PDO::PARAM_STR);
+                $stmt->bindParam(':less_retension_exclude_vat', $ipcData['less_retension_exclude_vat'], PDO::PARAM_STR);
+                $stmt->bindParam(':net_amount_due_for_payment', $ipcData['net_amount_due_for_payment'], PDO::PARAM_STR);
+                $stmt->bindParam(':total_value_of_retention', $ipcData['total_value_of_retention'], PDO::PARAM_STR);
+                $stmt->bindParam(':total_value_of_certification_made', $ipcData['total_value_of_certification_made'], PDO::PARAM_STR);
+                $stmt->bindParam(':resulting_balance_of_contract_sum_outstanding', $ipcData['resulting_balance_of_contract_sum_outstanding'], PDO::PARAM_STR);
+                $stmt->bindParam(':workflow_id', 2, PDO::PARAM_INT);
 
-            // INSERT ipc_period_approvals
+                $stmt->execute();
+                $stmt->closeCursor();
+
+                // $ipcId = $this->db->lastInsertId();
+
+                // INSERT ipc_period_approvals
 
             }
             $this->db->commit();

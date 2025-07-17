@@ -318,16 +318,29 @@ $(document).ready(function () {
       create_ipc : create_ipc,
     };
 
+    const less_retension_exclude_vat = 0;
+    const sum_of_less_retension_exclude_vat = 0;
     const ipcData = {
       po_id: $("#po_id").val(),
       period_id: $("#period_id").val(),
       inspection_id: $("#inspection_id").val(),
       period_number: $("#period_number").val(),
+      project_name: $("#project_name").val(),
+      contractor: $("#supplier_name").val(),
       contract_value: $("#contract_value").val(),
-      interim_payment: $("#interim_payment").val(),
-      interim_payment_less_previous: $("#interim_payment_less_previous").val(),
-      interim_payment_accumulated: $("#interim_payment_accumulated").val(),
-      interim_payment_remain: $("#interim_payment_remain").val(),
+
+      interim_payment_less_previous: $("#interim_payment_less_previous").val(),//(1)ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน
+      interim_payment: $("#interim_payment").val(),//(2)ยอดเบิกเงินงวดปัจจุบัน
+      interim_payment_accumulated: $("#interim_payment_accumulated").val(),//(3)ยอดเบิกเงินงวดสะสมถึงปัจจุบัน
+      interim_payment_remain: $("#interim_payment_remain").val(),//(4)ยอดเงินงวดคงเหลือ
+      total_value_of_interim_payment: $("#interim_payment_less_previous").val() + $("#interim_payment").val(),
+      less_previous_interim_payment: $("#interim_payment_less_previous").val(),
+      net_value_of_current_claim: $("#interim_payment").val(),
+      less_retension_exclude_vat: less_retension_exclude_vat,
+      net_amount_due_for_payment: $("#interim_payment").val()-less_retension_exclude_vat,
+      total_value_of_retention: sum_of_less_retension_exclude_vat,
+      total_value_of_certification_made: $("#interim_payment_accumulated").val()-sum_of_less_retension_exclude_vat,
+      resulting_balance_of_contract_sum_outstanding: $("#interim_payment_remain").val()-sum_of_less_retension_exclude_vat,
     };
 
     const data_sent = {

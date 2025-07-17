@@ -41,7 +41,7 @@ if (isset($requestData['action']) && $requestData['action'] == 'select') {
     echo json_encode($response);
     
 } elseif (isset($requestData['action']) && $requestData['action'] == 'updateCurrentApprovalLevel') {
-    $savedInspectionId = $inspection->updateCurrentApprovalLevel($requestData['approvalData']);
+    $savedInspectionId = $inspection->updateCurrentApprovalLevel($requestData['approvalData'],$requestData['ipcData']);
 
     $response = [
         'status' => 'success',

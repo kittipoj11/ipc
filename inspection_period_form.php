@@ -228,7 +228,7 @@ require_once 'auth.php';
                         <?php
                         $display_include_vat = $rsInspection['header']['is_include_vat'] ? "(Including VAT 7% )" : "";
                         ?>
-                        <label for="vat" class="input-group-text d-none">(Includeing VAT</label>
+                        <label for="vat" class="input-group-text d-none">Includeing VAT</label>
                         <input type="text" class="form-control border border-0" name="vat" id="vat" readonly value="<?= $display_include_vat ?>">
                       </div>
                     </div>
@@ -240,7 +240,7 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="period_number" class="input-group-text">เบิกงวดงานที่ </label>
-                            <input type="text" class="form-control" name="period_number" readonly value="<?= $rsInspection['period']['period_number'] ?>">
+                            <input type="text" class="form-control" name="period_number" id="period_number" readonly value="<?= $rsInspection['period']['period_number'] ?>">
                           </div>
                         </div>
                         <div class="row m-1">
