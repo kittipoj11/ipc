@@ -79,12 +79,6 @@ $(document).ready(function () {
     return tableBody;
   }
 
-  $(document).on("click", "a.po_number", function (e) {
-    e.preventDefault();
-    const po_id = $(this).closest("tr").data("po-id");
-    window.location.href = "inspection_view.php?po_id=" + po_id;
-  });
-
   // Click ที่รายการงวดงานใดๆใน tdMain ที่ไม่มี <a></a>
   // $(document).on("click", ".tdMain:not(:has(a))", function (e) {
   $(document).on("click", ".tdMain", function (e) {
@@ -123,6 +117,13 @@ $(document).ready(function () {
         $("#tbody-period").html();
       });
   });
+
+  $(document).on("click", "a.po_number", function (e) {
+    e.preventDefault();
+    const po_id = $(this).closest("tr").data("po-id");
+    window.location.href = "inspection_view.php?po_id=" + po_id;
+  });
+  
 
     $(document).on("click", "a.period_number", function (e) {
       e.preventDefault();
