@@ -56,7 +56,7 @@ require_once 'auth.php';
     $pdo=$connection->getDbConnection();
 
     $inspection = new Inspection($pdo);
-    $rsInspection =$inspection->getHeaderByPoId($po_id);
+    $rsInspection =$inspection->getPoByPoId($po_id);
 
     // เปลี่ยนไปใช้ $rsPoMain[periods] แบบ po_form.php
     ?>
@@ -149,7 +149,7 @@ require_once 'auth.php';
                     <?php
                     $display_include_vat = $rsInspection['is_include_vat'] ? "(Including VAT 7% )" : "";
                     ?>
-                    <label for="vat" class="input-group-text d-none">(Includeing VAT</label>
+                    <label for="vat" class="input-group-text d-none">Includeing VAT</label>
                     <input type="text" class="form-control border border-0" name="vat" id="vat" disabled value="<?= $display_include_vat ?>">
                   </div>
                 </div>

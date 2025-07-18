@@ -124,16 +124,13 @@ require_once 'auth.php';
                   <table class="table table-bordered justify-content-center text-center" id="tablePeriod">
                     <thead>
                       <tr>
-                        <th class="text-center align-content-center p-1 d-none">po_id</th>
-                        <th class="text-center align-content-center p-1 d-none">period_id</th>
-                        <th class="text-center align-content-center p-1 d-none">ipc_id</th>
                         <th class="text-center align-content-center p-1" width="5%">no.</th>
                         <th class="text-center p-1">ยอดเบิกในงวด(บาท)</th>
                         <th class="text-center p-1">retention ในงวด(บาท)</th>
                         <th class="text-center p-1">retention สะสม(บาท)</th>
                         <th class="text-center p-1">ยอดเงินจ่ายจริง(บาท)</th>
                         <th class="text-center p-1">ยอดเงินจ่ายจริงสะสม(บาท)</th>
-                        <th class="text-center p-1">paid</th>
+                        <th class="text-center p-1 d-none">paid</th>
                         <th class="text-center p-1">paid date</th>
                         <th class="text-center align-content-center p-1">หมายเหตุ</th>
                     </thead>

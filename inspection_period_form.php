@@ -85,7 +85,7 @@ require_once 'auth.php';
     // $_SESSION['current_approval_level isset'] =  isset($rsInspection['period']['current_approval_level']);
     // $_SESSION['current_approval_level'] =  $rsInspection['period']['current_approval_level'];
     // $_SESSION['approval_date isset'] =  array_key_exists('approval_date', $rsInspection['periodApprovals']) ;
-    // $_SESSION['approval_date'] =  is_null($rsInspection['periodApprovals']['approval_date']);
+    $_SESSION['rsInspection'] =  $rsInspection;
 
     $plan_status = new Plan_status($pdo);
     $rsPlanStatus = $plan_status->getAll();
@@ -121,6 +121,7 @@ require_once 'auth.php';
 
                       <h6 class="m-1 fw-bold"><?= $rsInspection['header']['po_number'] . " : " . $rsInspection['header']['supplier_id'] . " - " . $rsInspection['header']['supplier_name'] ?></h6>
                       <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspection['period']['period_number'] . "]" ?></h6>
+                      <h6 class="m-1 fw-bold"><?= "[type " . gettype($rsInspection['periodApprovals']) . "]" ?></h6>
                       <button type="button" name="btnAttach" id="btnAttach" class="btn btn-primary btn-sm m-1">
                         <i class="fi fi-rr-clip"></i>
                       </button>
@@ -128,10 +129,10 @@ require_once 'auth.php';
 
                     <!-- <div class="dropdown"> -->
                     <?php
-                    if (
-                      array_key_exists('approval_date', $rsInspection['periodApprovals']) && is_null($rsInspection['periodApprovals']['approval_date'])
-                      && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id'] == $_SESSION['user_id']
-                    ):
+                    // if (array_key_exists('approval_date', $rsInspection['periodApprovals']) && is_null($rsInspection['periodApprovals']['approval_date'])
+                    //   && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id'] == $_SESSION['user_id']):
+                    if (is_null($rsInspection['periodApprovals']['approval_date'])
+                      && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id'] == $_SESSION['user_id']):
                     ?>
                       <div class="btn-group" role="group">
                         <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

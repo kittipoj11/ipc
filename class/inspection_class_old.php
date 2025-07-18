@@ -11,7 +11,7 @@ class Inspection
         $this->db = $pdoConnection;
     }
 
-    public function getHeaderAll(): array
+    public function getAllPox(): array
     {
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                     , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
@@ -33,7 +33,7 @@ class Inspection
         return $rs;
     }
 
-    public function getHeaderByPoId($poId): ?array
+    public function getPoByPoIdx($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
@@ -65,7 +65,7 @@ class Inspection
         return $rs;
     }
 
-    public function getHeaderByPeriodId($periodId): ?array
+    public function getPoByPeriodIdx($periodId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $sql = "SELECT O.supplier_id, O.location_id , O.po_number, O.project_name, O.working_name_th, O.working_name_en
@@ -93,7 +93,7 @@ class Inspection
         return $rs;
     }
 
-    public function getAllPeriodByPoId($poId): array
+    public function getAllPeriodByPoIdx($poId): array
     {
         $sql = "SELECT P.inspection_id, P.period_id, P.po_id, P.period_number
                 , P.workload_planned_percent, P.workload_actual_completed_percent, P.workload_remaining_percent
@@ -121,7 +121,7 @@ class Inspection
      * @param int $period_id ID ของ Period ที่ต้องการ
      * @return array|null คืนค่าเป็น array ที่มีข้อมูลทั้งหมด หรือ null ถ้าไม่พบ
      */
-    public function getPeriodByPeriodId(int $period_id): ?array
+    public function getPeriodByPeriodIdx(int $period_id): ?array
     {
         // 1. ดึงข้อมูลของ inspection_periods ที่ต้องการ
         $sql = "SELECT P.inspection_id, P.period_id, P.po_id, P.period_number
@@ -157,7 +157,7 @@ class Inspection
         }
 
         // 3. ดึงข้อมูลของ po_main ของ period_id ที่ต้องการ
-        $rsPoMain = $this->getHeaderByPeriodId($period_id);
+        $rsPoMain = $this->getPoByPeriodIdx($period_id);
 
         // 4. ดึงข้อมูล PeriodDetails ทั้งหมดของ Period นี้ 
         $rsPeriodDetails = $this->getPeriodDetailsByPeriodId($period_id);
@@ -172,7 +172,7 @@ class Inspection
         return $result;
     }
 
-    public function getPeriodDetailsByPeriodId($periodId): ?array
+    public function getPeriodDetailsByPeriodIdx($periodId): ?array
     {
         $sql = "SELECT I.`rec_id`, I.`inspection_id`, I.`order_no`, I.`details`, I.`remark` 
                 FROM `inspection_period_details`I
@@ -190,7 +190,7 @@ class Inspection
         return $rs;
     }
 
-    public function getInspectionPeriodAssignToMe($username): array
+    public function getInspectionPeriodAssignToMex($username): array
     {
         $sql = "SELECT P1.inspection_id, P1.period_id, P1.po_id, P1.period_number
                 , P1.workload_planned_percent, P1.workload_actual_completed_percent, P1.workload_remaining_percent
@@ -231,7 +231,7 @@ class Inspection
         return $rs;
     }
 
-    public function getInspectionFilesByInspectionId($getPoId, $getPeriodId, $getInspectionId): array
+    public function getInspectionFilesByInspectionIdx($getPoId, $getPeriodId, $getInspectionId): array
     {
         $sql = "SELECT `file_id`, `inspection_files`.`inspection_id`, `file_name`, `file_path`, `file_type`, `uploaded_at` 
                 FROM `inspection_files` 
@@ -249,7 +249,7 @@ class Inspection
         return $rs;
     }
 
-    public function save(array $headerData, array $periodsData): int
+    public function savex(array $headerData, array $periodsData): int
     {
         // --- WORKFLOW ---
         // กำหนดค่า default สำหรับ workflow step ของ inspection และ ipc (อาจจะมีหน้าจอ config) โดยที่
@@ -545,7 +545,7 @@ class Inspection
         }
     }
     
-    public function updateInspectionPeriod($getData)
+    public function updateInspectionPeriodx($getData)
     {
         @session_start();
 
@@ -726,7 +726,7 @@ class Inspection
         }
     }
 
-    public function updateCurrentApprovalLevel($getData)
+    public function updateCurrentApprovalLevelx($getData)
     {
         @session_start();
 
@@ -776,7 +776,7 @@ class Inspection
         }
     }
 
-    public function insertInspectionFiles($getData)
+    public function insertInspectionFilesx($getData)
     {
         @session_start();
 
@@ -871,7 +871,7 @@ class Inspection
 
     // Function นี้ลบที่ละ file_id
     // ต้องทำลบที่ละ inspection_id ด้วย เมื่อมีการลบ po_period จะต้องมาลบ inspection_id ที่ inspection_files ด้วย
-    public function deleteInspectionFiles($getFileId)
+    public function deleteInspectionFilesx($getFileId)
     {
         $file_id = $getFileId;
         // if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['file_id'])) {

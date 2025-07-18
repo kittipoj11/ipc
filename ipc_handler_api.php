@@ -22,8 +22,8 @@ if (isset($requestData['action']) && $requestData['action'] == 'select') {
     echo json_encode($rs);
 
 } elseif (isset($requestData['action']) && $requestData['action'] == 'selectIpcPeriodAll') {
-    // $rs = $ipc->getAllPeriodByPoId($requestData['po_id']);
-    // echo json_encode($rs);
+    $rs = $ipc->getAllPeriodByPoId($requestData['po_id']);
+    echo json_encode($rs);
     
 } else {
     // fetchAll($ipc);

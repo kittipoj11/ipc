@@ -17,7 +17,7 @@ $(document).ready(function () {
 
     $.ajax({
       url: "ipc_handler_api.php",
-      type: "POST",
+      type: "post",
       contentType: "application/json",
       dataType: "json",
       data: JSON.stringify(data_sent),
@@ -32,9 +32,9 @@ $(document).ready(function () {
           $("#tbody").html();
         }
       })
-      .fail((jqXHR) => {
-        const errorMsg = jqXHR.responseJSON
-          ? jqXHR.responseJSON.message
+      .fail((xhr) => {
+        const errorMsg = xhr.responseJSON
+          ? xhr.responseJSON.message
           : "เกิดข้อผิดพลาดในการดึงข้อมูล";
         // showMessage(errorMsg, false);
         $("#tbody").html();
@@ -61,25 +61,6 @@ $(document).ready(function () {
     return tableBody;
   }
 
-  function createPeriodTable(datas) {
-    let tableBody = "";
-    $.each(datas, function (index, data) {
-      tableBody += `
-                    <tr data-po-id=${data.po_id} data-period-id=${data.period_id} data-inspection-id=${data.inspection_id}>
-                      <td class="tdPeriod text-right py-0 px-1"><a class="link-opacity-100 pe-auto period_number" style="margin: 0px 5px 5px 5px">${data.period_number}</a></td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.workload_planned_percent}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.workload_actual_completed_percent}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.workload_remaining_percent}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.interim_payment}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.interim_payment_less_previous}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.interim_payment_remain}</td>
-                      <td class="tdPeriod text-left py-0 px-1">${data.remark}</td>
-                    </tr>                      
-                  `;
-    });
-    return tableBody;
-  }
-
     // Click ที่รายการงวดงานใดๆใน tdMain ที่ไม่มี <a></a>
   // $(document).on("click", ".tdMain:not(:has(a))", function (e) {
   $(document).on("click", ".tdMain", function (e) {
@@ -93,7 +74,7 @@ $(document).ready(function () {
 
     const data_sent = {
       po_id: po_id,
-      action: "selectInspectionPeriodAll",
+      action: "selectIpcPeriodAll",
     };
     $.ajax({
       url: "ipc_handler_api.php",
@@ -118,6 +99,27 @@ $(document).ready(function () {
         $("#tbody-period").html();
       });
   });
+
+  
+
+  function createPeriodTable(datas) {
+    let tableBody = "";
+    $.each(datas, function (index, data) {
+      tableBody += `
+                    <tr data-po-id=${data.po_id} data-period-id=${data.period_id} data-inspection-id=${data.inspection_id} data-ipc-id=${data.ipc_id}>
+                      <td class="tdPeriod text-right py-0 px-1"><a class="link-opacity-100 pe-auto period_number" style="margin: 0px 5px 5px 5px">${data.period_number}</a></td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.net_value_of_current_claim}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.less_retension_exclude_vat}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_retention}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.net_amount_due_for_payment}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_certification_made}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.agreement_date}</td>
+                      <td class="tdPeriod text-left py-0 px-1">${data.remark}</td>
+                    </tr>                      
+                  `;
+    });
+    return tableBody;
+  }
 
   $(document).on("click", "a.po_number", function (e) {
     e.preventDefault();

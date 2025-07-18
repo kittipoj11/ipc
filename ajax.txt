@@ -1,0 +1,43 @@
+รูปแบบการใช้งาน $.ajax()
+1. รูปแบบการใช้งานพื้นฐาน:
+$.ajax({
+  url: 'your-api-endpoint', // URL ของ API ที่ต้องการเรียก
+  method: 'GET',           // HTTP method ที่ต้องการใช้ (GET, POST, PUT, DELETE, ...)
+  contentType: 'apllication/json',
+  dataType: 'json',         // ประเภทของข้อมูลที่คาดหวังจากเซิร์ฟเวอร์ (json, xml, html, text, script, หรือ auto)
+  data: stringify(data_sent),
+  success: function(data) {
+    // ฟังก์ชันที่จะทำงานเมื่อการเรียก API สำเร็จ
+    console.log('Success:', data);
+  },
+  error: function(xhr, status, error) {
+    // ฟังก์ชันที่จะทำงานเมื่อเกิดข้อผิดพลาดในการเรียก API
+    console.error('Error:', status, error);
+  },
+  complete: function(xhr, status) {
+    // ฟังก์ชันที่จะทำงานเสมอ ไม่ว่าการเรียก API จะสำเร็จหรือล้มเหลว
+    console.log('Complete:', status);
+  }
+});
+
+2. ใช้ $.ajax() ร่วมกับ Promise (ตั้งแต่ jQuery 1.5):
+$.ajax() สามารถคืนค่า Promise object ซึ่งทำให้สามารถใช้ .done(), .fail(), และ .always() แทน success, error, และ complete ได้:
+$.ajax({
+  url: 'https://api.example.com/another-api',
+  method: 'GET',
+  contentType: "apllication/json",
+  dataType: 'json'
+  data: stringify(data_sent),
+})
+.done(function(data) {
+  console.log('สำเร็จ:', data);
+})
+.fail(function(xhr, status, error) {
+  console.error('ล้มเหลว:', status, error);
+})
+.always(function() {
+  console.log('เสร็จสิ้น');
+});
+
+
+

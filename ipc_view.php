@@ -56,6 +56,9 @@ require_once 'auth.php';
     $connection=new Connection();
     $pdo=$connection->getDbConnection();
 
+    $ipc = new Ipc($pdo);
+    $rsIpc = $ipc->getPoByPoId($po_id);
+
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -74,36 +77,36 @@ require_once 'auth.php';
           <form name="myForm" id="myForm" action="" method="post">
             <div class="card">
               <div class="card-header">
-                <h6 class="m-1 fw-bold"><?= $rsPo['po_number'] . " : " . $rsPo['supplier_id'] . " - " . $rsPo['supplier_name'] ?></h6>
+                <h6 class="m-1 fw-bold"><?= $rsIpc['po_number'] . " : " . $rsIpc['supplier_id'] . " - " . $rsIpc['supplier_name'] ?></h6>
               </div>
 
               <div class="card-body m-0 p-0">
 
-                <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsPo['po_id'] ?>">
+                <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsIpc['po_id'] ?>">
 
                 <div class="row m-1">
                   <div class="col-4 input-group input-group-sm">
                     <label for="supplier_name" class="input-group-text">ผู้รับเหมา</label>
-                    <input type="text" class="form-control" name="supplier_name" id="supplier_name" value="<?= $rsPo['supplier_name'] ?>" disabled>
+                    <input type="text" class="form-control" name="supplier_name" id="supplier_name" value="<?= $rsIpc['supplier_name'] ?>" disabled>
                   </div>
                 </div>
 
                 <div class="row m-1">
                   <div class="col-6 input-group input-group-sm">
                     <label for="project_name" class="input-group-text">โครงการ</label>
-                    <input type="text" class="form-control" name="project_name" id="project_name" disabled value="<?= $rsPo['project_name'] ?>">
+                    <input type="text" class="form-control" name="project_name" id="project_name" disabled value="<?= $rsIpc['project_name'] ?>">
                   </div>
 
                   <div class="col-6 input-group input-group-sm">
                     <label for="location_name" class="input-group-text">สถานที่</label>
-                    <input type="text" class="form-control" name="location_name" id="location_name" disabled value="<?= $rsPo['location_name'] ?>">
+                    <input type="text" class="form-control" name="location_name" id="location_name" disabled value="<?= $rsIpc['location_name'] ?>">
                   </div>
                 </div>
 
                 <div class="row m-1">
                   <div class="col-6 input-group input-group-sm">
                     <label for="working_name_th" class="input-group-text">งาน</label>
-                    <input type="text" class="form-control" name="working_name_th" id="working_name_th" disabled value="<?= $rsPo['working_name_th'] ?> (<?= $rsPo['working_name_en'] ?>)">
+                    <input type="text" class="form-control" name="working_name_th" id="working_name_th" disabled value="<?= $rsIpc['working_name_th'] ?> (<?= $rsIpc['working_name_en'] ?>)">
                   </div>
 
                 </div>
@@ -112,20 +115,20 @@ require_once 'auth.php';
                   <div class="col-4">
                     <div class="row-1 input-group input-group-sm">
                       <label for="working_date_from" class="input-group-text">ระยะเวลาดำเนินการ</label>
-                      <input type="date" class="form-control" name="working_date_from" id="working_date_from" disabled value="<?php echo isset($rsPo['working_date_from']) ? htmlspecialchars($rsPo['working_date_from']) : ''; ?>">
+                      <input type="date" class="form-control" name="working_date_from" id="working_date_from" disabled value="<?php echo isset($rsIpc['working_date_from']) ? htmlspecialchars($rsIpc['working_date_from']) : ''; ?>">
 
                     </div>
                   </div>
                   <div class="col-4">
                     <div class="row-1 input-group input-group-sm">
                       <label for="working_date_to" class="input-group-text "> ถึง </label>
-                      <input type="date" class="form-control" name="working_date_to" id="working_date_to" disabled value="<?php echo isset($rsPo['working_date_to']) ? htmlspecialchars($rsPo['working_date_to']) : ''; ?>">
+                      <input type="date" class="form-control" name="working_date_to" id="working_date_to" disabled value="<?php echo isset($rsIpc['working_date_to']) ? htmlspecialchars($rsIpc['working_date_to']) : ''; ?>">
                     </div>
                   </div>
 
                   <div class="col-2 input-group input-group-sm">
                     <label for="working_day" class="input-group-text">รวม</label>
-                    <input type="number" class="form-control" name="working_day" id="working_day" disabled value="<?php echo isset($rsPo['working_day']) ? htmlspecialchars($rsPo['working_day']) : ''; ?>">
+                    <input type="number" class="form-control" name="working_day" id="working_day" disabled value="<?php echo isset($rsIpc['working_day']) ? htmlspecialchars($rsIpc['working_day']) : ''; ?>">
                   </div>
                 </div>
 
@@ -134,19 +137,19 @@ require_once 'auth.php';
                 <div class="row m-1">
                   <div class="col-4 input-group input-group-sm">
                     <label for="po_number" class="input-group-text">เลขที่ PO</label>
-                    <input type="text" class="form-control" name="po_number" id="po_number" value=<?= $rsPo['po_number'] ?> readonly>
+                    <input type="text" class="form-control" name="po_number" id="po_number" value=<?= $rsIpc['po_number'] ?> readonly>
                   </div>
 
                   <div class="col-4 input-group input-group-sm">
                     <label for="contract_value" class="input-group-text">มูลค่างานตาม PO</label>
-                    <input type="number" class="form-control" name="contract_value" id="contract_value" disabled value=<?= $rsPo['contract_value'] ?>>
+                    <input type="number" class="form-control" name="contract_value" id="contract_value" disabled value=<?= $rsIpc['contract_value'] ?>>
                   </div>
 
                   <div class="col-2 input-group input-group-sm">
                     <?php
-                    $display_include_vat = $rsPo['is_include_vat'] ? "(Including VAT 7% )" : "";
+                    $display_include_vat = $rsIpc['is_include_vat'] ? "(Including VAT 7% )" : "";
                     ?>
-                    <label for="vat" class="input-group-text d-none">(Includeing VAT</label>
+                    <label for="vat" class="input-group-text d-none">Includeing VAT</label>
                     <input type="text" class="form-control border border-0" name="vat" id="vat" disabled value="<?= $display_include_vat ?>">
                   </div>
                 </div>
@@ -157,14 +160,14 @@ require_once 'auth.php';
                   <div class="col-4">
                     <div class="row-1 input-group input-group-sm">
                       <label for="workload_planned_percent" class="input-group-text ">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</label>
-                      <input type="number" class="form-control " name="workload_planned_percent" id="workload_planned_percent" disabled value="<?php echo isset($rsPo['workload_planned_percent']) ? htmlspecialchars($rsPo['workload_planned_percent']) : ''; ?>">
+                      <input type="number" class="form-control " name="workload_planned_percent" id="workload_planned_percent" disabled value="<?php echo isset($rsIpc['workload_planned_percent']) ? htmlspecialchars($rsIpc['workload_planned_percent']) : ''; ?>">
                       <label for="workload_planned_percent" class="input-group-text ">%</label>
                     </div>
                   </div>
                   <div class="col-4">
                     <div class="row-1 input-group input-group-sm">
                       <label for="workload_actual_completed_percent" class="input-group-text ">ปริมาณที่แล้วเสร็จจริง</label>
-                      <input type="number" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsPo['workload_actual_completed_percent']) ? htmlspecialchars($rsPo['workload_actual_completed_percent']) : ''; ?>">
+                      <input type="number" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsIpc['workload_actual_completed_percent']) ? htmlspecialchars($rsIpc['workload_actual_completed_percent']) : ''; ?>">
                       <label for="workload_actual_completed_percent" class="input-group-text ">%</label>
                     </div>
                   </div>
@@ -172,7 +175,7 @@ require_once 'auth.php';
                   <div class="col-4">
                     <div class="row-1 input-group input-group-sm">
                       <label for="workload_remaining_percent" class="input-group-text">ปริมาณงานคงเหลือ</label>
-                      <input type="number" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsPo['workload_remaining_percent']) ? htmlspecialchars($rsPo['workload_remaining_percent']) : ''; ?>">
+                      <input type="number" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsIpc['workload_remaining_percent']) ? htmlspecialchars($rsIpc['workload_remaining_percent']) : ''; ?>">
                       <label for="workload_remaining_percent" class="input-group-text ">%</label>
                     </div>
                   </div>
@@ -197,30 +200,20 @@ require_once 'auth.php';
               <table class="table table-bordered justify-content-center text-center">
                 <thead>
                   <tr>
-                    <!-- <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">po_id</th>
-                    <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">period_id</th>
-                    <th class="text-center align-content-center p-1 d-none" rowspan="2" width="5%">inspection_id</th> -->
-                    <th class="text-center align-content-center p-1" rowspan="2" width="5%">งวดงาน</th>
-                    <th class="text-center p-1" colspan="3">ปริมาณงาน</th>
-                    <th class="text-center p-1" colspan="3">ยอดเบิกเงินงวด</th>
-                    <th class="text-center align-content-center p-1" rowspan="2">หมายเหตุ</th>
-                  </tr>
-                  <tr>
-                    <th class="text-center p-1" width="10%">ตามแผนงาน(%)</th>
-                    <th class="text-center p-1" width="10%">ที่แล้วเสร็จจริง(%)</th>
-                    <th class="text-center p-1" width="10%">คงเหลือ(%)</th>
-                    <th class="text-center p-1" width="10%">ยอดปัจจุบัน</th>
-                    <th class="text-center p-1" width="10%">ยอดสะสมถึงปัจจุบัน</th>
-                    <th class="text-center p-1" width="10%">ยอดคงเหลือ</th>
+                    <th class="text-center align-content-center p-1" width="5%">no.</th>
+                    <th class="text-center p-1">ยอดเบิกในงวด (บาท)</th>
+                    <th class="text-center p-1">retention ในงวด (บาท)</th>
+                    <th class="text-center p-1">retention สะสม (บาท)</th>
+                    <th class="text-center p-1">ยอดเงินจ่ายจริง (บาท)</th>
+                    <th class="text-center p-1">ยอดเงินจ่ายจริงสะสม (บาท)</th>
+                    <th class="text-center p-1 d-none">paid</th>
+                    <th class="text-center p-1">paid date</th>
+                    <th class="text-center align-content-center p-1">หมายเหตุ</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <?php foreach ($rsInspectionPeriod as $row) { ?>
-                    <tr data-po_id=<?= $row['po_id'] ?> data-period_id=<?= $row['period_id'] ?> data-inspection_id=<?= $row['inspection_id'] ?>>
-                      <!-- <td class="tdPeriod text-right text-primary input-group-sm p-0 po_id d-none" data-id=<?= $row['po_id'] ?>><?= $row['po_id'] ?></td>
-                      <td class="tdPeriod text-right text-primary input-group-sm p-0 period_id d-none" data-id=<?= $row['period_id'] ?>><?= $row['period_id'] ?></td>
-                      <td class="tdPeriod text-right text-primary input-group-sm p-0 inspection_id d-none" data-id=<?= $row['inspection_id'] ?>><?= $row['inspection_id'] ?></td> -->
-
+                  <?php foreach ($rsIpc as $row) { ?>
+                    <tr data-po-id=<?= $row['po_id'] ?> data-period-id=<?= $row['period_id'] ?> data-inspection-id=<?= $row['inspection_id'] ?>  data-ipc-id=<?= $row['ipc_id'] ?>>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['period_number'] ?></td>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_planned_percent'] ?></td>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_actual_completed_percent'] ?></td>
@@ -229,6 +222,15 @@ require_once 'auth.php';
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['interim_payment_less_previous'] ?></td>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['interim_payment_remain'] ?></td>
                       <td class="tdPeriod text-left text-primary py-0 px-1"><?= $row['remark'] ?></td>
+
+                      <td class="tdPeriod text-right py-0 px-1"><a class="link-opacity-100 pe-auto period_number" style="margin: 0px 5px 5px 5px">${data.period_number}</a></td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.net_value_of_current_claim}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.less_retension_exclude_vat}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_retention}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.net_amount_due_for_payment}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_certification_made}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.agreement_date}</td>
+                      <td class="tdPeriod text-left py-0 px-1">${data.remark}</td>
                     </tr>
                   <?php } ?>
                 </tbody>

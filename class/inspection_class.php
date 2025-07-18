@@ -12,7 +12,7 @@ class Inspection
         $this->db = $pdoConnection;
     }
 
-    public function getHeaderAll(): array
+    public function getAllPo(): array
     {
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                     , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
@@ -34,7 +34,7 @@ class Inspection
         return $rs;
     }
 
-    public function getHeaderByPoId($poId): ?array
+    public function getPoByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
@@ -164,9 +164,9 @@ class Inspection
         $rsPeriodDetails = $this->getPeriodDetailsByPeriodId($periodId);
 
         // 5. ดึงข้อมูล Period Approvals ของ period_id ที่มี approval_level = current_approval_level
-        $sql = "SELECT `inspection_approval_id`, `inspection_id`, `period_id`, `po_id`, `period_number`
-                , `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`, `approval_date`, `approval_comment` 
-                FROM `inspection_period_approvals` 
+        $sql = "SELECT inspection_approval_id, inspection_id, period_id, po_id, period_number
+                , approval_level, approver_id, approval_type_id, approval_type_text, approval_status_id, approval_date, approval_comment 
+                FROM inspection_period_approvals 
                 WHERE period_id = :period_id
                 AND approval_level = :approval_level";
         $stmt = $this->db->prepare($sql);
@@ -190,8 +190,8 @@ class Inspection
             'header' => $rsPoMain,
             'period' => $rsPeriods,
             'periodDetails' => $rsPeriodDetails, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
-            'periodApprovals' => $rsPeriodApprovals, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
-            'maxPeriodApproval' => $rsMaxPeriodApproval, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
+            'periodApprovals' => $rsPeriodApprovals, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 5
+            'maxPeriodApproval' => $rsMaxPeriodApproval, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 6
         ];
 
         return $result;
