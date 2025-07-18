@@ -1,7 +1,5 @@
 <?php
 
-use Dba\Connection;
-
 @session_start();
 
 require_once 'config.php';

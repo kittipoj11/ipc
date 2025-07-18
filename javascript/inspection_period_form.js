@@ -349,8 +349,8 @@ $(document).ready(function () {
       action: "updateCurrentApprovalLevel",
     };
 
-    console.log(`data_sent: ${JSON.stringify(data_sent)}`);
-    return;
+    // console.log(`data_sent: ${JSON.stringify(data_sent)}`);
+    // return;
     $.ajax({
       url: "inspection_handler_api.php",
       type: "POST",

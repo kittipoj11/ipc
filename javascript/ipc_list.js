@@ -143,16 +143,16 @@ $(document).ready(function () {
       // let period_id = inputPoPeriodId.val();
 
       const po_id = $(this).closest("tr").data("po-id");
-      // console.log(`po_id = ${po_id}`);
       const period_id = $(this).closest("tr").data("period-id");
       const inspection_id = $(this).closest("tr").data("inspection-id");
+      const ipc_id = $(this).closest("tr").data("ipc-id");
       // console.log(`period_id = ${period_id}`);
       // let po_id=1;
       // let period_id=1;
       // console.log(`po_id = ${po_id}`);
       // console.log(`period_id = ${period_id}`);
       // console.log(`inspection_id = ${inspection_id}`);
-      window.location.href = `inspection_period_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
+      window.location.href = `ipc_period_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}&ipc_id=${ipc_id}`;
     });
 
   // loadAllInspection();

@@ -66,7 +66,7 @@ class Inspection
         return $rs;
     }
 
-    public function getHeaderByPeriodId($periodId): ?array
+    public function getPoByPeriodId($periodId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $sql = "SELECT O.supplier_id, O.location_id , O.po_number, O.project_name, O.working_name_th, O.working_name_en
@@ -158,7 +158,7 @@ class Inspection
         }
 
         // 3. ดึงข้อมูลของ po_main ของ period_id ที่ต้องการ
-        $rsPoMain = $this->getHeaderByPeriodId($periodId);
+        $rsPoMain = $this->getPoByPeriodId($periodId);
 
         // 4. ดึงข้อมูล PeriodDetails ทั้งหมดของ Period นี้ 
         $rsPeriodDetails = $this->getPeriodDetailsByPeriodId($periodId);
