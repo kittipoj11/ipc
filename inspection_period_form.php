@@ -115,13 +115,13 @@ require_once 'auth.php';
                 <div class="card">
                   <div class="card-header d-flex justify-content-between">
                     <div class="col d-flex align-items-center">
-                      <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspection['period']['inspection_id'] ?>">
-                      <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspection['period']['period_id'] ?>">
                       <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsInspection['period']['po_id'] ?>">
+                      <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsInspection['period']['period_id'] ?>">
+                      <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsInspection['period']['inspection_id'] ?>">
 
+                      <!-- <h6 class="m-1 fw-bold">< ?= "[type " . gettype($rsInspection['periodApprovals']) . "]" ?></h6> -->
                       <h6 class="m-1 fw-bold"><?= $rsInspection['header']['po_number'] . " : " . $rsInspection['header']['supplier_id'] . " - " . $rsInspection['header']['supplier_name'] ?></h6>
                       <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsInspection['period']['period_number'] . "]" ?></h6>
-                      <h6 class="m-1 fw-bold"><?= "[type " . gettype($rsInspection['periodApprovals']) . "]" ?></h6>
                       <button type="button" name="btnAttach" id="btnAttach" class="btn btn-primary btn-sm m-1">
                         <i class="fi fi-rr-clip"></i>
                       </button>

@@ -149,19 +149,16 @@ $(document).ready(function () {
     calculateAndDisplay();
   });
 
-  function calculateAndDisplay() {
-    let workload_actual_completed_percent = $(
-      "#workload_actual_completed_percent"
-    ).val();
+  $("#floatingTextarea").on("click", function () {
+    console.log($(this).val());
+  });
 
-    if (
-      !isNaN(workload_actual_completed_percent) &&
-      workload_actual_completed_percent !== ""
-    ) {
+  function calculateAndDisplay() {
+    let workload_actual_completed_percent = $("#workload_actual_completed_percent").val();
+
+    if (!isNaN(workload_actual_completed_percent) && workload_actual_completed_percent !== "") {
       workload_remaining_percent = 100 - workload_actual_completed_percent; //(คือ Total Value Of Interim Payment))
-      $("#workload_remaining_percent").val(
-        workload_remaining_percent.toFixed(2)
-      );
+      $("#workload_remaining_percent").val(workload_remaining_percent.toFixed(2));
     } else {
       $("#workload_remaining_percent").val("");
     }
@@ -277,26 +274,6 @@ $(document).ready(function () {
     // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
   });
 
-
-
-// รอตรวจสอบ 3 ฟังก์ชัน
-  $(document).on("click", "#btnAttach", function (e) {
-    e.preventDefault();
-
-    const po_id = $("#po_id").val();
-    const period_id = $("#period_id").val();
-    const inspection_id = $("#inspection_id").val();
-
-    // console.log(`po_id = ${po_id}`);
-    // console.log(`period_id = ${period_id}`);
-    // console.log(`inspection_id = ${inspection_id}`);
-    window.location.href = `inspection_period_attach_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}&mode=`;
-  });
-
-  $("#floatingTextarea").on("click", function () {
-    console.log($(this).val());
-  });
-
   $(".approval_next").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
       e.preventDefault();
@@ -320,27 +297,33 @@ $(document).ready(function () {
 
     const less_retension_exclude_vat = 0;
     const sum_of_less_retension_exclude_vat = 0;
+
     const ipcData = {
       po_id: $("#po_id").val(),
       period_id: $("#period_id").val(),
       inspection_id: $("#inspection_id").val(),
+      ipc_id: 0,
       period_number: $("#period_number").val(),
       project_name: $("#project_name").val(),
       contractor: $("#supplier_name").val(),
       contract_value: $("#contract_value").val(),
+      remark: '',
 
       interim_payment_less_previous: $("#interim_payment_less_previous").val(),//(1)ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน
       interim_payment: $("#interim_payment").val(),//(2)ยอดเบิกเงินงวดปัจจุบัน
       interim_payment_accumulated: $("#interim_payment_accumulated").val(),//(3)ยอดเบิกเงินงวดสะสมถึงปัจจุบัน
       interim_payment_remain: $("#interim_payment_remain").val(),//(4)ยอดเงินงวดคงเหลือ
-      total_value_of_interim_payment: $("#interim_payment_less_previous").val() + $("#interim_payment").val(),
-      less_previous_interim_payment: $("#interim_payment_less_previous").val(),
-      net_value_of_current_claim: $("#interim_payment").val(),
-      less_retension_exclude_vat: less_retension_exclude_vat,
-      net_amount_due_for_payment: $("#interim_payment").val()-less_retension_exclude_vat,
-      total_value_of_retention: sum_of_less_retension_exclude_vat,
-      total_value_of_certification_made: $("#interim_payment_accumulated").val()-sum_of_less_retension_exclude_vat,
-      resulting_balance_of_contract_sum_outstanding: $("#interim_payment_remain").val()-sum_of_less_retension_exclude_vat,
+
+      total_value_of_interim_payment: $("#interim_payment_less_previous").val() + $("#interim_payment").val(),//(3)total_value_of_interim_payment
+      less_previous_interim_payment: $("#interim_payment_less_previous").val(),//(1)less_previous_interim_payment
+      net_value_of_current_claim: $("#interim_payment").val(),//(2)net_value_of_current_claim
+      less_retension_exclude_vat: less_retension_exclude_vat,//(5)less_retension_exclude_vat
+
+      net_amount_due_for_payment: $("#interim_payment").val()-less_retension_exclude_vat,//(6)net_amount_due_for_payment
+
+      total_value_of_retention: sum_of_less_retension_exclude_vat,//(7)total_value_of_retention
+      total_value_of_certification_made: $("#interim_payment_accumulated").val()-sum_of_less_retension_exclude_vat,//(8)total_value_of_certification_made
+      resulting_balance_of_contract_sum_outstanding: $("#interim_payment_remain").val()-sum_of_less_retension_exclude_vat,//(9)resulting_balance_of_contract_sum_outstanding
     };
 
     const data_sent = {
@@ -388,6 +371,7 @@ $(document).ready(function () {
         showMessage(errorMsg, false);
       });
   });
+  
   $(".approval_reject").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
       e.preventDefault();
@@ -451,6 +435,20 @@ $(document).ready(function () {
           : "เกิดข้อผิดพลาดรุนแรง";
         showMessage(errorMsg, false);
       });
+  });
+
+// รอตรวจสอบฟังก์ชัน
+  $(document).on("click", "#btnAttach", function (e) {
+    e.preventDefault();
+
+    const po_id = $("#po_id").val();
+    const period_id = $("#period_id").val();
+    const inspection_id = $("#inspection_id").val();
+
+    // console.log(`po_id = ${po_id}`);
+    // console.log(`period_id = ${period_id}`);
+    // console.log(`inspection_id = ${inspection_id}`);
+    window.location.href = `inspection_period_attach_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}&mode=`;
   });
 
   function loadPage() {

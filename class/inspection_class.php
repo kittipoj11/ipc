@@ -431,7 +431,7 @@ class Inspection
     }
 
     // เพิ่มเติมในส่วน ipc_periods
-    public function updateCurrentApprovalLevel(array $approvalData,array $ipcData): int
+    public function updateCurrentApprovalLevel(array $approvalData, array $ipcData): int
     {
         $isApprove = $approvalData['is_approve'];
         $approvalLevel = $isApprove ? $approvalData['current_approval_level'] : $approvalData['new_approval_level'];
@@ -469,9 +469,9 @@ class Inspection
             $stmt->closeCursor();
 
             if ($approvalData['create_ipc']) {
-
+                
                 // INSERT ipc_periods
-                $sql = "INSERT INTO ipc_periods(inspection_id, period_id, po_id, period_number, project_name, contractor, contract_value
+                $sql = "INSERT INTO ipc_periods(po_id, period_id, inspection_id, period_number, project_name, contractor, contract_value
                         , total_value_of_interim_payment, less_previous_interim_payment, net_value_of_current_claim, less_retension_exclude_vat
                         , net_amount_due_for_payment, total_value_of_retention, total_value_of_certification_made
                         , resulting_balance_of_contract_sum_outstanding, workflow_id)
@@ -480,9 +480,9 @@ class Inspection
                         , :net_amount_due_for_payment, :total_value_of_retention, :total_value_of_certification_made
                         , :resulting_balance_of_contract_sum_outstanding, :workflow_id)";
 
-                $stmt->bindParam(':inspection_id', $ipcData['inspection_id'], PDO::PARAM_INT);
                 $stmt->bindParam(':po_id', $ipcData['po_id'], PDO::PARAM_INT);
                 $stmt->bindParam(':period_id', $ipcData['period_id'], PDO::PARAM_INT);
+                $stmt->bindParam(':inspection_id', $ipcData['inspection_id'], PDO::PARAM_INT);
                 $stmt->bindParam(':period_number', $ipcData['period_number'], PDO::PARAM_STR);
                 $stmt->bindParam(':project_name', $ipcData['project_name'], PDO::PARAM_STR);
                 $stmt->bindParam(':contractor', $ipcData['contractor'],  PDO::PARAM_INT);
