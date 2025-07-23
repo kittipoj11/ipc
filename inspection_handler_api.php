@@ -11,7 +11,7 @@ require_once 'class/connection_class.php';
 require_once 'class/po_class.php';
 require_once 'class/inspection_class.php';
 require_once 'class/ipc_class.php';
-require_once 'class/inspection_service_class.php';
+require_once 'class/approval_service_class.php';
 
 $requestData = json_decode(file_get_contents('php://input'), true);
 
