@@ -24,8 +24,8 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'select') {
     createPeriodTable($rs);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updateInspectionPeriod') {
     $rs = $inspection->updateInspectionPeriod($_REQUEST);
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'updateCurrentApprovalLevel') {
-    $rs = $inspection->updateCurrentApprovalLevel($_REQUEST);
+} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'approveInspection') {
+    $rs = $inspection->updateApprovalLevel_old($_REQUEST);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectInspectionFiles') {
     $rsInspectionFiles = $inspection->getInspectionFilesByInspectionId($_REQUEST['po_id'], $_REQUEST['period_id'], $_REQUEST['inspection_id']);
     echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);

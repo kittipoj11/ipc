@@ -246,7 +246,7 @@ $(document).ready(function () {
       data_sent.push(
         {
           name: "action",
-          value: "updateCurrentApprovalLevel",
+          value: "approveInspection",
         },
         {
           name: "new_approval_level",

@@ -726,7 +726,7 @@ class Inspection
         }
     }
 
-    public function updateCurrentApprovalLevelx($getData)
+    public function updateApprovalLevel_oldx($getData)
     {
         @session_start();
 

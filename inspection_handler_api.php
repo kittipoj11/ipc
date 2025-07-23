@@ -45,8 +45,8 @@ if (isset($requestData['action']) && $requestData['action'] == 'select') {
     // echo "1";
     echo json_encode($response);
     
-} elseif (isset($requestData['action']) && $requestData['action'] == 'updateCurrentApprovalLevel') {
-    // $savedInspectionId = $inspection->updateCurrentApprovalLevel($requestData['approvalData'],$requestData['ipcData']);
+} elseif (isset($requestData['action']) && $requestData['action'] == 'approveInspection') {
+    // $savedInspectionId = $inspection->updateApprovalLevel_old($requestData['approvalData'],$requestData['ipcData']);
     $inspectionService->approveInspection($requestData['approvalData'],$requestData['ipcData']);
     $response = [
         'status' => 'success',

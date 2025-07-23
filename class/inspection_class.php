@@ -434,7 +434,7 @@ class Inspection
     }
 
     // เพิ่มเติมในส่วน ipc_periods
-    public function updateCurrentApprovalLevel(array $approvalData, array $ipcData): int
+    public function updateApprovalLevel_old(array $approvalData, array $ipcData): int
     {
         $isApprove = $approvalData['is_approve'];
         $approvalLevel = $isApprove ? $approvalData['current_approval_level'] : $approvalData['new_approval_level'];

@@ -329,7 +329,7 @@ $(document).ready(function () {
     const data_sent = {
       approvalData: approvalData,
       ipcData: ipcData,
-      action: "updateCurrentApprovalLevel",
+      action: "approveInspection",
     };
 
     // console.log(`data_sent: ${JSON.stringify(data_sent)}`);
@@ -394,7 +394,7 @@ $(document).ready(function () {
 
     const data_sent = {
       approvalData: approvalData,
-      action: "updateCurrentApprovalLevel",
+      action: "approveInspection",
     };
 
     // console.log(`data_sent: ${JSON.stringify(data_sent)}`);
