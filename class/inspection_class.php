@@ -86,10 +86,13 @@ class Inspection
         $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
-        if (!$rs) {
-            return null; // ไม่พบข้อมูล
-        }
-        // return $rs ?: null;
+
+        return $rs ?: null;
+        // /* หรือใช้
+        // if (!$rs) {
+        //     return null; // ไม่พบข้อมูล
+        // }
+        // */ 
 
         return $rs;
     }
@@ -513,6 +516,45 @@ class Inspection
             }
             throw $e;
         }
+    }
+
+    // ทำการ update level เมื่อมีการ approve
+    public function updateApprovalLevel(array $approvalData): int
+    {
+        $isApprove = $approvalData['is_approve'];
+        $approvalLevel = $isApprove ? $approvalData['current_approval_level'] : $approvalData['new_approval_level'];
+
+        // UPDATE inspection_periods
+        $sql = "UPDATE `inspection_periods`
+                SET `current_approval_level` = :new_approval_level
+                , inspection_status = :inspection_status
+                WHERE `po_id` = :po_id
+                    AND `period_id` = :period_id
+                    AND `inspection_id` = :inspection_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':po_id', $approvalData['po_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':period_id', $approvalData['period_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':inspection_id', $approvalData['inspection_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':new_approval_level', $approvalData['new_approval_level'], PDO::PARAM_INT);
+        $stmt->bindParam(':inspection_status', $approvalData['inspection_status'], PDO::PARAM_INT);
+
+        $stmt->execute();
+        $stmt->closeCursor();
+
+        // UPDATE inspection_period_approvals
+        $sql = "UPDATE `inspection_period_approvals`
+                SET `approval_date` = IF(:isApprove, NOW(), NULL)
+                WHERE `inspection_id` = :inspection_id
+                    AND `approval_level` = :approval_level";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':inspection_id', $approvalData['inspection_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':approval_level', $approvalLevel, PDO::PARAM_INT);
+        $stmt->bindParam(':isApprove', $isApprove, PDO::PARAM_BOOL);
+
+        $stmt->execute();
+        $stmt->closeCursor();
+
+        return (int)$approvalData['inspection_id'];
     }
 
     public function insertInspectionFiles($getData)

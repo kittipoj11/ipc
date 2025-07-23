@@ -10,13 +10,18 @@ require_once 'config.php';
 require_once 'class/connection_class.php';
 require_once 'class/po_class.php';
 require_once 'class/inspection_class.php';
+require_once 'class/ipc_class.php';
+require_once 'class/inspection_service_class.php';
+
+$requestData = json_decode(file_get_contents('php://input'), true);
 
 $connection = new Connection();
 $pdo = $connection->getDbConnection();
 $inspection = new Inspection($pdo);
+$ipc = new Ipc($pdo);
+$inspectionService = new InspectionService($pdo, $inspection, $ipc);
 
-$requestData = json_decode(file_get_contents('php://input'), true);
-// $_SESSION['req data1']=$requestData;
+// $_SESSION['XXXXXXXXXXXXXXXXXXXXX']=$requestData['ipcData'];
 
 if (isset($requestData['action']) && $requestData['action'] == 'select') {
     $rs = $inspection->getAllPo();
@@ -41,8 +46,8 @@ if (isset($requestData['action']) && $requestData['action'] == 'select') {
     echo json_encode($response);
     
 } elseif (isset($requestData['action']) && $requestData['action'] == 'updateCurrentApprovalLevel') {
-    $savedInspectionId = $inspection->updateCurrentApprovalLevel($requestData['approvalData'],$requestData['ipcData']);
-
+    // $savedInspectionId = $inspection->updateCurrentApprovalLevel($requestData['approvalData'],$requestData['ipcData']);
+    $inspectionService->approveInspection($requestData['approvalData'],$requestData['ipcData']);
     $response = [
         'status' => 'success',
         'message' => 'บันทึกข้อมูล PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',

@@ -2,28 +2,29 @@
 @session_start();
 // require_once 'config.php';
 require_once 'connection_class.php';
+require_once 'inspection_class.php';
+require_once 'ipc_class.php';
 
-class TransactionService
+class InspectionService
 {
     private $db;
+    private $inspection;
+    private $ipc;
 
-    public function __construct(PDO $pdoConnection)
+    public function __construct(PDO $pdoConnection, Inspection $inspection, Ipc $ipc)
     {
         $this->db = $pdoConnection;
+        $this->inspection = $inspection;
+        $this->ipc = $ipc;
     }
 
-    public function registerNewUser(string $name, string $email): bool
+    public function approveInspection(array $approvalData,array $ipcData): bool
     {
         try {
             $this->db->beginTransaction();
 
-            // ขั้นตอนที่ 1: สร้างผู้ใช้
-            $userId = $this->userRepo->create($name, $email);
-
-            // ขั้นตอนที่ 2: บันทึก Log
-            $this->logRepo->create($userId, 'USER_REGISTERED');
-
-            // ขั้นตอนอื่นๆ ที่อาจเพิ่มเข้ามาในอนาคต...
+            $this->inspection->updateApprovalLevel($approvalData);
+            $this->ipc->save($ipcData);
 
             $this->db->commit();
             return true;

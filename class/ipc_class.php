@@ -1,7 +1,6 @@
 <?php
 // require_once 'config.php';
 require_once 'connection_clasS.php';
-
 class Ipc
 {
     private $db;
@@ -207,68 +206,56 @@ class Ipc
 
     public function save(array $ipcData): int
     {
-        $this->db->beginTransaction();
-        try {
-            // กำหนดค่าให้ตัวแปร $ipcId ที่ส่งมา
-            $ipcId = $ipcData['ipc_id'] ?? 0;
-
-            // 1. ตรวจสอบและจัดการข้อมูล (INSERT หรือ UPDATE)
-            if (empty($ipcId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
-                // --- INSERT MODE ---
-                $sql = "INSERT INTO ipc_periods(po_id, period_id, inspection_id, period_number, project_name, contractor, contract_value
-                        , total_value_of_interim_payment, less_previous_interim_payment, net_value_of_current_claim, less_retension_exclude_vat
-                        , net_amount_due_for_payment, total_value_of_retention, total_value_of_certification_made, resulting_balance_of_contract_sum_outstanding
-                        , remark, workflow_id )
-                        VALUES(:po_id, :period_id, :inspection_id, :period_number, :project_name, :contractor, :contract_value
-                        , :total_value_of_interim_payment, :less_previous_interim_payment, :net_value_of_current_claim, :less_retension_exclude_vat
-                        , :net_amount_due_for_payment, :total_value_of_retention, :total_value_of_certification_made, :resulting_balance_of_contract_sum_outstanding
-                        , :remark, :workflow_id)";
-
-                $stmt = $this->db->prepare($sql);
-                $stmt->bindParam(':po_id', $ipcData['po_id'], PDO::PARAM_INT);
-                $stmt->bindParam(':period_id', $ipcData['period_id'], PDO::PARAM_INT);
-                $stmt->bindParam(':inspection_id', $ipcData['inspection_id'], PDO::PARAM_INT);
-                $stmt->bindParam(':period_number', $ipcData['period_number'], PDO::PARAM_STR);
-                $stmt->bindParam(':project_name', $ipcData['project_name'], PDO::PARAM_STR);
-                $stmt->bindParam(':contractor', $ipcData['contractor'],  PDO::PARAM_INT);
-                $stmt->bindParam(':contract_value', $ipcData['contract_value'], PDO::PARAM_STR);
-                $stmt->bindParam(':total_value_of_interim_payment', $ipcData['total_value_of_interim_payment'], PDO::PARAM_STR);
-                $stmt->bindParam(':less_previous_interim_payment', $ipcData['less_previous_interim_payment'], PDO::PARAM_STR);
-                $stmt->bindParam(':net_value_of_current_claim', $ipcData['net_value_of_current_claim'], PDO::PARAM_STR);
-                $stmt->bindParam(':less_retension_exclude_vat', $ipcData['less_retension_exclude_vat'], PDO::PARAM_STR);
-                $stmt->bindParam(':net_amount_due_for_payment', $ipcData['net_amount_due_for_payment'], PDO::PARAM_STR);
-                $stmt->bindParam(':total_value_of_retention', $ipcData['total_value_of_retention'], PDO::PARAM_STR);
-                $stmt->bindParam(':total_value_of_certification_made', $ipcData['total_value_of_certification_made'], PDO::PARAM_STR);
-                $stmt->bindParam(':resulting_balance_of_contract_sum_outstanding', $ipcData['resulting_balance_of_contract_sum_outstanding'], PDO::PARAM_STR);
-                $stmt->bindParam(':remark', $ipcData['remark'], PDO::PARAM_STR);
-                $stmt->bindParam(':workflow_id', 2, PDO::PARAM_INT);
-
-                $affected = $stmt->execute();
-                $ipcId = $this->db->lastInsertId();
-                $stmt->closeCursor();
-                return (int)$ipcId;
-            } else {
-                // --- UPDATE MODE ---
-                $sql = "UPDATE `ipc_periods`
-                        SET `remark` = :remark
-                        WHERE `ipc_id` = :ipc_id";
-
-                $stmt = $this->db->prepare($sql);
-                $stmt->bindParam(':ipc_id', $ipcId, PDO::PARAM_INT);
-                $stmt->bindParam(':remark', $ipcData['remark'], PDO::PARAM_STR);
-                $affected = $stmt->execute();
-                $stmt->closeCursor();
-                return (int)$ipcId;
-            }
-
-            $this->db->commit();
-            // คืนค่า IPC ID ที่บันทึกสำเร็จกลับไป
+        // กำหนดค่าให้ตัวแปร $ipcId ที่ส่งมา
+        $ipcId = $ipcData['ipc_id'] ?? 0;
+    
+        // 1. ตรวจสอบและจัดการข้อมูล (INSERT หรือ UPDATE)
+        if (empty($ipcId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
+            // --- INSERT MODE ---
+            $sql = "INSERT INTO ipc_periods(po_id, period_id, inspection_id, period_number, project_name, contractor, contract_value
+                    , total_value_of_interim_payment, less_previous_interim_payment, net_value_of_current_claim, less_retension_exclude_vat
+                    , net_amount_due_for_payment, total_value_of_retention, total_value_of_certification_made, resulting_balance_of_contract_sum_outstanding
+                    , remark, workflow_id )
+                    VALUES(:po_id, :period_id, :inspection_id, :period_number, :project_name, :contractor, :contract_value
+                    , :total_value_of_interim_payment, :less_previous_interim_payment, :net_value_of_current_claim, :less_retension_exclude_vat
+                    , :net_amount_due_for_payment, :total_value_of_retention, :total_value_of_certification_made, :resulting_balance_of_contract_sum_outstanding
+                    , :remark, :workflow_id)";
+    
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':po_id', $ipcData['po_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':period_id', $ipcData['period_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':inspection_id', $ipcData['inspection_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':period_number', $ipcData['period_number'], PDO::PARAM_INT);
+            $stmt->bindParam(':project_name', $ipcData['project_name'], PDO::PARAM_STR);
+            $stmt->bindParam(':contractor', $ipcData['contractor'],  PDO::PARAM_STR);
+            $stmt->bindParam(':contract_value', $ipcData['contract_value'], PDO::PARAM_STR);
+            $stmt->bindParam(':total_value_of_interim_payment', $ipcData['total_value_of_interim_payment'], PDO::PARAM_STR);
+            $stmt->bindParam(':less_previous_interim_payment', $ipcData['less_previous_interim_payment'], PDO::PARAM_STR);
+            $stmt->bindParam(':net_value_of_current_claim', $ipcData['net_value_of_current_claim'], PDO::PARAM_STR);
+            $stmt->bindParam(':less_retension_exclude_vat', $ipcData['less_retension_exclude_vat'], PDO::PARAM_STR);
+            $stmt->bindParam(':net_amount_due_for_payment', $ipcData['net_amount_due_for_payment'], PDO::PARAM_STR);
+            $stmt->bindParam(':total_value_of_retention', $ipcData['total_value_of_retention'], PDO::PARAM_STR);
+            $stmt->bindParam(':total_value_of_certification_made', $ipcData['total_value_of_certification_made'], PDO::PARAM_STR);
+            $stmt->bindParam(':resulting_balance_of_contract_sum_outstanding', $ipcData['resulting_balance_of_contract_sum_outstanding'], PDO::PARAM_STR);
+            $stmt->bindParam(':remark', $ipcData['remark'], PDO::PARAM_STR);
+            $stmt->bindParam(':workflow_id', 2, PDO::PARAM_INT);
+    
+            $affected = $stmt->execute();
+            $ipcId = $this->db->lastInsertId();
+            $stmt->closeCursor();
             return (int)$ipcId;
-        } catch (Exception $e) {
-            if ($this->db->inTransaction()) {
-                $this->db->rollBack();
-            }
-            throw $e;
+        } else {
+            // --- UPDATE MODE ---
+            $sql = "UPDATE `ipc_periods`
+                    SET `remark` = :remark
+                    WHERE `ipc_id` = :ipc_id";
+    
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':ipc_id', $ipcId, PDO::PARAM_INT);
+            $stmt->bindParam(':remark', $ipcData['remark'], PDO::PARAM_STR);
+            $affected = $stmt->execute();
+            $stmt->closeCursor();
+            return (int)$ipcId;
         }
     }
 }
