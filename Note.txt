@@ -327,5 +327,28 @@ unset($period);
 รอบที่ 3 นำ task ของ period ที่ 3 มาใส่ใน period ที่ 3
 โดยแต่ละ task จะเป็น array ที่ดึงมาจาก DB ตาม period ที่ระบุ
 
+////////////////////////////////////////////////////////////////////////
+การจัดเก็บข้อมูลที่เป็น array ลงในฟิลด์ TEXT ใน mySql
+// ข้อมูลที่จะ insert
+$product_name = "Laptop รุ่นใหม่";
+$product_features_array = ["หน้าจอ 15 นิ้ว", "RAM 16GB", "SSD 512GB", "Wi-Fi 6"];
+
+// แปลง array เป็น JSON string
+$product_features_json = json_encode($product_features_array, JSON_UNESCAPED_UNICODE);
+
+// SQL query สำหรับ insert
+$sql = "INSERT INTO products (name, features) VALUES (?, ?)";
+
+// เตรียม statement
+$stmt = $conn->prepare($sql);
+
+// bind parameters
+$stmt->bind_param("ss", $product_name, $product_features_json);
+
+// execute query
+$stmt->execute()
+/////////////////////////////////////////////////////////////////////////////
+
+
 
 
