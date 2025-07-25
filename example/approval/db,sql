@@ -72,3 +72,4 @@ INSERT INTO workflow_steps (workflow_id, approval_level, approver_id) VALUES
 INSERT INTO workflow_steps (workflow_id, approval_level, approver_id) VALUES
 ((SELECT id FROM workflows WHERE work_type = 'คำขอลาพักร้อน'), 1, (SELECT id FROM users WHERE username = 'approver1')),
 ((SELECT id FROM workflows WHERE work_type = 'คำขอลาพักร้อน'), 2, (SELECT id FROM users WHERE username = 'approver3'));
+

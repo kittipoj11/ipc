@@ -55,10 +55,11 @@ class Inspection
         $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetch();
-        if (!$rs) {
-            return null; // ไม่พบข้อมูล
-        }
-        // return $rs ?: null;
+        return $rs ?: null;
+        // หรือ
+        // if (!$rs) {
+        //     return null; // ไม่พบข้อมูล
+        // }
 
         // ดึงข้อมูลจากตารางรอง
         $rs['periods'] = $this->getAllPeriodByPoId($poId);

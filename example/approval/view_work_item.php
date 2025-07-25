@@ -47,7 +47,13 @@ try {
                 $stmtUpdateApproval->execute();
 
                 // ตรวจสอบว่าเป็นขั้นตอนการอนุมัติสุดท้ายหรือไม่
-                $stmtNextLevel = $pdo->prepare("SELECT MIN(approval_level) AS next_level FROM workflow_steps WHERE workflow_id = (SELECT workflow_id FROM workflow_steps WHERE approver_id = :user_id AND approval_level = :current_level) AND approval_level > :current_level");
+                $stmtNextLevel = $pdo->prepare("SELECT MIN(approval_level) AS next_level 
+                                                FROM workflow_steps 
+                                                WHERE workflow_id = (SELECT workflow_id 
+                                                                    FROM workflow_steps 
+                                                                    WHERE approver_id = :user_id 
+                                                                    AND approval_level = :current_level) 
+                                                AND approval_level > :current_level");
                 $stmtNextLevel->bindParam(':user_id', $current_user_id);
                 $stmtNextLevel->bindParam(':current_level', $work_item['approval_level']);
                 $stmtNextLevel->execute();
