@@ -57,7 +57,7 @@ require_once 'auth.php';
 
     $inspection = new Inspection($pdo);
     $rsInspection =$inspection->getPoByPoId($po_id);
-
+    // $_SESSION['XXXXXXXXXXXXXXXXXX'] = $po_id;
     // เปลี่ยนไปใช้ $rsPoMain[periods] แบบ po_form.php
     ?>
 

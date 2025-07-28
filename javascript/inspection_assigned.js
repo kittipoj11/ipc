@@ -36,7 +36,7 @@ $(document).ready(function () {
     // console.log(`po_id = ${po_id}`);
     // console.log(`period_id = ${period_id}`);
     // console.log(`inspection_id = ${inspection_id}`);
-    window.location.href = `inspection_period_attach_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}&mode=${mode}`;
+    window.location.href = `inspection_attach_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}&mode=${mode}`;
   });
 
   $("#floatingTextarea").on("click", function () {

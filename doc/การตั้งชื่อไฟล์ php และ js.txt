@@ -16,10 +16,10 @@ inspection.php -> inspection_list.php
 =>	inspection_view.php (แสดงข้อมูล header และ period)
 =>	inspection_view.js 
 =>	inspection_view_handler_api.php(new)
-	=>	inspection_edit.php -> inspection_period_form.php(แก้ไขข้อมูล period เพียงอย่างเดียว)
-	=>	inspection_edit.js -> inspection_period_form.js
-	=>	inspection_period_handler_api.php(new)
-		=> inspection_attach.php -> inspection_period_attach_form.php
-		=> inspection_crud.php -> inspection_period_attach_handler_api.php
-		=> inspection_attach.js -> inspection_period_attach.js
-			=> inspection_upload.php -> inspection_period_upload.php
+	=>	inspection_edit.php -> inspection_form.php(แก้ไขข้อมูล period เพียงอย่างเดียว)
+	=>	inspection_edit.js -> inspection_form.js
+	=>	inspection_handler_api.php(new)
+		=> inspection_attach.php -> inspection_attach_form.php
+		=> inspection_crud.php -> inspection_attach_handler_api.php
+		=> inspection_attach.js -> inspection_attach.js
+			=> inspection_upload.php -> inspection_upload.php

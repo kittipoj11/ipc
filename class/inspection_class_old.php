@@ -73,7 +73,7 @@ class Inspection
                 , O.working_date_from, O.working_date_to, O.working_day
                 , S.supplier_name, L.location_name
                 FROM po_main O
-                INNER JOIN inspection_periods P
+                INNER JOIN inspection P
                     ON P.po_id = O.po_id
                 INNER JOIN suppliers S
                     ON S.supplier_id = O.supplier_id
@@ -104,7 +104,7 @@ class Inspection
                 , P.retention_value, P.plan_status_id, P.is_paid, P.is_retention
                 , P.remark, P.inspection_status, P.current_approval_level
                 , P.disbursement, P.workflow_id
-                FROM `inspection_periods` P
+                FROM `inspection` P
                 WHERE `po_id` = :po_id
                 ORDER BY `period_number`";
         $stmt = $this->db->prepare($sql);
@@ -116,14 +116,14 @@ class Inspection
 
     /**
      * ดึงข้อมูลทั้งหมดที่เกี่ยวข้องกับ Period ที่ระบุ
-     * (ข้อมูล po_main หลัก, ข้อมูล inspection_periods, และข้อมูล inspection_period_details)
+     * (ข้อมูล po_main หลัก, ข้อมูล inspection, และข้อมูล inspection_details)
      *
      * @param int $period_id ID ของ Period ที่ต้องการ
      * @return array|null คืนค่าเป็น array ที่มีข้อมูลทั้งหมด หรือ null ถ้าไม่พบ
      */
     public function getPeriodByPeriodIdx(int $period_id): ?array
     {
-        // 1. ดึงข้อมูลของ inspection_periods ที่ต้องการ
+        // 1. ดึงข้อมูลของ inspection ที่ต้องการ
         $sql = "SELECT P.inspection_id, P.period_id, P.po_id, P.period_number
                 , P.workload_planned_percent, P.workload_actual_completed_percent, P.workload_remaining_percent
                 , P.interim_payment, P.interim_payment_percent
@@ -134,15 +134,15 @@ class Inspection
                 , P.remark, P.inspection_status, P.current_approval_level, P.disbursement, P.workflow_id
                 , A.approver_id, A.approval_level 
                 , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
-                FROM inspection_periods P
+                FROM inspection P
                 INNER JOIN po_main O
                     ON P.po_id = O.po_id
-                LEFT JOIN inspection_period_approvals A
+                LEFT JOIN inspection_approvals A
                     ON A.approval_level = P.current_approval_level
                     AND A.inspection_id = P.inspection_id
                 LEFT JOIN approval_status S
                     ON S.approval_status_id = A.approval_status_id
-                LEFT JOIN inspection_periods P2 
+                LEFT JOIN inspection P2 
                     ON P2.po_id = P.po_id AND P2.period_number = P.period_number - 1
                 WHERE P.period_id = :period_id
                 ORDER BY P.po_id, P.period_number";
@@ -175,8 +175,8 @@ class Inspection
     public function getPeriodDetailsByPeriodIdx($periodId): ?array
     {
         $sql = "SELECT I.`rec_id`, I.`inspection_id`, I.`order_no`, I.`details`, I.`remark` 
-                FROM `inspection_period_details`I
-                INNER JOIN inspection_periods P
+                FROM `inspection_details`I
+                INNER JOIN inspection P
                     ON P.`inspection_id` = I.`inspection_id`
                 WHERE P.`period_id` = :period_id
                 ORDER BY I.`order_no`";
@@ -205,22 +205,22 @@ class Inspection
                 , po_main.is_include_vat, po_main.contract_value, po_main.contract_value_before, po_main.vat, is_deposit, deposit_percent, deposit_value
                 , working_date_from, working_date_to, working_day
                 , suppliers.supplier_name, locations.location_name
-                , inspection_period_approvals.approver_id, inspection_period_approvals.approval_level 
+                , inspection_approvals.approver_id, inspection_approvals.approval_level 
                 , U.username, U.full_name
-                FROM inspection_periods P1
+                FROM inspection P1
                 INNER JOIN po_main
                     ON P1.po_id = po_main.po_id
                 INNER JOIN suppliers
                     ON suppliers.supplier_id = po_main.supplier_id
                 INNER JOIN locations
                     ON locations.location_id = po_main.location_id   
-                INNER JOIN inspection_period_approvals
-                    ON inspection_period_approvals.approval_level = P1.current_approval_level
-                    AND inspection_period_approvals.inspection_id = P1.inspection_id
+                INNER JOIN inspection_approvals
+                    ON inspection_approvals.approval_level = P1.current_approval_level
+                    AND inspection_approvals.inspection_id = P1.inspection_id
                 INNER JOIN approval_status
-                    ON approval_status.approval_status_id = inspection_period_approvals.approval_status_id
+                    ON approval_status.approval_status_id = inspection_approvals.approval_status_id
                 INNER JOIN users U 
-                    ON U.user_id = inspection_period_approvals.approver_id
+                    ON U.user_id = inspection_approvals.approver_id
                 WHERE U.username = :username
                     AND P1.current_approval_level >1 
                 ORDER BY P1.po_id, period_number";
@@ -235,11 +235,11 @@ class Inspection
     {
         $sql = "SELECT `file_id`, `inspection_files`.`inspection_id`, `file_name`, `file_path`, `file_type`, `uploaded_at` 
                 FROM `inspection_files` 
-                INNER JOIN `inspection_periods`
-                    ON `inspection_periods`.`inspection_id` = `inspection_files`.`inspection_id`
-                WHERE `inspection_periods`.`inspection_id` = :inspection_id
-                    AND `inspection_periods`.`period_id` = :period_id
-                    AND `inspection_periods`.`po_id` = :po_id";
+                INNER JOIN `inspection`
+                    ON `inspection`.`inspection_id` = `inspection_files`.`inspection_id`
+                WHERE `inspection`.`inspection_id` = :inspection_id
+                    AND `inspection`.`period_id` = :period_id
+                    AND `inspection`.`po_id` = :po_id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
@@ -253,10 +253,10 @@ class Inspection
     {
         // --- WORKFLOW ---
         // กำหนดค่า default สำหรับ workflow step ของ inspection และ ipc (อาจจะมีหน้าจอ config) โดยที่
-        // 1. ทำการสร้าง inspection_period_approvals เมื่อมีการ save po เรียบร้อยแล้ว
-        // 2. ทำการสร้าง ipc_period_approvals เมื่อมีการ approve ใน step สุดท้ายของ inspection ในแต่ละ period  
-        // workflow_id = 1 สร้าง inspection_period_approvals
-        // workflow_id = 2 สร้าง ipc_period_approvals
+        // 1. ทำการสร้าง inspection_approvals เมื่อมีการ save po เรียบร้อยแล้ว
+        // 2. ทำการสร้าง ipc_approvals เมื่อมีการ approve ใน step สุดท้ายของ inspection ในแต่ละ period  
+        // workflow_id = 1 สร้าง inspection_approvals
+        // workflow_id = 2 สร้าง ipc_approvals
         $workflowId = 1; //ในที่นี้กำหนด workflow_id = 1
 
         $this->db->beginTransaction();
@@ -378,8 +378,8 @@ class Inspection
                     // ดึงข้อมูลไฟล์ที่จะลบ
                     $sql = "SELECT file_path
                             FROM `inspection_files` 
-                            INNER JOIN `inspection_periods`
-                                ON `inspection_files`.`inspection_id` = `inspection_periods`.`inspection_id`
+                            INNER JOIN `inspection`
+                                ON `inspection_files`.`inspection_id` = `inspection`.`inspection_id`
                             WHERE `period_id` = :period_id";
 
                     $stmt = $this->db->prepare($sql);
@@ -398,10 +398,10 @@ class Inspection
             }
 
             // 3.2 ************************* ตรวจสอบ updateItems ****************************
-            // ถ้ารายการผ่านขั้นตอนแรกใน inspection_period_approvals (เปลี่ยน approval_status_id จาก 1-pending เป็น 2-approved) แล้วจะต้องห้ามแก้ไขหรือลบ period นี้
+            // ถ้ารายการผ่านขั้นตอนแรกใน inspection_approvals (เปลี่ยน approval_status_id จาก 1-pending เป็น 2-approved) แล้วจะต้องห้ามแก้ไขหรือลบ period นี้
             // แต่ถ้า approval_status_id เปลี่ยนจาก 1-pending เป็น 0-reject จะสามารถแก้ไขหรือลบได้
             // ในขั้นตอนเริ่มต้นของ approval_type ที่เป็น submit จะไม่สามารถ reject เอกสารของตัวเองได้่  ทำได้เพียงเปลี่ยนจาก 1-pending เป็น 2-approved 
-            // เพื่อเปลี่ยน approval_type เป็นค่าอื่นที่ไม่ใช่ submit เพื่อส่งให้ผู้ดำเนินการในลำดับถัดไป เช่น จาก 1-submit เป็น verify, confirm หรือ approve ตามแต่ที่กำหนดใน inspection_period_approvals
+            // เพื่อเปลี่ยน approval_type เป็นค่าอื่นที่ไม่ใช่ submit เพื่อส่งให้ผู้ดำเนินการในลำดับถัดไป เช่น จาก 1-submit เป็น verify, confirm หรือ approve ตามแต่ที่กำหนดใน inspection_approvals
             // และในการลบจะยังคงลบจากรายการสุดท้ายก่อนเสมอ
             if (!empty($updateItems)) {
                 // UPDATE po_periods
@@ -414,8 +414,8 @@ class Inspection
                                 AND `period_id` = :period_id";
                 $stmtUpdatePoPeriod = $this->db->prepare($sql);
 
-                // UPDATE inspection_periods
-                $sql = "UPDATE `inspection_periods`
+                // UPDATE inspection
+                $sql = "UPDATE `inspection`
                         SET `workload_planned_percent` = :workload_planned_percent
                         , `interim_payment` = :interim_payment
                         , `interim_payment_percent` = :interim_payment_percent
@@ -452,7 +452,7 @@ class Inspection
 
             // 3.3 ************************* ตรวจสอบ createItems ****************************
             if (!empty($createItems)) {
-                // ดึงข้อมูล workflow step เพื่อนำ Loop สร้าง inspection_period_approvals
+                // ดึงข้อมูล workflow step เพื่อนำ Loop สร้าง inspection_approvals
                 $sql = "SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`
                         FROM `workflow_steps`
                         WHERE `workflow_id` = :workflow_id
@@ -468,18 +468,18 @@ class Inspection
                         VALUES (:po_id, :period_number, :workload_planned_percent, :interim_payment, :interim_payment_percent, :remark)";
                 $stmtCreatePoPeriods = $this->db->prepare($sql);
 
-                // INSERT INTO inspection_periods
-                $sql = "INSERT INTO `inspection_periods`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `is_paid`, `is_retention`, `workflow_id`) 
+                // INSERT INTO inspection
+                $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `is_paid`, `is_retention`, `workflow_id`) 
                         VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :is_paid, :is_retention, :workflow_id)";
                 $stmtCreateInspectionPeriods = $this->db->prepare($sql);
 
-                // INSERT inspection_period_details
-                $sql = "INSERT INTO `inspection_period_details`(`inspection_id`) 
+                // INSERT inspection_details
+                $sql = "INSERT INTO `inspection_details`(`inspection_id`) 
                         VALUES (:inspection_id)";
                 $stmtCreateInspectionPeriodDetails = $this->db->prepare($sql);
 
-                // INSERT inspection_period_approvals
-                $sql = "INSERT INTO `inspection_period_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`) 
+                // INSERT inspection_approvals
+                $sql = "INSERT INTO `inspection_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`) 
                         VALUES (:inspection_id, :period_id, :po_id, :period_number, :approval_level, :approver_id, :approval_type_id, :approval_type_text, :approval_status_id)";
                 $stmtCreateInspectApprovals = $this->db->prepare($sql);
 
@@ -617,7 +617,7 @@ class Inspection
 
             // UPDATE po_main
             $sql = <<<EOD
-                        UPDATE `inspection_periods`
+                        UPDATE `inspection`
                             SET `workload_actual_completed_percent` = :workload_actual_completed_percent
                             , `workload_remaining_percent` = :workload_remaining_percent
                             , `workload_planned_percent` = :workload_planned_percent
@@ -666,9 +666,9 @@ class Inspection
             if ($stmtInspectionPeriods->execute()) {
                 // $_SESSION['remark'] = $remark;
                 $stmtInspectionPeriods->closeCursor();
-                // INSERT inspection_period_details
+                // INSERT inspection_details
                 $sql = <<<EOD
-                            INSERT INTO `inspection_period_details`(`inspection_id`, `order_no`, `details`, `remark`) 
+                            INSERT INTO `inspection_details`(`inspection_id`, `order_no`, `details`, `remark`) 
                             VALUES (:inspection_id, :order_no, :details, :remark)
                         EOD;
                 $stmtInspectionPeriodDetails = $this->db->prepare($sql);
@@ -683,9 +683,9 @@ class Inspection
                     $stmtInspectionPeriodDetails->closeCursor();
                 }
 
-                // UPDATE inspection_period_details
+                // UPDATE inspection_details
                 $sql = <<<EOD
-                            UPDATE `inspection_period_details`
+                            UPDATE `inspection_details`
                             SET `details` = :details
                             , `remark` = :remark
                             WHERE `inspection_id` = :inspection_id
@@ -703,9 +703,9 @@ class Inspection
                     $stmtInspectionPeriodDetails->closeCursor();
                 }
 
-                // DELETE inspection_period_details
+                // DELETE inspection_details
                 $sql = <<<EOD
-                            DELETE FROM `inspection_period_details`
+                            DELETE FROM `inspection_details`
                             WHERE `inspection_id` = :inspection_id
                                 AND `rec_id` = :rec_id
                         EOD;
@@ -737,9 +737,9 @@ class Inspection
             $current_approval_level = $getData['current_approval_level'];
             $new_approval_level = $getData['new_approval_level'];
 
-            // UPDATE inspection_periods
+            // UPDATE inspection
             $sql = <<<EOD
-                        UPDATE `inspection_periods`
+                        UPDATE `inspection`
                         SET `current_approval_level` = :new_approval_level
                         WHERE `po_id` = :po_id
                             AND `period_id` = :period_id
@@ -755,9 +755,9 @@ class Inspection
                 // $_SESSION['remark'] = $remark;
                 $stmtInspectionPeriods->closeCursor();
 
-                // UPDATE inspection_period_approvals
+                // UPDATE inspection_approvals
                 $sql = <<<EOD
-                            UPDATE `inspection_period_approvals`
+                            UPDATE `inspection_approvals`
                             SET `approval_date` = NOW()
                             WHERE `inspection_id` = :inspection_id
                                 AND `approval_level` = :approval_level

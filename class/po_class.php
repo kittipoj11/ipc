@@ -84,10 +84,10 @@ class Po
     {
         // --- WORKFLOW ---
         // กำหนดค่า default สำหรับ workflow step ของ inspection และ ipc (อาจจะมีหน้าจอ config) โดยที่
-        // 1. ทำการสร้าง inspection_period_approvals เมื่อมีการ save po เรียบร้อยแล้ว
-        // 2. ทำการสร้าง ipc_period_approvals เมื่อมีการ approve ใน step สุดท้ายของ inspection ในแต่ละ period  
-        // workflow_id = 1 สร้าง inspection_period_approvals
-        // workflow_id = 2 สร้าง ipc_period_approvals
+        // 1. ทำการสร้าง inspection_approvals เมื่อมีการ save po เรียบร้อยแล้ว
+        // 2. ทำการสร้าง ipc_approvals เมื่อมีการ approve ใน step สุดท้ายของ inspection ในแต่ละ period  
+        // workflow_id = 1 สร้าง inspection_approvals
+        // workflow_id = 2 สร้าง ipc_approvals
         $workflowId = 1; //ในที่นี้กำหนด workflow_id = 1
         
         $this->db->beginTransaction();
@@ -96,6 +96,7 @@ class Po
             $poId = $headerData['po_id'] ?? 0;
 
             // 1. ตรวจสอบและจัดการข้อมูล Header (INSERT หรือ UPDATE)
+            // <begin>public function save(array $poData):int(คือค่า po_id)
             if (empty($poId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
                 // --- CREATE MODE ---
                 // ถ้าจะสร้าง id มี prefix ด้วยตนเอง สมมติให้ prefix เป็น PO เช่น $poId = uniqid('PO', true);
@@ -183,15 +184,16 @@ class Po
             if (empty($poId)) {
                 throw new Exception("Could not create or find a valid PO ID.");
             }
+            // </begin>
 
             // 2. จัดการข้อมูล Periods ตามลำดับ(D-U-C Logic)
             $deleteItems = array_filter($periodsData, fn($item) => ($item['period_crud'] ?? 'none') === 'delete');
             $updateItems = array_filter($periodsData, fn($item) => ($item['period_crud'] ?? 'none') === 'update');
             $createItems = array_filter($periodsData, fn($item) => ($item['period_crud'] ?? 'none') === 'create');
 
-            $_SESSION['delete']=$deleteItems;
-            $_SESSION['update']=$updateItems;
-            $_SESSION['create']=$createItems;
+            // $_SESSION['delete']=$deleteItems;
+            // $_SESSION['update']=$updateItems;
+            // $_SESSION['create']=$createItems;
 
             $isPaid=0;
             $isRetention=0;
@@ -209,8 +211,8 @@ class Po
                     // ดึงข้อมูลไฟล์ที่จะลบ
                     $sql = "SELECT file_path
                             FROM `inspection_files` 
-                            INNER JOIN `inspection_periods`
-                                ON `inspection_files`.`inspection_id` = `inspection_periods`.`inspection_id`
+                            INNER JOIN `inspection`
+                                ON `inspection_files`.`inspection_id` = `inspection`.`inspection_id`
                             WHERE `period_id` = :period_id";
 
                     $stmt = $this->db->prepare($sql);
@@ -229,10 +231,10 @@ class Po
             }
 
             // 3.2 ************************* ตรวจสอบ updateItems ****************************
-            // ถ้ารายการผ่านขั้นตอนแรกใน inspection_period_approvals (เปลี่ยน approval_status_id จาก 1-pending เป็น 2-approved) แล้วจะต้องห้ามแก้ไขหรือลบ period นี้
+            // ถ้ารายการผ่านขั้นตอนแรกใน inspection_approvals (เปลี่ยน approval_status_id จาก 1-pending เป็น 2-approved) แล้วจะต้องห้ามแก้ไขหรือลบ period นี้
             // แต่ถ้า approval_status_id เปลี่ยนจาก 1-pending เป็น 0-reject จะสามารถแก้ไขหรือลบได้
             // ในขั้นตอนเริ่มต้นของ approval_type ที่เป็น submit จะไม่สามารถ reject เอกสารของตัวเองได้่  ทำได้เพียงเปลี่ยนจาก 1-pending เป็น 2-approved 
-            // เพื่อเปลี่ยน approval_type เป็นค่าอื่นที่ไม่ใช่ submit เพื่อส่งให้ผู้ดำเนินการในลำดับถัดไป เช่น จาก 1-submit เป็น verify, confirm หรือ approve ตามแต่ที่กำหนดใน inspection_period_approvals
+            // เพื่อเปลี่ยน approval_type เป็นค่าอื่นที่ไม่ใช่ submit เพื่อส่งให้ผู้ดำเนินการในลำดับถัดไป เช่น จาก 1-submit เป็น verify, confirm หรือ approve ตามแต่ที่กำหนดใน inspection_approvals
             // และในการลบจะยังคงลบจากรายการสุดท้ายก่อนเสมอ
             if (!empty($updateItems)) {
                 // UPDATE po_periods
@@ -245,8 +247,8 @@ class Po
                                 AND `period_id` = :period_id";
                 $stmtUpdatePoPeriod = $this->db->prepare($sql);
 
-                // UPDATE inspection_periods
-                $sql = "UPDATE `inspection_periods`
+                // UPDATE inspection
+                $sql = "UPDATE `inspection`
                         SET `workload_planned_percent` = :workload_planned_percent
                         , `interim_payment` = :interim_payment
                         , `interim_payment_percent` = :interim_payment_percent
@@ -283,7 +285,7 @@ class Po
 
             // 3.3 ************************* ตรวจสอบ createItems ****************************
             if (!empty($createItems)) {
-                // ดึงข้อมูล workflow step เพื่อนำ Loop สร้าง inspection_period_approvals
+                // ดึงข้อมูล workflow step เพื่อนำ Loop สร้าง inspection_approvals
                 $sql = "SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`
                         FROM `workflow_steps`
                         WHERE `workflow_id` = :workflow_id
@@ -299,18 +301,18 @@ class Po
                         VALUES (:po_id, :period_number, :workload_planned_percent, :interim_payment, :interim_payment_percent, :remark)";
                 $stmtCreatePoPeriods = $this->db->prepare($sql);
 
-                // INSERT INTO inspection_periods
-                $sql = "INSERT INTO `inspection_periods`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `is_paid`, `is_retention`, `workflow_id`) 
+                // INSERT INTO inspection
+                $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `is_paid`, `is_retention`, `workflow_id`) 
                         VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :is_paid, :is_retention, :workflow_id)";
                 $stmtCreateInspectionPeriods = $this->db->prepare($sql);
 
-                // INSERT inspection_period_details
-                $sql = "INSERT INTO `inspection_period_details`(`inspection_id`) 
+                // INSERT inspection_details
+                $sql = "INSERT INTO `inspection_details`(`inspection_id`) 
                         VALUES (:inspection_id)";
                 $stmtCreateInspectionPeriodDetails = $this->db->prepare($sql);
 
-                // INSERT inspection_period_approvals
-                $sql = "INSERT INTO `inspection_period_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`) 
+                // INSERT inspection_approvals
+                $sql = "INSERT INTO `inspection_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`) 
                         VALUES (:inspection_id, :period_id, :po_id, :period_number, :approval_level, :approver_id, :approval_type_id, :approval_type_text, :approval_status_id)";
                 $stmtCreateInspectApprovals = $this->db->prepare($sql);
 
@@ -381,10 +383,10 @@ class Po
         try {
             $sql = "SELECT file_path
                     FROM `inspection_files` 
-                    INNER JOIN `inspection_periods`
-                        ON `inspection_files`.`inspection_id` = `inspection_periods`.`inspection_id`
+                    INNER JOIN `inspection`
+                        ON `inspection_files`.`inspection_id` = `inspection`.`inspection_id`
                     INNER JOIN `po_periods`
-                        ON `po_periods`.`period_id` = `inspection_periods`.`period_id`
+                        ON `po_periods`.`period_id` = `inspection`.`period_id`
                     WHERE `po_periods`.`po_id` = :po_id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);

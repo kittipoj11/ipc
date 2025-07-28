@@ -160,10 +160,10 @@ CREATE TABLE `inspection_files` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inspection_periods`
+-- Table structure for table `inspection`
 --
 
-CREATE TABLE `inspection_periods` (
+CREATE TABLE `inspection` (
   `inspection_id` int(11) UNSIGNED NOT NULL,
   `period_id` int(11) DEFAULT NULL,
   `po_id` int(11) DEFAULT NULL,
@@ -192,10 +192,10 @@ CREATE TABLE `inspection_periods` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Dumping data for table `inspection_periods`
+-- Dumping data for table `inspection`
 --
 
-INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `workload_accumulated_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status_id`, `is_paid`, `is_retention`, `remark`, `inspection_status`, `current_approval_level`, `disbursement`, `workflow_id`) VALUES
+INSERT INTO `inspection` (`inspection_id`, `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `workload_actual_completed_percent`, `workload_remaining_percent`, `workload_accumulated_percent`, `interim_payment`, `interim_payment_percent`, `interim_payment_less_previous`, `interim_payment_less_previous_percent`, `interim_payment_accumulated`, `interim_payment_accumulated_percent`, `interim_payment_remain`, `interim_payment_remain_percent`, `retention_value`, `plan_status_id`, `is_paid`, `is_retention`, `remark`, `inspection_status`, `current_approval_level`, `disbursement`, `workflow_id`) VALUES
 (1, 1, 1, 1, '30.00', '30.00', '70.00', '0.00', '20000.00', '20.00', '0.00', '0.00', '20000.00', '18.69', '87000.00', '81.31', '0.00', 1, 0, 0, '', 1, 1, -1, 1),
 (2, 2, 1, 2, '30.00', NULL, NULL, '0.00', '30000.00', '30.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0, NULL, 1, 1, -1, 1),
 (3, 3, 1, 3, '40.00', NULL, NULL, '0.00', '50000.00', '50.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0, NULL, 1, 1, -1, 1);
@@ -203,10 +203,10 @@ INSERT INTO `inspection_periods` (`inspection_id`, `period_id`, `po_id`, `period
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inspection_period_approvals`
+-- Table structure for table `inspection_approvals`
 --
 
-CREATE TABLE `inspection_period_approvals` (
+CREATE TABLE `inspection_approvals` (
   `inspection_approval_id` int(11) UNSIGNED NOT NULL,
   `inspection_id` int(11) UNSIGNED DEFAULT NULL,
   `period_id` int(11) DEFAULT NULL,
@@ -222,10 +222,10 @@ CREATE TABLE `inspection_period_approvals` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Dumping data for table `inspection_period_approvals`
+-- Dumping data for table `inspection_approvals`
 --
 
-INSERT INTO `inspection_period_approvals` (`inspection_approval_id`, `inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`, `approval_date`, `approval_comment`) VALUES
+INSERT INTO `inspection_approvals` (`inspection_approval_id`, `inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`, `approval_date`, `approval_comment`) VALUES
 (1, 1, 1, 1, 1, 1, 1, 1, 'submit', 1, NULL, NULL),
 (2, 1, 1, 1, 1, 2, 3, 4, 'approve', 1, NULL, NULL),
 (3, 2, 2, 1, 2, 1, 1, 1, 'submit', 1, NULL, NULL),
@@ -236,10 +236,10 @@ INSERT INTO `inspection_period_approvals` (`inspection_approval_id`, `inspection
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inspection_period_details`
+-- Table structure for table `inspection_details`
 --
 
-CREATE TABLE `inspection_period_details` (
+CREATE TABLE `inspection_details` (
   `rec_id` int(11) UNSIGNED NOT NULL,
   `inspection_id` int(11) UNSIGNED DEFAULT NULL,
   `order_no` int(11) DEFAULT 1,
@@ -248,10 +248,10 @@ CREATE TABLE `inspection_period_details` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
--- Dumping data for table `inspection_period_details`
+-- Dumping data for table `inspection_details`
 --
 
-INSERT INTO `inspection_period_details` (`rec_id`, `inspection_id`, `order_no`, `details`, `remark`) VALUES
+INSERT INTO `inspection_details` (`rec_id`, `inspection_id`, `order_no`, `details`, `remark`) VALUES
 (1, 1, 1, 'งานเดินท่อx', 'aaa'),
 (2, 2, 1, NULL, NULL),
 (3, 3, 1, NULL, NULL);
@@ -281,10 +281,10 @@ INSERT INTO `inspection_status` (`inspection_status_id`, `inspection_status_name
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ipc_periods`
+-- Table structure for table `ipc`
 --
 
-CREATE TABLE `ipc_periods` (
+CREATE TABLE `ipc` (
   `ipc_id` int(11) UNSIGNED NOT NULL,
   `inspection_id` int(11) UNSIGNED NOT NULL,
   `period_id` int(11) DEFAULT NULL,
@@ -313,10 +313,10 @@ CREATE TABLE `ipc_periods` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ipc_period_approvals`
+-- Table structure for table `ipc_approvals`
 --
 
-CREATE TABLE `ipc_period_approvals` (
+CREATE TABLE `ipc_approvals` (
   `ipc_approval_id` int(11) UNSIGNED NOT NULL,
   `ipc_id` int(11) UNSIGNED DEFAULT NULL,
   `inspection_id` int(11) UNSIGNED DEFAULT NULL,
@@ -841,24 +841,24 @@ ALTER TABLE `inspection_files`
   ADD KEY `inspection_id` (`inspection_id`);
 
 --
--- Indexes for table `inspection_periods`
+-- Indexes for table `inspection`
 --
-ALTER TABLE `inspection_periods`
+ALTER TABLE `inspection`
   ADD PRIMARY KEY (`inspection_id`),
   ADD KEY `plan_status` (`plan_status_id`),
-  ADD KEY `inspection_periods_ibfk_1` (`period_id`);
+  ADD KEY `inspection_ibfk_1` (`period_id`);
 
 --
--- Indexes for table `inspection_period_approvals`
+-- Indexes for table `inspection_approvals`
 --
-ALTER TABLE `inspection_period_approvals`
+ALTER TABLE `inspection_approvals`
   ADD PRIMARY KEY (`inspection_approval_id`),
   ADD KEY `inspection_approvals_ibfk_1` (`inspection_id`);
 
 --
--- Indexes for table `inspection_period_details`
+-- Indexes for table `inspection_details`
 --
-ALTER TABLE `inspection_period_details`
+ALTER TABLE `inspection_details`
   ADD PRIMARY KEY (`rec_id`),
   ADD KEY `inspect_period_id` (`inspection_id`);
 
@@ -869,16 +869,16 @@ ALTER TABLE `inspection_status`
   ADD PRIMARY KEY (`inspection_status_id`);
 
 --
--- Indexes for table `ipc_periods`
+-- Indexes for table `ipc`
 --
-ALTER TABLE `ipc_periods`
+ALTER TABLE `ipc`
   ADD PRIMARY KEY (`ipc_id`),
-  ADD KEY `ipc_periods_ibfk_1` (`period_id`);
+  ADD KEY `ipc_ibfk_1` (`period_id`);
 
 --
--- Indexes for table `ipc_period_approvals`
+-- Indexes for table `ipc_approvals`
 --
-ALTER TABLE `ipc_period_approvals`
+ALTER TABLE `ipc_approvals`
   ADD PRIMARY KEY (`ipc_approval_id`),
   ADD KEY `ipc_approvals_ibfk_1` (`ipc_id`);
 
@@ -1024,33 +1024,33 @@ ALTER TABLE `inspection_files`
   MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `inspection_periods`
+-- AUTO_INCREMENT for table `inspection`
 --
-ALTER TABLE `inspection_periods`
+ALTER TABLE `inspection`
   MODIFY `inspection_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `inspection_period_approvals`
+-- AUTO_INCREMENT for table `inspection_approvals`
 --
-ALTER TABLE `inspection_period_approvals`
+ALTER TABLE `inspection_approvals`
   MODIFY `inspection_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `inspection_period_details`
+-- AUTO_INCREMENT for table `inspection_details`
 --
-ALTER TABLE `inspection_period_details`
+ALTER TABLE `inspection_details`
   MODIFY `rec_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `ipc_periods`
+-- AUTO_INCREMENT for table `ipc`
 --
-ALTER TABLE `ipc_periods`
+ALTER TABLE `ipc`
   MODIFY `ipc_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `ipc_period_approvals`
+-- AUTO_INCREMENT for table `ipc_approvals`
 --
-ALTER TABLE `ipc_period_approvals`
+ALTER TABLE `ipc_approvals`
   MODIFY `ipc_approval_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -1127,25 +1127,25 @@ ALTER TABLE `files`
 -- Constraints for table `inspection_files`
 --
 ALTER TABLE `inspection_files`
-  ADD CONSTRAINT `inspection_files_ibfk_1` FOREIGN KEY (`inspection_id`) REFERENCES `inspection_periods` (`inspection_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `inspection_files_ibfk_1` FOREIGN KEY (`inspection_id`) REFERENCES `inspection` (`inspection_id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `inspection_periods`
+-- Constraints for table `inspection`
 --
-ALTER TABLE `inspection_periods`
-  ADD CONSTRAINT `inspection_periods_ibfk_1` FOREIGN KEY (`period_id`) REFERENCES `po_periods` (`period_id`) ON DELETE CASCADE;
+ALTER TABLE `inspection`
+  ADD CONSTRAINT `inspection_ibfk_1` FOREIGN KEY (`period_id`) REFERENCES `po_periods` (`period_id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `inspection_period_approvals`
+-- Constraints for table `inspection_approvals`
 --
-ALTER TABLE `inspection_period_approvals`
-  ADD CONSTRAINT `inspection_period_approvals_ibfk_1` FOREIGN KEY (`inspection_id`) REFERENCES `inspection_periods` (`inspection_id`) ON DELETE CASCADE;
+ALTER TABLE `inspection_approvals`
+  ADD CONSTRAINT `inspection_approvals_ibfk_1` FOREIGN KEY (`inspection_id`) REFERENCES `inspection` (`inspection_id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `inspection_period_details`
+-- Constraints for table `inspection_details`
 --
-ALTER TABLE `inspection_period_details`
-  ADD CONSTRAINT `inspection_period_details_ibfk_1` FOREIGN KEY (`inspection_id`) REFERENCES `inspection_periods` (`inspection_id`) ON DELETE CASCADE;
+ALTER TABLE `inspection_details`
+  ADD CONSTRAINT `inspection_details_ibfk_1` FOREIGN KEY (`inspection_id`) REFERENCES `inspection` (`inspection_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `menu_items`

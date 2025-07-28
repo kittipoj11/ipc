@@ -509,4 +509,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/inspection_period_form.js"></script>
+    <script src="javascript/inspection_form.js"></script>

@@ -39,5 +39,5 @@ CREATE TABLE IF NOT EXISTS files (
 --   `file_type` varchar(100) NOT NULL,
 --   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp(),
 --   PRIMARY KEY (`file_id`),
---   FOREIGN KEY (inspection_id) REFERENCES inspection_periods(inspection_id) ON DELETE CASCADE
+--   FOREIGN KEY (inspection_id) REFERENCES inspection(inspection_id) ON DELETE CASCADE
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;

@@ -9,7 +9,7 @@ class Ipc
         $this->db = $pdoConnection;
     }
 
-    // ดึงข้อมูลจาก po_main ที่มีข้อมูลใน ipc_periods อย่างน้อย 1 รายการ  และจะ return ค่าออกไปเป็น array
+    // ดึงข้อมูลจาก po_main ที่มีข้อมูลใน ipc อย่างน้อย 1 รายการ  และจะ return ค่าออกไปเป็น array
     public function getAllPo(): array
     {
         $sql = "SELECT DISTINCT O.po_id, po_number, O.project_name, O.supplier_id, O.location_id
@@ -20,7 +20,7 @@ class Ipc
                 , S.supplier_name
                 , L.location_name
                 FROM po_main O
-                INNER JOIN ipc_periods I
+                INNER JOIN ipc I
                     ON I.po_id = O.po_id
                 INNER JOIN suppliers S
                     ON S.supplier_id = O.supplier_id
@@ -72,7 +72,7 @@ class Ipc
             , contractor, contract_value, total_value_of_interim_payment, less_previous_interim_payment, net_value_of_current_claim
             , less_retension_exclude_vat, net_amount_due_for_payment, total_value_of_retention, total_value_of_certification_made
             , resulting_balance_of_contract_sum_outstanding, submit_by, approved1_by, approved2_by, remark, workflow_id 
-            FROM ipc_periods
+            FROM ipc
             WHERE po_id = :po_id
             ORDER BY period_number";
         $stmt = $this->db->prepare($sql);
@@ -91,7 +91,7 @@ class Ipc
                 , O.working_date_from, O.working_date_to, O.working_day
                 , S.supplier_name, L.location_name
                 FROM po_main O
-                INNER JOIN inspection_periods P
+                INNER JOIN inspection P
                     ON P.po_id = O.po_id
                 INNER JOIN suppliers S
                     ON S.supplier_id = O.supplier_id
@@ -114,8 +114,8 @@ class Ipc
     public function getPeriodDetailsByPeriodId($periodId): ?array
     {
         $sql = "SELECT I.`rec_id`, I.`inspection_id`, I.`order_no`, I.`details`, I.`remark` 
-                FROM `inspection_period_details`I
-                INNER JOIN inspection_periods P
+                FROM `inspection_details`I
+                INNER JOIN inspection P
                     ON P.`inspection_id` = I.`inspection_id`
                 WHERE P.`period_id` = :period_id
                 ORDER BY I.`order_no`";
@@ -131,7 +131,7 @@ class Ipc
 
     public function getPeriodByPeriodId(int $periodId): ?array
     {
-        // 1. ดึงข้อมูลของ inspection_periods ที่ต้องการ
+        // 1. ดึงข้อมูลของ inspection ที่ต้องการ
         $sql = "SELECT P.inspection_id, P.period_id, P.po_id, P.period_number
                 , P.workload_planned_percent, P.workload_actual_completed_percent, P.workload_remaining_percent
                 , P.interim_payment, P.interim_payment_percent
@@ -142,15 +142,15 @@ class Ipc
                 , P.remark, P.inspection_status, P.current_approval_level, P.disbursement, P.workflow_id
                 , A.approver_id, A.approval_level 
                 , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
-                FROM inspection_periods P
+                FROM inspection P
                 INNER JOIN po_main O
                     ON P.po_id = O.po_id
-                LEFT JOIN inspection_period_approvals A
+                LEFT JOIN inspection_approvals A
                     ON A.approval_level = P.current_approval_level
                     AND A.inspection_id = P.inspection_id
                 LEFT JOIN approval_status S
                     ON S.approval_status_id = A.approval_status_id
-                LEFT JOIN inspection_periods P2 
+                LEFT JOIN inspection P2 
                     ON P2.po_id = P.po_id AND P2.period_number = P.period_number - 1
                 WHERE P.period_id = :period_id
                 ORDER BY P.po_id, P.period_number";
@@ -173,7 +173,7 @@ class Ipc
         // 5. ดึงข้อมูล Period Approvals ของ period_id ที่มี approval_level = current_approval_level
         $sql = "SELECT inspection_approval_id, inspection_id, period_id, po_id, period_number
                 , approval_level, approver_id, approval_type_id, approval_type_text, approval_status_id, approval_date, approval_comment 
-                FROM inspection_period_approvals 
+                FROM inspection_approvals 
                 WHERE period_id = :period_id
                 AND approval_level = :approval_level";
         $stmt = $this->db->prepare($sql);
@@ -184,7 +184,7 @@ class Ipc
 
         // 6. ดึงข้อมูล max ของ approval_level ใน Period Approvals ของ period_id
         $sql = "SELECT `inspection_id`, `period_id`, `po_id`, max(`approval_level`) as max_approval_level
-                FROM `inspection_period_approvals` 
+                FROM `inspection_approvals` 
                 WHERE period_id = :period_id
                 GROUP by `inspection_id`, `period_id`, `po_id`";
         $stmt = $this->db->prepare($sql);
@@ -212,7 +212,7 @@ class Ipc
         // 1. ตรวจสอบและจัดการข้อมูล (INSERT หรือ UPDATE)
         if (empty($ipcId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
             // --- INSERT MODE ---
-            $sql = "INSERT INTO ipc_periods(po_id, period_id, inspection_id, period_number, project_name, contractor, contract_value
+            $sql = "INSERT INTO ipc(po_id, period_id, inspection_id, period_number, project_name, contractor, contract_value
                     , total_value_of_interim_payment, less_previous_interim_payment, net_value_of_current_claim, less_retension_exclude_vat
                     , net_amount_due_for_payment, total_value_of_retention, total_value_of_certification_made, resulting_balance_of_contract_sum_outstanding
                     , remark, workflow_id )
@@ -246,7 +246,7 @@ class Ipc
             return (int)$ipcId;
         } else {
             // --- UPDATE MODE ---
-            $sql = "UPDATE `ipc_periods`
+            $sql = "UPDATE `ipc`
                     SET `remark` = :remark
                     WHERE `ipc_id` = :ipc_id";
     

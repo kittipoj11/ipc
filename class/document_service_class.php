@@ -1,0 +1,85 @@
+<?php
+@session_start();
+// require_once 'config.php';
+require_once 'connection_class.php';
+require_once 'po_class.php';
+require_once 'inspection_class.php';
+
+class DocumentService
+{
+    private $db;
+    private $po;
+    private $inspection;
+
+    public function __construct(PDO $pdoConnection, Inspection $inspection, Po $po)
+    {
+        $this->db = $pdoConnection;
+        $this->po = $po;
+        $this->inspection = $inspection;
+    }
+
+    public function managePoAndInspection(array $poData): bool
+    {
+        try {
+            $this->db->beginTransaction();
+
+            // $this->po->save($poData);
+            // $this->inspection->updateApprovalLevel($poData);
+
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            // สามารถบันทึก error หรือโยน exception ต่อไปได้
+            // error_log($e->getMessage());
+            return false;
+        }
+    }
+
+}
+/*Example
+class RegistrationService {
+    private $db;
+    private $userRepo;
+    private $logRepo;
+
+    public function __construct(PDO $db, UserRepository $userRepo, LogRepository $logRepo) {
+        $this->db = $db;
+        $this->userRepo = $userRepo;
+        $this->logRepo = $logRepo;
+    }
+
+    public function registerNewUser(string $name, string $email): bool {
+        try {
+            $this->db->beginTransaction();
+
+            // ขั้นตอนที่ 1: สร้างผู้ใช้
+            $userId = $this->userRepo->create($name, $email);
+
+            // ขั้นตอนที่ 2: บันทึก Log
+            $this->logRepo->create($userId, 'USER_REGISTERED');
+            
+            // ขั้นตอนอื่นๆ ที่อาจเพิ่มเข้ามาในอนาคต...
+
+            $this->db->commit();
+            return true;
+
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            // สามารถบันทึก error หรือโยน exception ต่อไปได้
+            // error_log($e->getMessage());
+            return false;
+        }
+    }
+}
+*/
+// $stmt = $conn->prepare('select ...where :');
+// $stmt->bindParam(':building_id', $building_id, PDO::PARAM_STR);
+// $stmt->bindParam(':building_name', $building_name, PDO::PARAM_STR);
+// $stmt->bindParam(':is_active', $is_active, PDO::PARAM_BOOL);
+// $stmt->execute();
+// $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);

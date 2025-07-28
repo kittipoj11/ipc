@@ -37,7 +37,7 @@ $(document).ready(function () {
     const po_id = $(this).closest("tr").data("po-id");
     const period_id = $(this).closest("tr").data("period-id");
     const inspection_id = $(this).closest("tr").data("inspection-id");
-    window.location.href = `inspection_period_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
+    window.location.href = `inspection_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
   });
 
   $("#btnCancel").click(function () {
