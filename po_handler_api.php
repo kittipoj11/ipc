@@ -9,10 +9,14 @@ header('Content-Type: application/json');
 require_once 'config.php';
 require_once 'class/connection_class.php';
 require_once 'class/po_class.php';
+require_once 'class/inspection_class.php';
+require_once 'class/document_service_class.php';
 
 $connection = new Connection;
 $pdo = $connection->getDbConnection();
 $po = new Po($pdo);
+$inspection = new Inspection($pdo);
+$doc = new DocumentService($pdo,$po,$inspection);
 
 $requestData = json_decode(file_get_contents('php://input'), true);
 // $_SESSION['req data1']=$requestData;
@@ -23,7 +27,8 @@ if (isset($requestData['action']) && $requestData['action'] == 'save') {
         throw new Exception('Invalid data structure.');
     }
     // ★★★ เรียกใช้เมธอด save เดียว จบ! ★★★
-    $savedPoId = $po->save($requestData['headerData'], $requestData['periodsData']);
+    // $savedPoId = $po->save($requestData['headerData'], $requestData['periodsData']);
+    $savedPoId = $doc->managePoAndInspection($requestData);
     
     $response = [
         'status' => 'success',

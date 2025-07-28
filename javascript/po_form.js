@@ -237,30 +237,6 @@ $(document).ready(function () {
   $("#myForm").on("submit", function (e) {// $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();
     // const action = { action: "save" };
-    const periodsData = [];
-
-    $("#tbody-period tr").each(function () {
-      const row = $(this);
-
-      // สร้าง object สำหรับเก็บข้อมูลของแถวนี้
-      // row.removeData("crud"); ทำการ clear ค่า data-* ที่อยู่ใน cache ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
-      const periodRecord = {
-        period_id: row.attr("data-period-id"), // ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
-        period_crud: row.attr("data-crud"), //
-        period_number: row.find('input[name="period_number"]').val(), // ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
-        workload_planned_percent: row
-          .find('input[name="workload_planned_percent"]')
-          .val(),
-        interim_payment: row.find('input[name="interim_payment"]').val(),
-        interim_payment_percent: row
-          .find('input[name="interim_payment_percent"]')
-          .val(),
-        remark: row.find('input[name="remark"]').val(),
-        crud: row.find('input[name="crud"]').val(),
-      };
-      // เพิ่ม object ของแถวนี้เข้าไปใน array หลัก
-      periodsData.push(periodRecord);
-    });
 
     const headerData = {
       po_id: $("#po_id").val(),
@@ -286,15 +262,29 @@ $(document).ready(function () {
         .length, //จำนวนตรงนี้จะไม่เอารายการที่ลบไป
     };
 
-    // if (dataToSend.length === 0) {
-    //   alert("ไม่มีการเปลี่ยนแปลงข้อมูลที่จะบันทึก");
-    //   return;
-    // }
+    const periodsData = [];
+    $("#tbody-period tr").each(function () {
+      const row = $(this);
 
-    // console.log("Data to be sent (number_of_period):", periodsData.length);
-    // console.log("Data to be sent (action):", action);
-    // console.log("Data to be sent (headerData):", headerData);
-    // console.log("Data to be sent (periods):", periodsData);
+      // สร้าง object สำหรับเก็บข้อมูลของแถวนี้
+      // row.removeData("crud"); ทำการ clear ค่า data-* ที่อยู่ใน cache ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
+      const periodRecord = {
+        period_id: row.attr("data-period-id"), // ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
+        period_crud: row.attr("data-crud"), //
+        period_number: row.find('input[name="period_number"]').val(), // ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
+        workload_planned_percent: row
+          .find('input[name="workload_planned_percent"]')
+          .val(),
+        interim_payment: row.find('input[name="interim_payment"]').val(),
+        interim_payment_percent: row
+          .find('input[name="interim_payment_percent"]')
+          .val(),
+        remark: row.find('input[name="remark"]').val(),
+        crud: row.find('input[name="crud"]').val(),
+      };
+      // เพิ่ม object ของแถวนี้เข้าไปใน array หลัก
+      periodsData.push(periodRecord);
+    });
 
     const data_sent = {
       headerData: headerData,
