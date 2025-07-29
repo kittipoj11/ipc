@@ -250,11 +250,11 @@ $(document).ready(function () {
       contract_value: parseFloat($("#contract_value").val() ?? 0),
       vat: $("#vat").val() ?? 0,
       is_include_vat: 1,
-      is_deposit: $("#is_deposit").val(),
-      deposit_value:
-        (parseFloat($("#deposit_percent").val() ?? 0) *
-          parseFloat($("#contract_value").val() ?? 0)) /
-        100,
+      // is_deposit: $("#is_deposit").val(),
+      deposit_percent: $("#deposit_percent").val() ?? 0,
+      deposit_value: (parseFloat($("#deposit_percent").val() ?? 0) * parseFloat($("#contract_value").val() ?? 0)) / 100,
+      retention_percent: $("#retention_percent").val() ?? 0,
+      retention_value: (parseFloat($("#retention_percent").val() ?? 0) * parseFloat($("#contract_value").val() ?? 0)) / 100,
       working_date_from: $("#working_date_from").val(),
       working_date_to: $("#working_date_to").val(),
       working_day: parseFloat($("#working_day").val() ?? 0),
@@ -292,13 +292,14 @@ $(document).ready(function () {
       action: "save",
     };
     // data_sent['action'] = "save";
-    // console.log("Data to be sent:", JSON.stringify(data_sent));
-    // console.log("Data to be sent:", data_sent);
+    console.log("Data to be sent:", JSON.stringify(data_sent));
+    console.log("Data to be sent:", data_sent);
     // return;
     $.ajax({
       url: "po_handler_api.php",
       type: "POST",
       contentType: "application/json",
+      dataType:'json',
       data: JSON.stringify(data_sent),
     })
       .done(function (result) {

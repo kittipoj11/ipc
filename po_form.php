@@ -176,16 +176,18 @@ require_once 'auth.php';
                         <label for="vat" class="input-group-text">VAT</label>
                         <input type="number" step="0.01" class="form-control" name="vat" id="vat" value="<?= (isset($rsPoMain['vat']) ? $rsPoMain['vat'] : '') ?>" data-vat_rate=<?= VAT_RATE ?> readonly>
                       </div>
+                    </div>
 
-                      <div class="col-2 input-group input-group-sm">
-                        <div class="form-check">
-                          <?php
-                          $checked_attr = isset($rsPoMain['deposit_percent']) ? ($rsPoMain['is_deposit'] ? "checked" : "") : "";
-                          ?>
-                          <input class="form-check-input" type="checkbox" name="is_deposit" id="is_deposit" <?= $checked_attr ?>>
-                        </div>
-                        <label class="form-check-label" for="deposit_percent">เงินมัดจำ</label>
-                        <input type="number" step="0.01" class="form-control" name="deposit_percent" id="deposit_percent" value="<?= (isset($rsPoMain['deposit_percent']) ? $rsPoMain['deposit_percent'] : '') ?>">%
+                    <div class="row m-1">
+
+                      <div class="col-4 input-group input-group-sm">
+                        <label class="input-group-text" for="deposit_percent">Deposit(%)</label>
+                        <input type="number" step="0.01" class="form-control" name="deposit_percent" id="deposit_percent" value="<?= (isset($rsPoMain['deposit_percent']) ? $rsPoMain['deposit_percent'] : 0) ?>">
+                      </div>
+
+                      <div class="col-4 input-group input-group-sm">
+                        <label class="input-group-text" for="retention_percent">Retention(%)</label>
+                        <input type="number" step="0.01" class="form-control" name="retention_percent" id="retention_percent" value="<?= (isset($rsPoMain['retention_percent']) ? $rsPoMain['retention_percent'] : 0) ?>">
                       </div>
                     </div>
                     <hr>
@@ -234,7 +236,7 @@ require_once 'auth.php';
                           <thead>
                             <tr>
                               <th class="p-1" width="5%">งวดงาน</th>
-                              <th class="p-1" width="15%">งานที่แล้วเสร็จตามแผน(%)</th>
+                              <th class="p-1" width="15%">ปริมาณงานตามแผน(%)</th>
                               <th class="p-1" width="15%">จำนวนเงิน</th>
                               <th class="p-1" width="10%">คิดเป็น(%)</th>
                               <th class="p-1">เงื่อนไขการจ่ายเงิน</th>

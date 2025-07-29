@@ -16,7 +16,7 @@ class Po
     {
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                     , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
-                    , `is_deposit`, `deposit_percent`, `deposit_value`
+                    , `deposit_percent`, `deposit_value`, `retention_percent`, `retention_value`
                     , `working_date_from`, `working_date_to`, `working_day`
                     , `create_by`, `create_date`, `number_of_period`
                     , s.`supplier_name`
@@ -39,7 +39,7 @@ class Po
         // ดึงข้อมูลจากตารางหลัก - po_main
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                 , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
-                , `is_deposit`, `deposit_percent`, `deposit_value`
+                , `deposit_percent`, `deposit_value`, `retention_percent`, `retention_value`
                 , `working_date_from`, `working_date_to`, `working_day`
                 , `create_by`, `create_date`, `number_of_period`
                 , s.`supplier_name`
@@ -80,46 +80,54 @@ class Po
         return $rs;
     }
 
-    public function save(array $headerData, array $periodsData): int
+    public function save(array $data): int
     {
-        $poId = $headerData['po_id'] ?? 0;
+        // $_SESSION['data AAAAAAAAAAAAAAAAAAAAAA']=$data;
+        $poId = $data['po_id'] ?? 0;
+        // $_SESSION['po id BBBBBBBBBBBBBBBBBBBBBB']=$data;
         if (empty($poId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
             // --- CREATE MODE ---
+            // $_SESSION['CREATE MODE XXXXXXXXXXXXXXXXXXXx']=$data;
             // ถ้าจะสร้าง id มี prefix ด้วยตนเอง สมมติให้ prefix เป็น PO เช่น $poId = uniqid('PO', true);
             // INSERT INTO po_main"
             $sql = "INSERT INTO `po_main`(`po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`
-                    , `is_include_vat`, `contract_value`, `contract_value_before`, `vat`, `is_deposit`, `deposit_percent`, `deposit_value`
+                    , `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
+                    , `deposit_percent`, `deposit_value`, `retention_percent`, `retention_value`
                     , `working_date_from`, `working_date_to`, `working_day`, `create_by`, `number_of_period`, `workflow_id`) 
                     VALUES(:po_number, :project_name, :supplier_id, :location_id, :working_name_th, :working_name_en
-                    , :is_include_vat, :contract_value, :contract_value_before, :vat, :is_deposit, :deposit_percent, :deposit_value
+                    , :is_include_vat, :contract_value, :contract_value_before, :vat
+                    , :deposit_percent, :deposit_value, :retention_percent, :retention_value
                     , :working_date_from, :working_date_to, :working_day, :create_by, :number_of_period, :workflow_id)";
 
-            $stmtCreatePoMain = $this->db->prepare($sql);
-            $stmtCreatePoMain->bindParam(':po_number', $headerData['po_number'], PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':project_name', $headerData['project_name'], PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':supplier_id', $headerData['supplier_id'],  PDO::PARAM_INT);
-            $stmtCreatePoMain->bindParam(':location_id', $headerData['location_id'], PDO::PARAM_INT);
-            $stmtCreatePoMain->bindParam(':working_name_th', $headerData['working_name_th'], PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':working_name_en', $headerData['working_name_en'], PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':is_include_vat', $headerData['is_include_vat'], PDO::PARAM_BOOL);
-            $stmtCreatePoMain->bindParam(':contract_value_before', $headerData['contract_value_before'], PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':contract_value', $headerData['contract_value'], PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':vat', $headerData['vat'], PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':is_deposit', $headerData['is_deposit'], PDO::PARAM_BOOL);
-            $stmtCreatePoMain->bindParam(':deposit_percent', $headerData['deposit_percent'], PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':deposit_value', $deposit_value, PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':working_date_from', $headerData['working_date_from'], PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':working_date_to', $headerData['working_date_to'], PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':working_day', $headerData['working_day'], PDO::PARAM_INT);
-            $stmtCreatePoMain->bindParam(':number_of_period', $headerData['number_of_period'], PDO::PARAM_INT);
-            $stmtCreatePoMain->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
-            $stmtCreatePoMain->bindParam(':workflow_id', $workflowId, PDO::PARAM_INT);
-            $stmtCreatePoMain->execute();
-            $stmtCreatePoMain->closeCursor();
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':po_number', $data['po_number'], PDO::PARAM_STR);
+            $stmt->bindParam(':project_name', $data['project_name'], PDO::PARAM_STR);
+            $stmt->bindParam(':supplier_id', $data['supplier_id'],  PDO::PARAM_INT);
+            $stmt->bindParam(':location_id', $data['location_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':working_name_th', $data['working_name_th'], PDO::PARAM_STR);
+            $stmt->bindParam(':working_name_en', $data['working_name_en'], PDO::PARAM_STR);
+            $stmt->bindParam(':is_include_vat', $data['is_include_vat'], PDO::PARAM_BOOL);
+            $stmt->bindParam(':contract_value_before', $data['contract_value_before'], PDO::PARAM_STR);
+            $stmt->bindParam(':contract_value', $data['contract_value'], PDO::PARAM_STR);
+            $stmt->bindParam(':vat', $data['vat'], PDO::PARAM_STR);
+            // $stmt->bindParam(':is_deposit', $data['is_deposit'], PDO::PARAM_BOOL);
+            $stmt->bindParam(':deposit_percent', $data['deposit_percent'], PDO::PARAM_STR);
+            $stmt->bindParam(':deposit_value', $data['deposit_value'], PDO::PARAM_STR);
+            $stmt->bindParam(':retention_percent', $data['retention_percent'], PDO::PARAM_STR);
+            $stmt->bindParam(':retention_value', $data['retention_value'], PDO::PARAM_STR);
+            $stmt->bindParam(':working_date_from', $data['working_date_from'], PDO::PARAM_STR);
+            $stmt->bindParam(':working_date_to', $data['working_date_to'], PDO::PARAM_STR);
+            $stmt->bindParam(':working_day', $data['working_day'], PDO::PARAM_INT);
+            $stmt->bindParam(':number_of_period', $data['number_of_period'], PDO::PARAM_INT);
+            $stmt->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
+            $stmt->bindParam(':workflow_id', $workflowId, PDO::PARAM_INT);
+            $stmt->execute();
+            $stmt->closeCursor();
             // กำหนดค่าให้ตัวแปร $poId จาก ID ของ PO ที่เพิ่งสร้างใหม่ด้วย lastInsertId()
             $poId = $this->db->lastInsertId();
         } else {
             // --- UPDATE MODE ---
+            // $_SESSION['UPDATE MODE XXXXXXXXXXXXXXXXXXXx']=$data;
             $sql = "UPDATE `po_main`
                         SET `project_name`= :project_name
                         , `supplier_id`= :supplier_id
@@ -130,41 +138,45 @@ class Po
                         , `contract_value_before`= :contract_value_before
                         , `contract_value`= :contract_value
                         , `vat`= :vat
-                        , `is_deposit`= :is_deposit
                         , `deposit_percent`= :deposit_percent
                         , `deposit_value`= :deposit_value
+                        , `retention_percent`= :retention_percent
+                        , `retention_value`= :retention_value
                         , `working_date_from`= :working_date_from
                         , `working_date_to`= :working_date_to
                         , `working_day`= :working_day
                         , `number_of_period` = :number_of_period
                         WHERE `po_id` = :po_id";
 
-            $stmtUpdatePoMain = $this->db->prepare($sql);
-            // $stmtUpdatePoMain->bindParam(':po_number', $headerData['po_number'], PDO::PARAM_STR);
-            $stmtUpdatePoMain->bindParam(':project_name', $headerData['project_name'], PDO::PARAM_STR);
-            $stmtUpdatePoMain->bindParam(':supplier_id', $headerData['supplier_id'],  PDO::PARAM_INT);
-            $stmtUpdatePoMain->bindParam(':location_id', $headerData['location_id'], PDO::PARAM_INT);
-            $stmtUpdatePoMain->bindParam(':working_name_th', $headerData['working_name_th'], PDO::PARAM_STR);
-            $stmtUpdatePoMain->bindParam(':working_name_en', $headerData['working_name_en'], PDO::PARAM_STR);
-            $stmtUpdatePoMain->bindParam(':is_include_vat', $headerData['is_include_vat'], PDO::PARAM_BOOL);
-            $stmtUpdatePoMain->bindParam(':contract_value_before', $headerData['contract_value_before'], PDO::PARAM_STR);
-            $stmtUpdatePoMain->bindParam(':contract_value', $headerData['contract_value'], PDO::PARAM_STR);
-            $stmtUpdatePoMain->bindParam(':vat', $headerData['vat'], PDO::PARAM_STR);
-            $stmtUpdatePoMain->bindParam(':is_deposit', $headerData['is_deposit'], PDO::PARAM_BOOL);
-            $stmtUpdatePoMain->bindParam(':deposit_percent', $headerData['deposit_percent'], PDO::PARAM_STR);
-            $stmtUpdatePoMain->bindParam(':deposit_value', $deposit_value, PDO::PARAM_STR);
-            $stmtUpdatePoMain->bindParam(':working_date_from', $headerData['working_date_from'], PDO::PARAM_STR);
-            $stmtUpdatePoMain->bindParam(':working_date_to', $headerData['working_date_to'], PDO::PARAM_STR);
-            $stmtUpdatePoMain->bindParam(':working_day', $headerData['working_day'], PDO::PARAM_INT);
-            $stmtUpdatePoMain->bindParam(':number_of_period', $headerData['number_of_period'], PDO::PARAM_INT);
-            // $stmtUpdatePoMain->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
-            // $stmtUpdatePoMain->bindParam(':workflow_id', $workflowId, PDO::PARAM_INT);
-            $stmtUpdatePoMain->bindParam(':po_id', $poId, PDO::PARAM_INT);
-            // $stmtUpdatePoMain->execute();
-            $stmtUpdatePoMain->execute();
+            $stmt = $this->db->prepare($sql);
+            // $stmt->bindParam(':po_number', $data['po_number'], PDO::PARAM_STR);
+            $stmt->bindParam(':project_name', $data['project_name'], PDO::PARAM_STR);
+            $stmt->bindParam(':supplier_id', $data['supplier_id'],  PDO::PARAM_INT);
+            $stmt->bindParam(':location_id', $data['location_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':working_name_th', $data['working_name_th'], PDO::PARAM_STR);
+            $stmt->bindParam(':working_name_en', $data['working_name_en'], PDO::PARAM_STR);
+            $stmt->bindParam(':is_include_vat', $data['is_include_vat'], PDO::PARAM_BOOL);
+            $stmt->bindParam(':contract_value_before', $data['contract_value_before'], PDO::PARAM_STR);
+            $stmt->bindParam(':contract_value', $data['contract_value'], PDO::PARAM_STR);
+            $stmt->bindParam(':vat', $data['vat'], PDO::PARAM_STR);
+            // $stmt->bindParam(':is_deposit', $data['is_deposit'], PDO::PARAM_BOOL);
+            $stmt->bindParam(':deposit_percent', $data['deposit_percent'], PDO::PARAM_STR);
+            $stmt->bindParam(':deposit_value', $data['deposit_value'], PDO::PARAM_STR);
+            $stmt->bindParam(':retention_percent', $data['retention_percent'], PDO::PARAM_STR);
+            $stmt->bindParam(':retention_value', $data['retention_value'], PDO::PARAM_STR);
+            $stmt->bindParam(':working_date_from', $data['working_date_from'], PDO::PARAM_STR);
+            $stmt->bindParam(':working_date_to', $data['working_date_to'], PDO::PARAM_STR);
+            $stmt->bindParam(':working_day', $data['working_day'], PDO::PARAM_INT);
+            $stmt->bindParam(':number_of_period', $data['number_of_period'], PDO::PARAM_INT);
+            // $stmt->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
+            // $stmt->bindParam(':workflow_id', $workflowId, PDO::PARAM_INT);
+            $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
+            // $stmt->execute();
+            $stmt->execute();
 
-            $stmtUpdatePoMain->closeCursor();
+            $stmt->closeCursor();
         }
+        return (int)$poId;
     }
 
     public function delete(int $poId): bool
