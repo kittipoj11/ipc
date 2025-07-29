@@ -269,6 +269,7 @@ $(document).ready(function () {
       // สร้าง object สำหรับเก็บข้อมูลของแถวนี้
       // row.removeData("crud"); ทำการ clear ค่า data-* ที่อยู่ใน cache ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
       const periodRecord = {
+        po_id: $("#po_id").val(),
         period_id: row.attr("data-period-id"), // ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
         period_crud: row.attr("data-crud"), //
         period_number: row.find('input[name="period_number"]').val(), // ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า

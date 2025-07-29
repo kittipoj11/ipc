@@ -59,10 +59,10 @@ class Inspection
             return null; // ไม่พบข้อมูล
         }
         // $_SESSION['XXXXXXXXXX'] = $rs;
-            // หรือ ถ้ามีการ return ค่าออกไปเลยสามารถใช้แบบนี้
-            // return $rs ?: null;
-            // แต่ถ้ายังมีการทำงานต่อต้องใช้แบบข้างบนเหมือนเดิม
-            
+        // หรือ ถ้ามีการ return ค่าออกไปเลยสามารถใช้แบบนี้
+        // return $rs ?: null;
+        // แต่ถ้ายังมีการทำงานต่อต้องใช้แบบข้างบนเหมือนเดิม
+
         // ดึงข้อมูลจากตารางรอง
         $rs['periods'] = $this->getAllPeriodByPoId($poId);
         // $_SESSION['ZZZZZZZZZZ'] = $rs;
@@ -436,6 +436,50 @@ class Inspection
         }
     }
 
+    public function saveFromPoPeriod(array $periodData): bool
+    {
+        if (empty($periodData['period_id'])) {
+            $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `workflow_id`) 
+                    VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :workflow_id)";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':po_id', $periodData['po_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':period_id', $periodData['period_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':period_number', $periodData['period_number'], PDO::PARAM_INT);
+            $stmt->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'],  PDO::PARAM_STR);
+            $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
+            $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
+            $stmt->bindParam(':workflow_id', 1, PDO::PARAM_INT);
+            $affected = $stmt->execute();
+            $stmt->closeCursor();
+            $inspectionId = $this->db->lastInsertId();
+            
+            // INSERT inspection_details
+            $sql = "INSERT INTO `inspection_details`(`inspection_id`) 
+                    VALUES (:inspection_id)";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
+            $stmt->execute();
+            $stmt->closeCursor();
+            return $affected;
+        } else {
+            $sql = "UPDATE `inspection`
+                    SET `workload_planned_percent` = :workload_planned_percent
+                    , `interim_payment` = :interim_payment
+                    , `interim_payment_percent` = :interim_payment_percent
+                    WHERE `po_id` = :po_id
+                        AND `period_id` = :period_id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':po_id', $periodData['po_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':period_id', $periodData['period_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'],  PDO::PARAM_STR);
+            $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
+            $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
+            $affected = $stmt->execute();
+            $stmt->closeCursor();
+            return $affected;
+        }
+    }
+
     // เพิ่มเติมในส่วน ipc
     public function updateApprovalLevel_old(array $approvalData, array $ipcData): int
     {
@@ -475,7 +519,7 @@ class Inspection
             $stmt->closeCursor();
 
             if ($approvalData['create_ipc']) {
-                
+
                 // INSERT ipc
                 $sql = "INSERT INTO ipc(po_id, period_id, inspection_id, period_number, project_name, contractor, contract_value
                         , total_value_of_interim_payment, less_previous_interim_payment, net_value_of_current_claim, less_retension_exclude_vat
@@ -704,6 +748,21 @@ class Inspection
             $this->db->rollBack();
             echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
         }
+    }
+
+    public function deleteFiles($periodId): array
+    {
+        // ดึงข้อมูลไฟล์ที่จะลบ
+        $sql = "SELECT file_path
+                FROM `inspection_files` 
+                INNER JOIN `inspection`
+                    ON `inspection_files`.`inspection_id` = `inspection`.`inspection_id`
+                WHERE `period_id` = :period_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 }
 

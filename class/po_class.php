@@ -82,12 +82,9 @@ class Po
 
     public function save(array $data): int
     {
-        // $_SESSION['data AAAAAAAAAAAAAAAAAAAAAA']=$data;
         $poId = $data['po_id'] ?? 0;
-        // $_SESSION['po id BBBBBBBBBBBBBBBBBBBBBB']=$data;
         if (empty($poId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
             // --- CREATE MODE ---
-            // $_SESSION['CREATE MODE XXXXXXXXXXXXXXXXXXXx']=$data;
             // ถ้าจะสร้าง id มี prefix ด้วยตนเอง สมมติให้ prefix เป็น PO เช่น $poId = uniqid('PO', true);
             // INSERT INTO po_main"
             $sql = "INSERT INTO `po_main`(`po_number`, `project_name`, `supplier_id`, `location_id`, `working_name_th`, `working_name_en`
@@ -127,26 +124,25 @@ class Po
             $poId = $this->db->lastInsertId();
         } else {
             // --- UPDATE MODE ---
-            // $_SESSION['UPDATE MODE XXXXXXXXXXXXXXXXXXXx']=$data;
             $sql = "UPDATE `po_main`
-                        SET `project_name`= :project_name
-                        , `supplier_id`= :supplier_id
-                        , `location_id`= :location_id
-                        , `working_name_th`= :working_name_th
-                        , `working_name_en`= :working_name_en
-                        , `is_include_vat`= :is_include_vat
-                        , `contract_value_before`= :contract_value_before
-                        , `contract_value`= :contract_value
-                        , `vat`= :vat
-                        , `deposit_percent`= :deposit_percent
-                        , `deposit_value`= :deposit_value
-                        , `retention_percent`= :retention_percent
-                        , `retention_value`= :retention_value
-                        , `working_date_from`= :working_date_from
-                        , `working_date_to`= :working_date_to
-                        , `working_day`= :working_day
-                        , `number_of_period` = :number_of_period
-                        WHERE `po_id` = :po_id";
+                    SET `project_name`= :project_name
+                    , `supplier_id`= :supplier_id
+                    , `location_id`= :location_id
+                    , `working_name_th`= :working_name_th
+                    , `working_name_en`= :working_name_en
+                    , `is_include_vat`= :is_include_vat
+                    , `contract_value_before`= :contract_value_before
+                    , `contract_value`= :contract_value
+                    , `vat`= :vat
+                    , `deposit_percent`= :deposit_percent
+                    , `deposit_value`= :deposit_value
+                    , `retention_percent`= :retention_percent
+                    , `retention_value`= :retention_value
+                    , `working_date_from`= :working_date_from
+                    , `working_date_to`= :working_date_to
+                    , `working_day`= :working_day
+                    , `number_of_period` = :number_of_period
+                    WHERE `po_id` = :po_id";
 
             $stmt = $this->db->prepare($sql);
             // $stmt->bindParam(':po_number', $data['po_number'], PDO::PARAM_STR);
@@ -179,40 +175,54 @@ class Po
         return (int)$poId;
     }
 
-    public function delete(int $poId): bool
+    public function deletePeriod(int $periodId): bool
     {
-        try {
-            $sql = "SELECT file_path
-                    FROM `inspection_files` 
-                    INNER JOIN `inspection`
-                        ON `inspection_files`.`inspection_id` = `inspection`.`inspection_id`
-                    INNER JOIN `po_periods`
-                        ON `po_periods`.`period_id` = `inspection`.`period_id`
-                    WHERE `po_periods`.`po_id` = :po_id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
-            $stmt->execute();
-            $rs = $stmt->fetchAll();
+        $sql = "DELETE FROM `po_periods` 
+                WHERE period_id = :period_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
 
-            // ลบไฟล์ออกจาก server
-            foreach ($rs as $row) {
-                $filePath = $row['file_path'];
-                if (file_exists($filePath)) {
-                    unlink($filePath); // ลบไฟล์
-                }
-            }
-
-            $sql = "DELETE FROM `po_main` 
-                    WHERE po_id = :po_id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
-
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            throw $e;
-        }
+        $affected = $stmt->execute();
+        $stmt->closeCursor();
+        return $affected;
     }
 
+    public function savePeriod(array $periodData):bool
+    {
+        if(empty($periodData['period_id'])){
+            $sql = "INSERT INTO `po_periods`(`po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`) 
+                    VALUES (:po_id, :period_number, :workload_planned_percent, :interim_payment, :interim_payment_percent, :remark)";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':po_id', $periodData['period_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':period_number', $periodData['period_number'], PDO::PARAM_INT);
+            $stmt->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'],  PDO::PARAM_STR);
+            $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
+            $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
+            $stmt->bindParam(':remark', $periodData['remark'], PDO::PARAM_STR);
+            $affected = $stmt->execute();
+            $stmt->closeCursor();
+            return $affected;
+            // $periodId = $this->db->lastInsertId();
+        }else{
+            $sql = "UPDATE `po_periods`
+                    SET `workload_planned_percent` = :workload_planned_percent
+                    , `interim_payment` = :interim_payment
+                    , `interim_payment_percent` = :interim_payment_percent
+                    , `remark` = :remark
+                    WHERE `po_id` = :po_id
+                        AND `period_id` = :period_id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':po_id', $periodData['po_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':period_id', $periodData['period_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'],  PDO::PARAM_STR);
+            $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
+            $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
+            $stmt->bindParam(':remark', $periodData['remark'], PDO::PARAM_STR);
+            $affected = $stmt->execute();
+            $stmt->closeCursor();
+            return $affected;
+        }
+    }
 
 
 }
