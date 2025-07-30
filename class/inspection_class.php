@@ -436,7 +436,7 @@ class Inspection
         }
     }
 
-    public function saveFromPoPeriod(array $periodData)
+    public function saveFromPoPeriod_canceled(array $periodData)
     {
         $_SESSION['periodData inspection class AAAAAAAAAAAAAAAAAAA'] = $periodData;
         // $inspectionId = $periodData['inspection_id'];
@@ -493,6 +493,51 @@ class Inspection
             $stmt->closeCursor();
             // return $affected;
         }
+    }
+
+    public function createFromPoPeriod(array $periodData)
+    {
+        $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `workflow_id`) 
+                    VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, 1)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':po_id', $periodData['po_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':period_id', $periodData['period_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':period_number', $periodData['period_number'], PDO::PARAM_INT);
+        $stmt->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'],  PDO::PARAM_STR);
+        $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
+        $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
+        // $stmt->bindParam(':workflow_id', 1, PDO::PARAM_INT);//ทำไม error ตรงนี้
+
+        $stmt->execute();
+        $stmt->closeCursor();
+        $inspectionId = $this->db->lastInsertId();
+
+        // INSERT inspection_period_details
+        $sql = "INSERT INTO `inspection_details`(`inspection_id`) 
+                VALUES (:inspection_id)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->closeCursor();
+    }
+
+    public function updateFromPoPeriod(array $periodData)
+    {
+        $sql = "UPDATE `inspection`
+                SET `workload_planned_percent` = :workload_planned_percent
+                , `interim_payment` = :interim_payment
+                , `interim_payment_percent` = :interim_payment_percent
+                WHERE `po_id` = :po_id
+                    AND `period_id` = :period_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':po_id', $periodData['po_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':period_id', $periodData['period_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'],  PDO::PARAM_STR);
+        $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
+        $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
+
+        $stmt->execute();
+        $stmt->closeCursor();
     }
 
     // เพิ่มเติมในส่วน ipc

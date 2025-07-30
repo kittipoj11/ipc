@@ -79,10 +79,12 @@ class DocumentService
                     $periodId = $this->po->savePeriod($item);
                     // เป็นการ update ไม่ต้องตรวจสอบ period_id หลังจาก save
                     // UPDATE inspection
+                    $this->inspection->updateFromPoPeriod($item);
+
+                    // ถ้าใช้แบบนี้ $this->inspection->saveFromPoPeriod($item);
                     // ต้องตรวจสอบก่อนว่ามีรายการใน inspection ที่มี period_id ตรงกับ period_id ใน po_periods หรือไม่
                     // ถ้ามีจะกำหนด $item['inspection_id'] = ค่า inspection_id ที่ได้
                     // ถ้าไม่มีจะกำหนด $item['inspection_id'] = 0
-                    $this->inspection->saveFromPoPeriod($item);
                 }
             }
 
@@ -107,12 +109,11 @@ class DocumentService
                 foreach ($createItems as &$item) {
                     // CREATE po_periods
                     $periodId = $this->po->savePeriod($item);
-
+                    
                     $item['period_id']=$periodId;
-                    $item['inspection_id']=0;
-
-                    // CREATE inspection
-                    $this->inspection->saveFromPoPeriod($item);
+                    
+                    // CREATE inspection and inspection_details
+                    $inspectionId = $this->inspection->createFromPoPeriod($item);
 
 
             //         $approvalStatusId = 1;
