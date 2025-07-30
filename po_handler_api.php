@@ -16,12 +16,9 @@ $connection = new Connection;
 $pdo = $connection->getDbConnection();
 $po = new Po($pdo);
 $inspection = new Inspection($pdo);
-$doc = new DocumentService($pdo,$po,$inspection);
+$doc = new DocumentService($pdo, $po, $inspection);
 
 $requestData = json_decode(file_get_contents('php://input'), true);
-// $_SESSION['req data1']=$requestData;
-// $_SESSION['Condition']=isset($requestData['action']) && $requestData['action'] == 'save';
-
 if (isset($requestData['action']) && $requestData['action'] == 'save') {
     if (!isset($requestData['headerData']) || !isset($requestData['periodsData'])) {
         throw new Exception('Invalid data structure.');
@@ -29,7 +26,7 @@ if (isset($requestData['action']) && $requestData['action'] == 'save') {
     // ★★★ เรียกใช้เมธอด save เดียว จบ! ★★★
     // $savedPoId = $po->save($requestData['headerData'], $requestData['periodsData']);
     $savedPoId = $doc->managePoAndInspection($requestData);
-    
+
     $response = [
         'status' => 'success',
         'message' => 'บันทึกข้อมูล PO ID: ' . $savedPoId . ' เรียบร้อยแล้ว',
