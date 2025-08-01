@@ -65,6 +65,34 @@ class Po
 
         return $rs;
     }
+    public function getHeaderByPoId($poId): ?array
+    {
+        // ดึงข้อมูลจากตารางหลัก - po_main
+        $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
+                , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
+                , `deposit_percent`, `deposit_value`, `retention_percent`, `retention_value`
+                , `working_date_from`, `working_date_to`, `working_day`
+                , `create_by`, `create_date`, `number_of_period`
+                , s.`supplier_name`
+                , l.`location_name`
+                FROM `po_main` p
+                INNER JOIN `suppliers` s
+                    ON s.`supplier_id` = p.`supplier_id`
+                INNER JOIN `locations` l
+                    ON l.`location_id` = p.`location_id`
+                WHERE `po_id` = :po_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs = $stmt->fetch();
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
+        // return $rs ?: null;
+
+        return $rs;
+    }
 
     public function getAllPeriodByPoId($poId): array
     {
@@ -487,7 +515,6 @@ class Po
     {
         $periodId = $periodData['period_id'];
         if(empty($periodId)){
-            $_SESSION['periodData po_class Insert QQQQQQQQQQQQQQQQQQQ'] = $periodData;
             $sql = "INSERT INTO `po_periods`(`po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`) 
                     VALUES (:po_id, :period_number, :workload_planned_percent, :interim_payment, :interim_payment_percent, :remark)";
             $stmt = $this->db->prepare($sql);
@@ -502,7 +529,6 @@ class Po
             $periodId = $this->db->lastInsertId();
             return $periodId;
         }else{
-            $_SESSION['periodData po_class Update QQQQQQQQQQQQQQQQQQQ'] = $periodData;
             $sql = "UPDATE `po_periods`
                     SET `workload_planned_percent` = :workload_planned_percent
                     , `interim_payment` = :interim_payment

@@ -8,7 +8,6 @@ require_once 'auth.php';
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
   <?php include 'header_main.php'; ?>
@@ -49,15 +48,18 @@ require_once 'auth.php';
     <?php
     require_once  'class/connection_class.php';
     require_once  'class/inspection_class.php';
+    // require_once  'class/po_class.php';
 
-    $po_id = $_REQUEST['po_id'];
+    $poId = $_REQUEST['po_id'];
 
     $connection=new Connection();
     $pdo=$connection->getDbConnection();
 
+    // $po = new Po($pdo);
+    // $inspection = new Inspection($pdo,$po);
     $inspection = new Inspection($pdo);
-    $rsInspection =$inspection->getPoByPoId($po_id);
-    // $_SESSION['XXXXXXXXXXXXXXXXXX'] = $po_id;
+    $rsInspection =$inspection->getByPoId($poId);
+    // $_SESSION['XXXXXXXXXXXXXXXXXX'] = $poId;
     // เปลี่ยนไปใช้ $rsPoMain[periods] แบบ po_form.php
     ?>
 

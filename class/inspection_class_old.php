@@ -33,7 +33,7 @@ class Inspection
         return $rs;
     }
 
-    public function getPoByPoIdx($poId): ?array
+    public function getHeaderByPoIdx($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`

@@ -21,8 +21,6 @@ $inspection = new Inspection($pdo);
 $ipc = new Ipc($pdo);
 $inspectionService = new InspectionService($pdo, $inspection, $ipc);
 
-// $_SESSION['XXXXXXXXXXXXXXXXXXXXX']=$requestData['ipcData'];
-
 if (isset($requestData['action']) && $requestData['action'] == 'select') {
     $rs = $inspection->getAllPo();
     echo json_encode($rs);

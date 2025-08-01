@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     // ฟังก์ชันสำหรับโหลดข้อมูลเริ่มต้น
   function loadDataAll() {
     const data_sent = {

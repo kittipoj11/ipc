@@ -2,10 +2,12 @@
 @session_start();
 // require_once 'config.php';
 require_once 'connection_class.php';
+require_once 'po_class.php';
 
 class Inspection
 {
     private $db;
+    private $po;
 
     public function __construct(PDO $pdoConnection)
     {
@@ -34,7 +36,7 @@ class Inspection
         return $rs;
     }
 
-    public function getPoByPoId($poId): ?array
+    public function getByPoId_old($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
@@ -65,7 +67,40 @@ class Inspection
 
         // ดึงข้อมูลจากตารางรอง
         $rs['periods'] = $this->getAllPeriodByPoId($poId);
-        // $_SESSION['ZZZZZZZZZZ'] = $rs;
+        
+        return $rs;
+
+    }
+    
+    public function getByPoId($poId): ?array
+    {
+        // ดึงข้อมูลจากตารางหลัก - po_main
+        $po=new Po($this->db);
+        $rs=$po->getHeaderByPoId($poId);
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
+
+        // ดึงข้อมูลจากตารางรอง
+        $rs['periods'] = $this->getAllPeriodByPoId($poId);
+        
+        // $rs2 = $this->po->getByPoId($poId);
+        
+        // $po = new Po($this->db);
+        // $rs2=$po->getByPoId($poId);
+
+        return $rs;
+    }
+
+    public function getHeaderByPoId($poId): ?array
+    {
+        // ดึงข้อมูลจากตารางหลัก - po_main
+        $po=new Po($this->db);
+        $rs=$po->getHeaderByPoId($poId);
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
+
         return $rs;
     }
 

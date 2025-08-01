@@ -76,7 +76,7 @@ require_once 'auth.php';
     $connection = new Connection;
     $pdo = $connection->getDbConnection();
 
-    $po_id = $_REQUEST['po_id'];
+    $poId = $_REQUEST['po_id'];
     $period_id = $_REQUEST['period_id'];
     $inspection_id = $_REQUEST['inspection_id'];
 
@@ -85,7 +85,7 @@ require_once 'auth.php';
     // $_SESSION['current_approval_level isset'] =  isset($rsInspection['period']['current_approval_level']);
     // $_SESSION['current_approval_level'] =  $rsInspection['period']['current_approval_level'];
     // $_SESSION['approval_date isset'] =  array_key_exists('approval_date', $rsInspection['periodApprovals']) ;
-    $_SESSION['rsInspection'] =  $rsInspection;
+    // $_SESSION['rsInspection'] =  $rsInspection;
 
     $plan_status = new Plan_status($pdo);
     $rsPlanStatus = $plan_status->getAll();
