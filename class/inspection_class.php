@@ -69,7 +69,6 @@ class Inspection
         $rs['periods'] = $this->getAllPeriodByPoId($poId);
         
         return $rs;
-
     }
     
     public function getByPoId($poId): ?array
