@@ -17,9 +17,17 @@ $(document).ready(function () {
     // const tbody = $("#tbody-period");
     // responseMessage.text("");
     // tbody.html('<tr><td colspan="5">กำลังโหลดข้อมูล...</td></tr>');
-    // console.log($("#po_id").val());
-    const row = $("#tbody-period tr[data-crud!='delete'][data-period-status='pending']");
-    $("#btnDeleteLast").addClass(row.length?"inline":"d-none");
+    console.log("loadPeriods");
+    const row = $('#tbody-period tr[data-crud!="delete"][data-period-status="pending"]');
+    // console.log(row.length);
+    if (row.length > 0) {
+      $("#btnDeleteLast").addClass('inline');
+      $("#btnDeleteLast").removeClass('d-none');
+    } else {
+      $("#btnDeleteLast").addClass('d-none');
+      $("#btnDeleteLast").removeClass('inline');
+      
+    }
     return;
     const data_sent = {
       po_id: $("#po_id").val(),
@@ -116,6 +124,7 @@ $(document).ready(function () {
         row.addClass("d-none").attr("data-crud", "delete");
         // row.attr("data-crud", "delete");
       }
+      loadPeriods();
     }
     // console.log(`row3 = ${row.attr("data-crud")} input=${row.find('input[name="crud"]').val()}`);
     // console.log(row.attr("data-crud"));
@@ -138,6 +147,7 @@ $(document).ready(function () {
         .clone(false)
         .attr("data-crud", "create")
         .attr("data-period-id", "")
+        .attr("data-period-status", "pending")
         .removeClass("d-none")
 
         .find('input[name="period_number"]')
@@ -167,7 +177,7 @@ $(document).ready(function () {
         .appendTo("#tbody-period");
     } else {
       // Create the new tr element using jQuery
-      const addTr = `<tr data-crud='create' data-period-id=''>
+      const addTr = `<tr data-crud='create' data-period-id=''data-period-status='pending'>
                             <td class='input-group-sm p-0'><input type='number' name='period_number' class='form-control period_number' value='1' readonly></td>
                             <td class='input-group-sm p-0'><input type='number' name='workload_planned_percent' class='form-control workload_planned_percent' value='0'></td>
                             <td class='input-group-sm p-0'><input type='number' name='interim_payment' class='form-control interim_payment' value='0'></td>
@@ -178,6 +188,7 @@ $(document).ready(function () {
 
       $("#tbody-period").append(addTr);
     }
+    loadPeriods();
   });
 
   $(".btnCancel , .btnBack").click(function () {
