@@ -96,7 +96,7 @@ class Po
 
     public function getAllPeriodByPoId($poId): array
     {
-        $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `remark`
+        $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, period_status, `remark`
                 FROM `po_periods`
                 WHERE `po_id` = :po_id
                 ORDER BY `po_id`, `period_number`";

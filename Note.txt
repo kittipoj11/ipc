@@ -365,7 +365,7 @@ fetchObject()
 ## ⚙️ ขั้นตอนการทำงาน (How it Works)
 เมื่อเราสั่ง $stmt->fetchObject('User') จะเกิดกระบวนการ 4 ขั้นตอนหลักๆ ดังนี้:
 
-1. สร้าง Object ใหม่: PDO จะสร้าง Object ว่างๆ ขึ้นมาหนึ่งตัวจากคลาสที่เราส่งชื่อเข้าไป (เช่น 'User') 
+1. สร้าง Object ใหม่: PDO จะสร้าง Object ว่างๆ ขึ้นมาหนึ่งตัวจากคลาสที่เราส่งชื่อเข้าไป (เช่น class 'User') 
     หากเราไม่ระบุชื่อคลาส มันจะสร้าง Object จากคลาสมาตรฐาน stdClass ให้แทน
 
 2. ดึงข้อมูล 1 แถว: มันจะดึงข้อมูลจากฐานข้อมูลมา 1 แถว (เหมือน fetch())
@@ -437,5 +437,106 @@ echo $user_object->getGreeting(); // ผลลัพธ์: Hello, Admin User
     ซึ่งหมายความว่าถ้าใน __construct() ของคุณมีการเรียกใช้ Property ใดๆ ค่าของมันจะยังไม่ถูกกำหนดจากฐานข้อมูลในขณะนั้น
 /////////////////////////////////////////////////////////////////////////////
 
+การเปลี่ยนจาก fetch มาเป็น fetchObject
+1. สร้างคลาส Order (และคลาส Period ถ้าต้องการ)
+    สร้างคลาส Order โดยคลาส Order ต้องมี property (ที่เป็น public) เพื่อรอรับข้อมูล periods 
+    class Order {
+        // Properties ที่ตรงกับคอลัมน์ในตาราง orders
+        public ?int $id = null;
+        public ?string $order_number = null;
+        public ?string $customer_name = null;
+        // ... ใส่ property อื่นๆ ให้ครบ ...
 
+        // ✨ Property นี้สำหรับเก็บข้อมูล periods ที่จะดึงมาทีหลัง
+        public array $periods = []; 
+    }
+
+2. สร้างคลาส Period
+    class Period {
+        public ?int $id = null;
+        public ?int $order_id = null;
+        public ?string $due_date = null;
+        public ?float $amount = null;
+        // ... property อื่นๆ ของ period ...
+    }
+
+3. สร้างคลาส OrderRepository 
+    <?php
+    // สมมติว่านี่คือคลาส Repository หรือ Service ของคุณ
+    class OrderRepository 
+    {
+        private $pdo;
+
+        public function __construct(PDO $pdo) {
+            $this->pdo = $pdo;
+        }
+
+        /**
+        * เมธอดที่ปรับปรุงใหม่: คืนค่าเป็น Order object หรือ null
+        */
+        public function getOrderById(int $id): ?Order
+        {
+            $stmt = $this->pdo->prepare("SELECT * FROM orders WHERE id = ?");
+            $stmt->execute([$id]);
+
+            // ดึงข้อมูลมาเป็น Object ของคลาส Order
+            $order = $stmt->fetchObject('Order');
+
+            // ตรวจสอบว่าหา Order เจอหรือไม่
+            if ($order) {
+                // ถ้าเจอ, ให้ไปดึงข้อมูล periods มาใส่ใน property ของ object
+                $periods = $this->getOrderPeriodsByOrderId($id);
+                $order->periods = $periods;
+            }
+
+            // คืนค่าเป็น Order object ที่มีข้อมูล periods อยู่ข้างใน หรือคืนค่า null ถ้าหาไม่เจอ
+            return $order;
+        }
+
+        /**
+        * เมธอดที่ปรับปรุงใหม่: คืนค่าเป็น array ของ Period objects
+        * @return Period[]
+        */
+        private function getOrderPeriodsByOrderId(int $order_id): array
+        {
+            $stmt = $this->pdo->prepare("SELECT * FROM order_periods WHERE order_id = ?");
+            $stmt->execute([$order_id]);
+
+            // ดึงข้อมูลทั้งหมดมาเป็น array ของ Object คลาส Period
+            return $stmt->fetchAll(PDO::FETCH_CLASS, 'Period');
+        }
+    }
+
+ตัวอย่างการใช้งาน
+// สมมติว่าได้สร้าง object ของ Repository ไว้แล้ว
+$orderRepo = new OrderRepository($pdo_connection);
+
+$order_id = 123;
+$order = $orderRepo->getOrderById($order_id);
+
+if ($order) {
+    // เข้าถึงข้อมูลหลักของ Order ได้โดยตรง
+    echo "Order Number: " . $order->order_number;
+    echo "Customer: " . $order->customer_name;
+
+    // วนลูปแสดงข้อมูลงวดชำระ (periods)
+    if (!empty($order->periods)) {
+        echo "<h3>Payment Periods:</h3>";
+        echo "<ul>";
+        foreach ($order->periods as $period) {
+            // $period คือ Object ของคลาส Period
+            echo "<li>Due Date: {$period->due_date}, Amount: {$period->amount}</li>";
+        }
+        echo "</ul>";
+    } else {
+        echo "<p>No payment periods found for this order.</p>";
+    }
+
+} else {
+    echo "Order with ID {$order_id} not found.";
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
 

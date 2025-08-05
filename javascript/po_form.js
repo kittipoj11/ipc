@@ -14,11 +14,13 @@ $(document).ready(function () {
   // --- ฟังก์ชันสำหรับโหลดข้อมูลเริ่มต้น ---
   // แก้ไขส่วนนี้ หรือ ยกเลิกฟังก์ชันนี้ถ้าไม่ได้ใช้****************************************************************************
   function loadPeriods() {
-    const tbody = $("#tbody-period");
-    responseMessage.text("");
-    tbody.html('<tr><td colspan="5">กำลังโหลดข้อมูล...</td></tr>');
+    // const tbody = $("#tbody-period");
+    // responseMessage.text("");
+    // tbody.html('<tr><td colspan="5">กำลังโหลดข้อมูล...</td></tr>');
     // console.log($("#po_id").val());
-    // return;
+    const row = $("#tbody-period tr[data-crud!='delete'][data-period-status='pending']");
+    $("#btnDeleteLast").addClass(row.length?"inline":"d-none");
+    return;
     const data_sent = {
       po_id: $("#po_id").val(),
     };
@@ -115,11 +117,7 @@ $(document).ready(function () {
         // row.attr("data-crud", "delete");
       }
     }
-    console.log(
-      `row3 = ${row.attr("data-crud")} input=${row
-        .find('input[name="crud"]')
-        .val()}`
-    );
+    // console.log(`row3 = ${row.attr("data-crud")} input=${row.find('input[name="crud"]').val()}`);
     // console.log(row.attr("data-crud"));
   });
 
@@ -337,5 +335,5 @@ $(document).ready(function () {
 
 
 
-  // loadPeriods();
+  loadPeriods();
 });
