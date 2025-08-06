@@ -8,7 +8,32 @@ class Workflows {
     {
         $this->db = $pdoConnection;
     }
+public function save(array $data):int
+{
+    $workflowId=$data['workflow_id']?? 0;
+    if(empty($workflowId)){
+        $sql = "INSERT INTO `workflow_name`
+                VALUES(:workflow_name)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':workflow_name',$workflow_name,PDO::PARAM_STR);
+        $stmt->execute();
+        $stmt->closeCursor();
+        $workflowId = $this->db->lastInsertId();
+    }else{
+        $sql = "UPDATE workflows 
+                SET workflow_name = :workflow_name
+                WHERE workflow_id = :workflow_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
+        $stmt->bindParam(':workflow_name', $workflow_name, PDO::PARAM_STR);
+        $stmt->execute();
+        $stmt->closeCursor();
+    }
 
+    return $workflowId;
+}
+
+    // ไม่ใช้
     public function create($data)
     {
         $workflow_name = $data['workflow_name'];
@@ -30,6 +55,8 @@ class Workflows {
             }
         }
     }
+
+    // ไม่ใช้
     public function update(array $data)
     {
         $workflow_id = $data['workflow_id'];
@@ -54,27 +81,16 @@ class Workflows {
             }
         }
     }
-    public function delete(array $data)
+    
+    public function delete(int $workflowId)
     {
-        $workflow_id = $data['workflow_id'];
         // $is_active = isset($data['is_active']) ? 1 : 0;
-        $sql = "update workflows 
-                set is_deleted = 1
-                where workflow_id = :workflow_id";
+        $sql = "UPDATE workflows 
+                SET is_deleted = 1
+                WHERE workflow_id = :workflow_id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':workflow_id', $workflow_id, PDO::PARAM_INT);
+        $stmt->bindParam(':workflow_id', $workflowId, PDO::PARAM_INT);
 
-        try {
-            if ($stmt->execute()) {
-                echo 'Data has been delete successfully.';
-            }
-        } catch (PDOException $e) {
-            if ($e->getCode() == 23000) {
-                echo 'This item could not be added.Because the data has duplicate values!!!';
-            } else {
-                echo 'Something is wrong.Can not add data.';
-            }
-        }
     }
 
     public function getAll(): array
@@ -125,7 +141,19 @@ class Workflows {
         return $rs;
     }
 
-    
+    public function getStep($workflowId, $approvalLevel) 
+    {
+        $sql = "SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text` 
+                FROM workflow_steps 
+                WHERE workflow_id = :workflow_id 
+                    AND approval_level = :approval_level";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':workflow_id', $workflowId, PDO::PARAM_INT);
+        $stmt->bindParam(':approval_level', $approvalLevel, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs =  $stmt->fetch(PDO::FETCH_ASSOC);
+        return $rs;
+    }
 
     
 }

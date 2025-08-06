@@ -12,103 +12,7 @@ class Po
         $this->db = $pdoConnection;
     }
 
-    public function getAll(): array
-    {
-        $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
-                    , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
-                    , `deposit_percent`, `deposit_value`, `retention_percent`, `retention_value`
-                    , `working_date_from`, `working_date_to`, `working_day`
-                    , `create_by`, `create_date`, `number_of_period`
-                    , s.`supplier_name`
-                    , l.`location_name`
-                    FROM `po_main` p
-                    INNER JOIN `suppliers` s
-                        ON s.`supplier_id` = p.`supplier_id`
-                    INNER JOIN `locations` l
-                        ON l.`location_id` = p.`location_id`
-                    ORDER BY `po_id`";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-
-        $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $rs;
-    }
-
-    public function getByPoId($poId): ?array
-    {
-        // ดึงข้อมูลจากตารางหลัก - po_main
-        $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
-                , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
-                , `deposit_percent`, `deposit_value`, `retention_percent`, `retention_value`
-                , `working_date_from`, `working_date_to`, `working_day`
-                , `create_by`, `create_date`, `number_of_period`
-                , s.`supplier_name`
-                , l.`location_name`
-                FROM `po_main` p
-                INNER JOIN `suppliers` s
-                    ON s.`supplier_id` = p.`supplier_id`
-                INNER JOIN `locations` l
-                    ON l.`location_id` = p.`location_id`
-                WHERE `po_id` = :po_id";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
-        $stmt->execute();
-        $rs = $stmt->fetch();
-        if (!$rs) {
-            return null; // ไม่พบข้อมูล
-        }
-        // return $rs ?: null;
-
-        // ดึงข้อมูลจากตารางรอง
-        $rs['periods'] = $this->getAllPeriodByPoId($poId);
-
-        return $rs;
-    }
-    public function getHeaderByPoId($poId): ?array
-    {
-        // ดึงข้อมูลจากตารางหลัก - po_main
-        $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
-                , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
-                , `deposit_percent`, `deposit_value`, `retention_percent`, `retention_value`
-                , `working_date_from`, `working_date_to`, `working_day`
-                , `create_by`, `create_date`, `number_of_period`
-                , s.`supplier_name`
-                , l.`location_name`
-                FROM `po_main` p
-                INNER JOIN `suppliers` s
-                    ON s.`supplier_id` = p.`supplier_id`
-                INNER JOIN `locations` l
-                    ON l.`location_id` = p.`location_id`
-                WHERE `po_id` = :po_id";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
-        $stmt->execute();
-        $rs = $stmt->fetch();
-        if (!$rs) {
-            return null; // ไม่พบข้อมูล
-        }
-        // return $rs ?: null;
-
-        return $rs;
-    }
-
-    public function getAllPeriodByPoId($poId): array
-    {
-        $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, period_status, `remark`
-                FROM `po_periods`
-                WHERE `po_id` = :po_id
-                ORDER BY `po_id`, `period_number`";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
-        $stmt->execute();
-
-        $rs = $stmt->fetchAll();
-        return $rs;
-    }
-
-    public function save(array $data): int
+        public function save(array $data): int
     {
         $poId = $data['po_id'] ?? 0;
         if (empty($poId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
@@ -548,6 +452,104 @@ class Po
             return $periodId;
         }
     }
+    
+    public function getAll(): array
+    {
+        $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
+                    , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
+                    , `deposit_percent`, `deposit_value`, `retention_percent`, `retention_value`
+                    , `working_date_from`, `working_date_to`, `working_day`
+                    , `create_by`, `create_date`, `number_of_period`
+                    , s.`supplier_name`
+                    , l.`location_name`
+                    FROM `po_main` p
+                    INNER JOIN `suppliers` s
+                        ON s.`supplier_id` = p.`supplier_id`
+                    INNER JOIN `locations` l
+                        ON l.`location_id` = p.`location_id`
+                    ORDER BY `po_id`";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rs;
+    }
+
+    public function getByPoId($poId): ?array
+    {
+        // ดึงข้อมูลจากตารางหลัก - po_main
+        $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
+                , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
+                , `deposit_percent`, `deposit_value`, `retention_percent`, `retention_value`
+                , `working_date_from`, `working_date_to`, `working_day`
+                , `create_by`, `create_date`, `number_of_period`
+                , s.`supplier_name`
+                , l.`location_name`
+                FROM `po_main` p
+                INNER JOIN `suppliers` s
+                    ON s.`supplier_id` = p.`supplier_id`
+                INNER JOIN `locations` l
+                    ON l.`location_id` = p.`location_id`
+                WHERE `po_id` = :po_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs = $stmt->fetch();
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
+        // return $rs ?: null;
+
+        // ดึงข้อมูลจากตารางรอง
+        $rs['periods'] = $this->getAllPeriodByPoId($poId);
+
+        return $rs;
+    }
+    public function getHeaderByPoId($poId): ?array
+    {
+        // ดึงข้อมูลจากตารางหลัก - po_main
+        $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
+                , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
+                , `deposit_percent`, `deposit_value`, `retention_percent`, `retention_value`
+                , `working_date_from`, `working_date_to`, `working_day`
+                , `create_by`, `create_date`, `number_of_period`
+                , s.`supplier_name`
+                , l.`location_name`
+                FROM `po_main` p
+                INNER JOIN `suppliers` s
+                    ON s.`supplier_id` = p.`supplier_id`
+                INNER JOIN `locations` l
+                    ON l.`location_id` = p.`location_id`
+                WHERE `po_id` = :po_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs = $stmt->fetch();
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
+        // return $rs ?: null;
+
+        return $rs;
+    }
+
+    public function getAllPeriodByPoId($poId): array
+    {
+        $sql = "SELECT `period_id`, `po_id`, `period_number`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, period_status, `remark`
+                FROM `po_periods`
+                WHERE `po_id` = :po_id
+                ORDER BY `po_id`, `period_number`";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $rs = $stmt->fetchAll();
+        return $rs;
+    }
+
+
 
 
 }

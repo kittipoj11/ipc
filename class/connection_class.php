@@ -8,11 +8,7 @@ class Connection
     private $username = 'root';
     private $password = '';
     private $dbname = 'ipc_db';
-    // private $dbname = 'inspection_db';
 
-    /**
-     * @var PDO|null ตัวแปรสำหรับเก็บ object PDO connection
-     */
     public $myConnect;
 
     /**
@@ -25,7 +21,6 @@ class Connection
     {
         $this->myConnect = null;
         try {
-            // $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4";
             $dsn = "mysql:host={$this->host};dbname={$this->dbname};charset=utf8mb4";
 
             // สร้าง PDO object และเก็บไว้ใน property ของคลาส
@@ -42,10 +37,6 @@ class Connection
         }
     }
 
-    /**
-     * ฟังก์ชันสำหรับดึง PDO connection object (แนะนำให้ใช้)
-     * @return PDO|null
-     */
     // เป็นวิธีที่ดีในการเข้าถึง connection object แทนที่จะเข้าถึง property $myConnect โดยตรง (หลักการ Encapsulation)
     public function getDbConnection()
     {
