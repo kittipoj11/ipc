@@ -111,7 +111,10 @@ require_once 'auth.php';
         <div class="container-fluid">
           <div class="row">
             <div class="col-12">
-              <form name="myForm" id="myForm" action="" method="post">
+              <form name="myForm" id="myForm" action="" method="post" 
+              data-user-id="<?= $_SESSION['user_id'] ?>"
+              data-inspection-status="<?= $rsInspection['period']['inspection_status'] ?>"
+              data-current-approver-id="<?= $rsInspection['period']['current_approver_id'] ?>">
                 <div class="card">
                   <div class="card-header d-flex justify-content-between">
                     <div class="col d-flex align-items-center">
@@ -128,23 +131,20 @@ require_once 'auth.php';
                     </div>
 
                     <!-- <div class="dropdown"> -->
-                    <?php
-                    if (array_key_exists('approval_date', $rsInspection['periodApprovals']) && is_null($rsInspection['periodApprovals']['approval_date'])
-                      && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id'] == $_SESSION['user_id']):
-                    // if (is_null($rsInspection['periodApprovals']['approval_date'])
-                    //   && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id'] == $_SESSION['user_id']):
-                    ?>
-                      <div class="btn-group" role="group">
-                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="btn-group" role="group">
+                        <button id="btnAction" class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                           Action
                         </button>
-
 
                         <ul class="dropdown-menu py-0" id="action_type" data-current-approval-level="<?= $rsInspection['period']['current_approval_level'] ?>" 
                         data-max-approval-level="<?= $rsInspection['maxPeriodApproval']['max_approval_level'] ?>">
                           <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
                           <?php
-                          if (isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 1):
+                          if (isset($rsInspection['period']['current_approval_level']) && empty($rsInspection['period']['current_approval_level']) ):
+                          ?>
+
+                          <?php
+                          elseif (isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 1):
                           ?>
                             <li><button class="dropdown-item approval_next" id="document_submit">Submit</a>
                             </li>
@@ -159,7 +159,6 @@ require_once 'auth.php';
 
                         </ul>
                       </div>
-                    <?php endif; ?>
                   </div>
 
                   <div class="card-body m-0 p-0">
@@ -461,10 +460,10 @@ require_once 'auth.php';
                         && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id'] == $_SESSION['user_id']
                       ):
                       ?>
-                        <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsInspection['period']['current_approval_level'] ?>">
                       <?php
                       endif;
                       ?>
+                      <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsInspection['period']['current_approval_level'] ?>">
                       <button type="button" name="btnCancel" class="btn btn-warning btn-sm m-1 btnCancel">ยกเลิก</button>
                     </div>
                   </div>

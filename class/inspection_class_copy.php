@@ -160,19 +160,17 @@ class Inspection
      * (ข้อมูล po_main หลัก, ข้อมูล inspection, และข้อมูล inspection_details)
      *
      * @param int $period_id ID ของ Period ที่ต้องการ
-     * @return array|null คืนค่าเป็น array ที่มีข้อมูลทั้งหมด หรือ null ถ้าไม่พบ
+     * @return array|null คืนค่าเป็น array ที่มีข้อมูลทั้งหมด หรือ null ถ้าไม่พบ 
      */
     public function getPeriodByPeriodId(int $periodId): ?array
     {
         // 1. ดึงข้อมูลของ inspection ที่ต้องการ
-        $sql = "SELECT P.inspection_id, P.period_id, P.po_id, P.period_number
-                , P.workload_planned_percent, P.workload_actual_completed_percent, P.workload_remaining_percent
-                , P.interim_payment, P.interim_payment_percent
-                , P.interim_payment_less_previous, P.interim_payment_less_previous_percent
-                , P.interim_payment_accumulated, P.interim_payment_accumulated_percent
-                , P.interim_payment_remain, P.interim_payment_remain_percent
-                , P.retention_value, P.plan_status_id, P.is_paid, P.is_retention
-                , P.remark, P.inspection_status, P.current_approval_level, P.disbursement, P.workflow_id
+        $sql = "SELECT P.`inspection_id`, P.`period_id`, P.`po_id`, P.`period_number`, P.`workflow_id`
+                , P.`workload_planned_percent`, P.`workload_actual_completed_percent`, P.`workload_remaining_percent`, P.`workload_accumulated_percent`
+                , P.`interim_payment`, P.`interim_payment_percent`, P.`interim_payment_less_previous`, P.`interim_payment_less_previous_percent`
+                , P.`interim_payment_accumulated`, P.`interim_payment_accumulated_percent`, P.`interim_payment_remain`, P.`interim_payment_remain_percent`
+                , P.`retention_value`, P.`plan_status_id`, P.`is_paid`, P.`is_retention`, P.`disbursement`, P.`remark`, P.`inspection_status`
+                , P.`current_approval_level`, P.`current_approver_id`, P.`created_by`, P.`created_at`, P.`updated_at` 
                 , A.approver_id, A.approval_level 
                 , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
                 FROM inspection P
@@ -230,8 +228,8 @@ class Inspection
             'header' => $rsPoMain,
             'period' => $rsPeriods,
             'periodDetails' => $rsPeriodDetails, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
-            'periodApprovals' => $rsPeriodApprovals, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 5
-            'maxPeriodApproval' => $rsMaxPeriodApproval, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 6
+            // 'periodApprovals' => $rsPeriodApprovals, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 5
+            // 'maxPeriodApproval' => $rsMaxPeriodApproval, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 6
         ];
 
         return $result;
@@ -531,8 +529,8 @@ class Inspection
 
     public function createFromPoPeriod(array $periodData)
     {
-        $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `workflow_id`) 
-                    VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, 1)";
+        $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, current_approver_id, `workflow_id`) 
+                    VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :current_approver_id, 1)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $periodData['po_id'], PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $periodData['period_id'], PDO::PARAM_INT);
@@ -540,12 +538,13 @@ class Inspection
         $stmt->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'],  PDO::PARAM_STR);
         $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
         $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
+        $stmt->bindParam(':current_approver_id', $_SESSION['user_id'], PDO::PARAM_STR);
         // $stmt->bindParam(':workflow_id', 1, PDO::PARAM_INT);//ทำไม error ตรงนี้
-
+        
         $stmt->execute();
         $stmt->closeCursor();
         $inspectionId = $this->db->lastInsertId();
-
+        
         // INSERT inspection_period_details
         $sql = "INSERT INTO `inspection_details`(`inspection_id`) 
                 VALUES (:inspection_id)";
@@ -554,13 +553,14 @@ class Inspection
         $stmt->execute();
         $stmt->closeCursor();
     }
-
+    
     public function updateFromPoPeriod(array $periodData)
     {
         $sql = "UPDATE `inspection`
                 SET `workload_planned_percent` = :workload_planned_percent
                 , `interim_payment` = :interim_payment
                 , `interim_payment_percent` = :interim_payment_percent
+                , current_approver_id = :current_approver_id
                 WHERE `po_id` = :po_id
                     AND `period_id` = :period_id";
         $stmt = $this->db->prepare($sql);
@@ -569,7 +569,8 @@ class Inspection
         $stmt->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'],  PDO::PARAM_STR);
         $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
         $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
-
+        $stmt->bindParam(':current_approver_id', $periodData['workload_planned_percent'], PDO::PARAM_STR);
+        
         $stmt->execute();
         $stmt->closeCursor();
     }

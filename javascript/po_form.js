@@ -17,11 +17,11 @@ $(document).ready(function () {
     // const tbody = $("#tbody-period");
     // responseMessage.text("");
     // tbody.html('<tr><td colspan="5">กำลังโหลดข้อมูล...</td></tr>');
-    console.log("loadPeriods");
+    // console.log("loadPeriods");
     const row = $('#tbody-period tr[data-crud!="delete"][data-period-status="pending"]');
     // console.log(row.length);
     if (row.length > 0) {
-      $("#btnDeleteLast").addClass('inline');
+      $("#btnDeleteLast").addClass('inline'); 
       $("#btnDeleteLast").removeClass('d-none');
     } else {
       $("#btnDeleteLast").addClass('d-none');

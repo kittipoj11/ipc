@@ -229,7 +229,7 @@ $(document).ready(function () {
     // console.log(data_sent);
     // return;
     $.ajax({
-      url: "inspection_handler_api.php",
+      url: "inspection_handler_api_copy.php",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(data_sent),
@@ -335,7 +335,7 @@ $(document).ready(function () {
     // console.log(`data_sent: ${JSON.stringify(data_sent)}`);
     // return;
     $.ajax({
-      url: "inspection_handler_api.php",
+      url: "inspection_handler_api_copy.php",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(data_sent),
@@ -400,7 +400,7 @@ $(document).ready(function () {
     // console.log(`data_sent: ${JSON.stringify(data_sent)}`);
     // return;
     $.ajax({
-      url: "inspection_handler_api.php",
+      url: "inspection_handler_api_copy.php",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(data_sent),
@@ -451,17 +451,52 @@ $(document).ready(function () {
     window.location.href = `inspection_attach_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}&mode=`;
   });
 
-  function loadPage() {
-    // $.ajax({
-    //   url: "get_files.php",
-    //   type: "GET",
-    //   success: function (response) {
-    //     $("#fileDisplay").html(response);
-    //   },
-    //   error: function () {
-    //     $("#fileDisplay").html("ไม่สามารถโหลดไฟล์ได้.");
-    //   },
-    // });btn-group
+  function refreshForm() {
+    const myForm = $('#myForm');
+    // console.log(myForm.data('inspection-status'))interim_payment
+    $("#interim_payment").attr('readonly',false);
+    if ((myForm.data('inspection-status') =='draft') 
+      && myForm.data('current-approver-id') == myForm.data('user-id')) {
+      $("#btnAction").addClass('d-none');
+      $("#btnAction").removeClass('inline');
+
+      $("#submit").addClass('inline');
+      $("#submit").removeClass('d-none');
+    } 
+    else if ((myForm.data('inspection-status') =='draft' || myForm.data('inspection-status') =='pending submit') 
+      && myForm.data('current-approver-id') == myForm.data('user-id')) {
+      $("#btnAction").addClass('inline');
+      $("#btnAction").removeClass('d-none');
+
+      $("#submit").addClass('inline');
+      $("#submit").removeClass('d-none');
+    } 
+    else if (myForm.data('inspection-status') =='pending approve' 
+    && myForm.data('current-approver-id') == myForm.data('user-id')) {
+      $("#btnAction").addClass('inline');
+      $("#btnAction").removeClass('d-none');
+
+      $("#submit").addClass('d-none');
+      $("#submit").removeClass('inline');
+
+      // $("#interim_payment").attr('readonly',true);
+      $("#keyIn").addClass('div-disabled');
+    } 
+    else{
+      $("#btnAction").addClass('d-none');
+      $("#btnAction").removeClass('inline');
+
+      $("#submit").addClass('d-none');
+      $("#submit").removeClass('inline');
+
+      // $("#interim_payment").attr('readonly',true);
+      $("#keyIn").addClass('div-disabled');
+    }
+
+
+
+    return;
+
     if ($("#submit").data("current_approval_level") > 1) {
       $("#submit").addClass("d-none");
       $(".btn-group").addClass("d-none");
@@ -473,5 +508,5 @@ $(document).ready(function () {
     // $(".btn-group").addClass("d-none");
   }
 
-  loadPage();
+  refreshForm();
 });
