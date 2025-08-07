@@ -19,7 +19,7 @@ $connection = new Connection();
 $pdo = $connection->getDbConnection();
 $inspection = new Inspection($pdo);
 $ipc = new Ipc($pdo);
-$inspectionService = new InspectionService($pdo, $inspection, $ipc);
+$inspectionService = new InspectionApprovalService($pdo, $inspection, $ipc);
 
 if (isset($requestData['action']) && $requestData['action'] == 'select') {
     $rs = $inspection->getAllPo();

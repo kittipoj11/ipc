@@ -350,6 +350,7 @@ class Inspection
                         , `plan_status_id` = :plan_status_id
                         , `disbursement` = :disbursement
                         , `remark` = :remark
+                        , `inspection_status` = :inspection_status
                         WHERE `po_id` = :po_id
                             AND `period_id` = :period_id
                             AND `inspection_id` = :inspection_id";
@@ -374,6 +375,7 @@ class Inspection
                 $stmtInspectionPeriods->bindParam(':disbursement', $periodData['disbursement'], PDO::PARAM_INT);
                 $stmtInspectionPeriods->bindParam(':retention_value', $periodData['retention_value'], PDO::PARAM_STR);
                 $stmtInspectionPeriods->bindParam(':remark', $periodData['remark'], PDO::PARAM_STR);
+                $stmtInspectionPeriods->bindParam(':inspection_status', $periodData['inspection_status'], PDO::PARAM_STR);
 
                 // $stmtUpdatePoMain->execute();
                 $stmtInspectionPeriods->execute();

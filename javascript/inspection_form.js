@@ -199,6 +199,7 @@ $(document).ready(function () {
       plan_status_id : $("#plan_status_id").val() ?? 0,
       disbursement : disbursement,//$("#disbursement").val() ?? 0,
       remark : $("#remark").val() ?? '',
+      inspection_status : 'pending submit',
     };
 // console.log(periodData);
 // return;
@@ -229,7 +230,7 @@ $(document).ready(function () {
     // console.log(data_sent);
     // return;
     $.ajax({
-      url: "inspection_handler_api_copy.php",
+      url: "inspection_handler_api.php",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(data_sent),
@@ -335,7 +336,7 @@ $(document).ready(function () {
     // console.log(`data_sent: ${JSON.stringify(data_sent)}`);
     // return;
     $.ajax({
-      url: "inspection_handler_api_copy.php",
+      url: "inspection_handler_api.php",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(data_sent),
@@ -400,7 +401,7 @@ $(document).ready(function () {
     // console.log(`data_sent: ${JSON.stringify(data_sent)}`);
     // return;
     $.ajax({
-      url: "inspection_handler_api_copy.php",
+      url: "inspection_handler_api.php",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(data_sent),
