@@ -106,6 +106,7 @@ $(document).ready(function () {
     );
   });
 
+  // แก้ไขใหม่
   $("#interim_payment").on("change keyup", function () {
     interim_payment = parseFloat($(this).val());
 
@@ -138,6 +139,7 @@ $(document).ready(function () {
     }
   });
 
+  // แก้ไขใหม่
   $("#workload_actual_completed_percent").on("keypress", function (event) {
     // Check if the pressed key is Enter (keyCode 13)
     if (event.which === 13) {
@@ -145,14 +147,17 @@ $(document).ready(function () {
     }
   });
 
+  // แก้ไขใหม่
   $("#workload_actual_completed_percent").on("blur", function () {
     calculateAndDisplay();
   });
 
+  // แก้ไขใหม่
   $("#floatingTextarea").on("click", function () {
     console.log($(this).val());
   });
 
+  // แก้ไขใหม่
   function calculateAndDisplay() {
     let workload_actual_completed_percent = $("#workload_actual_completed_percent").val();
 

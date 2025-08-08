@@ -36,41 +36,6 @@ class Inspection
         return $rs;
     }
 
-    public function getByPoId_old($poId): ?array
-    {
-        // ดึงข้อมูลจากตารางหลัก - po_main
-        $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
-                , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
-                , `is_deposit`, `deposit_percent`, `deposit_value`
-                , `working_date_from`, `working_date_to`, `working_day`
-                , `create_by`, `create_date`, `number_of_period`
-                , s.`supplier_name`
-                , l.`location_name`
-                FROM `po_main` p
-                INNER JOIN `suppliers` s
-                    ON s.`supplier_id` = p.`supplier_id`
-                INNER JOIN `locations` l
-                    ON l.`location_id` = p.`location_id`
-                WHERE `po_id` = :po_id";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
-        $stmt->execute();
-        $rs = $stmt->fetch();
-        if (!$rs) {
-            return null; // ไม่พบข้อมูล
-        }
-        // $_SESSION['XXXXXXXXXX'] = $rs;
-        // หรือ ถ้ามีการ return ค่าออกไปเลยสามารถใช้แบบนี้
-        // return $rs ?: null;
-        // แต่ถ้ายังมีการทำงานต่อต้องใช้แบบข้างบนเหมือนเดิม
-
-        // ดึงข้อมูลจากตารางรอง
-        $rs['periods'] = $this->getAllPeriodByPoId($poId);
-        
-        return $rs;
-    }
-    
     public function getByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main

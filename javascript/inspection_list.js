@@ -24,6 +24,7 @@ $(document).ready(function () {
       .done(function (result) {
         // console.log(`result: ${result}`);
         // responseMessage.text(result.message).css("color", "green");
+        // return;
         if (result.length > 0) {
           tableBody = createTableBody(result);
           $("#tbody").html(tableBody); // นำ HTML ของตารางไปใส่ใน div ที่มี id="tbody"

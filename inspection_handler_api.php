@@ -11,16 +11,14 @@ require_once 'class/connection_class.php';
 require_once 'class/po_class.php';
 require_once 'class/inspection_class.php';
 require_once 'class/ipc_class.php';
-require_once 'class/approval_service_class.php';
+require_once 'class/inspection_approval_service_class.php';
 
 $requestData = json_decode(file_get_contents('php://input'), true);
-
 $connection = new Connection();
 $pdo = $connection->getDbConnection();
 $inspection = new Inspection($pdo);
 $ipc = new Ipc($pdo);
 $inspectionService = new InspectionApprovalService($pdo, $inspection, $ipc);
-
 if (isset($requestData['action']) && $requestData['action'] == 'select') {
     $rs = $inspection->getAllPo();
     echo json_encode($rs);
