@@ -353,9 +353,9 @@ class Inspection
             $updateItems = array_filter($detailsData, fn($item) => ($item['order_crud'] ?? 'none') === 'update');
             $createItems = array_filter($detailsData, fn($item) => ($item['order_crud'] ?? 'none') === 'create');
 
-            $_SESSION['delete'] = $deleteItems;
-            $_SESSION['update'] = $updateItems;
-            $_SESSION['create'] = $createItems;
+            // $_SESSION['delete'] = $deleteItems;
+            // $_SESSION['update'] = $updateItems;
+            // $_SESSION['create'] = $createItems;
 
             $isPaid = 0;
             $isRetention = 0;
@@ -372,7 +372,7 @@ class Inspection
                         $stmtDelete->bindParam(':inspection_id', $item['inspection_id'], PDO::PARAM_INT);
                         $stmtDelete->bindParam(':rec_id', $item['rec_id'], PDO::PARAM_INT);
                         $stmtDelete->execute();
-                        $_SESSION['delete detail[' . $item["rec_id"] . ']:'] = $item['detail'];
+                        // $_SESSION['delete detail[' . $item["rec_id"] . ']:'] = $item['detail'];
                         $stmtDelete->closeCursor();
                     }
                 }
@@ -396,7 +396,7 @@ class Inspection
                         $stmtUpdate->bindParam(':remark', $item['remark'], PDO::PARAM_STR);
 
                         $stmtUpdate->execute();
-                        $_SESSION['update detail[' . $item["rec_id"] . ']:'] = $item['detail'];
+                        // $_SESSION['update detail[' . $item["rec_id"] . ']:'] = $item['detail'];
                         $stmtUpdate->closeCursor();
                     }
                 }
@@ -416,7 +416,7 @@ class Inspection
                     $stmtCreate->bindParam(':remark', $item['remark'], PDO::PARAM_STR);
 
                     $stmtCreate->execute();
-                    $_SESSION['insert detail[' . $this->db->lastInsertId() . ']:'] = $item['detail'];
+                    // $_SESSION['insert detail[' . $this->db->lastInsertId() . ']:'] = $item['detail'];
                     $stmtCreate->closeCursor();
 
                     // $periodId = $this->db->lastInsertId();
@@ -432,65 +432,6 @@ class Inspection
                 $this->db->rollBack();
             }
             throw $e;
-        }
-    }
-
-    public function saveFromPoPeriod_canceled(array $periodData)
-    {
-        $_SESSION['periodData inspection class AAAAAAAAAAAAAAAAAAA'] = $periodData;
-        // $inspectionId = $periodData['inspection_id'];
-        if (empty($inspectionId)) {
-            $_SESSION['Insert inspection class DDDDDDDDDDDDDDDDDDD'] = 'Insert';
-            // $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `workflow_id`) 
-            //         VALUES (1, 2, 9, 55, 50000, 40, 1)";
-            // $stmt = $this->db->prepare($sql);
-            // $stmt->execute();
-            // $stmt->closeCursor();
-            // $inspectionId = $this->db->lastInsertId();
-            // $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `workflow_id`) 
-            //         VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :workflow_id)";
-            $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `workflow_id`) 
-                    VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, 1)";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':po_id', $periodData['po_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':period_id', $periodData['period_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':period_number', $periodData['period_number'], PDO::PARAM_INT);
-            $stmt->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'],  PDO::PARAM_STR);
-            $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
-            $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
-            // $stmt->bindParam(':workflow_id', 1, PDO::PARAM_INT);//ทำไม error ตรงนี้
-
-            $stmt->execute();
-            $stmt->closeCursor();
-            $inspectionId = $this->db->lastInsertId();
-            
-
-            // INSERT inspection_details
-            // $sql = "INSERT INTO `inspection_details`(`inspection_id`) 
-            //         VALUES (:inspection_id)";
-            // $stmt = $this->db->prepare($sql);
-            // $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
-            // $stmt->execute();
-            // $stmt->closeCursor();
-            // return $affected;
-        } else {
-            $_SESSION['Update inspection class DDDDDDDDDDDDDDDDDDD'] = 'Update';
-            $sql = "UPDATE `inspection`
-                    SET `workload_planned_percent` = :workload_planned_percent
-                    , `interim_payment` = :interim_payment
-                    , `interim_payment_percent` = :interim_payment_percent
-                    WHERE `po_id` = :po_id
-                        AND `period_id` = :period_id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':po_id', $periodData['po_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':period_id', $periodData['period_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'],  PDO::PARAM_STR);
-            $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
-            $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
-            
-            $stmt->execute();
-            $stmt->closeCursor();
-            // return $affected;
         }
     }
 

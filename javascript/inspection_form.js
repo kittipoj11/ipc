@@ -238,6 +238,7 @@ $(document).ready(function () {
       url: "inspection_handler_api.php",
       type: "POST",
       contentType: "application/json",
+      dataType:"json",
       data: JSON.stringify(data_sent),
     })
       .done(function (result) {
