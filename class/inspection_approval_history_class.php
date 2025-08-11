@@ -28,6 +28,7 @@ class InspectionApprovalHistory
         return true;
     }
 
+    
 }
 /*Example
 class RegistrationService {

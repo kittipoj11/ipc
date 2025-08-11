@@ -119,6 +119,7 @@ require_once 'auth.php';
             <div class="col-12">
               <form name="myForm" id="myForm" action="" method="post" 
               data-user-id="<?= $_SESSION['user_id'] ?>"
+              data-inspection-id="<?= $rsInspection['period']['inspection_id'] ?>"
               data-inspection-status="<?= $rsInspection['period']['inspection_status'] ?>"
               data-current-approver-id="<?= $rsInspection['period']['current_approver_id'] ?>">
                 <div class="card">

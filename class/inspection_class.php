@@ -434,11 +434,15 @@ class Inspection
             throw $e;
         }
     }
-
+  // ทำการบันทึกข้อมูล inspection เพื่อกำหนดค่าดังนี้ 
+  // inspection_status เป็น 'draft'(เป็นค่า default ที่กำหนดใน database) 
+  // current_approval_level เป็น 0 (เป็นค่า default ที่กำหนดใน database เพราะ inspecion_status = 'draft')
+  // current_approver_id เป็น 0(เป็นค่า default ที่กำหนดใน database เพราะถูกสร้างจาก po_period ยังไม่ได้ถูก save จาก inspection) 
+  // และบันทึก inspection_approval_history.action เป็น 'create document'
     public function createFromPoPeriod(array $periodData)
     {
-        $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, current_approver_id, `workflow_id`) 
-                    VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, :current_approver_id, 1)";
+        $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `workflow_id`) 
+                    VALUES (:po_id, :period_number, :period_id, :workload_planned_percent, :interim_payment, :interim_payment_percent, 1)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':po_id', $periodData['po_id'], PDO::PARAM_INT);
         $stmt->bindParam(':period_id', $periodData['period_id'], PDO::PARAM_INT);
@@ -446,7 +450,8 @@ class Inspection
         $stmt->bindParam(':workload_planned_percent', $periodData['workload_planned_percent'],  PDO::PARAM_STR);
         $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
         $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
-        $stmt->bindParam(':current_approver_id', $_SESSION['user_id'], PDO::PARAM_STR);
+        // $stmt->bindParam(':current_approver_id', $_SESSION['user_id'], PDO::PARAM_STR);
+        // $stmt->bindParam(':current_approver_id', 0, PDO::PARAM_STR);
         // $stmt->bindParam(':workflow_id', 1, PDO::PARAM_INT);//ทำไม error ตรงนี้
         
         $stmt->execute();

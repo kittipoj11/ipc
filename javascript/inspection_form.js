@@ -169,20 +169,71 @@ $(document).ready(function () {
     }
   }
 
+  function sendRequest(action,data){
+    const myForm = $('#myForm');
+    const inspectionId = myForm.data('inspection-id');
+    const userId = myForm.data('user-id');
+
+    const data_sent = {
+      action: action,
+      inspectionId:inspectionId,
+      userId:userId,
+      ...data
+    };
+console.log(data_sent);
+// console.log(JSON.stringify(data_sent));
+return;
+    $.ajax({
+      url: "inspection_handler_api.php",
+      type: "POST",
+      contentType: "application/json",
+      dataType: 'json',
+      data: JSON.stringify(data_sent),
+    })
+      .done(function (result) {
+        // console.log(`result: ${result}`);
+        responseMessage.text(result.message).css("color", "green");
+        Swal.fire({
+          icon: "success",
+          title: "Approved successfully",
+          color: "#716add",
+          allowOutsideClick: false,
+          background: "black",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "inspection_list.php";
+          }
+        });
+      })
+      .fail((jqXHR) => {
+        const errorMsg = jqXHR.responseJSON
+          ? jqXHR.responseJSON.message
+          : "เกิดข้อผิดพลาดรุนแรง";
+        showMessage(errorMsg, false);
+      });
+  }
+
+  // ทำการบันทึกข้อมูล inspection
+  // current_approval_level = current_approval_level +1 (ค่า current_approval_level เดิม = 0) 
+  // ดึงข้อมูลจาก workflow_step ที่มี id = 1 และ approval_level = current_approval_level โดยมี limit 1 (จะได้ approval_level(1), approver_id(1), approval_type_text(submit))
+  // inspection_status เป็น 'pending submit'('pending ' + workflow_step.approval_type_text) 
+  // current_approver_id เป็น 1 (จาก workflow_step.approver_id)
+  // และบันทึก inspection_approval_history.action เป็น 'create document'
   $("#myForm").on("submit", function (e) {
     e.preventDefault();
-    // const radioButtons = document.querySelectorAll('input[name="disbursement"]');
+    /* const radioButtons = document.querySelectorAll('input[name="disbursement"]');
 
-    // let disbursement = 0; // กำหนดค่าเริ่มต้นเป็น 0
-    // for (const radioButton of radioButtons) {
-    //   if (radioButton.checked) {
-    //     disbursement = radioButton.value; // ดึงค่าจาก value
-    //     break;
-    //   }
-    // }
+    let disbursement = 0; // กำหนดค่าเริ่มต้นเป็น 0
+    for (const radioButton of radioButtons) {
+      if (radioButton.checked) {
+        disbursement = radioButton.value; // ดึงค่าจาก value
+        break;
+      }
+    }
 
-    // ★★★ ดึงค่าจาก radio button ที่ถูก ":checked" ของแถวนี้ ★★★
-    // ใช้ [name^="disbursement"] เพื่อเลือก radio button ทั้งหมดที่ชื่อขึ้นต้นด้วย "disbursement"
+    ★★★ ดึงค่าจาก radio button ที่ถูก ":checked" ของแถวนี้ ★★★
+    ใช้ [name^="disbursement"] เพื่อเลือก radio button ทั้งหมดที่ชื่อขึ้นต้นด้วย "disbursement"
+    */
     const disbursement = $('input[name^="disbursement"]:checked').val() || null; // ถ้าไม่มีการเลือก ให้เป็น null
 
     const periodData = {
@@ -226,14 +277,14 @@ $(document).ready(function () {
       detailsData.push(detailRecord);
     });
 
-    const data_sent = {
+    let data = {
       periodData: periodData,
       detailsData: detailsData,
-      action: "save",
     };
+    sendRequest('save',data);
 
     // console.log(data_sent);
-    // return;
+    return;
     $.ajax({
       url: "inspection_handler_api.php",
       type: "POST",
@@ -271,14 +322,6 @@ $(document).ready(function () {
           : "เกิดข้อผิดพลาดรุนแรง";
         showMessage(errorMsg, false);
       });
-  });
-
-  $(".btnCancel").click(function () {
-    window.history.back();
-    // window.location.href = "inspection_view.php";
-    // window.history.go(-1);
-    // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
-    // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
   });
 
   $(".approval_next").on("click", function (e) {
@@ -442,6 +485,14 @@ $(document).ready(function () {
           : "เกิดข้อผิดพลาดรุนแรง";
         showMessage(errorMsg, false);
       });
+  });
+
+  $(".btnCancel").click(function () {
+    window.history.back();
+    // window.location.href = "inspection_view.php";
+    // window.history.go(-1);
+    // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
+    // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
   });
 
 // รอตรวจสอบฟังก์ชัน

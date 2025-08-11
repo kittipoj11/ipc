@@ -19,6 +19,15 @@ $pdo = $connection->getDbConnection();
 $inspection = new Inspection($pdo);
 $ipc = new Ipc($pdo);
 $inspectionService = new InspectionApprovalService($pdo, $inspection, $ipc);
+
+switch($requestData['action']){
+    case 'select':
+        break;
+    
+    case 'save':
+        break;
+    
+}
 if (isset($requestData['action']) && $requestData['action'] == 'select') {
     $rs = $inspection->getAllPo();
     echo json_encode($rs);
