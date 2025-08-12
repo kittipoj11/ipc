@@ -178,7 +178,21 @@ $stmt->fetchAll():
 ด้วยเหตุนี้ การเขียนฟังก์ชัน getAllRecords จึงไม่จำเป็นต้องตรวจสอบค่าก่อน return เพราะผลลัพธ์ที่ได้เป็นประเภทข้อมูลที่สม่ำเสมอ (คือเป็น array เสมอ)
 การตรวจสอบค่าที่เรียกใช้: if (!empty($allUsers)) หรือ if (count($allUsers) > 0)
 
+///////////////////////////////////////////////////////////////////////
+★★★ ดึงค่าจาก radio button ที่ถูก ":checked" ของ row ★★★
+const radioButtons = document.querySelectorAll('input[name="disbursement"]');
+let disbursement = 0; // กำหนดค่าเริ่มต้นเป็น 0
+for (const radioButton of radioButtons) {
+    if (radioButton.checked) {
+    disbursement = radioButton.value; // ดึงค่าจาก value
+    break;
+    }
+}
 
+หรือ
+
+ใช้ [name^="disbursement"] เพื่อเลือก radio button ทั้งหมดที่ชื่อขึ้นต้นด้วย "disbursement"
+    
 ///////////////////////////////////////////////////////////////////////
 
 array_filter คือฟังก์ชันมาตรฐานของ PHP ที่ทำหน้าที่เหมือน "กระชอน" หรือ "ตะแกรงร่อน" สำหรับ Array ครับ

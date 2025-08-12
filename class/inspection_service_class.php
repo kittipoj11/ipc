@@ -4,19 +4,58 @@
 require_once 'connection_class.php';
 require_once 'inspection_class.php';
 require_once 'ipc_class.php';
+require_once 'workflows_class.php';
 
-class InspectionApprovalService
+class InspectionService
 {
     private $db;
     private $inspection;
     private $ipc;
+    private $workflow;
 
-    public function __construct(PDO $pdoConnection, Inspection $inspection, Ipc $ipc)
+    public function __construct(PDO $pdoConnection, Inspection $inspection, Ipc $ipc, Workflows $workflow)
     {
         $this->db = $pdoConnection;
         $this->inspection = $inspection;
         $this->ipc = $ipc;
+        $this->workflow = $workflow;
     }
+
+    public function saveInspection(array $periodData, array $detailsData): bool
+    {
+        try {
+            $this->db->beginTransaction();
+            // 1.ดึง user_id จาก SESSION
+            $userId=$_SESSION['user_id'];
+            // 2.หา current_approval_level, workflow_id จาก inspection
+            $rsInspection = $this->inspection->getByInspectionId($periodData['inspection_id']);
+            
+            // 3.หา workflow_step
+            $nextLevel = $rsInspection['period']['current_approval_level']+1;
+            $workflowId = $rsInspection['period']['workflow_id'];
+            $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
+
+            // 4.save inspection
+            $this->inspection->save($periodData, $detailsData);
+
+            // 5.update inspection status
+            $this->inspection->updateStatus($periodData['inspection_id'],'pending submit', $rsWorkflow['approver_id'], $nextLevel);
+            
+            // 6.log history 
+            $this->inspection->logHistory($periodData['inspection_id'], $userId,'Inspection Created');
+
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            // สามารถบันทึก error หรือโยน exception ต่อไปได้
+            // error_log($e->getMessage());
+            return false;
+        }
+    }
+
 
     public function approveInspection(array $approvalData,array $ipcData): bool
     {
@@ -114,20 +153,20 @@ class InspectionApprovalService
 
     private function createNextDocument($new_workflow_id, $creator_id, $source_data)
     {
-        $workflow = Workflow::find($new_workflow_id);
-        if (!$workflow) return;
+        // $workflow = Workflow::find($new_workflow_id);
+        // if (!$workflow) return;
 
-        $firstStep = $workflow->getStep(1);
-        if (!$firstStep) return;
+        // $firstStep = $workflow->getStep(1);
+        // if (!$firstStep) return;
 
-        $sql = "INSERT INTO documents (workflow_id, data, status, current_step, current_approver_id, created_by) 
-                VALUES (?, ?, 'pending_approval', 1, ?, ?)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$new_workflow_id, $source_data, $firstStep['approver_user_id'], $creator_id]);
-        $newDocId = $this->pdo->lastInsertId();
+        // $sql = "INSERT INTO documents (workflow_id, data, status, current_step, current_approver_id, created_by) 
+        //         VALUES (?, ?, 'pending_approval', 1, ?, ?)";
+        // $stmt = $this->db->prepare($sql);
+        // $stmt->execute([$new_workflow_id, $source_data, $firstStep['approver_user_id'], $creator_id]);
+        // $newDocId = $this->db->lastInsertId();
 
-        $history = new ApprovalHistory($newDocId, $creator_id, 'created_auto', 'Generated from workflow ' . $workflow->name);
-        $history->save();
+        // $history = new ApprovalHistory($newDocId, $creator_id, 'created_auto', 'Generated from workflow ' . $workflow->name);
+        // $history->save();
     }
 }
 /*Example

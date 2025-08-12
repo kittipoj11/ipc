@@ -169,26 +169,36 @@ $(document).ready(function () {
     }
   }
 
+  // - action มาจากการกดปุ่มว่าเป็นอะไร เช่น save, submit, approve, reject เป็นต้น  
+  // โดย submit และ approve เป็นการเลื่อน level เหมือนกัน  ต่างกันแค่ชื่อ   ซึ่งอาจจะดึงข้อมูลชื่อมาจาก workflow_step 
+  // - data เป็นข้อมูลที่มาจากฟอร์มเพื่อนำมาบันทึกข้อมูล 
+  // เช่นถ้าเป็นการ save จะดึงข้อมูลของ inspection บน form ส่งมาให้   เพื่อมาทำการ save 
+  // ถ้าเป็นการ submit sinv reject ไม่ต้องส่งข้อมูลของ form มาเพราะไม่ได้ใช้ข้อมูลบน form แต่ใช้การเลื่อนหรือถอย level จากการดึงข้อมูลใน workflow_step 
+  // แต่ทุก action ต้องส่ง data ที่มีข้อมูลอย่างน้อยคือ inspection-id, user-id
   function sendRequest(action,data){
-    const myForm = $('#myForm');
-    const inspectionId = myForm.data('inspection-id');
-    const userId = myForm.data('user-id');
+    const myForm = $("#myForm");
+    const inspectionId = myForm.data("inspection-id");
+    const userId = myForm.data("user-id"); //ไม่ต้องส่งไปก็ได้เพราะ  เรียกใช้ $_SESSION['user_id] ใน inspection_handler_api.php หรือ inspection_service_class.php
 
     const data_sent = {
       action: action,
-      inspectionId:inspectionId,
-      userId:userId,
-      ...data
+      inspectionId: inspectionId,
+      userId: userId,
+      ...data,
     };
-console.log(data_sent);
-// console.log(JSON.stringify(data_sent));
-return;
+    // console.log(action);
+    // console.log(JSON.stringify(data_sent));
+    // return;
     $.ajax({
       url: "inspection_handler_api.php",
       type: "POST",
       contentType: "application/json",
-      dataType: 'json',
+      dataType: "json",
       data: JSON.stringify(data_sent),
+      // beforeSend: function () {
+      //   // Optional: disable buttons to prevent double-clicking
+      //   $("#submit").prop("disabled", true);
+      // },
     })
       .done(function (result) {
         // console.log(`result: ${result}`);
@@ -221,41 +231,33 @@ return;
   // และบันทึก inspection_approval_history.action เป็น 'create document'
   $("#myForm").on("submit", function (e) {
     e.preventDefault();
-    /* const radioButtons = document.querySelectorAll('input[name="disbursement"]');
-
-    let disbursement = 0; // กำหนดค่าเริ่มต้นเป็น 0
-    for (const radioButton of radioButtons) {
-      if (radioButton.checked) {
-        disbursement = radioButton.value; // ดึงค่าจาก value
-        break;
-      }
-    }
-
-    ★★★ ดึงค่าจาก radio button ที่ถูก ":checked" ของแถวนี้ ★★★
-    ใช้ [name^="disbursement"] เพื่อเลือก radio button ทั้งหมดที่ชื่อขึ้นต้นด้วย "disbursement"
-    */
+    const myForm = $("#myForm");
+    const currentApprovalLevel = myForm.data("current-approval-level");
+    const workflowId = myForm.data("workflow_id");
     const disbursement = $('input[name^="disbursement"]:checked').val() || null; // ถ้าไม่มีการเลือก ให้เป็น null
 
     const periodData = {
       po_id: $("#po_id").val(),
       period_id: $("#period_id").val(),
       inspection_id: $("#inspection_id").val(),
-      workload_actual_completed_percent: $("#workload_actual_completed_percent").val() ?? 0,
-      workload_remaining_percent : $("#workload_remaining_percent").val() ?? 0,
-      workload_planned_percent : $("#workload_planned_percent").val() ?? 0,
-      interim_payment : $("#interim_payment").val() ?? 0,
-      interim_payment_percent : $("#interim_payment_percent").val() ?? 0,
-      interim_payment_less_previous : $("#interim_payment_less_previous").val() ?? 0,
-      interim_payment_less_previous_percent : $("#interim_payment_less_previous_percent").val() ?? 0,
-      interim_payment_accumulated : $("#interim_payment_accumulated").val() ?? 0,
-      interim_payment_accumulated_percent : $("#interim_payment_accumulated_percent").val() ?? 0,
-      interim_payment_remain : $("#interim_payment_remain").val() ?? 0,
-      interim_payment_remain_percent : $("#interim_payment_remain_percent").val() ?? 0,
-      retention_value : $("#retention_value").val() ?? 0,
-      plan_status_id : $("#plan_status_id").val() ?? 0,
-      disbursement : disbursement,//$("#disbursement").val() ?? 0,
-      remark : $("#remark").val() ?? '',
-      inspection_status : 'pending submit',
+      workload_actual_completed_percent:        $("#workload_actual_completed_percent").val() ?? 0,
+      workload_remaining_percent: $("#workload_remaining_percent").val() ?? 0,
+      workload_planned_percent: $("#workload_planned_percent").val() ?? 0,
+      interim_payment: $("#interim_payment").val() ?? 0,
+      interim_payment_percent: $("#interim_payment_percent").val() ?? 0,
+      interim_payment_less_previous:        $("#interim_payment_less_previous").val() ?? 0,
+      interim_payment_less_previous_percent:        $("#interim_payment_less_previous_percent").val() ?? 0,
+      interim_payment_accumulated: $("#interim_payment_accumulated").val() ?? 0,
+      interim_payment_accumulated_percent:        $("#interim_payment_accumulated_percent").val() ?? 0,
+      interim_payment_remain: $("#interim_payment_remain").val() ?? 0,
+      interim_payment_remain_percent:        $("#interim_payment_remain_percent").val() ?? 0,
+      retention_value: $("#retention_value").val() ?? 0,
+      plan_status_id: $("#plan_status_id").val() ?? 0,
+      disbursement: disbursement, //$("#disbursement").val() ?? 0,
+      remark: $("#remark").val() ?? "",
+      inspection_status: "pending submit",
+      current_approval_level: currentApprovalLevel,
+      workflow_id: workflowId,
     };
 // console.log(periodData);
 // return;
@@ -282,209 +284,25 @@ return;
       detailsData: detailsData,
     };
     sendRequest('save',data);
-
-    // console.log(data_sent);
-    return;
-    $.ajax({
-      url: "inspection_handler_api.php",
-      type: "POST",
-      contentType: "application/json",
-      dataType:"json",
-      data: JSON.stringify(data_sent),
-    })
-      .done(function (result) {
-        // console.log(`result: ${result}`);
-        responseMessage.text(result.message).css("color", "green");
-        Swal.fire({
-          icon: "success",
-          title: "Data saved successfully",
-          color: "#716add",
-          allowOutsideClick: false,
-          background: "black",
-          // backdrop: `
-          //                     rgba(0,0,123,0.4)
-          //                     url("_images/paw.gif")
-          //                     left bottom
-          //                     no-repeat
-          //                     `,
-          // showConfirmButton: false,
-          // timer: 15000
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // loadData(); // โหลดข้อมูลใหม่ทั้งหมด
-            window.location.href = "inspection_list.php";
-          }
-        });
-      })
-      .fail((jqXHR) => {
-        const errorMsg = jqXHR.responseJSON
-          ? jqXHR.responseJSON.message
-          : "เกิดข้อผิดพลาดรุนแรง";
-        showMessage(errorMsg, false);
-      });
   });
 
-  $(".approval_next").on("click", function (e) {
+  $(".approve").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
       e.preventDefault();
-    // console.log("click");
-    const max_approval_level = $(this).closest("ul").data("max-approval-level");
-    const current_approval_level = $(this).closest("ul").data("current-approval-level");
-    const new_approval_level = (current_approval_level==max_approval_level) ? current_approval_level : current_approval_level + 1;
-    const inspection_status = (current_approval_level==max_approval_level) ? 3 : 2;
-    const create_ipc = (current_approval_level==max_approval_level) ? true : false;
-
-    const approvalData = {
-      po_id: $("#po_id").val(),
-      period_id: $("#period_id").val(),
-      inspection_id: $("#inspection_id").val(),
-      current_approval_level: current_approval_level,
-      new_approval_level : new_approval_level,
-      inspection_status : inspection_status,
-      is_approve : true,
-      create_ipc : create_ipc,
-    };
-
-    const less_retension_exclude_vat = 0;
-    const sum_of_less_retension_exclude_vat = 0;
-
-    const ipcData = {
-      po_id: $("#po_id").val(),
-      period_id: $("#period_id").val(),
-      inspection_id: $("#inspection_id").val(),
-      ipc_id: 0,
-      period_number: $("#period_number").val(),
-      project_name: $("#project_name").val(),
-      contractor: $("#supplier_name").val(),
-      contract_value: $("#contract_value").val(),
-      remark: '',
-
-      interim_payment_less_previous: $("#interim_payment_less_previous").val(),//(1)ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน
-      interim_payment: $("#interim_payment").val(),//(2)ยอดเบิกเงินงวดปัจจุบัน
-      interim_payment_accumulated: $("#interim_payment_accumulated").val(),//(3)ยอดเบิกเงินงวดสะสมถึงปัจจุบัน
-      interim_payment_remain: $("#interim_payment_remain").val(),//(4)ยอดเงินงวดคงเหลือ
-
-      total_value_of_interim_payment: $("#interim_payment_less_previous").val() + $("#interim_payment").val(),//(3)total_value_of_interim_payment
-      less_previous_interim_payment: $("#interim_payment_less_previous").val(),//(1)less_previous_interim_payment
-      net_value_of_current_claim: $("#interim_payment").val(),//(2)net_value_of_current_claim
-      less_retension_exclude_vat: less_retension_exclude_vat,//(5)less_retension_exclude_vat
-
-      net_amount_due_for_payment: $("#interim_payment").val()-less_retension_exclude_vat,//(6)net_amount_due_for_payment
-
-      total_value_of_retention: sum_of_less_retension_exclude_vat,//(7)total_value_of_retention
-      total_value_of_certification_made: $("#interim_payment_accumulated").val()-sum_of_less_retension_exclude_vat,//(8)total_value_of_certification_made
-      resulting_balance_of_contract_sum_outstanding: $("#interim_payment_remain").val()-sum_of_less_retension_exclude_vat,//(9)resulting_balance_of_contract_sum_outstanding
-    };
-
-    const data_sent = {
-      approvalData: approvalData,
-      ipcData: ipcData,
-      action: "approveInspection",
-    };
-
-    // console.log(`data_sent: ${JSON.stringify(data_sent)}`);
-    // return;
-    $.ajax({
-      url: "inspection_handler_api.php",
-      type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify(data_sent),
-    })
-      .done(function (result) {
-        // console.log(`result: ${result}`);
-        responseMessage.text(result.message).css("color", "green");
-        Swal.fire({
-          icon: "success",
-          title: "Approved successfully",
-          color: "#716add",
-          allowOutsideClick: false,
-          background: "black",
-          // backdrop: `
-          //                     rgba(0,0,123,0.4)
-          //                     url("_images/paw.gif")
-          //                     left bottom
-          //                     no-repeat
-          //                     `,
-          // showConfirmButton: false,
-          // timer: 15000
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // loadData(); // โหลดข้อมูลใหม่ทั้งหมด
-            window.location.href = "inspection_list.php";
-          }
-        });
-      })
-      .fail((jqXHR) => {
-        const errorMsg = jqXHR.responseJSON
-          ? jqXHR.responseJSON.message
-          : "เกิดข้อผิดพลาดรุนแรง";
-        showMessage(errorMsg, false);
-      });
+    sendRequest($(".approve").data("approve-text"));
   });
   
-  $(".approval_reject").on("click", function (e) {
+  $(".reject").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
       e.preventDefault();
-    // console.log("click");
-    let max_approval_level = $(this).closest("ul").data("max-approval-level");
-    let current_approval_level = $(this).closest("ul").data("current_approval_level");
-    let new_approval_level = current_approval_level - 1;
-    let inspection_status = 1;
-
-    const approvalData = {
-      po_id: $("#po_id").val(),
-      period_id: $("#period_id").val(),
-      inspection_id: $("#inspection_id").val(),
-      current_approval_level: current_approval_level,
-      new_approval_level : new_approval_level,
-      inspection_status : inspection_status,
-      isApprove : false,
-      create_ipc : false,
-    };
-
-    const data_sent = {
-      approvalData: approvalData,
-      action: "approveInspection",
-    };
-
-    // console.log(`data_sent: ${JSON.stringify(data_sent)}`);
-    // return;
-    $.ajax({
-      url: "inspection_handler_api.php",
-      type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify(data_sent),
-    })
-      .done(function (result) {
-        // console.log(`result: ${result}`);
-        responseMessage.text(result.message).css("color", "green");
-        Swal.fire({
-          icon: "success",
-          title: "Approved successfully",
-          color: "#716add",
-          allowOutsideClick: false,
-          background: "black",
-          // backdrop: `
-          //                     rgba(0,0,123,0.4)
-          //                     url("_images/paw.gif")
-          //                     left bottom
-          //                     no-repeat
-          //                     `,
-          // showConfirmButton: false,
-          // timer: 15000
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // loadData(); // โหลดข้อมูลใหม่ทั้งหมด
-            window.location.href = "inspection_list.php";
-          }
-        });
-      })
-      .fail((jqXHR) => {
-        const errorMsg = jqXHR.responseJSON
-          ? jqXHR.responseJSON.message
-          : "เกิดข้อผิดพลาดรุนแรง";
-        showMessage(errorMsg, false);
-      });
+    // const comments = $("#reject_comments").val().trim();
+    const comments = "#reject_comments";
+    // if (!comments) {
+    //   alert("กรุณากรอกเหตุผลในการปฏิเสธ");
+    //   $("#reject_comments").focus();
+    //   return;
+    // }
+    sendRequest("reject", { comments: comments });
   });
 
   $(".btnCancel").click(function () {
@@ -512,58 +330,31 @@ return;
   function refreshForm() {
     const myForm = $('#myForm');
     // console.log(myForm.data('inspection-status'))interim_payment
-    $("#interim_payment").attr('readonly',false);
-    if ((myForm.data('inspection-status') =='draft') 
-      && myForm.data('current-approver-id') == myForm.data('user-id')) {
-      $("#btnAction").addClass('d-none');
-      $("#btnAction").removeClass('inline');
-
+    $("#interim_payment").attr('readonly', false);
+    // จัดการปุ่ม save
+    if ((myForm.data('inspection-status') =='draft') && myForm.data('created-by') == myForm.data('user-id')) {
       $("#submit").addClass('inline');
       $("#submit").removeClass('d-none');
     } 
-    else if ((myForm.data('inspection-status') =='draft' || myForm.data('inspection-status') =='pending submit') 
-      && myForm.data('current-approver-id') == myForm.data('user-id')) {
-      $("#btnAction").addClass('inline');
-      $("#btnAction").removeClass('d-none');
-
-      $("#submit").addClass('inline');
-      $("#submit").removeClass('d-none');
-    } 
-    else if (myForm.data('inspection-status') =='pending approve' 
-    && myForm.data('current-approver-id') == myForm.data('user-id')) {
-      $("#btnAction").addClass('inline');
-      $("#btnAction").removeClass('d-none');
-
+    else {
       $("#submit").addClass('d-none');
       $("#submit").removeClass('inline');
-
-      // $("#interim_payment").attr('readonly',true);
-      $("#keyIn").addClass('div-disabled');
+    }
+    
+    if (myForm.data('inspection-status') == 'pending submit' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+      $("#btnAction").addClass('inline');
+      $("#btnAction").removeClass('d-none');
+    } 
+    else if (myForm.data('inspection-status') =='pending approve' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+      $("#btnAction").addClass('inline');
+      $("#btnAction").removeClass('d-none');
     } 
     else{
       $("#btnAction").addClass('d-none');
       $("#btnAction").removeClass('inline');
-
-      $("#submit").addClass('d-none');
-      $("#submit").removeClass('inline');
-
-      // $("#interim_payment").attr('readonly',true);
-      $("#keyIn").addClass('div-disabled');
     }
 
-
-
-    return;
-
-    if ($("#submit").data("current_approval_level") > 1) {
-      $("#submit").addClass("d-none");
-      $(".btn-group").addClass("d-none");
-    } else {
-      $("#submit").removeClass("d-none");
-      $(".btn-group").removeClass("d-none");
-    }
-    // $("#submit").addClass("d-none");
-    // $(".btn-group").addClass("d-none");
+ 
   }
 
   refreshForm();

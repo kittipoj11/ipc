@@ -100,6 +100,8 @@ class Workflows
     // ฟังก์ชั่นนี้ต้องใช้หรือไม่
     public function getStep($workflowId, $approvalLevel)
     {
+        $_SESSION['workflowId']=$workflowId;
+        $_SESSION['approvalLevel']=$approvalLevel;
         $sql = "SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text` 
                 FROM workflow_steps 
                 WHERE workflow_id = :workflow_id 

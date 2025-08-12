@@ -56,11 +56,14 @@ require_once 'auth.php';
       /* เพิ่มสีข้อความให้เป็นสีขาวเพื่อให้ตัดกับพื้นหลัง */
     }
 
-  .div-disabled {
-    opacity: 0.5; /* ทำให้ดูจางลง */
-    pointer-events: none; /* ป้องกันการคลิกเมาส์ */
-    cursor: not-allowed; /* เปลี่ยนเคอร์เซอร์ (ทางเลือก) */
-  }
+    .div-disabled {
+      opacity: 0.5;
+      /* ทำให้ดูจางลง */
+      pointer-events: none;
+      /* ป้องกันการคลิกเมาส์ */
+      cursor: not-allowed;
+      /* เปลี่ยนเคอร์เซอร์ (ทางเลือก) */
+    }
   </style>
 </head>
 
@@ -75,7 +78,7 @@ require_once 'auth.php';
     <!-- Main Content Start -->
     <?php
     require_once  'class/connection_class.php';
-    require_once  'class/inspection_class_copy.php';
+    require_once  'class/inspection_class.php';
     require_once  'class/plan_status_class.php';
 
     // $_SESSION['Request'] = $_REQUEST;
@@ -83,15 +86,13 @@ require_once 'auth.php';
     $pdo = $connection->getDbConnection();
 
     $poId = $_REQUEST['po_id'];
-    $period_id = $_REQUEST['period_id'];
-    $inspection_id = $_REQUEST['inspection_id'];
+    $periodId = $_REQUEST['period_id'];
+    $inspectionId = $_REQUEST['inspection_id'];
 
     $inspection = new Inspection($pdo);
-    $rsInspection = $inspection->getPeriodByPeriodId($period_id);
-    // $_SESSION['current_approval_level isset'] =  isset($rsInspection['period']['current_approval_level']);
-    // $_SESSION['current_approval_level'] =  $rsInspection['period']['current_approval_level'];
-    // $_SESSION['approval_date isset'] =  array_key_exists('approval_date', $rsInspection['periodApprovals']) ;
-    // $_SESSION['rsInspection XXXXXXXXXXXXXXXXXXXXXXXXXXX'] =  $rsInspection;
+    $rsInspection = $inspection->getByInspectionId($inspectionId);
+
+    $rsCurrentApprovalType  = $inspection->getCurrentApprovalType($inspectionId);
 
     $plan_status = new Plan_status($pdo);
     $rsPlanStatus = $plan_status->getAll();
@@ -117,11 +118,14 @@ require_once 'auth.php';
         <div class="container-fluid">
           <div class="row">
             <div class="col-12">
-              <form name="myForm" id="myForm" action="" method="post" 
-              data-user-id="<?= $_SESSION['user_id'] ?>"
-              data-inspection-id="<?= $rsInspection['period']['inspection_id'] ?>"
-              data-inspection-status="<?= $rsInspection['period']['inspection_status'] ?>"
-              data-current-approver-id="<?= $rsInspection['period']['current_approver_id'] ?>">
+              <form name="myForm" id="myForm" action="" method="post"
+                data-user-id="<?= $_SESSION['user_id'] ?>"
+                data-inspection-id="<?= $rsInspection['period']['inspection_id'] ?>"
+                data-inspection-status="<?= $rsInspection['period']['inspection_status'] ?>"
+                data-workflow-id="<?= $rsInspection['period']['workflow_id'] ?>"
+                data-created-by="<?= $rsInspection['period']['created_by'] ?>"
+                data-current-approver-id="<?= $rsInspection['period']['current_approver_id'] ?>"
+                data-current-approval-level="<?= $rsInspection['period']['current_approval_level'] ?>">
                 <div class="card">
                   <div class="card-header d-flex justify-content-between">
                     <div class="col d-flex align-items-center">
@@ -139,33 +143,20 @@ require_once 'auth.php';
 
                     <!-- <div class="dropdown"> -->
                     <div class="btn-group" role="group">
-                        <button id="btnAction" class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Action
-                        </button>
+                      <button id="btnAction" class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                      </button>
 
-                        <ul class="dropdown-menu py-0" id="action_type" data-current-approval-level="<?= $rsInspection['period']['current_approval_level'] ?>" 
-                        data-max-approval-level="<?= $rsInspection['maxPeriodApproval']['max_approval_level'] ?>">
-                          <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
-                          <?php
-                          if (isset($rsInspection['period']['current_approval_level']) && empty($rsInspection['period']['current_approval_level']) ):
-                          ?>
+                      <ul class="dropdown-menu py-0" id="action_type">
+                        <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
 
-                          <?php
-                          elseif (isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 1):
-                          ?>
-                            <li><button class="dropdown-item approval_next" id="document_submit">Submit</a>
-                            </li>
-                          <?php
-                          elseif (isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 2):
-                          ?>
-                            <li><button class="dropdown-item approval_next" id="document_approve">Approve</a>
-                            </li>
-                            <li><button class="dropdown-item approval_reject" id="document_reject">Reject</button>
-                            </li>
-                          <?php endif; ?>
+                        <li><button class="dropdown-item approve" data-approve-text="<?php echo $rsCurrentApprovalType['approval_type_text'] ?>"><?php echo $rsCurrentApprovalType['approval_type_text'] ?></button></li>
+                        <?php if ($rsCurrentApprovalType['current_approval_level'] > 1): ?>
+                          <li><button class="dropdown-item reject">reject</button></li>
+                        <?php endif; ?>
 
-                        </ul>
-                      </div>
+                      </ul>
+                    </div>
                   </div>
 
                   <div class="card-body m-0 p-0">
@@ -460,16 +451,6 @@ require_once 'auth.php';
                   <div class="container-fluid  p-0 d-flex justify-content-between">
                     <button type="button" name="btnCancel" class="btn btn-primary btn-sm m-1 btnCancel"> <i class="fi fi-rr-left"></i> </button>
                     <div>
-                      <?php
-                      if (
-                        isset($rsInspection['period']['current_approval_level']) && $rsInspection['period']['current_approval_level'] == 1
-                        && array_key_exists('approval_date', $rsInspection['periodApprovals']) && is_null($rsInspection['periodApprovals']['approval_date'])
-                        && isset($rsInspection['periodApprovals']['approver_id']) && $rsInspection['periodApprovals']['approver_id'] == $_SESSION['user_id']
-                      ):
-                      ?>
-                      <?php
-                      endif;
-                      ?>
                       <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsInspection['period']['current_approval_level'] ?>">
                       <button type="button" name="btnCancel" class="btn btn-warning btn-sm m-1 btnCancel">ยกเลิก</button>
                     </div>

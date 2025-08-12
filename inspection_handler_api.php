@@ -11,69 +11,63 @@ require_once 'class/connection_class.php';
 require_once 'class/po_class.php';
 require_once 'class/inspection_class.php';
 require_once 'class/ipc_class.php';
-require_once 'class/inspection_approval_service_class.php';
+require_once 'class/workflows_class.php';
+require_once 'class/inspection_service_class.php';
 
 $requestData = json_decode(file_get_contents('php://input'), true);
-$connection = new Connection();
-$pdo = $connection->getDbConnection();
-$inspection = new Inspection($pdo);
-$ipc = new Ipc($pdo);
-$inspectionService = new InspectionApprovalService($pdo, $inspection, $ipc);
 
-switch($requestData['action']){
-    case 'select':
-        break;
-    
-    case 'save':
-        break;
-    
-}
-if (isset($requestData['action']) && $requestData['action'] == 'select') {
-    $rs = $inspection->getAllPo();
-    echo json_encode($rs);
+$userId = $_SESSION['user_id'] ?? 0;
 
-} elseif (isset($requestData['action']) && $requestData['action'] == 'selectInspectionPeriodAll') {
-    $rs = $inspection->getAllPeriodByPoId($requestData['po_id']);
-    echo json_encode($rs);
+if (isset($requestData['action']) && $userId > 0) {
+    $connection = new Connection();
+    $pdo = $connection->getDbConnection();
 
-} elseif (isset($requestData['action']) && $requestData['action'] == 'save') {
-    if (!isset($requestData['periodData']) || !isset($requestData['detailsData'])) {
-        throw new Exception('Invalid data structure.');
+    $inspection = new Inspection($pdo);
+    $ipc = new Ipc($pdo);
+    $workflow = new Workflows($pdo);
+    $inspectionService = new InspectionService($pdo, $inspection, $ipc,$workflow);
+
+    switch ($requestData['action']) {
+        case 'save':
+            // $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
+            $savedInspectionId = $inspectionService->saveInspection($requestData['periodData'], $requestData['detailsData']);
+            $response = [
+                'status' => 'success',
+                'message' => 'บันทึกข้อมูล PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
+                'data' => ['inspection_id' => $savedInspectionId]
+            ];
+            echo json_encode($response);
+            break;
+
+        case 'select':
+            $rs = $inspection->getAllPo();
+            echo json_encode($rs);
+            break;
+
+        case 'selectInspectionPeriodAll':
+            $rs = $inspection->getAllPeriodByPoId($requestData['po_id']);
+            echo json_encode($rs);
+            break;
+
+        case 'approveInspection':
+            $inspectionService->approveInspection($requestData['approvalData'], $requestData['ipcData']);
+            $response = [
+                'status' => 'success',
+                'message' => 'บันทึกข้อมูล PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
+                'data' => ['inspection_id' => $savedInspectionId]
+            ];
+            echo json_encode($response);
+            break;
+        case 'selectInspectionFiles':
+            $rsInspectionFiles = $inspection->getInspectionFilesByInspectionId($requestData['po_id'], $requestData['period_id'], $requestData['inspection_id']);
+            echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
+            break;
+        case 'insertInspectionFiles':
+            $inspection->insertInspectionFiles($requestData);
+            break;
+        case 'deleteInspectionFiles':
+            $inspection->deleteInspectionFiles($requestData['file_id']);
+            break;
+        default:
     }
-    $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
-    
-    $response = [
-        'status' => 'success',
-        'message' => 'บันทึกข้อมูล PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
-        'data' => ['inspection_id' => $savedInspectionId]
-    ];
-    // echo "1";
-    echo json_encode($response);
-    
-} elseif (isset($requestData['action']) && $requestData['action'] == 'approveInspection') {
-    // $savedInspectionId = $inspection->updateApprovalLevel_old($requestData['approvalData'],$requestData['ipcData']);
-    $inspectionService->approveInspection($requestData['approvalData'],$requestData['ipcData']);
-    $response = [
-        'status' => 'success',
-        'message' => 'บันทึกข้อมูล PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
-        'data' => ['inspection_id' => $savedInspectionId]
-    ];
-    // echo "1";
-    echo json_encode($response);
-
-
-} elseif (isset($requestData['action']) && $requestData['action'] == 'selectInspectionFiles') {
-    $rsInspectionFiles = $inspection->getInspectionFilesByInspectionId($requestData['po_id'], $requestData['period_id'], $requestData['inspection_id']);
-    echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
-
-} elseif (isset($requestData['action']) && $requestData['action'] == 'insertInspectionFiles') {
-    $inspection->insertInspectionFiles($requestData);
-    // echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
-
-} elseif (isset($requestData['action']) && $requestData['action'] == 'deleteInspectionFiles') {
-    $inspection->deleteInspectionFiles($requestData['file_id']);
-
-} else {
-    // fetchAll($inspection);
 }
-

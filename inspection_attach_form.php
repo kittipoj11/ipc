@@ -95,7 +95,7 @@ require_once 'auth.php';
     $pdo=$connection->getDbConnection();
 
     $inspection = new Inspection($pdo);
-    $rsInspection = $inspection->getPeriodByPeriodId($period_id);
+    $rsInspection = $inspection->getByInspectionId($inspection_id);
 
     ?>
 
