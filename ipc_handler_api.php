@@ -8,23 +8,57 @@ header('Content-Type: application/json');
 
 require_once 'config.php';
 require_once 'class/connection_class.php';
+require_once 'class/inspection_class.php';
 require_once 'class/ipc_class.php';
-
-$connection = new Connection;
-$pdo = $connection->getDbConnection();
-$ipc = new ipc($pdo);
+require_once 'class/workflows_class.php';
+require_once 'class/inspection_service_class.php';
 
 $requestData = json_decode(file_get_contents('php://input'), true);
-// $_SESSION['req data1']=$requestData;
 
-if (isset($requestData['action']) && $requestData['action'] == 'select') {
-    $rs = $ipc->getAllPo();
-    echo json_encode($rs);
+$userId = $_SESSION['user_id'] ?? 0;
 
-} elseif (isset($requestData['action']) && $requestData['action'] == 'selectIpcPeriodAll') {
-    $rs = $ipc->getAllPeriodByPoId($requestData['po_id']);
-    echo json_encode($rs);
-    
-} else {
-    // fetchAll($ipc);
+
+if (isset($requestData['action']) && $userId > 0) {
+    $connection = new Connection();
+    $pdo = $connection->getDbConnection();
+
+    $inspection = new Inspection($pdo);
+    $ipc = new Ipc($pdo);
+    $workflow = new Workflows($pdo);
+    $documentService = new InspectionService($pdo, $inspection, $ipc, $workflow);
+
+    switch ($requestData['action']) {
+        case 'approve':
+            // $ipcId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
+            $ipcId = $documentService->approveIpc($requestData['ipcId']);
+            $response = [
+                'status' => 'success',
+                'message' => 'อนุมัติ PO ID: ' . $ipcId . ' เรียบร้อยแล้ว',
+                'data' => ['ipc_id' => $ipcId]
+            ];
+            echo json_encode($response);
+            break;
+
+        case 'reject':
+            // $ipcId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
+            $ipcId = $documentService->rejectInspection($requestData['ipcId'], $requestData['comments']);
+            $response = [
+                'status' => 'success',
+                'message' => 'ไม่อนุมัติ PO ID: ' . $ipcId,
+                'data' => ['ipc_id' => $ipcId]
+            ];
+            echo json_encode($response);
+            break;
+
+        case 'select':
+            $rs = $ipc->getAllPo();
+            echo json_encode($rs);
+            break;
+
+        case 'selectIpcPeriodAll':
+            $rs = $ipc->getAllPeriodByPoId($requestData['po_id']);
+            echo json_encode($rs);
+            break;
+        default:
+    }
 }

@@ -21,7 +21,7 @@ class InspectionService
         $this->workflow = $workflow;
     }
 
-    public function saveInspection(array $periodData, array $detailsData): bool
+    public function saveInspection(array $periodData, array $detailsData): int
     {
         try {
             $this->db->beginTransaction();
@@ -29,144 +29,298 @@ class InspectionService
             $userId=$_SESSION['user_id'];
             // 2.หา current_approval_level, workflow_id จาก inspection
             $rsInspection = $this->inspection->getByInspectionId($periodData['inspection_id']);
+            // $_SESSION['rsInspection']=$rsInspection;
             
             // 3.หา workflow_step
-            $nextLevel = $rsInspection['period']['current_approval_level']+1;
+            $inspectionId = $periodData['inspection_id'];
+            $currentLevel = $rsInspection['period']['current_approval_level'];
+            $nextLevel = $currentLevel + 1;
             $workflowId = $rsInspection['period']['workflow_id'];
+
             $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
+            $nextApproverId = $rsWorkflow['approver_id'];
 
             // 4.save inspection
             $this->inspection->save($periodData, $detailsData);
 
             // 5.update inspection status
-            $this->inspection->updateStatus($periodData['inspection_id'],'pending submit', $rsWorkflow['approver_id'], $nextLevel);
+            $this->inspection->updateStatus($inspectionId,'pending submit', $nextApproverId, $nextLevel);
             
             // 6.log history 
-            $this->inspection->logHistory($periodData['inspection_id'], $userId,'Inspection Created');
+            $this->inspection->logHistory($inspectionId, $userId,'Inspection Created');
 
             $this->db->commit();
-            return true;
+            return $inspectionId;
         } catch (Exception $e) {
             if ($this->db->inTransaction()) {
                 $this->db->rollBack();
             }
             // สามารถบันทึก error หรือโยน exception ต่อไปได้
             // error_log($e->getMessage());
-            return false;
+            return 0;
         }
     }
 
-
-    public function approveInspection(array $approvalData,array $ipcData): bool
+    public function approveInspection($inspectionId): int
     {
         try {
             $this->db->beginTransaction();
+            // 1.ดึง user_id จาก SESSION
+            $userId=$_SESSION['user_id'];
+            // 2.หา current_approval_level, workflow_id จาก inspection
+            $rsInspection = $this->inspection->getByInspectionId($inspectionId);
+            // $_SESSION['rsInspection XXXXXXXXXXXXX']=$rsInspection;
+            // return $inspectionId;
 
-            $this->inspection->updateApprovalLevel($approvalData);
-            $this->ipc->save($ipcData);
+            // 3.หา workflow_step
+            $currentLevel= $rsInspection['period']['current_approval_level'];
+            $nextLevel = $currentLevel+1;
+            $workflowId = $rsInspection['period']['workflow_id'];
+
+            $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
+
+            // 4.update inspection status
+            // ตรวจสอบ $rsWorkflow ว่ามีข้อมูลหรือไม่
+            if ($rsWorkflow) {
+                $nextApproverId = $rsWorkflow['approver_id'];
+                $this->inspection->updateStatus($inspectionId, 'pending approve', $nextApproverId, $nextLevel);
+
+                // 5.log history 
+                $this->inspection->logHistory($inspectionId, $userId, "Approved at Step {$currentLevel}");
+            } else {
+            //inspection_status สถานะปัจจุบัน (Completed)
+            //current_approver_id บอกว่าไม่มีใครต้องทำอะไรต่อ (Null) 
+            //current_level บอกประวัติว่าไปถึงขั้นตอนไหน (ขั้นตอนสุดท้าย)
+                $this->inspection->updateStatus($inspectionId, 'Completed', NULL, $currentLevel);
+
+                // 5.log history 
+                $this->inspection->logHistory($inspectionId, $userId, "Final Approved at Step {$currentLevel}. Status: Completed");
+
+                // ถ้าเป็น inspection(workflow_id = 1) จะทำการสร้างเอกสาร ipc(workflow_id=2)
+                if ($rsInspection['period']['workflow_id'] === 1) {
+                    $less_retension_exclude_vat=0;
+                    $sum_of_less_retension_exclude_vat=0;
+                    $ipcData=[
+                        "po_id"=> $rsInspection['period']["po_id"],
+                        "period_id"=> $rsInspection['period']["period_id"],
+                        "inspection_id"=> $rsInspection['period']["inspection_id"],
+                        "ipc_id"=> 0,
+                        "period_number"=> $rsInspection['period']["period_number"],
+                        "project_name"=> $rsInspection['header']["project_name"],
+                        "contractor"=> $rsInspection['header']["supplier_name"],
+                        "contract_value"=> $rsInspection['header']["contract_value"],
+                        "total_value_of_interim_payment"=> $rsInspection['period']["interim_payment_less_previous"] + $rsInspection['period']["interim_payment"],//(3)total_value_of_interim_payment
+                        "less_previous_interim_payment"=> $rsInspection['period']["interim_payment_less_previous"],//(1)less_previous_interim_payment
+                        "net_value_of_current_claim"=> $rsInspection['period']["interim_payment"],//(2)net_value_of_current_claim
+                        "less_retension_exclude_vat"=> $less_retension_exclude_vat,//(5)less_retension_exclude_vat
+                        "net_amount_due_for_payment"=> $rsInspection['period']["interim_payment"]-$less_retension_exclude_vat,//(6)net_amount_due_for_payment
+                        "total_value_of_retention"=> $sum_of_less_retension_exclude_vat,//(7)total_value_of_retention
+                        "total_value_of_certification_made"=> $rsInspection['period']["interim_payment_accumulated"]-$sum_of_less_retension_exclude_vat,//(8)total_value_of_certification_made
+                        "resulting_balance_of_contract_sum_outstanding"=> $rsInspection['period']["interim_payment_remain"]-$sum_of_less_retension_exclude_vat,//(9)resulting_balance_of_contract_sum_outstanding
+                        "remark"=> '',
+                        "workflow_id"=>2,
+                        "interim_payment_less_previous"=> $rsInspection['period']["interim_payment_less_previous"],//(1)ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน
+                        "interim_payment"=> $rsInspection['period']["interim_payment"],//(2)ยอดเบิกเงินงวดปัจจุบัน
+                        "interim_payment_accumulated"=> $rsInspection['period']["interim_payment_accumulated"],//(3)ยอดเบิกเงินงวดสะสมถึงปัจจุบัน
+                        "interim_payment_remain"=> $rsInspection['period']["interim_payment_remain"],//(4)ยอดเงินงวดคงเหลือ
+                    ];
+
+                    $ipcId = $this->ipc->create($ipcData);
+                    
+                    // 2.หา current_approval_level, workflow_id จาก ipc
+                    $rsIpc = $this->ipc->getByIpcId($ipcId);
+                    
+                    // 3.หา workflow_step
+                    $nextLevel = 1;
+                    $workflowId = $rsIpc['period']['workflow_id'];
+                    
+                    $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
+                    $nextApproverId = $rsWorkflow['approver_id'];
+                    
+                    // 5.update ipc status
+                    $this->ipc->updateStatus($ipcId, 'pending submit', $nextApproverId, $nextLevel);
+                    
+                    // 6.log history 
+                    $this->ipc->logHistory($ipcId, $userId, 'IPC Created');
+                }
+            }
+            $this->db->commit();
+            return $inspectionId;
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            // สามารถบันทึก error หรือโยน exception ต่อไปได้
+            // $_SESSION['rollback GGGGGGGGGGGGG'] = $e->getMessage();
+            error_log($e->getMessage());
+            return 0;
+        }
+    }
+
+    public function rejectInspection($inspectionId, $comments): int
+    {
+        try {
+            $this->db->beginTransaction();
+            // 1.ดึง user_id จาก SESSION
+            $userId = $_SESSION['user_id'];
+            // 2.หา current_approval_level, workflow_id จาก inspection
+            $rsInspection = $this->inspection->getByInspectionId($inspectionId);
+
+            // 3.หา workflow_step
+            $currentLevel = $rsInspection['period']['current_approval_level'];
+            $nextLevel = $currentLevel - 1;
+            $workflowId = $rsInspection['period']['workflow_id'];
+
+            $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
+
+            // 4.update inspection status
+            $nextApproverId = $rsWorkflow['approver_id'];
+            $this->inspection->updateStatus($inspectionId, 'pending submit', $nextApproverId, $nextLevel);
+
+            // 5.log history 
+            $this->inspection->logHistory($inspectionId, $userId, "Inspection rejected at Step {$currentLevel}", $comments);
 
             $this->db->commit();
-            return true;
+            return $inspectionId;
         } catch (Exception $e) {
             if ($this->db->inTransaction()) {
                 $this->db->rollBack();
             }
             // สามารถบันทึก error หรือโยน exception ต่อไปได้
             // error_log($e->getMessage());
-            return false;
+            return 0;
         }
     }
 
-    public function submitDocument(Document $document, User $submitter)
+    public function approveIpc($ipcId): int
     {
-        if ($document->status !== 'draft' || $document->created_by !== $submitter->id) {
-            throw new Exception("Only the creator can submit a draft document.");
-        }
-        $workflow = Workflow::find($document->workflow_id);
-        $firstStep = $workflow->getStep(1);
+        try {
+            $this->db->beginTransaction();
+            // 1.ดึง user_id จาก SESSION
+            $userId = $_SESSION['user_id'];
+            // 2.หา current_approval_level, workflow_id จาก inspection
+            $rsIpc = $this->ipc->getByIpcId($ipcId);
+            // $_SESSION['rsIpc XXXXXXXXXXXXX']=$rsIpc;
+            // return $ipcId;
 
-        if (!$firstStep) {
-            throw new Exception("Workflow is not configured correctly.");
-        }
+            // 3.หา workflow_step
+            $currentLevel = $rsIpc['period']['current_approval_level'];
+            $nextLevel = $currentLevel + 1;
+            $workflowId = $rsIpc['period']['workflow_id'];
 
-        $document->status = 'pending_approval';
-        $document->current_step = 1;
-        $document->current_approver_id = $firstStep['approver_user_id'];
-        $document->save();
+            $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
 
-        $history = new ApprovalHistory($document->id, $submitter->id, 'submitted');
-        $history->save();
-    }
+            // 4.update ipc status
+            // ตรวจสอบ $rsWorkflow ว่ามีข้อมูลหรือไม่
+            if ($rsWorkflow) {
+                $nextApproverId = $rsWorkflow['approver_id'];
+                $this->ipc->updateStatus($ipcId, 'pending approve', $nextApproverId, $nextLevel);
 
-    public function approveDocument(Document $document, User $approver, $comments)
-    {
-        if ($document->status !== 'pending_approval' || $document->current_approver_id !== $approver->id) {
-            throw new Exception("You do not have permission to approve this document.");
-        }
+                // 5.log history 
+                $this->ipc->logHistory($ipcId, $userId, "Approved at Step {$currentLevel}");
+            } else {
+                //inspection_status สถานะปัจจุบัน (Completed)
+                //current_approver_id บอกว่าไม่มีใครต้องทำอะไรต่อ (Null) 
+                //current_level บอกประวัติว่าไปถึงขั้นตอนไหน (ขั้นตอนสุดท้าย)
+                $this->ipc->updateStatus($ipcId, 'Completed', NULL, $currentLevel);
 
-        $history = new ApprovalHistory($document->id, $approver->id, 'approved', $comments);
-        $history->save();
+                // 5.log history 
+                $this->ipc->logHistory($ipcId, $userId, "Final Approved at Step {$currentLevel}. Status: Completed");
 
-        $workflow = Workflow::find($document->workflow_id);
-        $nextStep = $workflow->getStep($document->current_step + 1);
+                // ถ้าเป็น ipc(workflow_id = 1) จะทำการสร้างเอกสาร ipc(workflow_id=2)
+                if ($rsIpc['period']['workflow_id'] === 1) {
+                    $less_retension_exclude_vat = 0;
+                    $sum_of_less_retension_exclude_vat = 0;
+                    $ipcData = [
+                        "po_id" => $rsIpc['period']["po_id"],
+                        "period_id" => $rsIpc['period']["period_id"],
+                        "inspection_id" => $rsIpc['period']["inspection_id"],
+                        "ipc_id" => 0,
+                        "period_number" => $rsIpc['period']["period_number"],
+                        "project_name" => $rsIpc['header']["project_name"],
+                        "contractor" => $rsIpc['header']["supplier_name"],
+                        "contract_value" => $rsIpc['header']["contract_value"],
+                        "total_value_of_interim_payment" => $rsIpc['period']["interim_payment_less_previous"] + $rsIpc['period']["interim_payment"], //(3)total_value_of_interim_payment
+                        "less_previous_interim_payment" => $rsIpc['period']["interim_payment_less_previous"], //(1)less_previous_interim_payment
+                        "net_value_of_current_claim" => $rsIpc['period']["interim_payment"], //(2)net_value_of_current_claim
+                        "less_retension_exclude_vat" => $less_retension_exclude_vat, //(5)less_retension_exclude_vat
+                        "net_amount_due_for_payment" => $rsIpc['period']["interim_payment"] - $less_retension_exclude_vat, //(6)net_amount_due_for_payment
+                        "total_value_of_retention" => $sum_of_less_retension_exclude_vat, //(7)total_value_of_retention
+                        "total_value_of_certification_made" => $rsIpc['period']["interim_payment_accumulated"] - $sum_of_less_retension_exclude_vat, //(8)total_value_of_certification_made
+                        "resulting_balance_of_contract_sum_outstanding" => $rsIpc['period']["interim_payment_remain"] - $sum_of_less_retension_exclude_vat, //(9)resulting_balance_of_contract_sum_outstanding
+                        "remark" => '',
+                        "workflow_id" => 2,
+                        "interim_payment_less_previous" => $rsIpc['period']["interim_payment_less_previous"], //(1)ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน
+                        "interim_payment" => $rsIpc['period']["interim_payment"], //(2)ยอดเบิกเงินงวดปัจจุบัน
+                        "interim_payment_accumulated" => $rsIpc['period']["interim_payment_accumulated"], //(3)ยอดเบิกเงินงวดสะสมถึงปัจจุบัน
+                        "interim_payment_remain" => $rsIpc['period']["interim_payment_remain"], //(4)ยอดเงินงวดคงเหลือ
+                    ];
 
-        if ($nextStep) {
-            $document->current_step++;
-            $document->current_approver_id = $nextStep['approver_user_id'];
-        } else { // Final approval
-            $document->status = 'completed';
-            $document->current_approver_id = null;
+                    $ipcId = $this->ipc->create($ipcData);
 
-            if ($workflow->next_workflow_id) {
-                $this->createNextDocument($workflow->next_workflow_id, $approver->id, $document->data);
+                    // 2.หา current_approval_level, workflow_id จาก ipc
+                    $rsIpc = $this->ipc->getByIpcId($ipcId);
+
+                    // 3.หา workflow_step
+                    $nextLevel = 1;
+                    $workflowId = $rsIpc['period']['workflow_id'];
+
+                    $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
+                    $nextApproverId = $rsWorkflow['approver_id'];
+
+                    // 5.update ipc status
+                    $this->ipc->updateStatus($ipcId, 'pending submit', $nextApproverId, $nextLevel);
+
+                    // 6.log history 
+                    $this->ipc->logHistory($ipcId, $userId, 'IPC Created');
+                }
             }
+            $this->db->commit();
+            return $ipcId;
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            // สามารถบันทึก error หรือโยน exception ต่อไปได้
+            // $_SESSION['rollback GGGGGGGGGGGGG'] = $e->getMessage();
+            error_log($e->getMessage());
+            return 0;
         }
-        $document->save();
     }
 
-    public function rejectDocument(Document $document, User $approver, $comments)
+    public function rejectIpc($ipcId, $comments): int
     {
-        if ($document->status !== 'pending_approval' || $document->current_approver_id !== $approver->id) {
-            throw new Exception("You do not have permission to reject this document.");
+        try {
+            $this->db->beginTransaction();
+            // 1.ดึง user_id จาก SESSION
+            $userId = $_SESSION['user_id'];
+            // 2.หา current_approval_level, workflow_id จาก ipc
+            $rsIpc = $this->ipc->getByIpcId($ipcId);
+
+            // 3.หา workflow_step
+            $currentLevel = $rsIpc['period']['current_approval_level'];
+            $nextLevel = $currentLevel - 1;
+            $workflowId = $rsIpc['period']['workflow_id'];
+
+            $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
+
+            // 4.update ipc status
+            $nextApproverId = $rsWorkflow['approver_id'];
+            $this->ipc->updateStatus($ipcId, 'pending submit', $nextApproverId, $nextLevel);
+
+            // 5.log history 
+            $this->ipc->logHistory($ipcId, $userId, "IPC rejected at Step {$currentLevel}", $comments);
+
+            $this->db->commit();
+            return $ipcId;
+        } catch (Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            // สามารถบันทึก error หรือโยน exception ต่อไปได้
+            // error_log($e->getMessage());
+            return 0;
         }
-        if (empty($comments)) {
-            throw new Exception("Comments are required for rejection.");
-        }
-
-        $history = new ApprovalHistory($document->id, $approver->id, 'rejected', $comments);
-        $history->save();
-
-        $workflow = Workflow::find($document->workflow_id);
-        $prevStepNumber = $document->current_step - 1;
-
-        $document->status = 'rejected';
-        if ($prevStepNumber < 1) { // Send back to creator
-            $document->current_step = 0;
-            $document->current_approver_id = $document->created_by;
-        } else { // Send to previous approver
-            $prevStep = $workflow->getStep($prevStepNumber);
-            $document->current_step = $prevStepNumber;
-            $document->current_approver_id = $prevStep['approver_user_id'];
-        }
-        $document->save();
-    }
-
-    private function createNextDocument($new_workflow_id, $creator_id, $source_data)
-    {
-        // $workflow = Workflow::find($new_workflow_id);
-        // if (!$workflow) return;
-
-        // $firstStep = $workflow->getStep(1);
-        // if (!$firstStep) return;
-
-        // $sql = "INSERT INTO documents (workflow_id, data, status, current_step, current_approver_id, created_by) 
-        //         VALUES (?, ?, 'pending_approval', 1, ?, ?)";
-        // $stmt = $this->db->prepare($sql);
-        // $stmt->execute([$new_workflow_id, $source_data, $firstStep['approver_user_id'], $creator_id]);
-        // $newDocId = $this->db->lastInsertId();
-
-        // $history = new ApprovalHistory($newDocId, $creator_id, 'created_auto', 'Generated from workflow ' . $workflow->name);
-        // $history->save();
     }
 }
 /*Example

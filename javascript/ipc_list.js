@@ -23,8 +23,7 @@ $(document).ready(function () {
       data: JSON.stringify(data_sent),
     })
       .done(function (result) {
-        // console.log(`result: ${result}`);
-        // responseMessage.text(result.message).css("color", "green");
+        // console.log(result);
         if (result.length > 0) {
           tableBody = createTableBody(result);
           $("#tbody").html(tableBody); // นำ HTML ของตารางไปใส่ใน div ที่มี id="tbody"
@@ -46,7 +45,6 @@ $(document).ready(function () {
     $.each(datas, function (index, data) {
       tableBody += `
                       <tr data-po-id='${data.po_id}' data-po-number='${data.po_number}'>
-                          <td class="tdMain p-0 d-none">${data.po_id}</td>
                           <td class="tdMain p-0"><a class='link-opacity-100 pe-auto po_number' title='View' style='margin: 0px 5px 5px 5px'>${data.po_number}</a></td>
                           <td class="tdMain p-0">${data.project_name}</td>
                           <td class="tdMain p-0">${data.supplier_name}</td>
@@ -57,6 +55,26 @@ $(document).ready(function () {
                       </tr>
                             
                     `;
+    });
+    return tableBody;
+  }
+
+  function createPeriodTable(datas) {
+    let tableBody = "";
+    $.each(datas, function (index, data) {
+      tableBody += `
+                    <tr data-po-id=${data.po_id} data-period-id=${data.period_id} data-inspection-id=${data.inspection_id} data-ipc-id=${data.ipc_id}>
+                      <td class="tdPeriod text-right py-0 px-1"><a class="link-opacity-100 pe-auto period_number" style="margin: 0px 5px 5px 5px">${data.period_number}</a></td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.net_value_of_current_claim}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.less_retension_exclude_vat}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_retention}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.net_amount_due_for_payment}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_certification_made}</td>
+                      <td class="tdPeriod text-right py-0 px-1 d-none">0</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.agreement_date}</td>
+                      <td class="tdPeriod text-left py-0 px-1">${data.remark}</td>
+                    </tr>                      
+                  `;
     });
     return tableBody;
   }
@@ -102,24 +120,6 @@ $(document).ready(function () {
 
   
 
-  function createPeriodTable(datas) {
-    let tableBody = "";
-    $.each(datas, function (index, data) {
-      tableBody += `
-                    <tr data-po-id=${data.po_id} data-period-id=${data.period_id} data-inspection-id=${data.inspection_id} data-ipc-id=${data.ipc_id}>
-                      <td class="tdPeriod text-right py-0 px-1"><a class="link-opacity-100 pe-auto period_number" style="margin: 0px 5px 5px 5px">${data.period_number}</a></td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.net_value_of_current_claim}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.less_retension_exclude_vat}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_retention}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.net_amount_due_for_payment}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_certification_made}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.agreement_date}</td>
-                      <td class="tdPeriod text-left py-0 px-1">${data.remark}</td>
-                    </tr>                      
-                  `;
-    });
-    return tableBody;
-  }
 
   $(document).on("click", "a.po_number", function (e) {
     e.preventDefault();
@@ -130,29 +130,13 @@ $(document).ready(function () {
 
     $(document).on("click", "a.period_number", function (e) {
       e.preventDefault();
-      // การใช้ตัวแปรในการเก็บค่า
-      // // ค้นหา tr ที่ปุ่ม a.period อยู่
-      // let row = $(this).closest('tr');
-      // // ค้น input ที่มี class po_id
-      // let inputPoId = row.find('input.po_id');
-      // // ดึงค่าจาก inputPoId
-      // let po_id = inputPoId.val();
-      // // ค้น input ที่มี class period_id
-      // let inputPoPeriodId = row.find('input.period_id');
-      // // ดึงค่าจาก inputPoPeriodId
-      // let period_id = inputPoPeriodId.val();
 
       const po_id = $(this).closest("tr").data("po-id");
       const period_id = $(this).closest("tr").data("period-id");
       const inspection_id = $(this).closest("tr").data("inspection-id");
       const ipc_id = $(this).closest("tr").data("ipc-id");
-      // console.log(`period_id = ${period_id}`);
-      // let po_id=1;
-      // let period_id=1;
-      // console.log(`po_id = ${po_id}`);
-      // console.log(`period_id = ${period_id}`);
-      // console.log(`inspection_id = ${inspection_id}`);
-      window.location.href = `ipc_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}&ipc_id=${ipc_id}`;
+      // window.location.href = `ipc_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}&ipc_id=${ipc_id}`;
+      window.location.href = `ipc_form.php?ipc_id=${ipc_id}`;
     });
 
   // loadAllInspection();

@@ -76,17 +76,16 @@ require_once 'auth.php';
     $connection = new Connection;
     $pdo = $connection->getDbConnection();
 
-    $po_id = $_REQUEST['po_id'];
-    $period_id = $_REQUEST['period_id'];
-    $inspection_id = $_REQUEST['inspection_id'];
-    $ipc_id = $_REQUEST['ipc_id'];
+    $poId = $_REQUEST['po_id'];
+    $periodId = $_REQUEST['period_id'];
+    $inspectionId = $_REQUEST['inspection_id'];
+    $ipcId = $_REQUEST['ipc_id'];
 
     $ipc = new Ipc($pdo);
-    $rsIpc = $ipc->getPeriodByPeriodId($period_id);
+    $rsIpc = $ipc->getByIpcId($ipcId);
     // $_SESSION['current_approval_level isset'] =  isset($rsIpc['period']['current_approval_level']);
     // $_SESSION['current_approval_level'] =  $rsIpc['period']['current_approval_level'];
     // $_SESSION['approval_date isset'] =  array_key_exists('approval_date', $rsIpc['periodApprovals']) ;
-    $_SESSION['rsIpc'] =  $rsIpc;
 
     $plan_status = new Plan_status($pdo);
     $rsPlanStatus = $plan_status->getAll();
@@ -94,7 +93,7 @@ require_once 'auth.php';
     // 
     // ถ้า approval_level ตรงกับ current_approval_level และ approver_id ตรงกับ user_id ที่ login
     // 
-    $content_header = 'Inspection(ตรวจรับงาน)';
+    $content_header = 'IPC';
     ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -112,14 +111,17 @@ require_once 'auth.php';
         <div class="container-fluid">
           <div class="row">
             <div class="col-12">
-              <form name="myForm" id="myForm" action="" method="post">
+              <form name="myForm" id="myForm" action="" method="post"
+                data-user-id="<?= $_SESSION['user_id'] ?>"
+                data-inspection-id="<?= $rsIpc['period']['inspection_id'] ?>"
+                data-inspection-status="<?= $rsIpc['period']['inspection_status'] ?>"
+                data-workflow-id="<?= $rsIpc['period']['workflow_id'] ?>"
+                data-created-by="<?= $rsIpc['period']['created_by'] ?>"
+                data-current-approver-id="<?= $rsIpc['period']['current_approver_id'] ?>"
+                data-current-approval-level="<?= $rsIpc['period']['current_approval_level'] ?>">
                 <div class="card">
                   <div class="card-header d-flex justify-content-between">
                     <div class="col d-flex align-items-center">
-                      <input type="text" class="form-control d-none" name="inspection_id" id="inspection_id" value="<?= $rsIpc['period']['inspection_id'] ?>">
-                      <input type="text" class="form-control d-none" name="period_id" id="period_id" value="<?= $rsIpc['period']['period_id'] ?>">
-                      <input type="text" class="form-control d-none" name="po_id" id="po_id" value="<?= $rsIpc['period']['po_id'] ?>">
-
                       <h6 class="m-1 fw-bold"><?= $rsIpc['header']['po_number'] . " : " . $rsIpc['header']['supplier_id'] . " - " . $rsIpc['header']['supplier_name'] ?></h6>
                       <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsIpc['period']['period_number'] . "]" ?></h6>
                       <h6 class="m-1 fw-bold"><?= "[type " . gettype($rsIpc['periodApprovals']) . "]" ?></h6>
@@ -130,10 +132,12 @@ require_once 'auth.php';
 
                     <!-- <div class="dropdown"> -->
                     <?php
-                    if (array_key_exists('approval_date', $rsIpc['periodApprovals']) && is_null($rsIpc['periodApprovals']['approval_date'])
-                      && isset($rsIpc['periodApprovals']['approver_id']) && $rsIpc['periodApprovals']['approver_id'] == $_SESSION['user_id']):
-                    // if (is_null($rsIpc['periodApprovals']['approval_date'])
-                    //   && isset($rsIpc['periodApprovals']['approver_id']) && $rsIpc['periodApprovals']['approver_id'] == $_SESSION['user_id']):
+                    if (
+                      array_key_exists('approval_date', $rsIpc['periodApprovals']) && is_null($rsIpc['periodApprovals']['approval_date'])
+                      && isset($rsIpc['periodApprovals']['approver_id']) && $rsIpc['periodApprovals']['approver_id'] == $_SESSION['user_id']
+                    ):
+                      // if (is_null($rsIpc['periodApprovals']['approval_date'])
+                      //   && isset($rsIpc['periodApprovals']['approver_id']) && $rsIpc['periodApprovals']['approver_id'] == $_SESSION['user_id']):
                     ?>
                       <div class="btn-group" role="group">
                         <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -141,8 +145,8 @@ require_once 'auth.php';
                         </button>
 
 
-                        <ul class="dropdown-menu py-0" id="action_type" data-current-approval-level="<?= $rsIpc['period']['current_approval_level'] ?>" 
-                        data-max-approval-level="<?= $rsIpc['maxPeriodApproval']['max_approval_level'] ?>">
+                        <ul class="dropdown-menu py-0" id="action_type" data-current-approval-level="<?= $rsIpc['period']['current_approval_level'] ?>"
+                          data-max-approval-level="<?= $rsIpc['maxPeriodApproval']['max_approval_level'] ?>">
                           <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
                           <?php
                           if (isset($rsIpc['period']['current_approval_level']) && $rsIpc['period']['current_approval_level'] == 1):

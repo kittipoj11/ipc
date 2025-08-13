@@ -36,6 +36,18 @@ class Inspection
         return $rs;
     }
 
+    public function getHeaderByPoId($poId): ?array
+    {
+        // ดึงข้อมูลจากตารางหลัก - po_main
+        $po=new Po($this->db);
+        $rs=$po->getHeaderByPoId($poId);
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
+
+        return $rs;
+    }
+
     public function getByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
@@ -52,18 +64,6 @@ class Inspection
         
         // $po = new Po($this->db);
         // $rs2=$po->getByPoId($poId);
-
-        return $rs;
-    }
-
-    public function getHeaderByPoId($poId): ?array
-    {
-        // ดึงข้อมูลจากตารางหลัก - po_main
-        $po=new Po($this->db);
-        $rs=$po->getHeaderByPoId($poId);
-        if (!$rs) {
-            return null; // ไม่พบข้อมูล
-        }
 
         return $rs;
     }
@@ -136,16 +136,10 @@ class Inspection
                 , P.`interim_payment_accumulated`, P.`interim_payment_accumulated_percent`, P.`interim_payment_remain`, P.`interim_payment_remain_percent`
                 , P.`retention_value`, P.`plan_status_id`, P.`is_paid`, P.`is_retention`, P.`disbursement`, P.`remark`, P.`inspection_status`
                 , P.`current_approval_level`, P.`current_approver_id`, P.`created_by`, P.`created_at`, P.`updated_at` 
-                , A.approver_id, A.approval_level 
                 , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
                 FROM inspection P
                 INNER JOIN po_main O
                     ON P.po_id = O.po_id
-                LEFT JOIN inspection_approvals A
-                    ON A.approval_level = P.current_approval_level
-                    AND A.inspection_id = P.inspection_id
-                LEFT JOIN approval_status S
-                    ON S.approval_status_id = A.approval_status_id
                 LEFT JOIN inspection P2 
                     ON P2.po_id = P.po_id AND P2.period_number = P.period_number - 1
                 WHERE P.inspection_id = :inspection_id
@@ -527,89 +521,7 @@ class Inspection
     }
 
     // เพิ่มเติมในส่วน ipc
-    public function updateApprovalLevel_old(array $approvalData, array $ipcData): int
-    {
-        $isApprove = $approvalData['is_approve'];
-        $approvalLevel = $isApprove ? $approvalData['current_approval_level'] : $approvalData['new_approval_level'];
 
-        $this->db->beginTransaction();
-        try {
-            // UPDATE inspection
-            $sql = "UPDATE `inspection`
-                    SET `current_approval_level` = :new_approval_level
-                    , inspection_status = :inspection_status
-                    WHERE `po_id` = :po_id
-                        AND `period_id` = :period_id
-                        AND `inspection_id` = :inspection_id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':po_id', $approvalData['po_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':period_id', $approvalData['period_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':inspection_id', $approvalData['inspection_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':new_approval_level', $approvalData['new_approval_level'], PDO::PARAM_INT);
-            $stmt->bindParam(':inspection_status', $approvalData['inspection_status'], PDO::PARAM_INT);
-
-            $stmt->execute();
-            $stmt->closeCursor();
-
-            // UPDATE inspection_approvals
-            $sql = "UPDATE `inspection_approvals`
-                    SET `approval_date` = IF(:isApprove, NOW(), NULL)
-                    WHERE `inspection_id` = :inspection_id
-                        AND `approval_level` = :approval_level";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':inspection_id', $approvalData['inspection_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':approval_level', $approvalLevel, PDO::PARAM_INT);
-            $stmt->bindParam(':isApprove', $isApprove, PDO::PARAM_BOOL);
-
-            $stmt->execute();
-            $stmt->closeCursor();
-
-            if ($approvalData['create_ipc']) {
-
-                // INSERT ipc
-                $sql = "INSERT INTO ipc(po_id, period_id, inspection_id, period_number, project_name, contractor, contract_value
-                        , total_value_of_interim_payment, less_previous_interim_payment, net_value_of_current_claim, less_retension_exclude_vat
-                        , net_amount_due_for_payment, total_value_of_retention, total_value_of_certification_made
-                        , resulting_balance_of_contract_sum_outstanding, workflow_id)
-                        VALUES(:inspection_id, :period_id, :po_id, :period_number, :project_name, :contractor, :contract_value
-                        , :total_value_of_interim_payment, :less_previous_interim_payment, :net_value_of_current_claim, :less_retension_exclude_vat
-                        , :net_amount_due_for_payment, :total_value_of_retention, :total_value_of_certification_made
-                        , :resulting_balance_of_contract_sum_outstanding, :workflow_id)";
-
-                $stmt->bindParam(':po_id', $ipcData['po_id'], PDO::PARAM_INT);
-                $stmt->bindParam(':period_id', $ipcData['period_id'], PDO::PARAM_INT);
-                $stmt->bindParam(':inspection_id', $ipcData['inspection_id'], PDO::PARAM_INT);
-                $stmt->bindParam(':period_number', $ipcData['period_number'], PDO::PARAM_STR);
-                $stmt->bindParam(':project_name', $ipcData['project_name'], PDO::PARAM_STR);
-                $stmt->bindParam(':contractor', $ipcData['contractor'],  PDO::PARAM_INT);
-                $stmt->bindParam(':contract_value', $ipcData['contract_value'], PDO::PARAM_STR);
-                $stmt->bindParam(':total_value_of_interim_payment', $ipcData['total_value_of_interim_payment'], PDO::PARAM_STR);
-                $stmt->bindParam(':less_previous_interim_payment', $ipcData['less_previous_interim_payment'], PDO::PARAM_STR);
-                $stmt->bindParam(':net_value_of_current_claim', $ipcData['net_value_of_current_claim'], PDO::PARAM_STR);
-                $stmt->bindParam(':less_retension_exclude_vat', $ipcData['less_retension_exclude_vat'], PDO::PARAM_STR);
-                $stmt->bindParam(':net_amount_due_for_payment', $ipcData['net_amount_due_for_payment'], PDO::PARAM_STR);
-                $stmt->bindParam(':total_value_of_retention', $ipcData['total_value_of_retention'], PDO::PARAM_STR);
-                $stmt->bindParam(':total_value_of_certification_made', $ipcData['total_value_of_certification_made'], PDO::PARAM_STR);
-                $stmt->bindParam(':resulting_balance_of_contract_sum_outstanding', $ipcData['resulting_balance_of_contract_sum_outstanding'], PDO::PARAM_STR);
-                $stmt->bindParam(':workflow_id', 2, PDO::PARAM_INT);
-
-                $stmt->execute();
-                $stmt->closeCursor();
-
-                // $ipcId = $this->db->lastInsertId();
-
-                // INSERT ipc_approvals
-
-            }
-            $this->db->commit();
-            return (int)$approvalData['inspection_id'];
-        } catch (Exception $e) {
-            if ($this->db->inTransaction()) {
-                $this->db->rollBack();
-            }
-            throw $e;
-        }
-    }
 
     // ทำการ update level เมื่อมีการ approve
     public function updateApprovalLevel(array $approvalData): int

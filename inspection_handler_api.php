@@ -39,6 +39,28 @@ if (isset($requestData['action']) && $userId > 0) {
             echo json_encode($response);
             break;
 
+        case 'approve':
+            // $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
+            $savedInspectionId = $inspectionService->approveInspection($requestData['inspectionId']);
+            $response = [
+                'status' => 'success',
+                'message' => 'อนุมัติ PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
+                'data' => ['inspection_id' => $savedInspectionId]
+            ];
+            echo json_encode($response);
+            break;
+
+        case 'reject':
+            // $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
+            $savedInspectionId = $inspectionService->rejectInspection($requestData['inspectionId'], $requestData['comments']);
+            $response = [
+                'status' => 'success',
+                'message' => 'ไม่อนุมัติ PO ID: ' . $savedInspectionId,
+                'data' => ['inspection_id' => $savedInspectionId]
+            ];
+            echo json_encode($response);
+            break;
+
         case 'select':
             $rs = $inspection->getAllPo();
             echo json_encode($rs);
@@ -49,15 +71,6 @@ if (isset($requestData['action']) && $userId > 0) {
             echo json_encode($rs);
             break;
 
-        case 'approveInspection':
-            $inspectionService->approveInspection($requestData['approvalData'], $requestData['ipcData']);
-            $response = [
-                'status' => 'success',
-                'message' => 'บันทึกข้อมูล PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
-                'data' => ['inspection_id' => $savedInspectionId]
-            ];
-            echo json_encode($response);
-            break;
         case 'selectInspectionFiles':
             $rsInspectionFiles = $inspection->getInspectionFilesByInspectionId($requestData['po_id'], $requestData['period_id'], $requestData['inspection_id']);
             echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);

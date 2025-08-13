@@ -32,7 +32,7 @@ class Ipc
         return $rs;
     }
 
-    public function getPoByPoId($poId): ?array
+    public function getHeaderByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $po = new Po($this->db);

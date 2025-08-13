@@ -57,7 +57,7 @@ require_once 'auth.php';
     $pdo=$connection->getDbConnection();
 
     $ipc = new Ipc($pdo);
-    $rsIpc = $ipc->getPoByPoId($po_id);
+    $rsIpc = $ipc->getByIpcId($po_id);
 
     ?>
 

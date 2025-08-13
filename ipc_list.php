@@ -81,7 +81,6 @@ require_once 'auth.php';
                   <table id="tableMain" class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
-                        <th class="text-center p-1 d-none">po_id</th>
                         <th class="text-center p-1" style="width: 150px;">เลขที่ PO</th>
                         <th class="text-center p-1">โครงการ</th>
                         <th class="text-center p-1">ผู้รับเหมา</th>
@@ -89,7 +88,6 @@ require_once 'auth.php';
                         <th class="text-center p-1">งาน</th>
                         <th class="text-center p-1">มูลค่า PO</th>
                         <th class="text-center p-1">จำนวนงวดงาน</th>
-                        <th class="text-center p-1 d-none" style="width: 120px;">Action</th>
                       </tr>
                     </thead>
                     <tbody id="tbody">

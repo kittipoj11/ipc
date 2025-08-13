@@ -175,7 +175,7 @@ $(document).ready(function () {
   // เช่นถ้าเป็นการ save จะดึงข้อมูลของ inspection บน form ส่งมาให้   เพื่อมาทำการ save 
   // ถ้าเป็นการ submit sinv reject ไม่ต้องส่งข้อมูลของ form มาเพราะไม่ได้ใช้ข้อมูลบน form แต่ใช้การเลื่อนหรือถอย level จากการดึงข้อมูลใน workflow_step 
   // แต่ทุก action ต้องส่ง data ที่มีข้อมูลอย่างน้อยคือ inspection-id, user-id
-  function sendRequest(action,data){
+  function sendRequest(action, data){
     const myForm = $("#myForm");
     const inspectionId = myForm.data("inspection-id");
     const userId = myForm.data("user-id"); //ไม่ต้องส่งไปก็ได้เพราะ  เรียกใช้ $_SESSION['user_id] ใน inspection_handler_api.php หรือ inspection_service_class.php
@@ -204,8 +204,8 @@ $(document).ready(function () {
         // console.log(`result: ${result}`);
         responseMessage.text(result.message).css("color", "green");
         Swal.fire({
-          icon: "success",
-          title: "Approved successfully",
+          icon: result.status,
+          title: result.message,
           color: "#716add",
           allowOutsideClick: false,
           background: "black",
@@ -289,7 +289,9 @@ $(document).ready(function () {
   $(".approve").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
       e.preventDefault();
-    sendRequest($(".approve").data("approve-text"));
+    // sendRequest($(".approve").data("approve-text"));
+    // console.log("click");
+    sendRequest("approve");
   });
   
   $(".reject").on("click", function (e) {
