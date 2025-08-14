@@ -25,15 +25,15 @@ if (isset($requestData['action']) && $userId > 0) {
     $inspection = new Inspection($pdo);
     $ipc = new Ipc($pdo);
     $workflow = new Workflows($pdo);
-    $documentService = new InspectionService($pdo, $inspection, $ipc, $workflow);
+    $inspectionService = new InspectionService($pdo, $inspection, $ipc, $workflow);
 
     switch ($requestData['action']) {
         case 'approve':
             // $ipcId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
-            $ipcId = $documentService->approveIpc($requestData['ipcId']);
+            $ipcId = $inspectionService->approveIpc($requestData['ipcId']);
             $response = [
                 'status' => 'success',
-                'message' => 'อนุมัติ PO ID: ' . $ipcId . ' เรียบร้อยแล้ว',
+                'message' => 'อนุมัติ IPC ID: ' . $ipcId . ' เรียบร้อยแล้ว',
                 'data' => ['ipc_id' => $ipcId]
             ];
             echo json_encode($response);
@@ -41,22 +41,22 @@ if (isset($requestData['action']) && $userId > 0) {
 
         case 'reject':
             // $ipcId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
-            $ipcId = $documentService->rejectInspection($requestData['ipcId'], $requestData['comments']);
+            $ipcId = $inspectionService->rejectInspection($requestData['ipcId'], $requestData['comments']);
             $response = [
                 'status' => 'success',
-                'message' => 'ไม่อนุมัติ PO ID: ' . $ipcId,
+                'message' => 'ไม่อนุมัติ IPC ID: ' . $ipcId,
                 'data' => ['ipc_id' => $ipcId]
             ];
             echo json_encode($response);
             break;
 
         case 'select':
-            $rs = $ipc->getAllPo();
+            $rs = $ipc->getPoMainAll();
             echo json_encode($rs);
             break;
 
         case 'selectIpcPeriodAll':
-            $rs = $ipc->getAllPeriodByPoId($requestData['po_id']);
+            $rs = $ipc->getIpcAllByPoId($requestData['po_id']);
             echo json_encode($rs);
             break;
         default:

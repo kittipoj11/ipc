@@ -14,7 +14,7 @@ class Inspection
         $this->db = $pdoConnection;
     }
 
-    public function getAllPo(): array
+    public function getPoMainAll(): array
     {
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                     , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
@@ -75,7 +75,7 @@ class Inspection
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $po=new Po($this->db);
-        $rs=$po->getHeaderByPoId($poId);
+        $rs=$po->getPoMainByPoId($poId);
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
@@ -91,11 +91,11 @@ class Inspection
         return $rs;
     }
 
-    public function getHeaderByPoId($poId): ?array
+    public function getPoMainByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $po=new Po($this->db);
-        $rs=$po->getHeaderByPoId($poId);
+        $rs=$po->getPoMainByPoId($poId);
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }

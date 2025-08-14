@@ -199,14 +199,14 @@ class InspectionService
             // 1.ดึง user_id จาก SESSION
             $userId = $_SESSION['user_id'];
             // 2.หา current_approval_level, workflow_id จาก inspection
-            $rsIpc = $this->ipc->getByIpcId($ipcId);
+            $rsIpc = $this->ipc->getIpcByIpcId($ipcId);
             // $_SESSION['rsIpc XXXXXXXXXXXXX']=$rsIpc;
             // return $ipcId;
 
             // 3.หา workflow_step
-            $currentLevel = $rsIpc['period']['current_approval_level'];
+            $currentLevel = $rsIpc['ipc']['current_approval_level'];
             $nextLevel = $currentLevel + 1;
-            $workflowId = $rsIpc['period']['workflow_id'];
+            $workflowId = $rsIpc['ipc']['workflow_id'];
 
             $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
 
@@ -226,54 +226,6 @@ class InspectionService
 
                 // 5.log history 
                 $this->ipc->logHistory($ipcId, $userId, "Final Approved at Step {$currentLevel}. Status: Completed");
-
-                // ถ้าเป็น ipc(workflow_id = 1) จะทำการสร้างเอกสาร ipc(workflow_id=2)
-                if ($rsIpc['period']['workflow_id'] === 1) {
-                    $less_retension_exclude_vat = 0;
-                    $sum_of_less_retension_exclude_vat = 0;
-                    $ipcData = [
-                        "po_id" => $rsIpc['period']["po_id"],
-                        "period_id" => $rsIpc['period']["period_id"],
-                        "inspection_id" => $rsIpc['period']["inspection_id"],
-                        "ipc_id" => 0,
-                        "period_number" => $rsIpc['period']["period_number"],
-                        "project_name" => $rsIpc['header']["project_name"],
-                        "contractor" => $rsIpc['header']["supplier_name"],
-                        "contract_value" => $rsIpc['header']["contract_value"],
-                        "total_value_of_interim_payment" => $rsIpc['period']["interim_payment_less_previous"] + $rsIpc['period']["interim_payment"], //(3)total_value_of_interim_payment
-                        "less_previous_interim_payment" => $rsIpc['period']["interim_payment_less_previous"], //(1)less_previous_interim_payment
-                        "net_value_of_current_claim" => $rsIpc['period']["interim_payment"], //(2)net_value_of_current_claim
-                        "less_retension_exclude_vat" => $less_retension_exclude_vat, //(5)less_retension_exclude_vat
-                        "net_amount_due_for_payment" => $rsIpc['period']["interim_payment"] - $less_retension_exclude_vat, //(6)net_amount_due_for_payment
-                        "total_value_of_retention" => $sum_of_less_retension_exclude_vat, //(7)total_value_of_retention
-                        "total_value_of_certification_made" => $rsIpc['period']["interim_payment_accumulated"] - $sum_of_less_retension_exclude_vat, //(8)total_value_of_certification_made
-                        "resulting_balance_of_contract_sum_outstanding" => $rsIpc['period']["interim_payment_remain"] - $sum_of_less_retension_exclude_vat, //(9)resulting_balance_of_contract_sum_outstanding
-                        "remark" => '',
-                        "workflow_id" => 2,
-                        "interim_payment_less_previous" => $rsIpc['period']["interim_payment_less_previous"], //(1)ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน
-                        "interim_payment" => $rsIpc['period']["interim_payment"], //(2)ยอดเบิกเงินงวดปัจจุบัน
-                        "interim_payment_accumulated" => $rsIpc['period']["interim_payment_accumulated"], //(3)ยอดเบิกเงินงวดสะสมถึงปัจจุบัน
-                        "interim_payment_remain" => $rsIpc['period']["interim_payment_remain"], //(4)ยอดเงินงวดคงเหลือ
-                    ];
-
-                    $ipcId = $this->ipc->create($ipcData);
-
-                    // 2.หา current_approval_level, workflow_id จาก ipc
-                    $rsIpc = $this->ipc->getByIpcId($ipcId);
-
-                    // 3.หา workflow_step
-                    $nextLevel = 1;
-                    $workflowId = $rsIpc['period']['workflow_id'];
-
-                    $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
-                    $nextApproverId = $rsWorkflow['approver_id'];
-
-                    // 5.update ipc status
-                    $this->ipc->updateStatus($ipcId, 'pending submit', $nextApproverId, $nextLevel);
-
-                    // 6.log history 
-                    $this->ipc->logHistory($ipcId, $userId, 'IPC Created');
-                }
             }
             $this->db->commit();
             return $ipcId;
@@ -298,9 +250,9 @@ class InspectionService
             $rsIpc = $this->ipc->getByIpcId($ipcId);
 
             // 3.หา workflow_step
-            $currentLevel = $rsIpc['period']['current_approval_level'];
+            $currentLevel = $rsIpc['ipc']['current_approval_level'];
             $nextLevel = $currentLevel - 1;
-            $workflowId = $rsIpc['period']['workflow_id'];
+            $workflowId = $rsIpc['ipc']['workflow_id'];
 
             $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
 

@@ -12,6 +12,7 @@ function buildMenuForRole(PDO $pdo, int $role_id): array
             FROM menu_items m
             JOIN role_menu_permissions p ON m.id = p.menu_item_id
             WHERE p.role_id = :role_id
+                AND is_deleted = 0
             ORDER BY m.parent_id, m.order_num";
 
     $stmt = $pdo->prepare($sql);

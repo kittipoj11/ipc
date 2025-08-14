@@ -5,7 +5,7 @@
 // or can used
 // if(session_status() === PHP_SESSION_NONE) session_start();
 
-// require_once '../config.php';
+// require_once 'config.php';
 // print_r($_SESSION);
 if (!isset($_SESSION['login_status']) || $_SESSION['login_status'] == false) :
     $message = "คุณยังไม่ได้ Login!";

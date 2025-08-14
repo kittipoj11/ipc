@@ -44,7 +44,7 @@ if (isset($requestData['action']) && $userId > 0) {
             $savedInspectionId = $inspectionService->approveInspection($requestData['inspectionId']);
             $response = [
                 'status' => 'success',
-                'message' => 'อนุมัติ PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
+                'message' => 'อนุมัติ Inspection ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
                 'data' => ['inspection_id' => $savedInspectionId]
             ];
             echo json_encode($response);
@@ -55,14 +55,14 @@ if (isset($requestData['action']) && $userId > 0) {
             $savedInspectionId = $inspectionService->rejectInspection($requestData['inspectionId'], $requestData['comments']);
             $response = [
                 'status' => 'success',
-                'message' => 'ไม่อนุมัติ PO ID: ' . $savedInspectionId,
+                'message' => 'ไม่อนุมัติ Inspection ID: ' . $savedInspectionId,
                 'data' => ['inspection_id' => $savedInspectionId]
             ];
             echo json_encode($response);
             break;
 
         case 'select':
-            $rs = $inspection->getAllPo();
+            $rs = $inspection->getPoMainAll();
             echo json_encode($rs);
             break;
 

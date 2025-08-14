@@ -9,61 +9,44 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   // Click ที่รายการใดๆ
-  $(document).on("click", ".tdMain:not(:has(a))", function (e) {
-    e.preventDefault();
-    $(".content-period").removeClass("d-none");
-    // หรือ
-    // $(".content-period").removeClass('d-none').addClass('d-flex');
+  // $(document).on("click", ".tdMain:not(:has(a))", function (e) {
+  //   e.preventDefault();
+  //   $(".content-period").removeClass("d-none");
+  //   // หรือ
+  //   // $(".content-period").removeClass('d-none').addClass('d-flex');
 
-    let po_id = $(this).closest("tr").data("id"); //$(this).closest("tr")
-    let po_number = $(this).closest("tr").find("a:first").html();
-    // let po_id = $(this).closest('tr').attr('po-id');
-    $(".card-title").html(po_number);
+  //   let po_id = $(this).closest("tr").data("id"); //$(this).closest("tr")
+  //   let po_number = $(this).closest("tr").find("a:first").html();
+  //   // let po_id = $(this).closest('tr').attr('po-id');
+  //   $(".card-title").html(po_number);
 
-    $.ajax({
-      url: "ipc_crud.php",
-      type: "POST",
-      data: {
-        po_id: po_id,
-        action: "selectInspectionPeriodAll",
-      },
-      dataType: "json",
-      success: function (response) {
-        // console.log(`response=${response}`);
-        // data = JSON.parse(response);
-        // console.log(data);
+  //   $.ajax({
+  //     url: "ipc_crud.php",
+  //     type: "POST",
+  //     data: {
+  //       po_id: po_id,
+  //       action: "selectInspectionPeriodAll",
+  //     },
+  //     dataType: "json",
+  //     success: function (response) {
+  //       // console.log(`response=${response}`);
+  //       // data = JSON.parse(response);
+  //       // console.log(data);
 
-        $("#tbody-period").html(response);
-      },
-    });
-  });
+  //       $("#tbody-period").html(response);
+  //     },
+  //   });
+  // });
 
   $(document).on("click", ".tdPeriod", function (e) {
     e.preventDefault();
-    // การใช้ตัวแปรในการเก็บค่า
-    // // ค้นหา tr ที่ปุ่ม a.period อยู่
-    // let row = $(this).closest('tr');
-    // // ค้น input ที่มี class po_id
-    // let inputPoId = row.find('input.po_id');
-    // // ดึงค่าจาก inputPoId
-    // let po_id = inputPoId.val();
-    // // ค้น input ที่มี class period_id
-    // let inputPoPeriodId = row.find('input.period_id');
-    // // ดึงค่าจาก inputPoPeriodId
-    // let period_id = inputPoPeriodId.val();
 
-    const po_id = $(this).closest("tr").data("po_id");
-    const period_id = $(this).closest("tr").data("period_id");
-    const inspection_id = $(this).closest("tr").data("inspection_id");
-    // const po_id = $(this).closest("tr").find(".po_id").data("id");
-    // const period_id = $(this).closest("tr").find(".period_id").data("id");
-    // const inspection_id = $(this).closest("tr").find(".inspection_id").val("id");
-    // let po_id=1;
-    // let period_id=1;
-    console.log(`po_id = ${po_id}`);
-    console.log(`period_id = ${period_id}`);
-    console.log(`inspection_id = ${inspection_id}`);
-    window.location.href = `inspection_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
+    // const po_id = $(this).closest("tr").data("po_id");
+    // const period_id = $(this).closest("tr").data("period_id");
+    // const inspection_id = $(this).closest("tr").data("inspection_id");
+    const ipcId = $(this).closest("tr").data("ipc-id");
+    // window.location.href = `inspection_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}`;
+    window.location.href = `ipc_form.php?ipc_id=${ipcId}`;
   });
 
   $("#btnCancel").click(function () {

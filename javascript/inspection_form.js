@@ -343,6 +343,7 @@ $(document).ready(function () {
       $("#submit").removeClass('inline');
     }
     
+    // จัดการปุ่ม action
     if (myForm.data('inspection-status') == 'pending submit' && myForm.data('current-approver-id') == myForm.data('user-id')) {
       $("#btnAction").addClass('inline');
       $("#btnAction").removeClass('d-none');

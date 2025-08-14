@@ -55,6 +55,121 @@ require_once 'auth.php';
       color: white;
       /* เพิ่มสีข้อความให้เป็นสีขาวเพื่อให้ตัดกับพื้นหลัง */
     }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px;
+      border: 1px solid #ddd;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1.title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .header-info,
+    .payment-details,
+    .footer-info {
+      margin-bottom: 20px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .info-label {
+      font-weight: bold;
+      width: 200px;
+    }
+
+    .info-value {
+      flex-grow: 1;
+    }
+
+    .line {
+      border-bottom: 1px solid #000;
+      margin-top: 5px;
+    }
+
+    .payment-box {
+      border: 1px solid #000;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    .payment-box h2 {
+      font-size: 18px;
+      margin: 0 0 10px 0;
+    }
+
+    .payment-details .item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .payment-details .item .label {
+      flex-grow: 1;
+    }
+
+    .payment-details .item .value {
+      width: 150px;
+      text-align: right;
+    }
+
+    .net-amount {
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    .signatures {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 50px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .signature-block {
+      text-align: center;
+    }
+
+    .signature-line {
+      border-bottom: 1px solid #000;
+      width: 250px;
+      margin: 0 auto 5px auto;
+    }
+
+    .signature-name {
+      font-weight: bold;
+    }
+
+    .signature-title {
+      font-size: 14px;
+    }
+
+    .company-footer {
+      margin-top: 20px;
+      font-size: 12px;
+      text-align: right;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+    }
   </style>
 </head>
 
@@ -76,16 +191,15 @@ require_once 'auth.php';
     $connection = new Connection;
     $pdo = $connection->getDbConnection();
 
-    $poId = $_REQUEST['po_id'];
-    $periodId = $_REQUEST['period_id'];
-    $inspectionId = $_REQUEST['inspection_id'];
+    // $poId = $_REQUEST['po_id'];
+    // $periodId = $_REQUEST['period_id'];
+    // $inspectionId = $_REQUEST['inspection_id'];
     $ipcId = $_REQUEST['ipc_id'];
 
     $ipc = new Ipc($pdo);
-    $rsIpc = $ipc->getByIpcId($ipcId);
-    // $_SESSION['current_approval_level isset'] =  isset($rsIpc['period']['current_approval_level']);
-    // $_SESSION['current_approval_level'] =  $rsIpc['period']['current_approval_level'];
-    // $_SESSION['approval_date isset'] =  array_key_exists('approval_date', $rsIpc['periodApprovals']) ;
+    $rsIpc = $ipc->getIpcByIpcId($ipcId);
+
+    $rsCurrentApprovalType  = $ipc->getCurrentApprovalType($ipcId);
 
     $plan_status = new Plan_status($pdo);
     $rsPlanStatus = $plan_status->getAll();
@@ -113,343 +227,142 @@ require_once 'auth.php';
             <div class="col-12">
               <form name="myForm" id="myForm" action="" method="post"
                 data-user-id="<?= $_SESSION['user_id'] ?>"
-                data-inspection-id="<?= $rsIpc['period']['inspection_id'] ?>"
-                data-inspection-status="<?= $rsIpc['period']['inspection_status'] ?>"
-                data-workflow-id="<?= $rsIpc['period']['workflow_id'] ?>"
-                data-created-by="<?= $rsIpc['period']['created_by'] ?>"
-                data-current-approver-id="<?= $rsIpc['period']['current_approver_id'] ?>"
-                data-current-approval-level="<?= $rsIpc['period']['current_approval_level'] ?>">
+                data-ipc-id="<?= $rsIpc['ipc']['ipc_id'] ?>"
+                data-ipc-status="<?= $rsIpc['ipc']['ipc_status'] ?>"
+                data-workflow-id="<?= $rsIpc['ipc']['workflow_id'] ?>"
+                data-created-by="<?= $rsIpc['ipc']['created_by'] ?>"
+                data-current-approver-id="<?= $rsIpc['ipc']['current_approver_id'] ?>"
+                data-current-approval-level="<?= $rsIpc['ipc']['current_approval_level'] ?>">
                 <div class="card">
                   <div class="card-header d-flex justify-content-between">
                     <div class="col d-flex align-items-center">
-                      <h6 class="m-1 fw-bold"><?= $rsIpc['header']['po_number'] . " : " . $rsIpc['header']['supplier_id'] . " - " . $rsIpc['header']['supplier_name'] ?></h6>
-                      <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsIpc['period']['period_number'] . "]" ?></h6>
-                      <h6 class="m-1 fw-bold"><?= "[type " . gettype($rsIpc['periodApprovals']) . "]" ?></h6>
-                      <button type="button" name="btnAttach" id="btnAttach" class="btn btn-primary btn-sm m-1">
-                        <i class="fi fi-rr-clip"></i>
-                      </button>
+                      <h6 class="m-1 fw-bold"><?= $rsIpc['pomain']['po_number'] . " : " . $rsIpc['pomain']['supplier_id'] . " - " . $rsIpc['pomain']['supplier_name'] ?></h6>
+                      <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsIpc['ipc']['period_number'] . "]" ?></h6>
                     </div>
 
                     <!-- <div class="dropdown"> -->
-                    <?php
-                    if (
-                      array_key_exists('approval_date', $rsIpc['periodApprovals']) && is_null($rsIpc['periodApprovals']['approval_date'])
-                      && isset($rsIpc['periodApprovals']['approver_id']) && $rsIpc['periodApprovals']['approver_id'] == $_SESSION['user_id']
-                    ):
-                      // if (is_null($rsIpc['periodApprovals']['approval_date'])
-                      //   && isset($rsIpc['periodApprovals']['approver_id']) && $rsIpc['periodApprovals']['approver_id'] == $_SESSION['user_id']):
-                    ?>
-                      <div class="btn-group" role="group">
-                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Action
-                        </button>
+                    <div class="btn-group" role="group">
+                      <button id="btnAction" class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                      </button>
 
+                      <ul class="dropdown-menu py-0" id="action_type">
+                        <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
 
-                        <ul class="dropdown-menu py-0" id="action_type" data-current-approval-level="<?= $rsIpc['period']['current_approval_level'] ?>"
-                          data-max-approval-level="<?= $rsIpc['maxPeriodApproval']['max_approval_level'] ?>">
-                          <!-- <li><a class="dropdown-item p-1" href="#">Confirm</a></li> -->
-                          <?php
-                          if (isset($rsIpc['period']['current_approval_level']) && $rsIpc['period']['current_approval_level'] == 1):
-                          ?>
-                            <li><button class="dropdown-item approval_next" id="document_submit">Submit</a>
-                            </li>
-                          <?php
-                          elseif (isset($rsIpc['period']['current_approval_level']) && $rsIpc['period']['current_approval_level'] == 2):
-                          ?>
-                            <li><button class="dropdown-item approval_next" id="document_approve">Approve</a>
-                            </li>
-                            <li><button class="dropdown-item approval_reject" id="document_reject">Reject</button>
-                            </li>
-                          <?php endif; ?>
+                        <li><button class="dropdown-item approve" data-approve-text="<?php echo $rsCurrentApprovalType['approval_type_text'] ?>"><?php echo $rsCurrentApprovalType['approval_type_text'] ?></button></li>
+                        <?php if ($rsCurrentApprovalType['current_approval_level'] > 1): ?>
+                          <li><button class="dropdown-item reject">reject</button></li>
+                        <?php endif; ?>
 
-                        </ul>
-                      </div>
-                    <?php endif; ?>
+                      </ul>
+                    </div>
                   </div>
 
                   <div class="card-body m-0 p-0">
+                    <div class="container">
+                      <h1 class="title">INTERIM CERTIFICATE</h1>
 
-                    <div class="row m-1">
-                      <div class="col-4 input-group input-group-sm">
-                        <label for="supplier_name" class="input-group-text">ผู้รับเหมา</label>
-                        <input type="text" class="form-control" name="supplier_name" id="supplier_name" value="<?= $rsIpc['header']['supplier_name'] ?>" readonly>
-                      </div>
-                    </div>
-
-                    <div class="row m-1">
-                      <div class="col-6 input-group input-group-sm">
-                        <label for="project_name" class="input-group-text">โครงการ</label>
-                        <input type="text" class="form-control" name="project_name" id="project_name" readonly value="<?= $rsIpc['header']['project_name'] ?>">
-                      </div>
-
-                      <div class="col-6 input-group input-group-sm">
-                        <label for="location_name" class="input-group-text">สถานที่</label>
-                        <input type="text" class="form-control" name="location_name" id="location_name" readonly value="<?= $rsIpc['header']['location_name'] ?>">
-                      </div>
-                    </div>
-
-                    <div class="row m-1">
-                      <div class="col-6 input-group input-group-sm">
-                        <label for="working_name_th" class="input-group-text">งาน</label>
-                        <input type="text" class="form-control" name="working_name_th" id="working_name_th" readonly value="<?= $rsIpc['header']['working_name_th'] ?> (<?= $rsIpc['header']['working_name_en'] ?>)">
-                      </div>
-
-                    </div>
-
-                    <div class="row m-1">
-                      <div class="col-4">
-                        <div class="row-1 input-group input-group-sm">
-                          <label for="working_date_from" class="input-group-text">ระยะเวลาดำเนินการ</label>
-                          <input type="date" class="form-control" name="working_date_from" id="working_date_from" readonly value="<?php echo isset($rsIpc['header']['working_date_from']) ? htmlspecialchars($rsIpc['header']['working_date_from']) : ''; ?>">
-
+                      <div class="header-info">
+                        <div class="info-row">
+                          <div class="info-label">DATE</div>
+                          <div class="info-value">18<sup>th</sup> May 2023</div>
                         </div>
-                      </div>
-                      <div class="col-4">
-                        <div class="row-1 input-group input-group-sm">
-                          <label for="working_date_to" class="input-group-text "> ถึง </label>
-                          <input type="date" class="form-control" name="working_date_to" id="working_date_to" readonly value="<?php echo isset($rsIpc['header']['working_date_to']) ? htmlspecialchars($rsIpc['header']['working_date_to']) : ''; ?>">
+                        <div class="info-row">
+                          <div class="info-label">PROJECT</div>
+                          <div class="info-value"><?= $rsIpc['pomain']['project_name'] ?></div>
+                        </div>
+                        <div class="info-row">
+                          <div class="info-label">OWNER</div>
+                          <div class="info-value">IMPACT Exhibition Management Co., Ltd.<br>47/569-576, 10th floor, Bangkok Land Building,<br>Popular 3 Road, Banmai Sub-district,<br>Pakkred District, Nonthaburi 11120</div>
                         </div>
                       </div>
 
-                      <div class="col-2 input-group input-group-sm">
-                        <label for="working_day" class="input-group-text">รวม</label>
-                        <input type="number" class="form-control" name="working_day" id="working_day" readonly value="<?php echo isset($rsIpc['header']['working_day']) ? htmlspecialchars($rsIpc['header']['working_day']) : ''; ?>">
-                      </div>
-                    </div>
+                      <hr>
 
-                    <hr class="hr border border-dark">
-
-                    <div class="row m-1">
-                      <div class="col-4 input-group input-group-sm">
-                        <label for="po_number" class="input-group-text">เลขที่ PO</label>
-                        <input type="text" class="form-control" name="po_number" id="po_number" value=<?= $rsIpc['header']['po_number'] ?> readonly>
-                      </div>
-
-                      <div class="col-4 input-group input-group-sm">
-                        <label for="contract_value" class="input-group-text">มูลค่างานตาม PO</label>
-                        <input type="number" class="form-control" name="contract_value" id="contract_value" readonly value=<?= $rsIpc['header']['contract_value'] ?>>
-                      </div>
-
-                      <div class="col-2 input-group input-group-sm">
-                        <?php
-                        $display_include_vat = $rsIpc['header']['is_include_vat'] ? "(Including VAT 7% )" : "";
-                        ?>
-                        <label for="vat" class="input-group-text d-none">Includeing VAT</label>
-                        <input type="text" class="form-control border border-0" name="vat" id="vat" readonly value="<?= $display_include_vat ?>">
-                      </div>
-                    </div>
-
-                    <hr class="hr border border-dark">
-
-                    <div class="row m-1">
-                      <div class="col-3 border-end border-dark-subtle m-0 p-0">
-                        <div class="row m-1">
-                          <div class="col-12 input-group input-group-sm">
-                            <label for="period_number" class="input-group-text">เบิกงวดงานที่ </label>
-                            <input type="text" class="form-control" name="period_number" id="period_number" readonly value="<?= $rsIpc['period']['period_number'] ?>">
-                          </div>
+                      <div class="header-info">
+                        <div class="info-row">
+                          <div class="info-label">AGREEMENT DATE</div>
+                          <!-- <div class="info-value">25<sup>th</sup> April 2023 (IMPO23020769-1)</div> -->
+                          <div class="info-value"><?= $rsIpc['ipc']['agreement_date'] ?></div>
                         </div>
-                        <div class="row m-1">
-                          <div class="col-12 input-group input-group-sm">
-                            <div class="form-check">
-                              <?php
-                              $checked_attr = $rsIpc['header']['is_deposit'] ? "checked" : "";
-                              ?>
-                              <input class="form-check-input" type="checkbox" name="is_deposit" readonly <?= $checked_attr ?>>
-                            </div>
-                            <label class="form-check-label" for="deposit_percent">มีเงินมัดจำ </label>
-                            <input type="number" class="form-control" name="deposit_percent" id="deposit_percent" readonly value=<?= $rsIpc['header']['deposit_percent'] ?>>%
-                          </div>
+                        <div class="info-row">
+                          <div class="info-label">CONTRACTOR</div>
+                          <div class="info-value"><?= $rsIpc['ipc']['contractor'] ?></div>
+                        </div>
+                        <div class="info-row">
+                          <div class="info-label">CONTRACT VALUE</div>
+                          <div class="info-value">(Including Vat 7%)</div>
+                          <div class="info-value" style="text-align: right; font-weight: bold;"><?= number_format($rsIpc['ipc']['contract_value'], 2) ?></div>
                         </div>
                       </div>
 
-                      <div class="col-9">
-                        <div class="row m-1">
-                          <div class="col-12 input-group input-group-sm">
-                            <label for="interim_payment" class="col-3 input-group-text">ยอดเบิกเงินงวดปัจจุบัน</label>
-                            <input type="number" step="1.00" class="col-3 form-control" name="interim_payment" id="interim_payment" value="<?= $rsIpc['period']['interim_payment'] ?>">
-                            <label class="input-group-text">บาท</label>
-                            <label class="col-2 input-group-text">(Including VAT7%)</label>
-                            <!-- </div>
-                          <div class="col-2 input-group input-group-sm"> -->
-                            <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_percent" id="interim_payment_percent" readonly value=<?= $rsIpc['period']['interim_payment_percent'] ?>>
-                            <label class="input-group-text">%</label>
-                          </div>
-                        </div>
-
-                        <div class="row m-1">
-                          <div class="col-12 input-group input-group-sm">
-                            <label for="interim_payment_less_previous" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</label>
-                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_less_previous" id="interim_payment_less_previous" readonly value="<?= $rsIpc['period']['previous_interim_payment_accumulated'] ?>">
-                            <label class="input-group-text">บาท</label>
-                            <label class="col-2 input-group-text">(Including VAT7%)</label>
-                            <!-- </div>
-                          <div class="col-2 input-group input-group-sm"> -->
-                            <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_less_previous_percent" id="interim_payment_less_previous_percent" readonly value="<?= $rsIpc['period']['interim_payment_less_previous_percent'] ?>">
-                            <label class="input-group-text">%</label>
-                          </div>
-                        </div>
-
-                        <div class="row m-1">
-                          <div class="col-12 input-group input-group-sm">
-                            <label for="interim_payment_accumulated" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</label>
-                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_accumulated" id="interim_payment_accumulated" readonly value="<?= $rsIpc['period']['interim_payment_accumulated'] ?>">
-                            <label class="input-group-text">บาท</label>
-                            <label class="col-2 input-group-text">(Including VAT7%)</label>
-                            <!-- </div>
-                          <div class="col-2 input-group input-group-sm"> -->
-                            <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_accumulated_percent" id="interim_payment_accumulated_percent" readonly value="<?= $rsIpc['period']['interim_payment_accumulated_percent'] ?>">
-                            <label class="input-group-text">%</label>
-                          </div>
-                        </div>
-
-                        <div class="row m-1">
-                          <div class="col-12 input-group input-group-sm">
-                            <label for="interim_payment_remain" class="col-3 input-group-text">ยอดเงินงวดคงเหลือ</label>
-                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_remain" id="interim_payment_remain" readonly value="<?= $rsIpc['period']['interim_payment_remain'] ?>">
-                            <label class="input-group-text">บาท</label>
-                            <label class="col-2 input-group-text">(Including VAT7%)</label>
-                            <!-- </div>
-                          <div class="col-2 input-group input-group-sm"> -->
-                            <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_remain_percent" id="interim_payment_remain_percent" readonly value="<?= $rsIpc['period']['interim_payment_remain_percent'] ?>">
-                            <label class="input-group-text">%</label>
-                          </div>
-                        </div>
+                      <div class="payment-box">
+                        <h2>INTERIM PAYMENT CLAIM No.1</h2>
                       </div>
-                    </div>
 
-                    <hr class="hr border border-dark">
-
-                    <div class="row m-1 mb-3">
-                      <div class="col-4">
-                        <div class="row-1 input-group input-group-sm">
-                          <label for="workload_planned_percent" class="input-group-text ">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</label>
-                          <input type="number" step="0.01" class="form-control " name="workload_planned_percent" id="workload_planned_percent" readonly value="<?php echo isset($rsIpc['period']['workload_planned_percent']) ? htmlspecialchars($rsIpc['period']['workload_planned_percent']) : ''; ?>">
-                          <label for="workload_planned_percent" class="input-group-text ">%</label>
+                      <div class="payment-details">
+                        <div class="item">
+                          <div class="label">Total Value Of Interim Payment</div>
+                          <div class="value"><?= number_format($rsIpc['ipc']['total_value_of_interim_payment'], 2) ?></div>
                         </div>
-                      </div>
-                      <div class="col-4">
-                        <div class="row-1 input-group input-group-sm">
-                          <label for="workload_actual_completed_percent" class="input-group-text ">ปริมาณที่แล้วเสร็จจริง</label>
-                          <input type="number" step="0.01" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsIpc['period']['workload_actual_completed_percent']) ? htmlspecialchars($rsIpc['period']['workload_actual_completed_percent']) : ''; ?>">
-                          <label for="workload_actual_completed_percent" class="input-group-text ">%</label>
+                        <div class="item">
+                          <div class="label">Less Previous Interim Payment</div>
+                          <div class="value"><?= number_format($rsIpc['ipc']['less_previous_interim_payment'], 2) ?></div>
+                        </div>
+                        <div class="item">
+                          <div class="label">Net Value of Current Claim</div>
+                          <div class="value"><?= number_format($rsIpc['ipc']['net_value_of_current_claim'], 2) ?></div>
+                        </div>
+                        <div class="item">
+                          <div class="label">Less Retention 5% (Exclu. VAT)</div>
+                          <div class="value"><?= number_format($rsIpc['ipc']['less_retension_exclude_vat'], 2) ?></div>
                         </div>
                       </div>
 
-                      <div class="col-4">
-                        <div class="row-1 input-group input-group-sm">
-                          <label for="workload_remaining_percent" class="input-group-text">ปริมาณงานคงเหลือ</label>
-                          <input type="number" step="0.01" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsIpc['period']['workload_remaining_percent']) ? htmlspecialchars($rsIpc['period']['workload_remaining_percent']) : ''; ?>">
-                          <label for="workload_remaining_percent" class="input-group-text ">%</label>
+                      <div class="net-amount">
+                        <div class="info-row">
+                          <div class="info-label">NET AMOUNT DUE FOR PAYMENT No.1</div>
+                          <div class="info-value" style="text-align: right; font-weight: bold;"><?= number_format($rsIpc['ipc']['net_amount_due_for_payment'], 2) ?></div>
                         </div>
                       </div>
-                    </div>
 
-                    <div class="card border border-1 border-dark m-1">
-                      <h6 class="m-1 fw-bold">รายการรายละเอียดการตรวจสอบ</h6>
-                      <!-- <div class="card-header" style="display: flex;"> -->
-                      <div class="m-1">
-                        <a id="btnAdd" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="right" title="เพิ่มงวดงาน">
-                          Add Order
-                        </a>
-
-                        <a id="btnDeleteLast" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="ลบงวดงานล่าสุด">
-                          Delete last order
-                        </a>
-                        <a id="btnClear" class="btn btn-danger btn-sm d-none" data-toggle="tooltip" data-placement="right" title="ลบงวดงานทั้งหมด">
-                          Clear all order
-                        </a>
-                      </div>
-
-                      <div class="card-body p-0">
-                        <!-- สร้าง Table ตามปกติ -->
-                        <table class="table table-bordered justify-content-center text-center" id="tableOrder">
-                          <thead>
-                            <tr>
-                              <th class="p-1" width="5%">ลำดับที่</th>
-                              <th class="p-1" width="20%">รายละเอียดการตรวจสอบ</th>
-                              <th class="p-1">หมายเหตุ</th>
-                              <th class="p-1" width="5%">Crud</th>
-                              <th class="p-1 d-nonex" width="5%">rec_id</th>
-                            </tr>
-                          </thead>
-
-                          <tbody id="tbody-order">
-                            <?php foreach ($rsIpc['periodDetails'] as $row) { ?>
-                              <tr data-crud='select' data-rec-id=<?php echo isset($row['rec_id']) ? htmlspecialchars($row['rec_id']) : ''; ?>>
-                                <!-- กำหนดลำดับ Auto 1, 2, 3, ... -->
-                                <td class="input-group-sm p-0"><input type="number" name="order_no" class="form-control" value="<?php echo isset($row['order_no']) ? htmlspecialchars($row['order_no']) : ''; ?>" readonly>
-                                </td>
-                                <td class="input-group-sm p-0"><input type="text" name="detail" class="form-control" value="<?php echo isset($row['details']) ? htmlspecialchars($row['details']) : ''; ?>">
-                                </td>
-                                <td class="input-group-sm p-0"><input type="text" name="remark" class="form-control" value="<?php echo isset($row['remark']) ? htmlspecialchars($row['remark']) : ''; ?>">
-                                </td>
-                                <td class="input-group-sm p-0">
-                                  <input type="text" name="crud" class="form-control" value="select">
-                                </td>
-                                <td class="input-group-sm p-0 d-nonex"><input type="text" name="rec_id" class="form-control" value="<?php echo isset($row['rec_id']) ? htmlspecialchars($row['rec_id']) : ''; ?>" readonly></td>
-                              </tr>
-                            <?php } ?>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-
-                    <div class="card">
-                      <div class="card-header d-none">
-                      </div>
-
-                      <div class="card-body">
-                        <div class="row m-1 mb-3">
-                          <div class="col-8 input-group input-group-sm">
-                            <label for="plan_status_id" class="input-group-text">ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน</label>
-                            <select class="form-select form-control" name="plan_status_id" id="plan_status_id">
-                              <option value="-1" selected>...</option>
-                              <?php
-                              foreach ($rsPlanStatus as $row) :
-                                $selected_attr = ($rsIpc['period']['plan_status_id'] == $row['plan_status_id']) ? " selected" : "";
-                                echo "<option value='{$row['plan_status_id']}' {$selected_attr}>{$row['plan_status_name']}</option>";
-                              endforeach ?>
-                            </select>
-                          </div>
+                      <div class="payment-details">
+                        <div class="item">
+                          <div class="label">Total Value of Retention (Inclu. this certificate)</div>
+                          <div class="value"><?= number_format($rsIpc['ipc']['total_value_of_retention'], 2) ?></div>
                         </div>
-                        <div class="form-floating">
-                          <textarea name="remark" class="form-control" id="remark" placeholder="Leave a comment here" rows="4" style="min-height: 4em;height: auto;"><?php echo isset($rsIpc['period']['remark']) ? trim(htmlspecialchars($rsIpc['period']['remark'])) : ''; ?></textarea>
-                          <label for="remark">หมายเหตุ:</label>
+                        <div class="item">
+                          <div class="label">Total Value of Certification made (Inclu. this certificate)</div>
+                          <div class="value"><?= number_format($rsIpc['ipc']['total_value_of_certification_made'], 2) ?></div>
                         </div>
-
-                        <?php
-                        // savedPaymentMethod = data.payment_method || 'Cash'; // กำหนดค่าดีฟอลต์เป็น Cash
-                        // $disbursement = $rsIpc['period']['disbursement'] ?? 0; // ถ้าเป็น null กำหนดค่าดีฟอลต์เป็น 0
-                        $disbursement = $rsIpc['period']['disbursement']; // ถ้าเป็น null ไม่ต้องกำหนดค่าดีฟอลต์
-
-                        ?>
-
-                        <div class="row m-1 mb-3">
-                          <div class="col-2 input-group input-group-sm">
-                            <label for="disbursement" class="input-group-text">การเบิกจ่าย</label>
-                          </div>
-                          <div class="col-2 form-check form-check-inline">
-                            <input class=" form-check-input" type="radio" name="disbursement" id="disbursement1" value="1" <?php echo ($disbursement == 1 ? 'checked' : ''); ?>>
-                            <label class="form-check-label" for="disbursement1">
-                              อนุมัติ
-                            </label>
-                          </div>
-                          <div class="col-2 form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="disbursement" id="disbursement2" value="0" <?php echo ($disbursement == 0 ? 'checked' : ''); ?>>
-                            <label class="form-check-label" for="disbursement2">
-                              ไม่อนุมัติ
-                            </label>
-                          </div>
+                        <div class="item">
+                          <div class="label">Resulting Balance of Contract Sum Outstanding</div>
+                          <div class="value"><?= number_format($rsIpc['ipc']['resulting_balance_of_contract_sum_outstanding'], 2) ?></div>
                         </div>
-
-                        <!-- ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร -->
                       </div>
-                      <!-- /.card-body -->
+
+                      <div class="signatures">
+                        <div class="signature-block">
+                          <div>By : <span class="signature-line"></span></div>
+                          <div class="signature-name">( Watchara Chanthrasopa )</div>
+                          <div class="signature-title">Head of Project Management Department</div>
+                        </div>
+                        <div class="signature-block">
+                          <div>By : <span class="signature-line"></span></div>
+                          <div class="signature-name">( Tanawat Worasakdinan )</div>
+                          <div class="signature-title">Cost control Manager</div>
+                          <div style="margin-top: 30px;">By : <span class="signature-line"></span></div>
+                          <div class="signature-name">( Apichaya Sindhuprama )</div>
+                          <div class="signature-title">Project Manager</div>
+                        </div>
+                      </div>
+
+                      <div class="company-footer">
+                        IMPACT EXHIBITION MANAGEMENT CO., LTD.<br>
+                        10<sup>th</sup> Floor, Bangkok Land Building, 47/569-576 Popular 3 Road,<br>
+                        Banmai Sub-district, Pakkred District, Nonthaburi 11120<br>
+                        GREATER BANGKOK, THAILAND
+                      </div>
 
                     </div>
 
@@ -459,18 +372,7 @@ require_once 'auth.php';
                   <div class="container-fluid  p-0 d-flex justify-content-between">
                     <button type="button" name="btnCancel" class="btn btn-primary btn-sm m-1 btnCancel"> <i class="fi fi-rr-left"></i> </button>
                     <div>
-                      <?php
-                      if (
-                        isset($rsIpc['period']['current_approval_level']) && $rsIpc['period']['current_approval_level'] == 1
-                        && array_key_exists('approval_date', $rsIpc['periodApprovals']) && is_null($rsIpc['periodApprovals']['approval_date'])
-                        && isset($rsIpc['periodApprovals']['approver_id']) && $rsIpc['periodApprovals']['approver_id'] == $_SESSION['user_id']
-                      ):
-                      ?>
-                        <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก" data-current_approval_level="<?= $rsIpc['period']['current_approval_level'] ?>">
-                      <?php
-                      endif;
-                      ?>
-                      <button type="button" name="btnCancel" class="btn btn-warning btn-sm m-1 btnCancel">ยกเลิก</button>
+                      <button type="button" name="btnCancel" class="btn btn-warning btn-sm m-1 btnCancel">Close</button>
                     </div>
                   </div>
 
@@ -514,4 +416,4 @@ require_once 'auth.php';
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- My JavaScript  -->
-    <script src="javascript/inspection_form.js"></script>
+    <script src="javascript/ipc_form.js"></script>

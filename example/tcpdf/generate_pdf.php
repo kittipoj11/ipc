@@ -1,7 +1,7 @@
 <?php
-    require_once  '../../class/po_class.php';
-    // require_once  './class/supplier_class.php';
-    // require_once  './class/location_class.php';
+    require_once  '../class/po_class.php';
+    // require_once  class/supplier_class.php';
+    // require_once  class/location_class.php';
 
     // $_SESSION['Request'] = $_REQUEST;
     // $po_id = $_REQUEST['po_id'];
@@ -61,9 +61,9 @@ $searchKeyword = $_POST['search_keyword'];
 // $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Include the TCPDF library
-require_once('../../class/TCPDF/tcpdf.php'); // ปรับ path ให้ถูกต้องกับตำแหน่งของ TCPDF
+require_once('../class/TCPDF/tcpdf.php'); // ปรับ path ให้ถูกต้องกับตำแหน่งของ TCPDF
 // กำหนด Path แบบเต็มไปยังไฟล์ฟอนต์ของคุณ
-$font_path = 'D:/_xampp/htdocs/ipc/class/TCPDF/fonts/THSarabunNew/thsarabunnew.ttf';
+$font_path = 'D:/_xampp/htdocs/iclass/TCPDF/fonts/THSarabunNew/thsarabunnew.ttf';
 
 // เพิ่มฟอนต์ TH Sarabun New
 $fontname = TCPDF_FONTS::addTTFfont($font_path, 'TrueTypeUnicode', '', 32);
@@ -102,7 +102,7 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 $pdf->SetFont('thsarabunnew', '', 16, '', true, 'fonts/THSarabunNew/');
 // แบบที่ 2
 // กำหนด Path แบบเต็มไปยังไฟล์ฟอนต์ของคุณ
-// $font_path = 'D:/_xampp/htdocs/ipc/class/TCPDF/fonts/THSarabunNew/thsarabunnew.ttf';
+// $font_path = 'D:/_xampp/htdocs/iclass/TCPDF/fonts/THSarabunNew/thsarabunnew.ttf';
 
 // เพิ่มฟอนต์ TH Sarabun New
 // $fontname = TCPDF_FONTS::addTTFfont($font_path, 'TrueTypeUnicode', '', 32);

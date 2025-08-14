@@ -21,7 +21,7 @@ if (!hasAccessToPage($pdo, $_SESSION['role_id'], $currentPageFilename)) {
 </head>
 
 <body>
-    <?php include '../partials/menu.php'; // เรียกใช้ menu.php จาก parent directory 
+    <?php include 'partials/menu.php'; // เรียกใช้ menu.php จาก parent directory 
     ?>
 
     <div class="content">

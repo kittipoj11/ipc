@@ -22,7 +22,7 @@ $ipc = new Ipc($pdo);
 $inspectionService = new InspectionService($pdo, $inspection, $ipc);
 
 if (isset($requestData['action']) && $requestData['action'] == 'select') {
-    $rs = $inspection->getAllPo();
+    $rs = $inspection->getPoMainAll();
     echo json_encode($rs);
 
 } elseif (isset($requestData['action']) && $requestData['action'] == 'selectInspectionPeriodAll') {

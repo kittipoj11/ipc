@@ -245,7 +245,7 @@ class Po
 
         return $rs;
     }
-    public function getHeaderByPoId($poId): ?array
+    public function getPoMainByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`

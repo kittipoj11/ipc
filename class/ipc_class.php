@@ -1,6 +1,7 @@
 <?php
 // require_once 'config.php';
 require_once 'connection_class.php';
+require_once 'po_class.php';
 class Ipc
 {
     private $db;
@@ -10,7 +11,7 @@ class Ipc
     }
 
     // ดึงข้อมูลจาก po_main ที่มีข้อมูลใน ipc อย่างน้อย 1 รายการ  และจะ return ค่าออกไปเป็น array
-    public function getAllPo(): array
+    public function getPoMainAll(): array
     {
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                     , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
@@ -32,11 +33,11 @@ class Ipc
         return $rs;
     }
 
-    public function getPoByPoId($poId): ?array
+    public function getPoMainByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
-        $po = new Po($this->db);
-        $rs = $po->getHeaderByPoId($poId);
+        $po=new Po($this->db);
+        $rs=$po->getPoMainByPoId($poId);
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
@@ -44,11 +45,105 @@ class Ipc
         return $rs;
     }
 
-    public function getByPoId($poId): ?array
+    public function getPoIpcAllByPoId($poId): ?array
+    {
+        // ดึงข้อมูลจากตารางหลัก - po_main
+        $po=new Po($this->db);
+        $rs=$po->getPoMainByPoId($poId);
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
+
+        // ดึงข้อมูลจากตารางรอง
+        $rs['ipc'] = $this->getIpcAllByPoId($poId);
+
+        return $rs;
+    }
+
+    public function getIpcAllByPoId($poId): array
+    {
+        $sql = "SELECT `ipc_id`, `inspection_id`, `period_id`, `po_id`, `period_number`, `workflow_id`, `project_name`, `agreement_date`, `contractor`, `contract_value`
+                , `total_value_of_interim_payment`, `less_previous_interim_payment`, `net_value_of_current_claim`, `less_retension_exclude_vat`, `net_amount_due_for_payment`
+                , `total_value_of_retention`, `total_value_of_certification_made`, `resulting_balance_of_contract_sum_outstanding`
+                , `submit_by`, `approved1_by`, `approved2_by`, `remark`, `ipc_status`, `current_approval_level`, `current_approver_id`, `created_by`, `created_at`, `updated_at` 
+                FROM ipc
+                WHERE po_id = :po_id
+                ORDER BY period_number";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rs;
+    }
+
+    public function getIpcByIpcId(int $ipcId): ?array
+    {
+        // 1. ดึงข้อมูลของ ipc ที่ต้องการ
+        $sql = "SELECT `ipc_id`, `inspection_id`, `period_id`, `po_id`, `period_number`, `workflow_id`, `project_name`
+                , `agreement_date`, `contractor`, `contract_value`, `total_value_of_interim_payment`, `less_previous_interim_payment`
+                , `net_value_of_current_claim`, `less_retension_exclude_vat`, `net_amount_due_for_payment`
+                , `total_value_of_retention`, `total_value_of_certification_made`, `resulting_balance_of_contract_sum_outstanding`
+                , `submit_by`, `approved1_by`, `approved2_by`, `remark`, `ipc_status`, `current_approval_level`, `current_approver_id`
+                , `created_by`, `created_at`, `updated_at` 
+                FROM ipc 
+                WHERE ipc_id = :ipc_id
+                ORDER BY po_id, period_number";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$ipcId]);
+        $rsIpc = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // 2. ถ้าไม่พบข้อมูล Inspection ให้คืนค่า null ทันที
+        if (!$rsIpc) {
+            return null;
+        }
+
+        // 3. ดึงข้อมูลของ po_main ของ period_id ที่ต้องการ
+        $rsPoMain = $this->getPoMainByPoId($rsIpc['po_id']);
+
+        // 7. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
+        $result = [
+            'pomain' => $rsPoMain,
+            'ipc' => $rsIpc,
+            // 'periodApprovals' => $rsInspectionApprovals, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 5
+            // 'maxInspectionApproval' => $rsMaxInspectionApproval, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 6
+        ];
+
+        return $result;
+    }
+
+public function getCurrentApprovalType($ipcId): ?array
+    {
+        $sql = "SELECT I.`ipc_status`, I.`current_approval_level`, I.`current_approver_id` 
+                , W.approval_type_text
+                FROM `ipc` I
+                INNER JOIN workflow_steps W
+                    ON I.workflow_id = W.workflow_id AND current_approval_level = approval_level
+                WHERE I.`ipc_id` = :ipc_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':ipc_id', $ipcId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs = $stmt->fetch();
+        if (!$rs) {
+            return null;
+        }
+        return $rs;
+    }
+
+
+
+
+
+
+
+
+
+    public function getByPoId_XXX($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $po = new Po($this->db);
-        $rs = $po->getHeaderByPoId($poId);
+        $rs = $po->getPoMainByPoId($poId);
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
@@ -64,7 +159,10 @@ class Ipc
         return $rs;
     }
 
-    public function getPoByPeriodId($periodId): ?array
+
+
+// ไปใช้ getIpcByIpcId
+    public function getPoByPeriodId_XXX($periodId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $sql = "SELECT O.supplier_id, O.location_id , O.po_number, O.project_name, O.working_name_th, O.working_name_en
@@ -92,58 +190,6 @@ class Ipc
         return $rs;
     }
 
-    public function getAllPeriodByPoId($poId): array
-    {
-        $sql = "SELECT `ipc_id`, `inspection_id`, `period_id`, `po_id`, `period_number`, `workflow_id`, `project_name`, `agreement_date`, `contractor`, `contract_value`
-        , `total_value_of_interim_payment`, `less_previous_interim_payment`, `net_value_of_current_claim`, `less_retension_exclude_vat`, `net_amount_due_for_payment`
-        , `total_value_of_retention`, `total_value_of_certification_made`, `resulting_balance_of_contract_sum_outstanding`
-        , `submit_by`, `approved1_by`, `approved2_by`, `remark`, `ipc_status`, `current_approval_level`, `current_approver_id`, `created_by`, `created_at`, `updated_at` 
-            FROM ipc
-            WHERE po_id = :po_id
-            ORDER BY period_number";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
-
-        $stmt->execute();
-        $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $rs;
-    }
-
-    public function getByIpcId(int $ipcId): ?array
-    {
-        // 1. ดึงข้อมูลของ inspection ที่ต้องการ
-        $sql = "SELECT `ipc_id`, `inspection_id`, `period_id`, `po_id`, `period_number`, `workflow_id`, `project_name`
-                , `agreement_date`, `contractor`, `contract_value`, `total_value_of_interim_payment`, `less_previous_interim_payment`
-                , `net_value_of_current_claim`, `less_retension_exclude_vat`, `net_amount_due_for_payment`
-                , `total_value_of_retention`, `total_value_of_certification_made`, `resulting_balance_of_contract_sum_outstanding`
-                , `submit_by`, `approved1_by`, `approved2_by`, `remark`, `ipc_status`, `current_approval_level`, `current_approver_id`
-                , `created_by`, `created_at`, `updated_at` 
-                FROM ipc 
-                WHERE ipc_id = :ipc_id
-                ORDER BY po_id, period_number";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$ipcId]);
-        $rsIpc = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // 2. ถ้าไม่พบข้อมูล Inspection ให้คืนค่า null ทันที
-        if (!$rsIpc) {
-            return null;
-        }
-
-        // 3. ดึงข้อมูลของ po_main ของ period_id ที่ต้องการ
-        $rsPoMain = $this->getHeaderByPoId($rsIpc['po_id']);
-
-        // 7. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
-        $result = [
-            'header' => $rsPoMain,
-            'period' => $rsIpc,
-            // 'periodApprovals' => $rsInspectionApprovals, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 5
-            // 'maxInspectionApproval' => $rsMaxInspectionApproval, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 6
-        ];
-
-        return $result;
-    }
 
     public function create(array $ipcData): int
     {

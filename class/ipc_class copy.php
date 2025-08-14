@@ -10,7 +10,7 @@ class Ipc
     }
 
     // ดึงข้อมูลจาก po_main ที่มีข้อมูลใน ipc อย่างน้อย 1 รายการ  และจะ return ค่าออกไปเป็น array
-    public function getAllPo(): array
+    public function getPoMainAll(): array
     {
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                     , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
@@ -32,11 +32,11 @@ class Ipc
         return $rs;
     }
 
-    public function getHeaderByPoId($poId): ?array
+    public function getPoMainByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $po = new Po($this->db);
-        $rs = $po->getHeaderByPoId($poId);
+        $rs = $po->getPoMainByPoId($poId);
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
@@ -48,7 +48,7 @@ class Ipc
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $po = new Po($this->db);
-        $rs = $po->getHeaderByPoId($poId);
+        $rs = $po->getPoMainByPoId($poId);
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
@@ -132,7 +132,7 @@ class Ipc
         }
 
         // 3. ดึงข้อมูลของ po_main ของ period_id ที่ต้องการ
-        $rsPoMain = $this->getHeaderByPoId($rsIpc['po_id']);
+        $rsPoMain = $this->getPoMainByPoId($rsIpc['po_id']);
 
         // 7. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
         $result = [

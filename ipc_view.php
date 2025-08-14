@@ -57,7 +57,8 @@ require_once 'auth.php';
     $pdo=$connection->getDbConnection();
 
     $ipc = new Ipc($pdo);
-    $rsIpc = $ipc->getByIpcId($po_id);
+    $rsIpc = $ipc->getPoIpcAllByPoId($po_id);
+$_SESSION['$rsIpc']=$rsIpc;
 
     ?>
 
@@ -156,31 +157,6 @@ require_once 'auth.php';
 
                 <!-- <hr class="hr border border-dark"> -->
 
-                <div class="row m-1 mb-3 d-none">
-                  <div class="col-4">
-                    <div class="row-1 input-group input-group-sm">
-                      <label for="workload_planned_percent" class="input-group-text ">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</label>
-                      <input type="number" class="form-control " name="workload_planned_percent" id="workload_planned_percent" disabled value="<?php echo isset($rsIpc['workload_planned_percent']) ? htmlspecialchars($rsIpc['workload_planned_percent']) : ''; ?>">
-                      <label for="workload_planned_percent" class="input-group-text ">%</label>
-                    </div>
-                  </div>
-                  <div class="col-4">
-                    <div class="row-1 input-group input-group-sm">
-                      <label for="workload_actual_completed_percent" class="input-group-text ">ปริมาณที่แล้วเสร็จจริง</label>
-                      <input type="number" class="form-control " name="workload_actual_completed_percent" id="workload_actual_completed_percent" value="<?php echo isset($rsIpc['workload_actual_completed_percent']) ? htmlspecialchars($rsIpc['workload_actual_completed_percent']) : ''; ?>">
-                      <label for="workload_actual_completed_percent" class="input-group-text ">%</label>
-                    </div>
-                  </div>
-
-                  <div class="col-4">
-                    <div class="row-1 input-group input-group-sm">
-                      <label for="workload_remaining_percent" class="input-group-text">ปริมาณงานคงเหลือ</label>
-                      <input type="number" class="form-control" name="workload_remaining_percent" id="workload_remaining_percent" readonly value="<?php echo isset($rsIpc['workload_remaining_percent']) ? htmlspecialchars($rsIpc['workload_remaining_percent']) : ''; ?>">
-                      <label for="workload_remaining_percent" class="input-group-text ">%</label>
-                    </div>
-                  </div>
-                </div>
-
               </div>
               <!-- /.card-body -->
             </div>
@@ -212,25 +188,25 @@ require_once 'auth.php';
                   </tr>
                 </thead>
                 <tbody>
-                  <?php foreach ($rsIpc as $row) { ?>
-                    <tr data-po-id=<?= $row['po_id'] ?> data-period-id=<?= $row['period_id'] ?> data-inspection-id=<?= $row['inspection_id'] ?>  data-ipc-id=<?= $row['ipc_id'] ?>>
+                  <?php foreach ($rsIpc['ipc'] as $row) { ?>
+                    <tr data-po-id="<?= $rsIpc['po_id'] ?>" data-period-id="<?= $row['period_id'] ?>" data-inspection-id="<?= $row['inspection_id'] ?>"  data-ipc-id="<?= $row['ipc_id'] ?>">
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['period_number'] ?></td>
-                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_planned_percent'] ?></td>
-                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_actual_completed_percent'] ?></td>
-                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['workload_remaining_percent'] ?></td>
-                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['interim_payment'] ?></td>
-                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['interim_payment_less_previous'] ?></td>
-                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['interim_payment_remain'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['net_value_of_current_claim'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['less_retension_exclude_vat'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['total_value_of_retention'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['total_value_of_retention'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['total_value_of_retention'] ?></td>
+                      <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['agreement_date'] ?></td>
                       <td class="tdPeriod text-left text-primary py-0 px-1"><?= $row['remark'] ?></td>
 
-                      <td class="tdPeriod text-right py-0 px-1"><a class="link-opacity-100 pe-auto period_number" style="margin: 0px 5px 5px 5px">${data.period_number}</a></td>
+                      <!-- <td class="tdPeriod text-right py-0 px-1"><a class="link-opacity-100 pe-auto period_number" style="margin: 0px 5px 5px 5px">${data.period_number}</a></td>
                       <td class="tdPeriod text-right py-0 px-1">${data.net_value_of_current_claim}</td>
                       <td class="tdPeriod text-right py-0 px-1">${data.less_retension_exclude_vat}</td>
                       <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_retention}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.net_amount_due_for_payment}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_certification_made}</td>
-                      <td class="tdPeriod text-right py-0 px-1">${data.agreement_date}</td>
-                      <td class="tdPeriod text-left py-0 px-1">${data.remark}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_retention}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_retention}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${data.total_value_of_retention}</td>
+                      <td class="tdPeriod text-left py-0 px-1">${data.remark}</td> -->
                     </tr>
                   <?php } ?>
                 </tbody>

@@ -14,7 +14,7 @@ class Inspection
         $this->db = $pdoConnection;
     }
 
-    public function getAllPo(): array
+    public function getPoMainAll(): array
     {
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
                     , `working_name_th`, `working_name_en`, `is_include_vat`, `contract_value`, `contract_value_before`, `vat`
@@ -36,11 +36,11 @@ class Inspection
         return $rs;
     }
 
-    public function getHeaderByPoId($poId): ?array
+    public function getPoMainByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $po=new Po($this->db);
-        $rs=$po->getHeaderByPoId($poId);
+        $rs=$po->getPoMainByPoId($poId);
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
@@ -52,7 +52,7 @@ class Inspection
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
         $po=new Po($this->db);
-        $rs=$po->getHeaderByPoId($poId);
+        $rs=$po->getPoMainByPoId($poId);
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
@@ -68,6 +68,28 @@ class Inspection
         return $rs;
     }
 
+    public function getAllPeriodByPoId($poId): array
+    {
+        $sql = "SELECT P.inspection_id, P.period_id, P.po_id, P.period_number
+                , P.workload_planned_percent, P.workload_actual_completed_percent, P.workload_remaining_percent
+                , P.interim_payment, P.interim_payment_percent
+                , P.interim_payment_less_previous, P.interim_payment_less_previous_percent
+                , P.interim_payment_accumulated, P.interim_payment_accumulated_percent
+                , P.interim_payment_remain, P.interim_payment_remain_percent
+                , P.retention_value, P.plan_status_id, P.is_paid, P.is_retention
+                , P.remark, P.inspection_status, P.current_approval_level
+                , P.disbursement, P.workflow_id
+                FROM `inspection` P
+                WHERE `po_id` = :po_id
+                ORDER BY `period_number`";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs = $stmt->fetchAll();
+        return $rs;
+    }
+
+    // อาจเปลี่ยนเป็น getPoByInspectionId($inspectionId)
     public function getPoByPeriodId($periodId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
@@ -96,27 +118,6 @@ class Inspection
         // }
         // */ 
 
-        return $rs;
-    }
-
-    public function getAllPeriodByPoId($poId): array
-    {
-        $sql = "SELECT P.inspection_id, P.period_id, P.po_id, P.period_number
-                , P.workload_planned_percent, P.workload_actual_completed_percent, P.workload_remaining_percent
-                , P.interim_payment, P.interim_payment_percent
-                , P.interim_payment_less_previous, P.interim_payment_less_previous_percent
-                , P.interim_payment_accumulated, P.interim_payment_accumulated_percent
-                , P.interim_payment_remain, P.interim_payment_remain_percent
-                , P.retention_value, P.plan_status_id, P.is_paid, P.is_retention
-                , P.remark, P.inspection_status, P.current_approval_level
-                , P.disbursement, P.workflow_id
-                FROM `inspection` P
-                WHERE `po_id` = :po_id
-                ORDER BY `period_number`";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
-        $stmt->execute();
-        $rs = $stmt->fetchAll();
         return $rs;
     }
 
