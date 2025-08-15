@@ -107,67 +107,68 @@ $(document).ready(function () {
   });
 
   // แก้ไขใหม่
-  $("#interim_payment").on("change keyup", function () {
-    interim_payment = parseFloat($(this).val());
+  // $("#interim_payment").on("change keyup", function () {
+  //   interim_payment = parseFloat($(this).val());
 
-    if (!isNaN(interim_payment) && !isNaN(contract_value)) {
-      interim_payment_accumulated = interim_payment + interim_payment_less_previous; //(คือ Total Value Of Interim Payment))
-      interim_payment_remain = contract_value - interim_payment_accumulated;
+  //   if (!isNaN(interim_payment) && !isNaN(contract_value)) {
+  //     interim_payment_accumulated = interim_payment + interim_payment_less_previous; //(คือ Total Value Of Interim Payment))
+  //     interim_payment_remain = contract_value - interim_payment_accumulated;
 
-      interim_payment_less_previous_percent = (interim_payment_less_previous * 100) / contract_value;
-      interim_payment_percent = (interim_payment * 100) / contract_value;
-      interim_payment_accumulated_percent = (interim_payment_accumulated * 100) / contract_value; //เปอร์เซ็นต์ของยอดเบิกเงินงวดสะสม
-      interim_payment_remain_percent = (interim_payment_remain * 100) / contract_value;
+  //     interim_payment_less_previous_percent = (interim_payment_less_previous * 100) / contract_value;
+  //     interim_payment_percent = (interim_payment * 100) / contract_value;
+  //     interim_payment_accumulated_percent = (interim_payment_accumulated * 100) / contract_value; //เปอร์เซ็นต์ของยอดเบิกเงินงวดสะสม
+  //     interim_payment_remain_percent = (interim_payment_remain * 100) / contract_value;
 
-      $("#interim_payment_less_previous").val(interim_payment_less_previous.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_accumulated").val(interim_payment_accumulated.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_remain").val(interim_payment_remain.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_less_previous").val(interim_payment_less_previous.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_accumulated").val(interim_payment_accumulated.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_remain").val(interim_payment_remain.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
 
-      $("#interim_payment_less_previous_percent").val(interim_payment_less_previous_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_percent").val(interim_payment_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_accumulated_percent").val(interim_payment_accumulated_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_remain_percent").val(interim_payment_remain_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
-    } else {
-      $("#interim_payment_less_previous").val("0"); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_accumulated").val("0"); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_remain").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_less_previous_percent").val(interim_payment_less_previous_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_percent").val(interim_payment_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_accumulated_percent").val(interim_payment_accumulated_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_remain_percent").val(interim_payment_remain_percent.toFixed(2)); // (ทศนิยม 2 ตำแหน่ง)
+  //   } else {
+  //     $("#interim_payment_less_previous").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_accumulated").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_remain").val("0"); // (ทศนิยม 2 ตำแหน่ง)
 
-      $("#interim_payment_less_previous_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_accumulated_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
-      $("#interim_payment_remain_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
-    }
-  });
+  //     $("#interim_payment_less_previous_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_accumulated_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+  //     $("#interim_payment_remain_percent").val("0"); // (ทศนิยม 2 ตำแหน่ง)
+  //   }
+  // });
+
+  // // แก้ไขใหม่
+  // $("#workload_actual_completed_percent").on("keypress", function (event) {
+  //   // Check if the pressed key is Enter (keyCode 13)
+  //   if (event.which === 13) {
+  //     calculateAndDisplay();
+  //   }
+  // });
+
+  // // แก้ไขใหม่
+  // $("#workload_actual_completed_percent").on("blur", function () {
+  //   calculateAndDisplay();
+  // });
 
   // แก้ไขใหม่
-  $("#workload_actual_completed_percent").on("keypress", function (event) {
-    // Check if the pressed key is Enter (keyCode 13)
-    if (event.which === 13) {
-      calculateAndDisplay();
-    }
-  });
+  // function calculateAndDisplay() {
+  //   let workload_actual_completed_percent = $("#workload_actual_completed_percent").val();
 
-  // แก้ไขใหม่
-  $("#workload_actual_completed_percent").on("blur", function () {
-    calculateAndDisplay();
-  });
+  //   if (!isNaN(workload_actual_completed_percent) && workload_actual_completed_percent !== "") {
+  //     workload_remaining_percent = 100 - workload_actual_completed_percent; //(คือ Total Value Of Interim Payment))
+  //     $("#workload_remaining_percent").val(workload_remaining_percent.toFixed(2));
+  //   } else {
+  //     $("#workload_remaining_percent").val("");
+  //   }
+  // }
 
   // แก้ไขใหม่
   $("#floatingTextarea").on("click", function () {
     console.log($(this).val());
   });
 
-  // แก้ไขใหม่
-  function calculateAndDisplay() {
-    let workload_actual_completed_percent = $("#workload_actual_completed_percent").val();
-
-    if (!isNaN(workload_actual_completed_percent) && workload_actual_completed_percent !== "") {
-      workload_remaining_percent = 100 - workload_actual_completed_percent; //(คือ Total Value Of Interim Payment))
-      $("#workload_remaining_percent").val(workload_remaining_percent.toFixed(2));
-    } else {
-      $("#workload_remaining_percent").val("");
-    }
-  }
 
   // - action มาจากการกดปุ่มว่าเป็นอะไร เช่น save, submit, approve, reject เป็นต้น  
   // โดย submit และ approve เป็นการเลื่อน level เหมือนกัน  ต่างกันแค่ชื่อ   ซึ่งอาจจะดึงข้อมูลชื่อมาจาก workflow_step 

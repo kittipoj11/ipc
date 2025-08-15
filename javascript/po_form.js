@@ -269,6 +269,7 @@ $(document).ready(function () {
       working_day: parseFloat($("#working_day").val() ?? 0),
       number_of_period: $("#tbody-period tr").not('[data-crud="delete"]')
         .length, //จำนวนตรงนี้จะไม่เอารายการที่ลบไป
+        workflowId:1,
     };
 
     const periodsData = [];

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ตัวอย่างใบเสร็จ</title>
+    <style>
+        body { font-family: sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        #preview { border: 1px dashed #ccc; padding: 20px; max-width: 800px; margin: auto; }
+    </style>
+</head>
+<body>
+
+<div id="preview">
+    <h1>ใบเสร็จรับเงิน / Receipt</h1>
+    <p>ลูกค้า (Customer): <span id="customerName">John Doe</span></p>
+    <p>เลขที่ (No.): <span id="invoiceNumber">INV-2025-001</span></p>
+    
+    <table id="invoiceItems">
+        <thead>
+            <tr>
+                <th>รายการ / Description</th>
+                <th>จำนวน / Qty</th>
+                <th>ราคา / Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>สินค้า A (Product A)</td>
+                <td>2</td>
+                <td>500.00</td>
+            </tr>
+            <tr>
+                <td>บริการ B (Service B)</td>
+                <td>1</td>
+                <td>1500.00</td>
+            </tr>
+        </tbody>
+    </table>
+    <h3 style="text-align: right;">ยอดรวม: 2,500.00 บาท</h3>
+</div>
+
+<div style="text-align: center; margin-top: 20px;">
+    <button id="printPdfBtn" style="padding: 10px 20px; font-size: 16px;">สร้างและพิมพ์ PDF</button>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#printPdfBtn').on('click', function() {
+        
+        // 1. รวบรวมข้อมูลจากหน้า Preview
+        let invoiceData = {
+            customer: $('#customerName').text(),
+            number: $('#invoiceNumber').text(),
+            items: []
+        };
+
+        $('#invoiceItems tbody tr').each(function() {
+            let row = $(this);
+            invoiceData.items.push({
+                description: row.find('td').eq(0).text(),
+                qty: row.find('td').eq(1).text(),
+                price: row.find('td').eq(2).text()
+            });
+        });
+
+        // 2. ส่งข้อมูลไปที่ PHP ผ่าน AJAX
+        $.ajax({
+            url: 'generate_pdf.php', // ชื่อไฟล์ PHP ที่จะสร้าง PDF
+            method: 'POST',
+            data: { 
+                // ส่งข้อมูลในรูปแบบที่ PHP จะรับได้ง่าย
+                invoice_data: JSON.stringify(invoiceData) 
+            },
+            success: function(response) {
+                // 4. เมื่อสำเร็จ ให้เปิดไฟล์ PDF ในแท็บใหม่
+                if (response.status === 'success') {
+                    window.open(response.file, '_blank');
+                } else {
+                    alert('เกิดข้อผิดพลาด: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('ไม่สามารถเชื่อมต่อกับ Server ได้');
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>

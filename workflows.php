@@ -1,4 +1,5 @@
 <?php
+
 @session_start();
 require_once 'config.php';
 require_once 'auth.php';
@@ -41,9 +42,15 @@ require_once 'auth.php';
 
     <!-- Main Content Start -->
     <?php
+    require_once  'class/connection_class.php';
     require_once  'class/workflows_class.php';
-    $workflow = new Workflows;
-    $rs = $workflow->getAll();
+
+    // $_SESSION['Request'] = $_REQUEST;
+    $connection = new Connection;
+    $pdo = $connection->getDbConnection();
+
+    $workflow = new Workflows($pdo);
+    $rs = $workflow->getAllStepsById(1);
     ?>
 
     <!-- Content Wrapper. Contains page content -->

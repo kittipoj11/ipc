@@ -30,6 +30,7 @@ class DocumentService
         try {
             $this->db->beginTransaction();
 
+           
             $poId = $this->po->save($data['headerData']);
             // ถ้า $poId ยังคงเป็น 0 หรือว่าง แสดงว่าเกิดข้อผิดพลาด
             if (empty($poId)) {
@@ -137,8 +138,9 @@ class DocumentService
                 //     $this->inspection->saveFromPoPeriod($item);
                 // }
             }
-
+$_SESSION['before commit BBBBBBBBBBBBBBB'] = $poId;
             $this->db->commit();
+            $_SESSION['after commit CCCCCCCCCCCCCCCCCc'] = $poId;
             // คืนค่า PO ID ที่บันทึกสำเร็จกลับไป
             return (int)$poId;
 

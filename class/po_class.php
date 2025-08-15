@@ -15,6 +15,7 @@ class Po
         public function save(array $data): int
     {
         $poId = $data['po_id'] ?? 0;
+         $_SESSION['before po save AAAAAAAAAAAAAAAAA'] = $poId;
         if (empty($poId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
             // --- CREATE MODE ---
             // ถ้าจะสร้าง id มี prefix ด้วยตนเอง สมมติให้ prefix เป็น PO เช่น $poId = uniqid('PO', true);
@@ -49,11 +50,12 @@ class Po
             $stmt->bindParam(':working_day', $data['working_day'], PDO::PARAM_INT);
             $stmt->bindParam(':number_of_period', $data['number_of_period'], PDO::PARAM_INT);
             $stmt->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
-            $stmt->bindParam(':workflow_id', $workflowId, PDO::PARAM_INT);
+            $stmt->bindParam(':workflow_id', $data['workflowId'], PDO::PARAM_INT);
             $stmt->execute();
             $stmt->closeCursor();
             // กำหนดค่าให้ตัวแปร $poId จาก ID ของ PO ที่เพิ่งสร้างใหม่ด้วย lastInsertId()
             $poId = $this->db->lastInsertId();
+             $_SESSION['after po save AAAAAAAAAAAAAAAAA'] = $poId;
         } else {
             // --- UPDATE MODE ---
             $sql = "UPDATE `po_main`
@@ -155,7 +157,9 @@ class Po
             $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
             $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
             $stmt->bindParam(':remark', $periodData['remark'], PDO::PARAM_STR);
-            $stmt->execute();
+            $_SESSION['before po period save AAAAAAAAAAAAAAAAA'] = $periodId;
+            // $stmt->execute();
+            $_SESSION['after po period save AAAAAAAAAAAAAAAAA'] = $stmt->execute();
             $stmt->closeCursor();
             $periodId = $this->db->lastInsertId();
             return $periodId;
@@ -178,6 +182,8 @@ class Po
             $stmt->closeCursor();
             return $periodId;
         }
+            
+
     }
 
     public function deletePeriod(int $periodId): bool

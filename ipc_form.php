@@ -3,7 +3,23 @@
 
 require_once 'config.php';
 require_once 'auth.php';
+// Require composer autoload
+require_once __DIR__ . '/vendor/autoload.php';
+
+// เพิ่ม Font ให้กับ mPDF
+$defaultFontConfig = (new Mpdf\Config\FontVariables())->getDefaults();
+$fontData = $defaultFontConfig['fontdata'];
+$mpdf = new \Mpdf\Mpdf([
+    'mode' => 'utf-8',
+    'format' => 'A4',
+    'default_font' => 'thsarabun', // หรือชื่อฟอนต์ที่คุณต้องการ
+    'autoScriptToLang' => true,
+    'autoLangToFont' => true
+]);
+
+ob_start(); // Start get HTML code
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -397,6 +413,7 @@ require_once 'auth.php';
     <?php include 'footer_bar.php'; ?>
 
 
+
     <!-- ./wrapper -->
 
     <!-- Scroll to Top Button-->
@@ -417,3 +434,4 @@ require_once 'auth.php';
 
     <!-- My JavaScript  -->
     <script src="javascript/ipc_form.js"></script>
+

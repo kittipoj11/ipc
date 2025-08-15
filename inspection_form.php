@@ -64,6 +64,31 @@ require_once 'auth.php';
       cursor: not-allowed;
       /* เปลี่ยนเคอร์เซอร์ (ทางเลือก) */
     }
+
+        .status {
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 15px;
+      color: white;
+      font-size: 0.9em;
+    }
+
+    .status-Draft {
+      background-color: #6c757d;
+    }
+
+    .status-pending-submit {
+      background-color: #ffc107;
+      color: #000;
+    }
+
+    .status-Rejected {
+      background-color: #dc3545;
+    }
+
+    .status-Completed {
+      background-color: #28a745;
+    }
   </style>
 </head>
 
@@ -139,6 +164,8 @@ require_once 'auth.php';
                       <button type="button" name="btnAttach" id="btnAttach" class="btn btn-primary btn-sm m-1">
                         <i class="fi fi-rr-clip"></i>
                       </button>
+                      <!-- <p><strong>Status:</strong> <span class="status status-<?php echo htmlspecialchars($rsInspection['period']['inspection_status']); ?>"><?php echo htmlspecialchars($rsInspection['period']['inspection_status']); ?></span></p> -->
+                      <p> <span class="status status-<?php echo htmlspecialchars($rsInspection['period']['inspection_status']); ?>"><?php echo htmlspecialchars($rsInspection['period']['inspection_status']); ?></span></p>
                     </div>
 
                     <!-- <div class="dropdown"> -->
@@ -265,7 +292,7 @@ require_once 'auth.php';
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_percent" id="interim_payment_percent" readonly value=<?= $rsInspection['period']['interim_payment_percent'] ?>>
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_percent" id="interim_payment_percent" value=<?= $rsInspection['period']['interim_payment_percent'] ?>>
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
@@ -273,13 +300,13 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment_less_previous" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</label>
-                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_less_previous" id="interim_payment_less_previous" readonly value="<?= $rsInspection['period']['previous_interim_payment_accumulated'] ?>">
+                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_less_previous" id="interim_payment_less_previous"  value="<?= $rsInspection['period']['interim_payment_less_previous'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_less_previous_percent" id="interim_payment_less_previous_percent" readonly value="<?= $rsInspection['period']['interim_payment_less_previous_percent'] ?>">
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_less_previous_percent" id="interim_payment_less_previous_percent"  value="<?= $rsInspection['period']['interim_payment_less_previous_percent'] ?>">
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
@@ -287,13 +314,13 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment_accumulated" class="col-3 input-group-text">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</label>
-                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_accumulated" id="interim_payment_accumulated" readonly value="<?= $rsInspection['period']['interim_payment_accumulated'] ?>">
+                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_accumulated" id="interim_payment_accumulated"  value="<?= $rsInspection['period']['interim_payment_accumulated'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_accumulated_percent" id="interim_payment_accumulated_percent" readonly value="<?= $rsInspection['period']['interim_payment_accumulated_percent'] ?>">
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_accumulated_percent" id="interim_payment_accumulated_percent"  value="<?= $rsInspection['period']['interim_payment_accumulated_percent'] ?>">
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
@@ -301,13 +328,13 @@ require_once 'auth.php';
                         <div class="row m-1">
                           <div class="col-12 input-group input-group-sm">
                             <label for="interim_payment_remain" class="col-3 input-group-text">ยอดเงินงวดคงเหลือ</label>
-                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_remain" id="interim_payment_remain" readonly value="<?= $rsInspection['period']['interim_payment_remain'] ?>">
+                            <input type="number" step="1" class="col-3 form-control" name="interim_payment_remain" id="interim_payment_remain"  value="<?= $rsInspection['period']['interim_payment_remain'] ?>">
                             <label class="input-group-text">บาท</label>
                             <label class="col-2 input-group-text">(Including VAT7%)</label>
                             <!-- </div>
                           <div class="col-2 input-group input-group-sm"> -->
                             <label class="input-group-text">คิดเป็น</label>
-                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_remain_percent" id="interim_payment_remain_percent" readonly value="<?= $rsInspection['period']['interim_payment_remain_percent'] ?>">
+                            <input type="number" step="0.01" class="col-2 form-control" name="interim_payment_remain_percent" id="interim_payment_remain_percent"  value="<?= $rsInspection['period']['interim_payment_remain_percent'] ?>">
                             <label class="input-group-text">%</label>
                           </div>
                         </div>
