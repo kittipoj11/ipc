@@ -108,13 +108,13 @@ class DocumentService
             //     $stmtCreateInspectApprovals = $this->db->prepare($sql);
 
                 foreach ($createItems as &$item) {
-                    // CREATE po_periods
+                    // CREATE po_periods $poId
+                    $item['po_id']=$poId;
                     $periodId = $this->po->savePeriod($item);
                     
                     $item['period_id']=$periodId;
-                    
                     // CREATE inspection and inspection_details
-                    $inspectionId = $this->inspection->createFromPoPeriod($item);
+                    $this->inspection->createFromPoPeriod($item);
 
 
             //         $approvalStatusId = 1;
@@ -138,9 +138,7 @@ class DocumentService
                 //     $this->inspection->saveFromPoPeriod($item);
                 // }
             }
-$_SESSION['before commit BBBBBBBBBBBBBBB'] = $poId;
             $this->db->commit();
-            $_SESSION['after commit CCCCCCCCCCCCCCCCCc'] = $poId;
             // คืนค่า PO ID ที่บันทึกสำเร็จกลับไป
             return (int)$poId;
 

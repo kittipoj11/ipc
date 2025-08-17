@@ -55,7 +55,6 @@ class Po
             $stmt->closeCursor();
             // กำหนดค่าให้ตัวแปร $poId จาก ID ของ PO ที่เพิ่งสร้างใหม่ด้วย lastInsertId()
             $poId = $this->db->lastInsertId();
-             $_SESSION['after po save AAAAAAAAAAAAAAAAA'] = $poId;
         } else {
             // --- UPDATE MODE ---
             $sql = "UPDATE `po_main`
@@ -157,9 +156,7 @@ class Po
             $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
             $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
             $stmt->bindParam(':remark', $periodData['remark'], PDO::PARAM_STR);
-            $_SESSION['before po period save AAAAAAAAAAAAAAAAA'] = $periodId;
-            // $stmt->execute();
-            $_SESSION['after po period save AAAAAAAAAAAAAAAAA'] = $stmt->execute();
+            $stmt->execute();
             $stmt->closeCursor();
             $periodId = $this->db->lastInsertId();
             return $periodId;
