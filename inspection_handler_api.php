@@ -39,6 +39,17 @@ if (isset($requestData['action']) && $userId > 0) {
             echo json_encode($response);
             break;
 
+        case 'update':
+            // $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
+            $savedInspectionId = $inspectionService->updateInspection($requestData['periodData'], $requestData['detailsData']);
+            $response = [
+                'status' => 'success',
+                'message' => 'บันทึกข้อมูล PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
+                'data' => ['inspection_id' => $savedInspectionId]
+            ];
+            echo json_encode($response);
+            break;
+
         case 'approve':
             // $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
             $savedInspectionId = $inspectionService->approveInspection($requestData['inspectionId']);

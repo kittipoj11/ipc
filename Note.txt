@@ -476,7 +476,7 @@ echo $user_object->getGreeting(); // ผลลัพธ์: Hello, Admin User
 
 3. สร้างคลาส OrderRepository 
     <?php
-    // สมมติว่านี่คือคลาส Repository หรือ Service ของคุณ
+    // สมมติว่านี่คือคลาส Repository หรือ Service
     class OrderRepository 
     {
         private $pdo;

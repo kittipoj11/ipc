@@ -125,7 +125,7 @@ require_once 'auth.php';
     // 
     // ถ้า approval_level ตรงกับ current_approval_level และ approver_id ตรงกับ user_id ที่ login
     // 
-    $content_header = 'Inspection(ตรวจรับงาน)';
+    $content_header = '✨ Inspection(ตรวจรับงาน) ✨';
     ?>
 
     <!-- Content Wrapper. Contains page content -->

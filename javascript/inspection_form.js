@@ -148,21 +148,21 @@ $(document).ready(function () {
   // });
 
   // // แก้ไขใหม่
-  // $("#workload_actual_completed_percent").on("blur", function () {
-  //   calculateAndDisplay();
-  // });
+  $("#workload_actual_completed_percent").on("blur", function () {
+    calculateAndDisplay();
+  });
 
   // แก้ไขใหม่
-  // function calculateAndDisplay() {
-  //   let workload_actual_completed_percent = $("#workload_actual_completed_percent").val();
+  function calculateAndDisplay() {
+    let workload_actual_completed_percent = $("#workload_actual_completed_percent").val();
 
-  //   if (!isNaN(workload_actual_completed_percent) && workload_actual_completed_percent !== "") {
-  //     workload_remaining_percent = 100 - workload_actual_completed_percent; //(คือ Total Value Of Interim Payment))
-  //     $("#workload_remaining_percent").val(workload_remaining_percent.toFixed(2));
-  //   } else {
-  //     $("#workload_remaining_percent").val("");
-  //   }
-  // }
+    if (!isNaN(workload_actual_completed_percent) && workload_actual_completed_percent !== "") {
+      workload_remaining_percent = 100 - workload_actual_completed_percent; //(คือ Total Value Of Interim Payment))
+      $("#workload_remaining_percent").val(workload_remaining_percent.toFixed(2));
+    } else {
+      $("#workload_remaining_percent").val("");
+    }
+  }
 
   // แก้ไขใหม่
   $("#floatingTextarea").on("click", function () {
@@ -284,7 +284,11 @@ $(document).ready(function () {
       periodData: periodData,
       detailsData: detailsData,
     };
-    sendRequest('save',data);
+    if(currentApprovalLevel == 0){
+      sendRequest('save',data);
+    }else{
+      sendRequest('update',data);
+    }
   });
 
   $(".approve").on("click", function (e) {
@@ -338,6 +342,10 @@ $(document).ready(function () {
     if ((myForm.data('inspection-status') =='draft') && myForm.data('created-by') == myForm.data('user-id')) {
       $("#submit").addClass('inline');
       $("#submit").removeClass('d-none');
+    } 
+    else if (myForm.data('inspection-status') == 'pending submit' && myForm.data('created-by') == myForm.data('user-id')) {
+      $("#btnAction").addClass('inline');
+      $("#btnAction").removeClass('d-none');
     } 
     else {
       $("#submit").addClass('d-none');
