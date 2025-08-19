@@ -86,6 +86,7 @@ require_once 'auth.php';
                         <th class="text-center p-1">งาน</th>
                         <th class="text-center p-1">มูลค่า PO</th>
                         <th class="text-center p-1">จำนวนงวดงาน</th>
+                        <th class="text-center p-1">สถานะ</th>
                       </tr>
                     </thead>
                     <tbody id="tbody">
@@ -122,6 +123,7 @@ require_once 'auth.php';
                         <th class="text-center p-1" colspan="3">ปริมาณงาน</th>
                         <th class="text-center p-1" colspan="3">ยอดเบิกเงินงวด</th>
                         <th class="text-center align-content-center p-1" rowspan="2">หมายเหตุ</th>
+                        <th class="text-center align-content-center p-1" rowspan="2" width="15%">สถานะ</th>
                       </tr>
                       <tr>
                         <th class="text-center p-1" width="10%">ตามแผนงาน(%)</th>

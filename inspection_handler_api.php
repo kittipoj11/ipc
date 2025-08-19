@@ -22,10 +22,11 @@ if (isset($requestData['action']) && $userId > 0) {
     $connection = new Connection();
     $pdo = $connection->getDbConnection();
 
+    $po = new Po($pdo);
     $inspection = new Inspection($pdo);
     $ipc = new Ipc($pdo);
     $workflow = new Workflows($pdo);
-    $inspectionService = new InspectionService($pdo, $inspection, $ipc,$workflow);
+    $inspectionService = new InspectionService($pdo, $po, $inspection, $ipc,$workflow);
 
     switch ($requestData['action']) {
         case 'save':

@@ -51,6 +51,7 @@ $(document).ready(function () {
                           <td class="tdMain p-0">${data.working_name_th}</td>
                           <td class="tdMain p-0 text-right">${data.contract_value}</td>
                           <td class="tdMain p-0 text-right">${data.number_of_period}</td>
+                          <td class="tdMain p-0 text-left">${data.po_status_name}</td>
                       </tr>
                             
                     `;
@@ -71,6 +72,7 @@ $(document).ready(function () {
                       <td class="tdPeriod text-right py-0 px-1">${data.interim_payment_less_previous}</td>
                       <td class="tdPeriod text-right py-0 px-1">${data.interim_payment_remain}</td>
                       <td class="tdPeriod text-left py-0 px-1">${data.remark}</td>
+                      <td class="tdPeriod text-left py-0 px-1">${data.inspection_status}</td>
                     </tr>                      
                   `;
     });
@@ -104,7 +106,7 @@ $(document).ready(function () {
           tableBody = createPeriodTable(result);
           $("#tbody-period").html(tableBody);
         } else {
-          $("#tbody-period").html();
+          $("#tbody-period").html("");
         }
       })
       .fail((jqXHR) => {
@@ -112,7 +114,7 @@ $(document).ready(function () {
           ? jqXHR.responseJSON.message
           : "เกิดข้อผิดพลาดในการดึงข้อมูล";
         // showMessage(errorMsg, false);
-        $("#tbody-period").html();
+        $("#tbody-period").html("");
       });
   });
 

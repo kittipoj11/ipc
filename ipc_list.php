@@ -129,6 +129,7 @@ require_once 'auth.php';
                         <th class="text-center p-1 d-none">paid</th>
                         <th class="text-center p-1">paid date</th>
                         <th class="text-center align-content-center p-1">หมายเหตุ</th>
+                        <th class="text-center align-content-center p-1" width="10%">สถานะ</th>
                     </thead>
                     <tbody id="tbody-period">
 

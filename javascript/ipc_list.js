@@ -73,6 +73,7 @@ $(document).ready(function () {
                       <td class="tdPeriod text-right py-0 px-1 d-none">0</td>
                       <td class="tdPeriod text-right py-0 px-1">${data.agreement_date}</td>
                       <td class="tdPeriod text-left py-0 px-1">${data.remark}</td>
+                      <td class="tdPeriod text-left py-0 px-1">${data.ipc_status}</td>
                     </tr>                      
                   `;
     });
@@ -102,11 +103,12 @@ $(document).ready(function () {
       data: JSON.stringify(data_sent),
     })
       .done(function (result) {
+        console.log(`result : ${result.length}`);
         if (result.length > 0) {
           tableBody = createPeriodTable(result);
           $("#tbody-period").html(tableBody);
         } else {
-          $("#tbody-period").html();
+          $("#tbody-period").html("");
         }
       })
       .fail((jqXHR) => {
@@ -114,7 +116,7 @@ $(document).ready(function () {
           ? jqXHR.responseJSON.message
           : "เกิดข้อผิดพลาดในการดึงข้อมูล";
         // showMessage(errorMsg, false);
-        $("#tbody-period").html();
+        $("#tbody-period").html("");
       });
   });
 

@@ -190,6 +190,7 @@ $(document).ready(function () {
     // console.log(action);
     // console.log(JSON.stringify(data_sent));
     // return;
+    // console.log(`data_sent: ${data_sent}`);
     $.ajax({
       url: "inspection_handler_api.php",
       type: "POST",
@@ -201,6 +202,7 @@ $(document).ready(function () {
       //   $("#submit").prop("disabled", true);
       // },
     })
+    // ถ้า submit แสดง แต่ approve ไม่แสดง
       .done(function (result) {
         // console.log(`result: ${result}`);
         responseMessage.text(result.message).css("color", "green");

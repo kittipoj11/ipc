@@ -195,6 +195,23 @@ class Po
         return $affected;
     }
     
+            public function updateStatus($poId, $poStatus)
+    {
+        $sql = "UPDATE `po_main`
+                SET `po_status` = :po_status
+                WHERE `po_id` = :po_id";
+
+        $stmt = $this->db->prepare($sql);
+        // $stmt->bindParam(':po_number', $po_number, PDO::PARAM_STR);
+        $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
+        $stmt->bindParam(':po_status', $poStatus, PDO::PARAM_INT);
+
+        // $stmtUpdatePoMain->execute();
+        $stmt->execute();
+        // $_SESSION['period data']= $periodData;
+        $stmt->closeCursor();
+    }
+
     public function getAll(): array
     {
         $sql = "SELECT `po_id`, `po_number`, `project_name`, p.`supplier_id`, p.`location_id`
@@ -204,11 +221,14 @@ class Po
                     , `create_by`, `create_date`, `number_of_period`
                     , s.`supplier_name`
                     , l.`location_name`
+                    , `po_status_name`
                     FROM `po_main` p
                     INNER JOIN `suppliers` s
                         ON s.`supplier_id` = p.`supplier_id`
                     INNER JOIN `locations` l
                         ON l.`location_id` = p.`location_id`
+                    INNER JOIN po_status
+                    	ON p.po_status = po_status.po_status_id
                     ORDER BY `po_id`";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();

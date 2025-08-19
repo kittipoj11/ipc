@@ -23,11 +23,14 @@ class Inspection
                     , `create_by`, `create_date`, `number_of_period`
                     , s.`supplier_name`
                     , l.`location_name`
+                    , `po_status_name`
                     FROM `po_main` p
                     INNER JOIN `suppliers` s
                         ON s.`supplier_id` = p.`supplier_id`
                     INNER JOIN `locations` l
                         ON l.`location_id` = p.`location_id`
+                    INNER JOIN po_status
+                    	ON p.po_status = po_status.po_status_id
                     ORDER BY `po_id`";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();

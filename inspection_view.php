@@ -206,6 +206,7 @@ require_once 'auth.php';
                     <th class="text-center p-1" colspan="3">ปริมาณงาน</th>
                     <th class="text-center p-1" colspan="3">ยอดเบิกเงินงวด</th>
                     <th class="text-center align-content-center p-1" rowspan="2">หมายเหตุ</th>
+                    <th class="text-center align-content-center p-1" rowspan="2" width="15%">สถานะ</th>
                   </tr>
                   <tr>
                     <th class="text-center p-1" width="10%">ตามแผนงาน(%)</th>
@@ -227,6 +228,7 @@ require_once 'auth.php';
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['interim_payment_less_previous'] ?></td>
                       <td class="tdPeriod text-right text-primary py-0 px-1"><?= $row['interim_payment_remain'] ?></td>
                       <td class="tdPeriod text-left text-primary py-0 px-1"><?= $row['remark'] ?></td>
+                      <td class="tdPeriod text-left text-primary py-0 px-1"><?= $row['inspection_status'] ?></td>
                     </tr>
                   <?php } ?>
                 </tbody>

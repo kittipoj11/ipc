@@ -228,10 +228,11 @@ public function getCurrentApprovalType($ipcId): ?array
             $stmt->bindParam(':remark', $ipcData['remark'], PDO::PARAM_STR);
             $stmt->bindParam(':workflow_id', $ipcData['workflow_id'], PDO::PARAM_INT);
             $stmt->bindParam(':created_by', $_SESSION['user_id'], PDO::PARAM_INT);
-    
+
             $stmt->execute();
             $ipcId = $this->db->lastInsertId();
             $stmt->closeCursor();
+            // $_SESSION['sql SSSSSSSSSSSSSSSSSS'] = $ipcId;
             return (int)$ipcId;
         // } else {
         //     // --- UPDATE MODE ---
@@ -255,7 +256,8 @@ public function getCurrentApprovalType($ipcId): ?array
         $stmt->bindParam(':ipc_status', $ipcStatus, PDO::PARAM_STR);
 
         // $stmtUpdatePoMain->execute();
-        $stmt->execute();
+        $_SESSION['ipc execute']= $stmt->execute();
+        // $stmt->execute();
         // $_SESSION['period data']= $periodData;
         $stmt->closeCursor();
     }

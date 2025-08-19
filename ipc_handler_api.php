@@ -8,6 +8,7 @@ header('Content-Type: application/json');
 
 require_once 'config.php';
 require_once 'class/connection_class.php';
+require_once 'class/po_class.php';
 require_once 'class/inspection_class.php';
 require_once 'class/ipc_class.php';
 require_once 'class/workflows_class.php';
@@ -22,10 +23,11 @@ if (isset($requestData['action']) && $userId > 0) {
     $connection = new Connection();
     $pdo = $connection->getDbConnection();
 
+    $po = new Po($pdo);
     $inspection = new Inspection($pdo);
     $ipc = new Ipc($pdo);
     $workflow = new Workflows($pdo);
-    $inspectionService = new InspectionService($pdo, $inspection, $ipc, $workflow);
+    $inspectionService = new InspectionService($pdo, $po, $inspection, $ipc, $workflow);
 
     switch ($requestData['action']) {
         case 'approve':
