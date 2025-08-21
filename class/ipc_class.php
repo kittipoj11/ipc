@@ -149,7 +149,7 @@ public function getCurrentApprovalType($ipcId): ?array
         }
 
         // ดึงข้อมูลจากตารางรอง
-        $rs['periods'] = $this->getAllPeriodByPoId($poId);
+        // $rs['periods'] = $this->getAllPeriodByPoId($poId);
 
         // $rs2 = $this->po->getByPoId($poId);
 
