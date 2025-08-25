@@ -21,15 +21,11 @@
     <!-- Pagination -->
     <nav aria-label="Page navigation example">
       <ul class="pagination">
-        <li class="page-item disabled">
-          <a class="page-link" href="#" id="prevBtn">Previous</a>
-        </li>
+        <li class="page-item disabled"><a class="page-link" href="#" id="prevBtn">Previous</a></li>
         <li class="page-item active"><a class="page-link" href="#" data-page="1">1</a></li>
         <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
         <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#" id="nextBtn">Next</a>
-        </li>
+        <li class="page-item"><a class="page-link" href="#" id="nextBtn">Next</a></li>
       </ul>
     </nav>
   </div>
@@ -38,8 +34,12 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+    const page1=`<h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>
+    <h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>
+    <h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>
+    <h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>`;
     const contentData = {
-      1: "<h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>",
+      1: page1,
       2: "<h4>หน้า 2</h4><p>นี่คือเนื้อหาของหน้าที่ 2 😎</p>",
       3: "<h4>หน้า 3</h4><p>และนี่คือหน้าที่ 3 🚀</p>"
     };
