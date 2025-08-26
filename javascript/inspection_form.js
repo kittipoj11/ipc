@@ -229,7 +229,7 @@ $(document).ready(function () {
   // ทำการบันทึกข้อมูล inspection
   // current_approval_level = current_approval_level +1 (ค่า current_approval_level เดิม = 0) 
   // ดึงข้อมูลจาก workflow_step ที่มี id = 1 และ approval_level = current_approval_level โดยมี limit 1 (จะได้ approval_level(1), approver_id(1), approval_type_text(submit))
-  // inspection_status เป็น 'pending submit'('pending ' + workflow_step.approval_type_text) 
+  // inspection_status เป็น 'pending-submit'('pending ' + workflow_step.approval_type_text) 
   // current_approver_id เป็น 1 (จาก workflow_step.approver_id)
   // และบันทึก inspection_approval_history.action เป็น 'create document'
   $("#myForm").on("submit", function (e) {
@@ -258,7 +258,7 @@ $(document).ready(function () {
       plan_status_id: $("#plan_status_id").val() ?? 0,
       disbursement: disbursement, //$("#disbursement").val() ?? 0,
       remark: $("#remark").val() ?? "",
-      inspection_status: "pending submit",
+      inspection_status: "pending-submit",
       current_approval_level: currentApprovalLevel,
       workflow_id: workflowId,
     };
@@ -345,7 +345,7 @@ $(document).ready(function () {
       $("#submit").addClass('inline');
       $("#submit").removeClass('d-none');
     } 
-    else if (myForm.data('inspection-status') == 'pending submit' && myForm.data('created-by') == myForm.data('user-id')) {
+    else if (myForm.data('inspection-status') == 'pending-submit' && myForm.data('created-by') == myForm.data('user-id')) {
       $("#btnAction").addClass('inline');
       $("#btnAction").removeClass('d-none');
     } 
@@ -355,11 +355,11 @@ $(document).ready(function () {
     }
     
     // จัดการปุ่ม action
-    if (myForm.data('inspection-status') == 'pending submit' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+    if (myForm.data('inspection-status') == 'pending-submit' && myForm.data('current-approver-id') == myForm.data('user-id')) {
       $("#btnAction").addClass('inline');
       $("#btnAction").removeClass('d-none');
     } 
-    else if (myForm.data('inspection-status') =='pending approve' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+    else if (myForm.data('inspection-status') =='pending-approve' && myForm.data('current-approver-id') == myForm.data('user-id')) {
       $("#btnAction").addClass('inline');
       $("#btnAction").removeClass('d-none');
     } 

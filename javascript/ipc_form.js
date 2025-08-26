@@ -106,15 +106,14 @@ $(document).ready(function () {
     
   });
 
-
   function refreshForm() {
     const myForm = $('#myForm');
     // จัดการปุ่ม action
-    if (myForm.data('ipc-status') == 'pending submit' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+    if (myForm.data('ipc-status') == 'pending-submit' && myForm.data('current-approver-id') == myForm.data('user-id')) {
       $("#btnAction").addClass('inline');
       $("#btnAction").removeClass('d-none');
     } 
-    else if (myForm.data('ipc-status') =='pending approve' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+    else if (myForm.data('ipc-status') =='pending-approve' && myForm.data('current-approver-id') == myForm.data('user-id')) {
       $("#btnAction").addClass('inline');
       $("#btnAction").removeClass('d-none');
     } 

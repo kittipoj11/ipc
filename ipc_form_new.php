@@ -310,114 +310,105 @@ ob_start(); // Start get HTML code
                     </div>
                   </div>
 
+
+
                   <div class="card-body m-0 p-0">
                     <div class="container-fluid">
-                      <h3 class="">INTERIM CERTIFICATE</h3>
-
-                      <div class="header-info">
-                        <!-- <div class="info-row">
+                      <!-- Content Area -->
+                      <div id="content" class="border p-3 rounded mb-4">
+                        <h3 class="">INTERIM CERTIFICATE</h3>
+                        <div class="header-info">
+                          <!-- <div class="info-row">
                           <div class="fw-bold" style="width: 200px;">DATE</div>
                           <div class="flex-grow-1">18<sup>th</sup> May 2023</div>
                         </div> -->
-                        <div class="info-row">
-                          <div class="fw-bold" style="width: 200px;">PROJECT</div>
-                          <div class="flex-grow-1"><?= $rsIpc['pomain']['project_name'] ?></div>
+                          <div class="info-row">
+                            <div class="fw-bold" style="width: 200px;">PROJECT</div>
+                            <div class="flex-grow-1"><?= $rsIpc['pomain']['project_name'] ?></div>
+                          </div>
+                          <div class="info-row">
+                            <div class="fw-bold" style="width: 200px;">OWNER</div>
+                            <div class="flex-grow-1">IMPACT Exhibition Management Co., Ltd.<br>47/569-576, 10th floor, Bangkok Land Building,<br>Popular 3 Road, Banmai Sub-district,<br>Pakkred District, Nonthaburi 11120</div>
+                          </div>
                         </div>
-                        <div class="info-row">
-                          <div class="fw-bold" style="width: 200px;">OWNER</div>
-                          <div class="flex-grow-1">IMPACT Exhibition Management Co., Ltd.<br>47/569-576, 10th floor, Bangkok Land Building,<br>Popular 3 Road, Banmai Sub-district,<br>Pakkred District, Nonthaburi 11120</div>
+
+                        <hr>
+
+                        <div class="header-info">
+                          <div class="info-row">
+                            <div class="fw-bold" style="width: 200px;">AGREEMENT DATE</div>
+                            <!-- <div class="flex-grow-1">25<sup>th</sup> April 2023 (IMPO23020769-1)</div> -->
+                            <div class="flex-grow-1"><?= $rsIpc['ipc']['agreement_date'] ?></div>
+                          </div>
+                          <div class="info-row">
+                            <div class="fw-bold" style="width: 200px;">CONTRACTOR</div>
+                            <div class="flex-grow-1"><?= $rsIpc['ipc']['contractor'] ?></div>
+                          </div>
+                          <div class="info-row">
+                            <div class="fw-bold" style="width: 200px;">CONTRACT VALUE</div>
+                            <div class="flex-grow-1">(Including Vat 7%)</div>
+                            <div class="flex-grow-1" style="text-align: right; font-weight: bold;"><?= number_format($rsIpc['ipc']['contract_value'], 2) ?></div>
+                          </div>
                         </div>
+
+                        <div class="payment-boxx">
+                          <h3>INTERIM PAYMENT CLAIM No.1</h3>
+                        </div>
+
+                        <div class="payment-details">
+                          <div class="item">
+                            <div class="flex-grow-1">Total Value Of Interim Payment</div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['total_value_of_interim_payment'], 2) ?></div>
+                          </div>
+                          <div class="item">
+                            <div class="flex-grow-1">Less Previous Interim Payment</div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['less_previous_interim_payment'], 2) ?></div>
+                          </div>
+                          <div class="item">
+                            <div class="flex-grow-1">Net Value of Current Claim</div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['net_value_of_current_claim'], 2) ?></div>
+                          </div>
+                          <div class="item">
+                            <div class="flex-grow-1">Less Retention 5% (Exclu. VAT)</div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['less_retension_exclude_vat'], 2) ?></div>
+                          </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between fw-bold" style="font-size: 18px;">
+                          <div class="">NET AMOUNT DUE FOR PAYMENT No.1</div>
+                          <div class="text-end"><?= number_format($rsIpc['ipc']['net_amount_due_for_payment'], 2) ?></div>
+                        </div>
+
+                        <div class="payment-details">
+                          <div class="item">
+                            <div class="flex-grow-1">Total Value of Retention (Inclu. this certificate)</div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['total_value_of_retention'], 2) ?></div>
+                          </div>
+                          <div class="item">
+                            <div class="flex-grow-1">Total Value of Certification made (Inclu. this certificate)</div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['total_value_of_certification_made'], 2) ?></div>
+                          </div>
+                          <div class="item">
+                            <div class="flex-grow-1">Resulting Balance of Contract Sum Outstanding</div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['resulting_balance_of_contract_sum_outstanding'], 2) ?></div>
+                          </div>
+                        </div>
+
                       </div>
 
-                      <hr>
-
-                      <div class="header-info">
-                        <div class="info-row">
-                          <div class="fw-bold" style="width: 200px;">AGREEMENT DATE</div>
-                          <!-- <div class="flex-grow-1">25<sup>th</sup> April 2023 (IMPO23020769-1)</div> -->
-                          <div class="flex-grow-1"><?= $rsIpc['ipc']['agreement_date'] ?></div>
-                        </div>
-                        <div class="info-row">
-                          <div class="fw-bold" style="width: 200px;">CONTRACTOR</div>
-                          <div class="flex-grow-1"><?= $rsIpc['ipc']['contractor'] ?></div>
-                        </div>
-                        <div class="info-row">
-                          <div class="fw-bold" style="width: 200px;">CONTRACT VALUE</div>
-                          <div class="flex-grow-1">(Including Vat 7%)</div>
-                          <div class="flex-grow-1" style="text-align: right; font-weight: bold;"><?= number_format($rsIpc['ipc']['contract_value'], 2) ?></div>
-                        </div>
-                      </div>
-
-                      <div class="payment-boxx">
-                        <h3>INTERIM PAYMENT CLAIM No.1</h3>
-                      </div>
-
-                      <div class="payment-details">
-                        <div class="item">
-                          <div class="flex-grow-1">Total Value Of Interim Payment</div>
-                          <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['total_value_of_interim_payment'], 2) ?></div>
-                        </div>
-                        <div class="item">
-                          <div class="flex-grow-1">Less Previous Interim Payment</div>
-                          <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['less_previous_interim_payment'], 2) ?></div>
-                        </div>
-                        <div class="item">
-                          <div class="flex-grow-1">Net Value of Current Claim</div>
-                          <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['net_value_of_current_claim'], 2) ?></div>
-                        </div>
-                        <div class="item">
-                          <div class="flex-grow-1">Less Retention 5% (Exclu. VAT)</div>
-                          <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['less_retension_exclude_vat'], 2) ?></div>
-                        </div>
-                      </div>
-                      <!--       font-weight: bold;
-      font-size: 18px;
-      margin-top: 10px; -->
-                      <div class="d-flex justify-content-between fw-bold" style="font-size: 18px;">
-                        <div class="">NET AMOUNT DUE FOR PAYMENT No.1</div>
-                        <div class="text-end"><?= number_format($rsIpc['ipc']['net_amount_due_for_payment'], 2) ?></div>
-                      </div>
-
-                      <div class="payment-details">
-                        <div class="item">
-                          <div class="flex-grow-1">Total Value of Retention (Inclu. this certificate)</div>
-                          <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['total_value_of_retention'], 2) ?></div>
-                        </div>
-                        <div class="item">
-                          <div class="flex-grow-1">Total Value of Certification made (Inclu. this certificate)</div>
-                          <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['total_value_of_certification_made'], 2) ?></div>
-                        </div>
-                        <div class="item">
-                          <div class="flex-grow-1">Resulting Balance of Contract Sum Outstanding</div>
-                          <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['resulting_balance_of_contract_sum_outstanding'], 2) ?></div>
-                        </div>
-                      </div>
-
-                      <!-- <div class="signatures">
-                        <div class="signature-block">
-                          <div>By : <span class="signature-line"></span></div>
-                          <div class="signature-name">( Watchara Chanthrasopa )</div>
-                          <div class="signature-">Head of Project Management Department</div>
-                        </div>
-                        <div class="signature-block">
-                          <div>By : <span class="signature-line"></span></div>
-                          <div class="signature-name">( Tanawat Worasakdinan )</div>
-                          <div class="signature-">Cost control Manager</div>
-                          <div style="margin-top: 30px;">By : <span class="signature-line"></span></div>
-                          <div class="signature-name">( Apichaya Sindhuprama )</div>
-                          <div class="signature-">Project Manager</div>
-                        </div>
-                      </div> -->
-
-                      <!-- <div class="company-footer">
-                        IMPACT EXHIBITION MANAGEMENT CO., LTD.<br>
-                        10<sup>th</sup> Floor, Bangkok Land Building, 47/569-576 Popular 3 Road,<br>
-                        Banmai Sub-district, Pakkred District, Nonthaburi 11120<br>
-                        GREATER BANGKOK, THAILAND
-                      </div> -->
 
                     </div>
 
+                    <!-- Pagination -->
+                    <nav aria-label="Page navigation example">
+                      <ul class="pagination">
+                        <li class="page-item disabled"><a class="page-link" href="#" id="prevBtn">Previous</a></li>
+                        <li class="page-item active"><a class="page-link" href="#" data-page="1">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#" id="nextBtn">Next</a></li>
+                      </ul>
+                    </nav>
                   </div>
                   <!-- /.card-body -->
                   <hr>
@@ -470,3 +461,58 @@ ob_start(); // Start get HTML code
 
     <!-- My JavaScript  -->
     <script src="javascript/ipc_form.js"></script>
+
+    <script>
+      const page1 = `<h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>
+    <h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>
+    <h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>
+    <h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>`;
+      const contentData = {
+        1: page1,
+        2: "<h4>หน้า 2</h4><p>นี่คือเนื้อหาของหน้าที่ 2 😎</p>",
+        3: "<h4>หน้า 3</h4><p>และนี่คือหน้าที่ 3 🚀</p>"
+      };
+
+      let currentPage = 1;
+      const totalPages = Object.keys(contentData).length;
+
+      const contentDiv = document.getElementById("content");
+      const paginationItems = document.querySelectorAll(".page-item a[data-page]");
+      const prevBtn = document.getElementById("prevBtn").parentElement;
+      const nextBtn = document.getElementById("nextBtn").parentElement;
+
+      function renderPage(page) {
+        currentPage = page;
+        contentDiv.innerHTML = contentData[page];
+
+        // update active class
+        paginationItems.forEach(item => {
+          item.parentElement.classList.remove("active");
+          if (parseInt(item.dataset.page) === page) {
+            item.parentElement.classList.add("active");
+          }
+        });
+
+        // disable prev/next if needed
+        prevBtn.classList.toggle("disabled", page === 1);
+        nextBtn.classList.toggle("disabled", page === totalPages);
+      }
+
+      // add click events
+      paginationItems.forEach(item => {
+        item.addEventListener("click", (e) => {
+          e.preventDefault();
+          renderPage(parseInt(item.dataset.page));
+        });
+      });
+
+      document.getElementById("prevBtn").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage > 1) renderPage(currentPage - 1);
+      });
+
+      document.getElementById("nextBtn").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage < totalPages) renderPage(currentPage + 1);
+      });
+    </script>
