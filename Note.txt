@@ -1,6 +1,6 @@
 สั่งให้ git ทับ local ไฟล์ทั้งหมด
 1. git fetch --all
-2. git reset --hard origin/master
+2. git reset --hard origin/master or git reset --hard origin/main
 
 ///////////////////////////////////////////////////////////////////////
 /* คำแนะนำในการใช้ sesion, cookie, define():

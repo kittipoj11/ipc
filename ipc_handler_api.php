@@ -61,6 +61,18 @@ if (isset($requestData['action']) && $userId > 0) {
             $rs = $ipc->getIpcAllByPoId($requestData['po_id']);
             echo json_encode($rs);
             break;
+            
+        case 'previewIpc':
+            $rs = $ipc->getIpcByIpcId($requestData['ipcId']);
+            $_SESSION['rs'] = $rs;
+            echo json_encode($rs);
+            break;
+
+        case 'previewInspection':
+            $rs = $ipc->getIpcByIpcId($requestData['ipcId']);
+            $_SESSION['rs'] = $rs;
+            echo json_encode($rs);
+            break;
         default:
     }
 }

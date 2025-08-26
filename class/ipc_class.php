@@ -94,7 +94,7 @@ class Ipc
         $stmt->execute([$ipcId]);
         $rsIpc = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // 2. ถ้าไม่พบข้อมูล Inspection ให้คืนค่า null ทันที
+        // 2. ถ้าไม่พบข้อมูล Ipc ให้คืนค่า null ทันที
         if (!$rsIpc) {
             return null;
         }

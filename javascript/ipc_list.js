@@ -103,7 +103,7 @@ $(document).ready(function () {
       data: JSON.stringify(data_sent),
     })
       .done(function (result) {
-        console.log(`result : ${result.length}`);
+        // console.log(`result : ${result.length}`);
         if (result.length > 0) {
           tableBody = createPeriodTable(result);
           $("#tbody-period").html(tableBody);

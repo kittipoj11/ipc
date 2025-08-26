@@ -506,10 +506,10 @@ ob_start(); // Start get HTML code
         });
       });
 
-      document.getElementById("prevBtn").addEventListener("click", (e) => {
-        e.preventDefault();
-        if (currentPage > 1) renderPage(currentPage - 1);
-      });
+      // document.getElementById("prevBtnx").addEventListener("click", (e) => {
+      //   e.preventDefault();
+      //   if (currentPage > 1) renderPage(currentPage - 1);
+      // });
 
       document.getElementById("nextBtn").addEventListener("click", (e) => {
         e.preventDefault();
