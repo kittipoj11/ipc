@@ -64,12 +64,12 @@ if (isset($requestData['action']) && $userId > 0) {
             
         case 'previewIpc':
             $rs = $ipc->getIpcByIpcId($requestData['ipcId']);
-            $_SESSION['rs'] = $rs;
+            // $_SESSION['rs'] = $rs;
             echo json_encode($rs);
             break;
 
         case 'previewInspection':
-            $rs = $ipc->getIpcByIpcId($requestData['ipcId']);
+            $rs = $inspection->getByInspectionId($requestData['inspectionId']);
             $_SESSION['rs'] = $rs;
             echo json_encode($rs);
             break;

@@ -146,26 +146,25 @@ class Inspection
         $rsInspectionDetails = $this->getDetailsByInspectionId($inspectionId);
 
         // 5. ดึงข้อมูล Inspection Approvals ของ inspection_id ที่มี approval_level = current_approval_level
-        $sql = "SELECT inspection_approval_id, inspection_id, period_id, po_id, period_number
-                , approval_level, approver_id, approval_type_id, approval_type_text, approval_status_id, approval_date, approval_comment 
-                FROM inspection_approvals 
-                WHERE inspection_id = :inspection_id
-                AND approval_level = :approval_level";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
-        $stmt->bindParam(':approval_level', $rsInspection['current_approval_level'], PDO::PARAM_INT);
-        $stmt->execute();
-        $rsInspectionApprovals = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        // $sql = "SELECT inspection_approval_id, inspection_id, period_id, po_id, period_number
+        //         , approval_level, approver_id, approval_type_id, approval_type_text, approval_status_id, approval_date, approval_comment 
+        //         FROM inspection_approvals 
+        //         WHERE inspection_id = :inspection_id
+        //         AND approval_level = :approval_level";
+        // $stmt = $this->db->prepare($sql);
+        // $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
+        // $stmt->bindParam(':approval_level', $rsInspection['current_approval_level'], PDO::PARAM_INT);
+        // $stmt->execute();
+        // $rsInspectionApprovals = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
-        // 6. ดึงข้อมูล max ของ approval_level ใน Inspection Approvals ของ period_id
-        $sql = "SELECT `inspection_id`, `period_id`, `po_id`, max(`approval_level`) as max_approval_level
-                FROM `inspection_approvals` 
-                WHERE inspection_id = :inspection_id
-                GROUP by `inspection_id`, `period_id`, `po_id`";
+        // 6. ดึงข้อมูล Plan Status
+        $sql = "select plan_status_id, plan_status_name, is_deleted 
+                from plan_status
+                where plan_status_id = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $rsInspection['plan_status_id'], PDO::PARAM_INT);
         $stmt->execute();
-        $rsMaxInspectionApproval = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $rsPlanStatus = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
         // 7. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
         $result = [
@@ -173,7 +172,7 @@ class Inspection
             'period' => $rsInspection,
             'periodDetails' => $rsInspectionDetails, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
             // 'periodApprovals' => $rsInspectionApprovals, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 5
-            // 'maxInspectionApproval' => $rsMaxInspectionApproval, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 6
+            'plan_status' => $rsPlanStatus, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 6
         ];
 
         return $result;

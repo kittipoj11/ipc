@@ -1,5 +1,22 @@
+// import numberFormatter from 'NumberFormatter.js';
 $(document).ready(function () {
   const responseMessage = $("#response-message");
+
+  function formatNumber(num) {
+  return num.toLocaleString('th-TH', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+// ฟังก์ชันบังคับใช้ comma เสมอ
+function formatWithComma(num) {
+  return Number(num).toLocaleString('th-TH', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
 
   function showMessage(message, isSuccess) {
     responseMessage
@@ -11,24 +28,13 @@ $(document).ready(function () {
       .fadeOut();
   }
 
-  let contract_value = isNaN(parseFloat($("#contract_value").val())) ? 0 : parseFloat($("#contract_value").val());
-  let interim_payment = parseFloat($("#interim_payment").val());
-  let interim_payment_less_previous = isNaN(parseFloat($("#interim_payment_less_previous").val())) ? 0 : parseFloat($("#interim_payment_less_previous").val());
-  let interim_payment_accumulated = isNaN(parseFloat($("#interim_payment_accumulated").val())) ? 0 : parseFloat($("#interim_payment_accumulated").val());
-  let interim_payment_remain = isNaN(parseFloat($("#interim_payment_remain").val())) ? 0 : parseFloat($("#interim_payment_remain").val());
-
-  let interim_payment_percent = isNaN(parseFloat($("#interim_payment_percent").val())) ? 0 : parseFloat($("#interim_payment_percent").val());
-  let interim_payment_less_previous_percent = isNaN(parseFloat($("#interim_payment_less_previous_percent").val())) ? 0 : parseFloat($("#interim_payment_less_previous_percent").val());
-  let interim_payment_accumulated_percent = isNaN(parseFloat($("#interim_payment_accumulated_percent").val())) ? 0 : parseFloat($("#interim_payment_accumulated_percent").val());
-  let interim_payment_remain_percent = isNaN(parseFloat($("#interim_payment_remain_percent").val())) ? 0 : parseFloat($("#interim_payment_remain_percent").val());
-
   // - action มาจากการกดปุ่มว่าเป็นอะไร เช่น save, submit, approve, reject เป็นต้น  
   // โดย submit และ approve เป็นการเลื่อน level เหมือนกัน  ต่างกันแค่ชื่อ   ซึ่งอาจจะดึงข้อมูลชื่อมาจาก workflow_step 
   // - data เป็นข้อมูลที่มาจากฟอร์มเพื่อนำมาบันทึกข้อมูล 
   // เช่นถ้าเป็นการ save จะดึงข้อมูลของ ipc บน form ส่งมาให้   เพื่อมาทำการ save 
   // ถ้าเป็นการ submit sinv reject ไม่ต้องส่งข้อมูลของ form มาเพราะไม่ได้ใช้ข้อมูลบน form แต่ใช้การเลื่อนหรือถอย level จากการดึงข้อมูลใน workflow_step 
   // แต่ทุก action ต้องส่ง data ที่มีข้อมูลอย่างน้อยคือ ipc-id, user-id
-  function sendRequest(action, data){
+  function sendRequest(action, data) {
     const myForm = $("#myForm");
     const ipcId = myForm.data("ipc-id");
     const userId = myForm.data("user-id"); //ไม่ต้องส่งไปก็ได้เพราะ  เรียกใช้ $_SESSION['user_id] ใน inspection_handler_api.php หรือ inspection_service_class.php
@@ -78,15 +84,15 @@ $(document).ready(function () {
 
   $(".approve").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
-      e.preventDefault();
+    e.preventDefault();
     // sendRequest($(".approve").data("approve-text"));
     // console.log("click");
     sendRequest("approve");
   });
-  
+
   $(".reject").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
-      e.preventDefault();
+    e.preventDefault();
     // const comments = $("#reject_comments").val().trim();
     const comments = "#reject_comments";
     // if (!comments) {
@@ -103,7 +109,7 @@ $(document).ready(function () {
     // window.history.go(-1);
     // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
     // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
-    
+
   });
 
   $(document).on("click", "#prevBtn", function () {
@@ -135,10 +141,10 @@ $(document).ready(function () {
 
   $(document).on("click", "#nextBtn", function () {
     const myForm = $("#myForm");
-    const ipcId = myForm.data("ipc-id");
+    const inspectionId = myForm.data("inspection-id");
     const dataSent = {
       action: "previewInspection",
-      ipcId: ipcId,
+      inspectionId: inspectionId,
     };
 
     $.ajax({
@@ -148,7 +154,7 @@ $(document).ready(function () {
       dataType: "json",
       data: JSON.stringify(dataSent),
     }).done(function (result) {
-      // console.log(result);
+      console.log(result);
       // console.log(result.length);
       if (result) {
         content = loadInspection(result);
@@ -166,9 +172,9 @@ $(document).ready(function () {
                 <h3 class="">INTERIM CERTIFICATE</h3>
                 <div class="header-info">
                   <!-- <div class="info-row">
-                  <div class="fw-bold" style="width: 200px;">DATE</div>
-                  <div class="flex-grow-1">18<sup>th</sup> May 2023</div>
-                </div> -->
+                    <div class="fw-bold" style="width: 200px;">DATE</div>
+                    <div class="flex-grow-1">18<sup>th</sup> May 2023</div>
+                  </div> -->
                   <div class="info-row">
                     <div class="fw-bold" style="width: 200px;">PROJECT</div>
                     <div class="flex-grow-1">${data.pomain.project_name}</div>
@@ -194,9 +200,7 @@ $(document).ready(function () {
                   <div class="info-row">
                     <div class="fw-bold" style="width: 200px;">CONTRACT VALUE</div>
                     <div class="flex-grow-1">(Including Vat 7%)</div>
-                    <div class="flex-grow-1" style="text-align: right; font-weight: bold;">${parseFloat(
-                      data.ipc.contract_value
-                    ).toFixed(2)}</div>
+                    <div class="flex-grow-1" style="text-align: right; font-weight: bold;">${parseFloat(data.ipc.contract_value).toFixed(2)}</div>
                   </div>
                 </div>
 
@@ -207,156 +211,216 @@ $(document).ready(function () {
                 <div class="payment-details">
                   <div class="item">
                     <div class="flex-grow-1">Total Value Of Interim Payment</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.total_value_of_interim_payment
-                    ).toFixed(2)}</div>
+                    <div class="text-end" style="width: 150px;">${parseFloat(data.ipc.total_value_of_interim_payment).toFixed(2)}</div>
                   </div>
                   <div class="item">
                     <div class="flex-grow-1">Less Previous Interim Payment</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.less_previous_interim_payment
-                    ).toFixed(2)}</div>
+                    <div class="text-end" style="width: 150px;">${parseFloat(data.ipc.less_previous_interim_payment).toFixed(2)}</div>
                   </div>
                   <div class="item">
                     <div class="flex-grow-1">Net Value of Current Claim</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.net_value_of_current_claim
-                    ).toFixed(2)}</div>
+                    <div class="text-end" style="width: 150px;">${parseFloat(data.ipc.net_value_of_current_claim).toFixed(2)}</div>
                   </div>
                   <div class="item">
                     <div class="flex-grow-1">Less Retention 5% (Exclu. VAT)</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.less_retension_exclude_vat
-                    ).toFixed(2)}</div>
+                    <div class="text-end" style="width: 150px;">${parseFloat(data.ipc.less_retension_exclude_vat).toFixed(2)}</div>
                   </div>
                 </div>
 
                 <div class="d-flex justify-content-between fw-bold" style="font-size: 18px;">
                   <div class="">NET AMOUNT DUE FOR PAYMENT No.1</div>
-                  <div class="text-end">${parseFloat(
-                    data.ipc.net_amount_due_for_payment
-                  ).toFixed(2)}</div>
+                  <div class="text-end">${parseFloat(data.ipc.net_amount_due_for_payment).toFixed(2)}</div>
                 </div>
 
                 <div class="payment-details">
                   <div class="item">
                     <div class="flex-grow-1">Total Value of Retention (Inclu. this certificate)</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.total_value_of_retention
-                    ).toFixed(2)}</div>
+                    <div class="text-end" style="width: 150px;">${parseFloat(data.ipc.total_value_of_retention).toFixed(2)}</div>
                   </div>
                   <div class="item">
                     <div class="flex-grow-1">Total Value of Certification made (Inclu. this certificate)</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.total_value_of_certification_made
-                    ).toFixed(2)}</div>
+                    <div class="text-end" style="width: 150px;">${parseFloat(data.ipc.total_value_of_certification_made).toFixed(2)}</div>
                   </div>
                   <div class="item">
                     <div class="flex-grow-1">Resulting Balance of Contract Sum Outstanding</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.resulting_balance_of_contract_sum_outstanding
-                    ).toFixed(2)}</div>
+                    <div class="text-end" style="width: 150px;">${parseFloat(data.ipc.resulting_balance_of_contract_sum_outstanding).toFixed(2)}</div>
                   </div>
                 </div>
                 `;
     return content;
   }
+
+  //       display: flex;
+  // justify-content: space-between;
+  // margin-bottom: 5px;
   function loadInspection(data) {
     let content = "";
     content = `
-                <h3 class="">INSPECTION CERTIFICATE</h3>
-                <div class="header-info">
-                  <!-- <div class="info-row">
-                  <div class="fw-bold" style="width: 200px;">DATE</div>
-                  <div class="flex-grow-1">18<sup>th</sup> May 2023</div>
-                </div> -->
-                  <div class="info-row">
-                    <div class="fw-bold" style="width: 200px;">PROJECT</div>
-                    <div class="flex-grow-1">${data.pomain.project_name}</div>
-                  </div>
-                  <div class="info-row">
-                    <div class="fw-bold" style="width: 200px;">OWNER</div>
-                    <div class="flex-grow-1">IMPACT Exhibition Management Co., Ltd.<br>47/569-576, 10th floor, Bangkok Land Building,<br>Popular 3 Road, Banmai Sub-district,<br>Pakkred District, Nonthaburi 11120</div>
+                <div class="d-flex justify-content-between">
+                  <div class="col d-flex justify-content-start">
+                    <div class="fw-bold" style="width: 200px;">ผู้รับเหมา</div>
+                    <div>${data.header.supplier_name}</div>
                   </div>
                 </div>
 
-                <hr>
+                <div class="d-flex justify-content-between">
+                  <div class="col d-flex justify-content-start">
+                    <div class="fw-bold" style="width: 200px;">โครงการ</div>
+                    <div >${data.header.project_name}</div>
+                  </div>
 
-                <div class="header-info">
-                  <div class="info-row">
-                    <div class="fw-bold" style="width: 200px;">AGREEMENT DATE</div>
-                    <!-- <div class="flex-grow-1">25<sup>th</sup> April 2023 (IMPO23020769-1)</div> -->
-                    <div class="flex-grow-1">${data.ipc.agreement_date}</div>
-                  </div>
-                  <div class="info-row">
-                    <div class="fw-bold" style="width: 200px;">CONTRACTOR</div>
-                    <div class="flex-grow-1">${data.ipc.contractor}></div>
-                  </div>
-                  <div class="info-row">
-                    <div class="fw-bold" style="width: 200px;">CONTRACT VALUE</div>
-                    <div class="flex-grow-1">(Including Vat 7%)</div>
-                    <div class="flex-grow-1" style="text-align: right; font-weight: bold;">${parseFloat(
-                      data.ipc.contract_value
-                    ).toFixed(2)}</div>
+                  <div class="col col-4 d-flex justify-content-start">
+                    <div class="fw-bold" style="width: 200px;">สถานที่</div>
+                    <div>${data.header.location_name}</div>
                   </div>
                 </div>
 
-                <div class="payment-boxx">
-                  <h3>INTERIM PAYMENT CLAIM No.1</h3>
-                </div>
-
-                <div class="payment-details">
-                  <div class="item">
-                    <div class="flex-grow-1">Total Value Of Interim Payment</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.total_value_of_interim_payment
-                    ).toFixed(2)}</div>
-                  </div>
-                  <div class="item">
-                    <div class="flex-grow-1">Less Previous Interim Payment</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.less_previous_interim_payment
-                    ).toFixed(2)}</div>
-                  </div>
-                  <div class="item">
-                    <div class="flex-grow-1">Net Value of Current Claim</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.net_value_of_current_claim
-                    ).toFixed(2)}</div>
-                  </div>
-                  <div class="item">
-                    <div class="flex-grow-1">Less Retention 5% (Exclu. VAT)</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.less_retension_exclude_vat
-                    ).toFixed(2)}</div>
+                <div class="d-flex justify-content-between">
+                  <div class="col d-flex justify-content-start">
+                    <div class="fw-bold" style="width: 200px;">งาน</div>
+                    <div>${data.header.working_name_th} (${data.header.working_name_en})</div>
                   </div>
                 </div>
 
-                <div class="d-flex justify-content-between fw-bold" style="font-size: 18px;">
-                  <div class="">NET AMOUNT DUE FOR PAYMENT No.1</div>
-                  <div class="text-end">${parseFloat(
-                    data.ipc.net_amount_due_for_payment
-                  ).toFixed(2)}</div>
+                <div class="d-flex justify-content-between">
+                  <div class="col col-4 d-flex justify-content-start">
+                    <div class="fw-bold" style="width: 200px;">ระยะเวลาดำเนินการ</div>
+                    <div >${data.header.working_date_from}</div>
+                  </div>
+
+                  <div class="col col-4 d-flex justify-content-start">
+                    <div class="fw-bold" style="width: 200px;">ถึง</div>
+                    <div>${data.header.working_date_to}</div>
+                  </div>
+
+                  <div class="col col-4 d-flex justify-content-start">
+                    <div class="fw-bold" style="width: 200px;">(รวม ${data.header.working_day} วัน)</div>
+                  </div>
                 </div>
 
-                <div class="payment-details">
-                  <div class="item">
-                    <div class="flex-grow-1">Total Value of Retention (Inclu. this certificate)</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.total_value_of_retention
-                    ).toFixed(2)}</div>
+                <hr class="hr border border-dark">
+
+                <div class="d-flex justify-content-between">
+                  <div class="col col-6 d-flex justify-content-start">
+                    <div class="fw-bold" style="width: 200px;">เลขที่ PO</div>
+                    <div >${data.header.po_number}</div>
                   </div>
-                  <div class="item">
-                    <div class="flex-grow-1">Total Value of Certification made (Inclu. this certificate)</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.total_value_of_certification_made
-                    ).toFixed(2)}</div>
+
+                  <div class="col col-6 d-flex justify-content-start">
+                    <div class="fw-bold" style="width: 200px;">มูลค่างานตาม PO</div>
+                    <div>${formatWithComma(data.header.contract_value)} บาท(Includeing VAT${data.header.is_include_vat}%)</div>
                   </div>
-                  <div class="item">
-                    <div class="flex-grow-1">Resulting Balance of Contract Sum Outstanding</div>
-                    <div class="text-end" style="width: 150px;">${parseFloat(
-                      data.ipc.resulting_balance_of_contract_sum_outstanding
-                    ).toFixed(2)}</div>
+                </div>
+
+                <hr class="hr border border-dark">
+
+                <div class="d-flex">
+                  <div class="col-3 border-end border-dark-subtle m-0 p-0">
+                    <div class="col d-flex justify-content-start">
+                      <div class="fw-bold" style="width: 200px;">เบิกงวดงานที่</div>
+                      <div>${data.period.period_number}</div>
+                    </div>
+
+                    <div class="col d-flex flex-column justify-content-start">
+                      <div class="col d-flex justify-content-start">
+                        <input type="checkbox" name="deposit" onclick="return false;" checked>
+                        <div class="fw-bold" style="width: 200px;">มี Deposit</div>
+                        <div>${data.header.deposit_percent}</div>
+                      </div>
+                      
+                      <div class="col d-flex justify-content-start">
+                        <input type="checkbox" name="deposit" onclick="return false;">
+                        <div class="fw-bold" style="width: 200px;">ไม่มี Deposit</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-9">
+                    <div class="col d-flex justify-content-between m-1">
+                        <div class="col-5">ยอดเบิกเงินงวดปัจจุบัน</div>
+                        <div class="col-5 text-end">${formatWithComma(data.period.interim_payment)} บาท (Including VAT7%) คิดเป็น</div>
+                        <div class="col-2 text-end ">${data.period.interim_payment_percent} %</div>
+                    </div>
+
+                    <div class="col d-flex justify-content-between m-1">
+                        <div class="col-5">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</div>
+                        <div class="col-5 text-end">${formatWithComma(data.period.interim_payment_less_previous)} บาท (Including VAT7%) คิดเป็น</div>
+                        <div class="col-2 text-end ">${data.period.interim_payment_less_previous_percent} %</div>
+                    </div>
+
+                    <div class="col d-flex justify-content-between m-1">
+                        <div class="col-5">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</div>
+                        <div class="col-5 text-end">${formatWithComma(data.period.interim_payment_accumulated)} บาท (Including VAT7%) คิดเป็น</div>
+                        <div class="col-2 text-end ">${data.period.interim_payment_accumulated_percent} %</div>
+                    </div>
+
+                    <div class="col d-flex justify-content-between m-1">
+                        <div class="col-5">ยอดเงินงวดคงเหลือ</div>
+                        <div class="col-5 text-end">${formatWithComma(data.period.interim_payment_remain)} บาท (Including VAT7%) คิดเป็น</div>
+                        <div class="col-2 text-end ">${data.period.interim_payment_remain_percent} %</div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <hr class="hr border border-dark">
+
+                <div class="d-flex justify-content-between">
+                  <div class="col col-4 d-flex justify-content-between">
+                    <div>ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</div>
+                    <div>${data.period.workload_planned_percent} %</div>
+                  </div>
+
+                  <div class="col col-4 d-flex justify-content-between">
+                    <div>ปริมาณที่แล้วเสร็จจริง</div>
+                    <div>${data.period.workload_actual_completed_percent} %</div>
+                  </div>
+
+                  <div class="col col-4 d-flex justify-content-between">
+                    <div>ปริมาณงานคงเหลือ</div>
+                    <div>${data.period.workload_remaining_percent} %</div>
+                  </div>
+                </div>
+
+                <div class="card border border-1 border-dark m-1">
+                  <div class="card-body p-0">
+                    <table class="table table-bordered justify-content-center text-center" id="tableOrder">
+                      <thead>
+                        <tr>
+                          <th class="p-1" width="5%">ลำดับที่</th>
+                          <th class="p-1" width="20%">รายละเอียดการตรวจสอบ</th>
+                          <th class="p-1">หมายเหตุ</th>
+                        </tr>
+                      </thead>
+
+                      <tbody id="tbody-order">
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <div class="col d-flex justify-content-start">
+                    <div>ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน : ${data.plan_status.plan_status_name} %</div>
+                  </div>
+                </div>
+
+                <div>หมายเหตุ:</div>
+                <div class="form-floating">
+                  <textarea name="remark" class="form-control" id="remark" rows="4" style="min-height: 4em;height: auto;" readonly>${data.period.remark}</textarea>
+                </div>
+
+                <div class="col d-flex justify-content-start">
+                  <div>ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร</div>
+                  <div class="col d-flex justify-content-start">
+                    <input type="radio" name="disbursement" onclick="return false;" checked>
+                    <div class="fw-bold" style="width: 200px;">อนุมัติเบิกจ่าย</div>
+                  </div>
+                  
+                  <div class="col d-flex justify-content-start">
+                    <input type="radio" name="disbursement" onclick="return false;">
+                    <div class="fw-bold" style="width: 200px;">ไม่อนุมัติเบิกจ่าย</div>
                   </div>
                 </div>
                 `;
@@ -369,17 +433,17 @@ $(document).ready(function () {
     if (myForm.data('ipc-status') == 'pending-submit' && myForm.data('current-approver-id') == myForm.data('user-id')) {
       $("#btnAction").addClass('inline');
       $("#btnAction").removeClass('d-none');
-    } 
-    else if (myForm.data('ipc-status') =='pending-approve' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+    }
+    else if (myForm.data('ipc-status') == 'pending-approve' && myForm.data('current-approver-id') == myForm.data('user-id')) {
       $("#btnAction").addClass('inline');
       $("#btnAction").removeClass('d-none');
-    } 
-    else{
+    }
+    else {
       $("#btnAction").addClass('d-none');
       $("#btnAction").removeClass('inline');
     }
 
- 
+
   }
 
   refreshForm();

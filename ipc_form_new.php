@@ -277,6 +277,7 @@ ob_start(); // Start get HTML code
               <form name="myForm" id="myForm" action="" method="post"
                 data-user-id="<?= $_SESSION['user_id'] ?>"
                 data-ipc-id="<?= $rsIpc['ipc']['ipc_id'] ?>"
+                data-inspection-id="<?= $rsIpc['ipc']['inspection_id'] ?>"
                 data-ipc-status="<?= $rsIpc['ipc']['ipc_status'] ?>"
                 data-workflow-id="<?= $rsIpc['ipc']['workflow_id'] ?>"
                 data-created-by="<?= $rsIpc['ipc']['created_by'] ?>"
@@ -461,6 +462,7 @@ ob_start(); // Start get HTML code
 
     <!-- My JavaScript  -->
     <script src="javascript/ipc_form.js"></script>
+    <!-- <script type="module" src="javascript/ipc_form.js"></script> -->
 
     <script>
       const page1 = `<h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>

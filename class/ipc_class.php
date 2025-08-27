@@ -91,7 +91,8 @@ class Ipc
                 ORDER BY po_id, period_number";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([$ipcId]);
+        $stmt->bindParam(':ipc_id', $ipcId, PDO::PARAM_INT);
+        $stmt->execute();
         $rsIpc = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // 2. ถ้าไม่พบข้อมูล Ipc ให้คืนค่า null ทันที
@@ -139,56 +140,8 @@ public function getCurrentApprovalType($ipcId): ?array
 
 
 
-    public function getByPoId_XXX($poId): ?array
-    {
-        // ดึงข้อมูลจากตารางหลัก - po_main
-        $po = new Po($this->db);
-        $rs = $po->getPoMainByPoId($poId);
-        if (!$rs) {
-            return null; // ไม่พบข้อมูล
-        }
 
-        // ดึงข้อมูลจากตารางรอง
-        // $rs['periods'] = $this->getAllPeriodByPoId($poId);
-
-        // $rs2 = $this->po->getByPoId($poId);
-
-        // $po = new Po($this->db);
-        // $rs2=$po->getByPoId($poId);
-
-        return $rs;
-    }
-
-
-
-// ไปใช้ getIpcByIpcId
-    public function getPoByPeriodId_XXX($periodId): ?array
-    {
-        // ดึงข้อมูลจากตารางหลัก - po_main
-        $sql = "SELECT O.supplier_id, O.location_id , O.po_number, O.project_name, O.working_name_th, O.working_name_en
-                , O.is_include_vat, O.contract_value, O.contract_value_before, O.vat, O.is_deposit, O.deposit_percent, O.deposit_value
-                , O.working_date_from, O.working_date_to, O.working_day
-                , S.supplier_name, L.location_name
-                FROM po_main O
-                INNER JOIN ipc P
-                    ON P.po_id = O.po_id
-                INNER JOIN suppliers S
-                    ON S.supplier_id = O.supplier_id
-                INNER JOIN locations L
-                    ON L.location_id = O.location_id   
-                WHERE P.period_id = :period_id";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':period_id', $periodId, PDO::PARAM_INT);
-        $stmt->execute();
-        $rs = $stmt->fetch();
-        if (!$rs) {
-            return null; // ไม่พบข้อมูล
-        }
-        // return $rs ?: null;
-
-        return $rs;
-    }
+    
 
 
     public function create(array $ipcData): int
