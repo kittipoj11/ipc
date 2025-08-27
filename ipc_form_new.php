@@ -402,7 +402,7 @@ ob_start(); // Start get HTML code
 
                     <!-- Pagination -->
                     <nav aria-label="Page navigation example">
-                      <ul class="pagination">
+                      <ul class="pagination" id="pagination">
                         <li class="page-item disabled"><a class="page-link" href="#" id="prevBtn">Previous</a></li>
                         <li class="page-item active"><a class="page-link" href="#" data-page="1">1</a></li>
                         <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
@@ -464,7 +464,7 @@ ob_start(); // Start get HTML code
     <script src="javascript/ipc_form.js"></script>
     <!-- <script type="module" src="javascript/ipc_form.js"></script> -->
 
-    <script>
+    <!-- <script>
       const page1 = `<h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>
     <h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>
     <h4>หน้า 1</h4><p>เนื้อหาของหน้าที่ 1 แสดงอยู่ตรงนี้ในครั้งต่อมา 🎉</p>
@@ -517,4 +517,4 @@ ob_start(); // Start get HTML code
         e.preventDefault();
         if (currentPage < totalPages) renderPage(currentPage + 1);
       });
-    </script>
+    </script> -->

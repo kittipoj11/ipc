@@ -17,7 +17,6 @@ function formatWithComma(num) {
   });
 }
 
-
   function showMessage(message, isSuccess) {
     responseMessage
       .text(message)
@@ -250,9 +249,6 @@ function formatWithComma(num) {
     return content;
   }
 
-  //       display: flex;
-  // justify-content: space-between;
-  // margin-bottom: 5px;
   function loadInspection(data) {
     let content = "";
     content = `
@@ -442,9 +438,58 @@ function formatWithComma(num) {
       $("#btnAction").addClass('d-none');
       $("#btnAction").removeClass('inline');
     }
-
-
   }
 
+  function loadPage(page = 1) {
+    const myForm = $("#myForm");
+    const ipcId = myForm.data("ipc-id");
+    const inspectionId = myForm.data("inspection-id");
+    const dataSent = {
+      action: "getCountOfInspectionFilesByInspectionId",
+      inspectionId: inspectionId,
+    };
+    console.log(page);
+    $.ajax({
+    url: "ipc_handler_api.php",
+    type: "post",
+    contentType: "application/json",
+    dataType: "json",
+    data: JSON.stringify(dataSent),
+  }).done(function (result) {
+    renderPagination(result, page);
+  });
+    
+    // ทำการ Load หน้าต่างๆตรงนี้
+  }
+  
+function renderPagination(totalPages, currentPage) {
+  let pagination = document.getElementById("pagination");
+  pagination.innerHTML = "";
+
+  // ปุ่ม Previous
+  pagination.innerHTML += `
+        <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
+          <a class="page-link" href="#" onclick="loadPage(${currentPage - 1})">Previous</a>
+        </li>
+      `;
+
+  // เลขหน้า
+  for (let i = 1; i <= totalPages; i++) {
+    pagination.innerHTML += `
+          <li class="page-item ${i === currentPage ? "active" : ""}">
+            <a class="page-link" href="#" onclick="loadPage(${i})">${i}</a>
+          </li>
+        `;
+  }
+
+  // ปุ่ม Next
+  pagination.innerHTML += `
+        <li class="page-item ${currentPage === totalPages ? "disabled" : ""}">
+          <a class="page-link" href="#" onclick="loadPage(${currentPage + 1})">Next</a>
+        </li>
+      `;
+}
+
   refreshForm();
+  loadPage(1);
 });

@@ -239,22 +239,29 @@ class Inspection
     }
 
     // ต้องแก้ไขฟังก์ชันนี้ใหม่
-    public function getInspectionFilesByInspectionId($getPoId, $getPeriodId, $getInspectionId): array
+    public function getInspectionFilesByInspectionId($inspectionId): array
     {
         $sql = "SELECT `file_id`, `inspection_files`.`inspection_id`, `file_name`, `file_path`, `file_type`, `uploaded_at` 
                 FROM `inspection_files` 
-                INNER JOIN `inspection`
-                    ON `inspection`.`inspection_id` = `inspection_files`.`inspection_id`
-                WHERE `inspection`.`inspection_id` = :inspection_id
-                    AND `inspection`.`period_id` = :period_id
-                    AND `inspection`.`po_id` = :po_id";
+                WHERE `inspection_id` = :inspection_id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':po_id', $getPoId, PDO::PARAM_INT);
-        $stmt->bindParam(':period_id', $getPeriodId, PDO::PARAM_INT);
-        $stmt->bindParam(':inspection_id', $getInspectionId, PDO::PARAM_INT);
+        $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
         $stmt->execute();
         $rs = $stmt->fetchAll();
         return $rs;
+    }
+
+    public function getCountOfInspectionFilesByInspectionId($inspectionId): int
+    {
+        $sql = "SELECT COUNT(*) as cnt 
+                FROM `inspection_files` 
+                WHERE `inspection_id` = :inspection_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rs = $stmt->fetch(PDO::FETCH_ASSOC);
+        $rows = $rs['cnt'];
+        return (int)$rows;
     }
 
 

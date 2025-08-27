@@ -70,7 +70,22 @@ if (isset($requestData['action']) && $userId > 0) {
 
         case 'previewInspection':
             $rs = $inspection->getByInspectionId($requestData['inspectionId']);
-            $_SESSION['rs'] = $rs;
+            // $_SESSION['rs'] = $rs;
+            echo json_encode($rs);
+            break;
+
+        case 'getCountOfInspectionFilesByInspectionId':
+            $row = $inspection->getCountOfInspectionFilesByInspectionId($requestData['inspectionId']);
+            $_SESSION['row='] = $row;
+            echo json_encode($row);
+            break;
+
+        case 'selectInspectionFiles':
+            $page = isset($requestData["page"]) ? (int)$requestData["page"] : 1;
+            $perPage = 1; // แสดงหน้าละ 1 รายการ
+            $offset = ($page - 1) * $perPage;
+            $rs = $inspection->getByInspectionId($requestData['inspectionId']);
+            // $_SESSION['rs'] = $rs;
             echo json_encode($rs);
             break;
         default:
