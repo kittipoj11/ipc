@@ -288,6 +288,7 @@ ob_start(); // Start get HTML code
                     <div class="col d-flex align-items-center">
                       <h6 class="m-1 fw-bold"><?= $rsIpc['pomain']['po_number'] . " : " . $rsIpc['pomain']['supplier_id'] . " - " . $rsIpc['pomain']['supplier_name'] ?></h6>
                       <h6 class="m-1 fw-bold"><?= "[งวดงานที่ " . $rsIpc['ipc']['period_number'] . "]" ?></h6>
+                      <button onclick="printPDF(<?= $rsIpc['ipc']['ipc_id'] ?>)">พิมพ์ PDF</button>
                       <h6 class="m-1 fw-bold">
                         <div class="status status-pending-submit"><?php echo htmlspecialchars($rsIpc['ipc']['ipc_status']); ?></div>
                       </h6>
@@ -463,5 +464,3 @@ ob_start(); // Start get HTML code
 
     <!-- My JavaScript  -->
     <script src="javascript/ipc_form.js"></script>
-
-    
