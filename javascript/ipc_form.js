@@ -1,173 +1,131 @@
 // import numberFormatter from 'NumberFormatter.js';
-$(document).ready(function () {
-  const responseMessage = $("#response-message");
+function loadPage(page = 1) {
+  const myForm = $("#myForm");
+  const ipcId = myForm.data("ipc-id");
+  const inspectionId = myForm.data("inspection-id");
 
-  function formatNumber(num) {
-  return num.toLocaleString('th-TH', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+  const dataSent = {};
+
+  // Add Properties
+  dataSent.action = "getCountOfInspectionFilesByInspectionId";
+  dataSent.inspectionId = inspectionId;
+
+  // console.log(page);
+  $.ajax({
+    url: "ipc_handler_api.php",
+    type: "post",
+    contentType: "application/json",
+    dataType: "json",
+    data: JSON.stringify(dataSent),
+  }).done(function (result) {
+    renderPagination(result + 2, page); //2 คือจำนวนหน้าของ IPC(หน้าที่1) และ Inspection(หน้าที่2)
   });
-}
 
-// ฟังก์ชันบังคับใช้ comma เสมอ
-function formatWithComma(num) {
-  return Number(num).toLocaleString('th-TH', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
+  // ทำการ Load หน้าต่างๆตรงนี้
+  switch (page) {
+    case 1://หน้าที่ 1 เป็น IPC เสมอ
+      // ใช้ Object.keys วนลบ property ใน dataSent
+      Object.keys(dataSent).forEach(key => delete dataSent[key]);
+      dataSent.action = "previewIpc";
+      dataSent.ipcId = ipcId;
 
-  function showMessage(message, isSuccess) {
-    responseMessage
-      .text(message)
-      .removeClass("success error")
-      .addClass(isSuccess ? "success" : "error")
-      .show()
-      .delay(5000)
-      .fadeOut();
-  }
-
-  // - action มาจากการกดปุ่มว่าเป็นอะไร เช่น save, submit, approve, reject เป็นต้น  
-  // โดย submit และ approve เป็นการเลื่อน level เหมือนกัน  ต่างกันแค่ชื่อ   ซึ่งอาจจะดึงข้อมูลชื่อมาจาก workflow_step 
-  // - data เป็นข้อมูลที่มาจากฟอร์มเพื่อนำมาบันทึกข้อมูล 
-  // เช่นถ้าเป็นการ save จะดึงข้อมูลของ ipc บน form ส่งมาให้   เพื่อมาทำการ save 
-  // ถ้าเป็นการ submit sinv reject ไม่ต้องส่งข้อมูลของ form มาเพราะไม่ได้ใช้ข้อมูลบน form แต่ใช้การเลื่อนหรือถอย level จากการดึงข้อมูลใน workflow_step 
-  // แต่ทุก action ต้องส่ง data ที่มีข้อมูลอย่างน้อยคือ ipc-id, user-id
-  function sendRequest(action, data) {
-    const myForm = $("#myForm");
-    const ipcId = myForm.data("ipc-id");
-    const userId = myForm.data("user-id"); //ไม่ต้องส่งไปก็ได้เพราะ  เรียกใช้ $_SESSION['user_id] ใน inspection_handler_api.php หรือ inspection_service_class.php
-
-    const data_sent = {
-      action: action,
-      ipcId: ipcId,
-      userId: userId,
-      ...data,
-    };
-    // console.log(action);
-    // console.log(JSON.stringify(data_sent));
-    // return;
-    $.ajax({
-      url: "ipc_handler_api.php",
-      type: "POST",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify(data_sent),
-      // beforeSend: function () {
-      //   // Optional: disable buttons to prevent double-clicking
-      //   $("#submit").prop("disabled", true);
-      // },
-    })
-      .done(function (result) {
-        // console.log(`result: ${result}`);
-        responseMessage.text(result.message).css("color", "green");
-        Swal.fire({
-          icon: result.status,
-          title: result.message,
-          color: "#716add",
-          allowOutsideClick: false,
-          background: "black",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = "ipc_list.php";
-          }
-        });
-      })
-      .fail((jqXHR) => {
-        const errorMsg = jqXHR.responseJSON
-          ? jqXHR.responseJSON.message
-          : "เกิดข้อผิดพลาดรุนแรง";
-        showMessage(errorMsg, false);
+      $.ajax({
+        url: "ipc_handler_api.php",
+        type: "post",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify(dataSent),
+      }).done(function (result) {
+        // console.log(result);
+        if (result) {
+          content = loadIpc(result);
+          $("#content").html(content);
+        } else {
+          $("#content").html("");
+        }
       });
+      break;
+
+    case 2://หน้าที่ 1 เป็น Inspection เสมอ
+      // ใช้ Object.keys วนลบ property ใน dataSent
+      Object.keys(dataSent).forEach(key => delete dataSent[key]);
+      dataSent.action = "previewInspection";
+      dataSent.inspectionId = inspectionId;
+
+      $.ajax({
+        url: "ipc_handler_api.php",
+        type: "post",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify(dataSent),
+      }).done(function (result) {
+        console.log(result);
+        // console.log(result);
+        if (result) {
+          content = loadInspection(result);
+          $("#content").html(content);
+        } else {
+          $("#content").html("");
+        }
+      });
+      break;
+    default://หน้าอื่นๆเป็นไฟล์ Attach ของ Inspection
+      // ใช้ Object.keys วนลบ property ใน dataSent
+      Object.keys(dataSent).forEach(key => delete dataSent[key]);
+      dataSent.action = "loadAttach";
+      dataSent.inspectionId = inspectionId;
+      dataSent.page = page;
+
+      $.ajax({
+        url:"ipc_handler_api.php",
+        type:"post",
+        contentType:"application/json",
+        dataType:"json",
+        data:JSON.stringify(dataSent),
+      }).done(function(result){
+        // console.log(result);
+        if(result){
+          content = loadAttach(result);
+          $("#content").html(content);
+        }
+        else{
+          $("#content").html("");
+        }
+      })
+  }
+}
+
+function renderPagination(totalPages, currentPage) {
+  pagination = "";
+
+  // ปุ่ม Previous
+  pagination += `
+        <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
+          <a class="page-link" href="#" onclick="loadPage(${currentPage - 1})">Previous</a>
+        </li>
+      `;
+
+  // เลขหน้า
+  for (let i = 1; i <= totalPages; i++) {
+    pagination += `
+          <li class="page-item ${i === currentPage ? "active" : ""}">
+            <a class="page-link" href="#" onclick="loadPage(${i})">${i}</a>
+          </li>
+        `;
   }
 
-  $(".approve").on("click", function (e) {
-    // $(document).on("click", "#btnSave", function (e) {
-    e.preventDefault();
-    // sendRequest($(".approve").data("approve-text"));
-    // console.log("click");
-    sendRequest("approve");
-  });
+  // ปุ่ม Next
+  pagination += `
+        <li class="page-item ${currentPage === totalPages ? "disabled" : ""}">
+          <a class="page-link" href="#" onclick="loadPage(${currentPage + 1})">Next</a>
+        </li>
+      `;
+      $(".pagination").html(pagination);
+}
 
-  $(".reject").on("click", function (e) {
-    // $(document).on("click", "#btnSave", function (e) {
-    e.preventDefault();
-    // const comments = $("#reject_comments").val().trim();
-    const comments = "#reject_comments";
-    // if (!comments) {
-    //   alert("กรุณากรอกเหตุผลในการปฏิเสธ");
-    //   $("#reject_comments").focus();
-    //   return;
-    // }
-    sendRequest("reject", { comments: comments });
-  });
-
-  $(".btnCancel").click(function () {
-    window.history.back();
-    // window.location.href = "inspection_view.php";
-    // window.history.go(-1);
-    // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
-    // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
-
-  });
-
-  $(document).on("click", "#prevBtn", function () {
-    const myForm = $("#myForm");
-    const ipcId = myForm.data("ipc-id");
-    const dataSent = {
-      action: "previewIpc",
-      ipcId: ipcId,
-    };
-
-    $.ajax({
-      url: "ipc_handler_api.php",
-      type: "post",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify(dataSent),
-    }).done(function (result) {
-      // console.log(result);
-      // console.log(result.length);
-      if (result) {
-        content = loadIpc(result);
-        $("#content").html(content);
-      } else {
-        $("#content").html("");
-      }
-    });
-
-  });
-
-  $(document).on("click", "#nextBtn", function () {
-    const myForm = $("#myForm");
-    const inspectionId = myForm.data("inspection-id");
-    const dataSent = {
-      action: "previewInspection",
-      inspectionId: inspectionId,
-    };
-
-    $.ajax({
-      url: "ipc_handler_api.php",
-      type: "post",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify(dataSent),
-    }).done(function (result) {
-      console.log(result);
-      // console.log(result.length);
-      if (result) {
-        content = loadInspection(result);
-        $("#content").html(content);
-      } else {
-        $("#content").html("");
-      }
-    });
-
-  });
-
-  function loadIpc(data) {
-    let content = "";
-    content = `
+function loadIpc(data) {
+  let content = "";
+  content = `
                 <h3 class="">INTERIM CERTIFICATE</h3>
                 <div class="header-info">
                   <!-- <div class="info-row">
@@ -246,12 +204,12 @@ function formatWithComma(num) {
                   </div>
                 </div>
                 `;
-    return content;
-  }
+  return content;
+}
 
-  function loadInspection(data) {
-    let content = "";
-    content = `
+function loadInspection(data) {
+  let content = "";
+  content = `
                 <div class="d-flex justify-content-between">
                   <div class="col d-flex justify-content-start">
                     <div class="fw-bold" style="width: 200px;">ผู้รับเหมา</div>
@@ -420,75 +378,166 @@ function formatWithComma(num) {
                   </div>
                 </div>
                 `;
+  return content;
+}
+
+function loadAttach(data) {
+      let content = "";
+
+      content += `
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">${data.file_name}</h5>
+            <p class="card-text">${data.file_type}</p>
+      `;
+
+      if (data.file_type === "image/jpeg") {
+        content += `<img src="${data.file_path}" class="img-fluid rounded">`;
+      } else if (data.file_type === "application/pdf") {
+        content += `
+          <div class="ratio ratio-16x9">
+            <iframe src="${data.file_path}" frameborder="0"></iframe>
+          </div>
+        `;
+      }
+
+      content += `
+          </div>
+        </div>
+      `;
+console.log(content);
     return content;
+}
+
+function refreshForm() {
+  const myForm = $('#myForm');
+  // จัดการปุ่ม action
+  if (myForm.data('ipc-status') == 'pending-submit' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+    $("#btnAction").addClass('inline');
+    $("#btnAction").removeClass('d-none');
+  }
+  else if (myForm.data('ipc-status') == 'pending-approve' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+    $("#btnAction").addClass('inline');
+    $("#btnAction").removeClass('d-none');
+  }
+  else {
+    $("#btnAction").addClass('d-none');
+    $("#btnAction").removeClass('inline');
+  }
+}
+
+  function formatNumber(num) {
+    return num.toLocaleString('th-TH', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
   }
 
-  function refreshForm() {
-    const myForm = $('#myForm');
-    // จัดการปุ่ม action
-    if (myForm.data('ipc-status') == 'pending-submit' && myForm.data('current-approver-id') == myForm.data('user-id')) {
-      $("#btnAction").addClass('inline');
-      $("#btnAction").removeClass('d-none');
-    }
-    else if (myForm.data('ipc-status') == 'pending-approve' && myForm.data('current-approver-id') == myForm.data('user-id')) {
-      $("#btnAction").addClass('inline');
-      $("#btnAction").removeClass('d-none');
-    }
-    else {
-      $("#btnAction").addClass('d-none');
-      $("#btnAction").removeClass('inline');
-    }
+  // ฟังก์ชันบังคับใช้ comma เสมอ
+  function formatWithComma(num) {
+    return Number(num).toLocaleString('th-TH', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
   }
 
-  function loadPage(page = 1) {
+$(document).ready(function () {
+  const responseMessage = $("#response-message");
+
+
+  function showMessage(message, isSuccess) {
+    responseMessage
+      .text(message)
+      .removeClass("success error")
+      .addClass(isSuccess ? "success" : "error")
+      .show()
+      .delay(5000)
+      .fadeOut();
+  }
+
+  // - action มาจากการกดปุ่มว่าเป็นอะไร เช่น save, submit, approve, reject เป็นต้น  
+  // โดย submit และ approve เป็นการเลื่อน level เหมือนกัน  ต่างกันแค่ชื่อ   ซึ่งอาจจะดึงข้อมูลชื่อมาจาก workflow_step 
+  // - data เป็นข้อมูลที่มาจากฟอร์มเพื่อนำมาบันทึกข้อมูล 
+  // เช่นถ้าเป็นการ save จะดึงข้อมูลของ ipc บน form ส่งมาให้   เพื่อมาทำการ save 
+  // ถ้าเป็นการ submit sinv reject ไม่ต้องส่งข้อมูลของ form มาเพราะไม่ได้ใช้ข้อมูลบน form แต่ใช้การเลื่อนหรือถอย level จากการดึงข้อมูลใน workflow_step 
+  // แต่ทุก action ต้องส่ง data ที่มีข้อมูลอย่างน้อยคือ ipc-id, user-id
+  function sendRequest(action, data) {
     const myForm = $("#myForm");
     const ipcId = myForm.data("ipc-id");
-    const inspectionId = myForm.data("inspection-id");
-    const dataSent = {
-      action: "getCountOfInspectionFilesByInspectionId",
-      inspectionId: inspectionId,
+    const userId = myForm.data("user-id"); //ไม่ต้องส่งไปก็ได้เพราะ  เรียกใช้ $_SESSION['user_id] ใน inspection_handler_api.php หรือ inspection_service_class.php
+
+    const data_sent = {
+      action: action,
+      ipcId: ipcId,
+      userId: userId,
+      ...data,
     };
-    console.log(page);
+    // console.log(action);
+    // console.log(JSON.stringify(data_sent));
+    // return;
     $.ajax({
-    url: "ipc_handler_api.php",
-    type: "post",
-    contentType: "application/json",
-    dataType: "json",
-    data: JSON.stringify(dataSent),
-  }).done(function (result) {
-    renderPagination(result, page);
+      url: "ipc_handler_api.php",
+      type: "POST",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify(data_sent),
+      // beforeSend: function () {
+      //   // Optional: disable buttons to prevent double-clicking
+      //   $("#submit").prop("disabled", true);
+      // },
+    })
+      .done(function (result) {
+        // console.log(`result: ${result}`);
+        responseMessage.text(result.message).css("color", "green");
+        Swal.fire({
+          icon: result.status,
+          title: result.message,
+          color: "#716add",
+          allowOutsideClick: false,
+          background: "black",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "ipc_list.php";
+          }
+        });
+      })
+      .fail((jqXHR) => {
+        const errorMsg = jqXHR.responseJSON
+          ? jqXHR.responseJSON.message
+          : "เกิดข้อผิดพลาดรุนแรง";
+        showMessage(errorMsg, false);
+      });
+  }
+
+  $(".approve").on("click", function (e) {
+    // $(document).on("click", "#btnSave", function (e) {
+    e.preventDefault();
+    // sendRequest($(".approve").data("approve-text"));
+    // console.log("click");
+    sendRequest("approve");
   });
-    
-    // ทำการ Load หน้าต่างๆตรงนี้
-  }
-  
-function renderPagination(totalPages, currentPage) {
-  let pagination = document.getElementById("pagination");
-  pagination.innerHTML = "";
 
-  // ปุ่ม Previous
-  pagination.innerHTML += `
-        <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
-          <a class="page-link" href="#" onclick="loadPage(${currentPage - 1})">Previous</a>
-        </li>
-      `;
+  $(".reject").on("click", function (e) {
+    // $(document).on("click", "#btnSave", function (e) {
+    e.preventDefault();
+    // const comments = $("#reject_comments").val().trim();
+    const comments = "#reject_comments";
+    // if (!comments) {
+    //   alert("กรุณากรอกเหตุผลในการปฏิเสธ");
+    //   $("#reject_comments").focus();
+    //   return;
+    // }
+    sendRequest("reject", { comments: comments });
+  });
 
-  // เลขหน้า
-  for (let i = 1; i <= totalPages; i++) {
-    pagination.innerHTML += `
-          <li class="page-item ${i === currentPage ? "active" : ""}">
-            <a class="page-link" href="#" onclick="loadPage(${i})">${i}</a>
-          </li>
-        `;
-  }
+  $(".btnCancel").click(function () {
+    window.history.back();
+    // window.location.href = "inspection_view.php";
+    // window.history.go(-1);
+    // $('.main').load('open_area_schedule_main.php'); แบบนี้ไม่ได้
+    // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
 
-  // ปุ่ม Next
-  pagination.innerHTML += `
-        <li class="page-item ${currentPage === totalPages ? "disabled" : ""}">
-          <a class="page-link" href="#" onclick="loadPage(${currentPage + 1})">Next</a>
-        </li>
-      `;
-}
+  });
 
   refreshForm();
   loadPage(1);

@@ -114,9 +114,9 @@ $(document).ready(function () {
     var fileDisplayArea = $("#fileDisplayArea .card-body");
     fileDisplayArea.empty(); // เคลียร์เนื้อหาเดิม
 
-    console.log(`fileUrl = ${fileUrl}`);
-    console.log(`fileType = ${fileType}`);
-    console.log(`fileName = ${fileName}`);
+    // console.log(`fileUrl = ${fileUrl}`);
+    // console.log(`fileType = ${fileType}`);
+    // console.log(`fileName = ${fileName}`);
     if (fileType.startsWith("image/")) {
       // แสดงรูปภาพ
       fileDisplayArea.html(`<img src="${fileUrl}" alt="${fileName}">`);

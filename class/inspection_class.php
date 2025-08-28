@@ -238,7 +238,6 @@ class Inspection
         return $rs;
     }
 
-    // ต้องแก้ไขฟังก์ชันนี้ใหม่
     public function getInspectionFilesByInspectionId($inspectionId): array
     {
         $sql = "SELECT `file_id`, `inspection_files`.`inspection_id`, `file_name`, `file_path`, `file_type`, `uploaded_at` 
@@ -263,7 +262,6 @@ class Inspection
         $rows = $rs['cnt'];
         return (int)$rows;
     }
-
 
     public function getCurrentApprovalType($inspectionId): ?array
     {

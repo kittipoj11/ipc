@@ -61,6 +61,12 @@ if (isset($requestData['action']) && $userId > 0) {
             $rs = $ipc->getIpcAllByPoId($requestData['po_id']);
             echo json_encode($rs);
             break;
+
+        case 'getCountOfInspectionFilesByInspectionId':
+            $row = $inspection->getCountOfInspectionFilesByInspectionId($requestData['inspectionId']);
+            // $_SESSION['row='] = $row;
+            echo json_encode($row);
+            break;
             
         case 'previewIpc':
             $rs = $ipc->getIpcByIpcId($requestData['ipcId']);
@@ -74,17 +80,22 @@ if (isset($requestData['action']) && $userId > 0) {
             echo json_encode($rs);
             break;
 
-        case 'getCountOfInspectionFilesByInspectionId':
-            $row = $inspection->getCountOfInspectionFilesByInspectionId($requestData['inspectionId']);
-            $_SESSION['row='] = $row;
-            echo json_encode($row);
-            break;
-
-        case 'selectInspectionFiles':
-            $page = isset($requestData["page"]) ? (int)$requestData["page"] : 1;
+        case 'loadAttach':
+            $inspectionId = $requestData['inspectionId'];
+            $page = isset($requestData["page"]) ? (int)$requestData["page"] : 3;
             $perPage = 1; // แสดงหน้าละ 1 รายการ
-            $offset = ($page - 1) * $perPage;
-            $rs = $inspection->getByInspectionId($requestData['inspectionId']);
+            $offset = ($page - 1)-2 * $perPage;// 2 คือจำนวนหน้าของ IPC(หน้าที่1) และ Inspection(หน้าที่2)
+                    
+            $sql = "SELECT `file_id`, `inspection_id`, `file_name`, `file_path`, `file_type`, `uploaded_at` 
+                    FROM `inspection_files` 
+                    WHERE `inspection_id` = :inspection_id
+                    LIMIT $offset, $perPage";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
+            $stmt->execute();
+            $rs = $stmt->fetch(PDO::FETCH_ASSOC);
+
             // $_SESSION['rs'] = $rs;
             echo json_encode($rs);
             break;
