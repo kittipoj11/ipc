@@ -370,9 +370,6 @@ ob_start(); // Start get HTML code
                           <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['less_retension_exclude_vat'], 2) ?></div>
                         </div>
                       </div>
-                      <!--       font-weight: bold;
-      font-size: 18px;
-      margin-top: 10px; -->
                       <div class="d-flex justify-content-between fw-bold" style="font-size: 18px;">
                         <div class="">NET AMOUNT DUE FOR PAYMENT No.1</div>
                         <div class="text-end"><?= number_format($rsIpc['ipc']['net_amount_due_for_payment'], 2) ?></div>

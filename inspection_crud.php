@@ -17,7 +17,7 @@ $inspection = new Inspection($pdo);
 // print_r($_REQUEST);
 // exit;
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectInspectionFiles') {
-    $rsInspectionFiles = $inspection->getInspectionFilesByInspectionId($_REQUEST['po_id'], $_REQUEST['period_id'], $_REQUEST['inspection_id']);
+    $rsInspectionFiles = $inspection->getInspectionFilesByInspectionId($_REQUEST['inspection_id']);
     echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
 } elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == 'insertInspectionFiles') {
     $inspection->insertInspectionFiles($_REQUEST);

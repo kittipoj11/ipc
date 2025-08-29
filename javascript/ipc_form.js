@@ -442,8 +442,8 @@ function refreshForm() {
   }
 
     // ฟังก์ชันกดพิมพ์ PDF
-  function printPDF(id) {
-    window.open("ipc_generate_pdf.php?id=" + id, "_blank");
+  function printPDF(ipcId) {
+    window.open("ipc_generate_pdf.php?ipc_id=" + ipcId, "_blank");
 }
   
 $(document).ready(function () {
