@@ -35,7 +35,7 @@ try {
             $pdo->beginTransaction();
             $start_date = new DateTime($_POST['date_from']);
             $end_date = new DateTime($_POST['date_to']);
-            $end_date->modify('+1 day');
+            $end_date->modify('+1 day'); // เพิ่ม 1 วันเพื่อให้ loop ครอบคลุมวันสุดท้าย
             $interval = new DateInterval('P1D');
             $date_range = new DatePeriod($start_date, $interval, $end_date);
 
@@ -45,6 +45,7 @@ try {
                 $start_time = $_POST['time_from'];
                 $end_time = $_POST['time_to'];
 
+                // ตรวจสอบการทับซ้อนของเวลา
                 $stmt_check = $pdo->prepare("SELECT COUNT(*) FROM booking_slots WHERE event_id = ? AND slot_date = ? AND (? < end_time AND ? > start_time)");
                 $stmt_check->execute([$_POST['event_id'], $current_date, $start_time, $end_time]);
                 if ($stmt_check->fetchColumn() > 0) {
@@ -68,12 +69,12 @@ try {
 
         case 'get_event_details':
             $event_id = $_GET['event_id'];
-            // ดึงข้อมูลลานจอดจากตารางใหม่
+            // ดึงข้อมูลลานจอดจาก
             $stmt_lots = $pdo->prepare("SELECT lot_name FROM event_parking_lots WHERE event_id = ? ORDER BY lot_name ASC");
             $stmt_lots->execute([$event_id]);
             $lots = $stmt_lots->fetchAll(PDO::FETCH_COLUMN);
 
-            // ดึงวันที่ที่ยังจองได้ (เหมือนเดิม)
+            // ดึงวันที่ที่ยังจองได้
             $stmt_dates = $pdo->prepare("SELECT DISTINCT slot_date FROM booking_slots WHERE event_id = ? AND slot_date >= CURDATE() ORDER BY slot_date ASC");
             $stmt_dates->execute([$event_id]);
             $dates = $stmt_dates->fetchAll(PDO::FETCH_COLUMN);
@@ -96,12 +97,12 @@ try {
             $date = $_GET['date'];
             $time = $_GET['time'];
 
-            // หาความจุเริ่มต้นจากตารางใหม่
+            // หาความจุเริ่มต้น
             $stmt = $pdo->prepare("SELECT capacity FROM event_parking_lots WHERE event_id = ? AND lot_name = ?");
             $stmt->execute([$event_id, $lot]);
             $initial_capacity = $stmt->fetchColumn() ?? 0;
 
-            // หายอดจองทั้งหมด (เหมือนเดิม)
+            // หายอดจองทั้งหมด
             $stmt_booked = $pdo->prepare("SELECT SUM(num_cars) as total_booked FROM bookings WHERE event_id = ? AND parking_lot = ? AND booking_date = ? AND start_time = ?");
             $stmt_booked->execute([$event_id, $lot, $date, $time]);
             $total_booked = $stmt_booked->fetchColumn() ?? 0;
@@ -123,14 +124,14 @@ try {
             }
 
             $pdo->beginTransaction();
-            // 1. ตรวจสอบว่า vendor จองวันนั้นไปหรือยัง (เหมือนเดิม)
+            // 1. ตรวจสอบว่า vendor จองวันนั้นไปหรือยัง
             $stmt_check_vendor = $pdo->prepare("SELECT COUNT(*) FROM bookings WHERE vendor_name = ? AND event_id = ? AND booking_date = ?");
             $stmt_check_vendor->execute([$vendor_name, $event_id, $booking_date]);
             if ($stmt_check_vendor->fetchColumn() > 0) {
                 throw new Exception("คุณได้ทำการจองสำหรับงานนี้ในวันที่ $booking_date ไปแล้ว");
             }
 
-            // 2. ตรวจสอบจำนวนที่ว่างอีกครั้ง (ดึง Capacity จากตารางใหม่)
+            // 2. ตรวจสอบจำนวนที่ว่างอีกครั้ง (ป้องกัน Race Condition)
             $stmt_cap = $pdo->prepare("SELECT capacity FROM event_parking_lots WHERE event_id = ? AND lot_name = ?");
             $stmt_cap->execute([$event_id, $parking_lot]);
             $initial_capacity = $stmt_cap->fetchColumn() ?? 0;
@@ -143,7 +144,7 @@ try {
                 throw new Exception("ขออภัย ช่องจอดไม่เพียงพอ ที่จอดเหลือ " . ($initial_capacity - $total_booked) . " คัน");
             }
 
-            // 3. ถ้าผ่านหมด ให้ทำการจอง (เหมือนเดิม)
+            // 3. ถ้าผ่านหมด ให้ทำการจอง
             $stmt_insert_booking = $pdo->prepare("INSERT INTO bookings (vendor_name, event_id, parking_lot, booking_date, start_time, num_cars) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt_insert_booking->execute([$vendor_name, $event_id, $parking_lot, $booking_date, $start_time, $num_cars]);
 
