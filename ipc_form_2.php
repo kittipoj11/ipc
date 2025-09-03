@@ -89,7 +89,7 @@ ob_start(); // Start get HTML code
     }
 
     h1.title {
-      text-align: center;
+      text-align: start;
       font-size: 24px;
       font-weight: bold;
       margin-bottom: 20px;

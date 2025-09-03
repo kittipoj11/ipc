@@ -1,14 +1,22 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
-
+@session_start();
+// require_once __DIR__ . '/vendor/autoload.php';
+require_once $_SERVER["DOCUMENT_ROOT"] . '/ipc/vendor/autoload.php';
+// $_SESSION['doc root']=$_SERVER["DOCUMENT_ROOT"];
 if (!isset($_POST['booking'])) {
     die("No data");
 }
 
 $booking = json_decode($_POST['booking'], true);
 
-$mpdf = new \Mpdf\Mpdf();
-
+// $mpdf = new \Mpdf\Mpdf();
+$mpdf = new \Mpdf\Mpdf([
+    'mode' => 'utf-8',
+    'format' => 'A4',
+    'default_font' => 'thsarabun', // หรือชื่อฟอนต์ที่คุณต้องการ
+    'autoScriptToLang' => true,
+    'autoLangToFont' => true
+]);
 $html = "
 <h2 style='text-align:center'>Booking Details</h2>
 <h4>ข้อมูลผู้จอง</h4>

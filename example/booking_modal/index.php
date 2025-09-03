@@ -1,4 +1,12 @@
-<?php include "db.php"; ?>
+<?php include "db.php"; 
+
+@session_start();
+// require_once __DIR__ . '/vendor/autoload.php';
+// require_once $_SERVER["DOCUMENT_ROOT"] . '/vendor/autoload.php';
+$_SESSION['doc root']=$_SERVER["DOCUMENT_ROOT"];
+// $_SESSION['doc root']='x';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
