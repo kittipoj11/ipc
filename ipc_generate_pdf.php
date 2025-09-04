@@ -540,7 +540,7 @@ $html2 = '
 </div>
 ';
 
-$html3='    
+$html3= '    
 <style>
       body {
         font-family: "dejavusans", sans-serif;
@@ -576,7 +576,7 @@ $html3='
       }
 
       .title {
-        text-align: start;
+        text-align: center;
         font-weight: bold;
         font-size: 12pt;
         margin-bottom: 15px;
@@ -607,27 +607,6 @@ $html3='
         text-align: center;
       }
 
-      .signature-block {
-        margin-top: 5px;
-        display: flex;
-        align-items: flex-start;
-        flex-direction: column;
-      }
-      .signature-block .sig-line {
-        width: 200px;
-        border-bottom: 1px solid #000;
-        margin-left: 50px;
-        margin-right: 10px;
-      }
-      .signature-details {
-        text-align: left;
-        margin-top: 5px;
-      }
-      .signature-details p {
-        margin: 0;
-        font-size: 12px;
-      }
-
     table .left-footer {
         text-align: left;
       }
@@ -652,132 +631,185 @@ $html3='
     </style>
 
     <div class="container">
-    <div class="title black-box center">การตรวจรับงาน<br>Project Management Department</div>
+    <div class="title center">การตรวจรับงาน<br>Project Management Department</div>
 
     <table>
-    <tr>
-        <td class="col-fixed-width"><span class="label">DATE</span></td>
-        <td>18<sup>th</sup> May 2023</td>
-    </tr>
-    <tr>
-        <td class="col-fixed-width"><span class="label">PROJECT</span></td>
-        <td>' . $rsIpc['pomain']['project_name'] . '</td>
-    </tr>
-    <tr>
-        <td class="col-fixed-width"><span class="label">OWNER</span></td>
-        <td>IMPACT Exhibition Management Co., Ltd.<br>47/569-576, 10th floor, Bangkok Land Building,<br>Popular 3 Road, Banmai Sub-district,<br>Pakkred District, Nonthaburi 11120</td>
-    </tr>
-    <tr>
-        <td class="col-fixed-width"><span class="label">AGREEMENT DATE</span></td>
-        <td>' . $rsIpc['ipc']['agreement_date'] . '</td>
-    </tr>
-    <tr>
-        <td class="col-fixed-width"><span class="label">CONTRACTOR</span></td>
-        <td>' . $rsIpc['ipc']['contractor'] . '</td>
-    </tr>
-    <tr>
-        <td class="col-fixed-width"><span class="label">CONTRACT VALUE</span></td>
+      <tr>
         <td>
-        <table style="width:100%; border:0;padding:0;">
+          <table style="width:100%; border:0;padding:0;">
             <tr>
-            <td style="text-align:left; border:0;padding:0;">(Including Vat 7%)</td>
-            <td style="text-align:right; border:0;padding:0;">' . number_format($rsIpc['ipc']['contract_value'], 2) . '</td>
+              <td class="col-fixed-width"><span class="label">ผู้รับเหมา</span></td>
+              <td>' . $rsInspection['header']['supplier_name'] . '</td>
             </tr>
-        </table>
-    </td>
-    </tr>
-    </table>
-
-    <div class="box">INTERIM PAYMENT CLAIM No.1</div>
-
-    <table>
-        <tr>
-            <td>Total Value Of Interim Payment</td>
-            <td class="right">' . number_format($rsIpc['ipc']['total_value_of_interim_payment'], 2) . '</td>
-        </tr>
-        <tr>
-            <td>Less Previous Interim Payment</td>
-            <td class="right">' . number_format($rsIpc['ipc']['less_previous_interim_payment'], 2) . '</td>
-        </tr>
-        <tr>
-            <td>Net Value of Current Claim</td>
-            <td class="right">' . number_format($rsIpc['ipc']['net_value_of_current_claim'], 2) . '</td>
-        </tr>
-        <tr>
-            <td>Less Retention 5% (Exclu. VAT)</td>
-            <td class="right">' . number_format($rsIpc['ipc']['less_retension_exclude_vat'], 2) . '</td>
-        </tr>
-        <tr>
-        <td colspan="2" style="height:25px;"></td>
-        </tr>    
-        <tr>
-            <td><span class="label">NET AMOUNT DUE FOR PAYMENT No.1</span></td>
-            <td class="right label">' . number_format($rsIpc['ipc']['net_amount_due_for_payment'], 2) . '</td>
-        </tr>
-        <tr>
-        <td colspan="2" style="height:25px;"></td>
-        </tr>  
-        <tr>
-            <td>Total Value of Retention (Inclu. this certificate)</td>
-            <td class="right"><span style="float:right;">' . number_format($rsIpc['ipc']['total_value_of_retention'], 2) . '</span></td>
-        </tr>
-        <tr>
-            <td>Total Value of Certification made (Inclu. this certificate)</td>
-            <td class="right"><span style="float:right;">' . number_format($rsIpc['ipc']['total_value_of_certification_made'], 2) . '</span></td>
-        </tr>
-        <tr>
-            <td>Resulting Balance of Contract Sum Outstanding</td>
-            <td class="right"><span style="float:right;">' . number_format($rsIpc['ipc']['resulting_balance_of_contract_sum_outstanding'], 2) . '</span></td>
-        </tr>    
+          </table>
+        </td>
+        <td>
+          <table style="width:100%; border:0;padding:0;">
+            <tr>
+              <td class="col-fixed-width"><span class="label">โครงการ</span></td>
+              <td>' . $rsInspection['header']['project_name'] . '</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table style="width:100%; border:0;padding:0;">
+            <tr>
+        <td class="col-fixed-width"><span class="label">สถานที่</span></td>
+        <td>' . $rsInspection['header']['location_name'] . '</td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table style="width:100%; border:0;padding:0;">
+            <tr>
+        <td class="col-fixed-width"><span class="label">งาน</span></td>
+        <td>' . $rsInspection['header']['working_name_th'] . '(' . $rsInspection['header']['working_name_en'] . ')</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
     </table>
 
     <table>
-    <tr>
-        <td colspan="2" style="height:25px;"></td>
-    </tr>  
-
-    <tr>
-        <td class="col-fixed-width center">
-            <div class="signature-block">
-                <p>By : <img src="images/signature.jpg" width="120"></p>
-                <div class="sig-line"></div>
-                <div class="signature-details">
-                    <p>( Watchara Chanthrasopa )</p>
-                    <p>Head of Project Management Department</p>
-                </div>
-            </div>
-        </td>
-
-        <td class="col-fixed-width center">
-            <div class="signature-block">
-                By : <img src="images/signature.jpg" width="120"><br>
-                <div class="sig-line"></div>
-                <div class="signature-details">
-                    ( Tanawat Worasakdinan ) <br>
-                    Cost Control Manager
-                </div>
-            </div>
-        </td>
-    </tr>
-
-    <tr>
-        <td colspan="2" style="height:25px;"></td>
-    </tr>  
-
-    <tr>
-        <td class="col-fixed-width center">
-
-        </td>
-
-        <td class="col-fixed-width center">
-            <div class="signature-block">
-                By : <img src="images/signature.jpg" width="120"><br>
-                    ( Apichaya Sindhuprama ) <br>
-                    Project Manager
-            </div>
-        </td>
-    </tr>
+      <tr>
+          <td class="col-fixed-width"><span class="label">ระยะเวลาดำเนินการ</span></td>
+          <td>' . $rsInspection['header']['working_date_from'] . '</td>
+          <td class="col-fixed-width"><span class="label">ถึง</span></td>
+          <td>' . $rsInspection['header']['working_date_to'] . '</td>
+          <td>(รวม ' . $rsInspection['header']['working_day'] . ' วัน)</td>
+      </tr>
     </table>
+
+    <hr class="hr border border-dark">
+
+    <table>
+      <tr>
+        <td>
+          <table style="width:100%; border:0;padding:0;">
+            <tr>
+              <td class="col-fixed-width"><span class="label">เลขที่ PO</span></td>
+              <td>' . $rsInspection['header']['po_number'] . '</td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table style="width:100%; border:0;padding:0;">
+            <tr>
+              <td class="col-fixed-width"><span class="label">มูลค่างานตาม PO</span></td>
+              <td>' . number_format($rsInspection['header']['contract_value'], 2) . ' บาท(Includeing VAT' . $rsInspection['header']['is_include_vat'] . '%)</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <hr class="hr border border-dark">
+
+    <table>
+      <tr>
+        <td style="width:30%;">
+          <table style="width:100%; border:0;padding:0;">
+            <tr>
+              <td class="col-fixed-width"><span class="label">เบิกงวดงานที่</span></td>
+              <td>' . $rsInspection['period']['period_number'] . '</td>
+            </tr>
+            <tr>
+              <td class="col-fixed-width"><input type="checkbox" checked></td>
+              <td>มี Deposit' . $rsInspection['header']['deposit_percent'] . '</td>
+            </tr>
+            <tr>
+              <td class="col-fixed-width"><input type="checkbox"></td>
+              <td>ไม่มี Deposit</td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table style="width:100%; border:0;padding:0;">
+            <tr>
+              <td class="col-fixed-width"><span class="label">ยอดเบิกเงินงวดปัจจุบัน</span></td>
+              <td class="col-fixed-width"><span class="label">' . number_format($rsInspection['period']['interim_payment'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td style="text-align:right; border:0;padding:0;">' . $rsInspection['period']['interim_payment_percent'] . ' %</td>
+            </tr>
+            <tr>
+              <td class="col-fixed-width"><span class="label">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</span></td>
+              <td class="col-fixed-width"><span class="label">' . number_format($rsInspection['period']['interim_payment_less_previous'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td style="text-align:right; border:0;padding:0;">' . $rsInspection['period']['interim_payment_less_previous_percent'] . ' %</td>
+            </tr>
+            <tr>
+              <td class="col-fixed-width"><span class="label">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</span></td>
+              <td class="col-fixed-width"><span class="label">' . number_format($rsInspection['period']['interim_payment_accumulated'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td style="text-align:right; border:0;padding:0;">' . $rsInspection['period']['interim_payment_accumulated_percent'] . ' %</td>
+            </tr>
+            <tr>
+              <td class="col-fixed-width"><span class="label">ยอดเงินงวดคงเหลือ</span></td>
+              <td class="col-fixed-width"><span class="label">' . number_format($rsInspection['period']['interim_payment_remain'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td style="text-align:right; border:0;padding:0;">' . $rsInspection['period']['interim_payment_remain_percent'] . ' %</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <hr class="hr border border-dark">
+
+    <table style="width:100%; border:0;padding:5px;">
+      <tr>
+        <td class="col-fixed-width"><span class="label">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</span>' . $rsInspection['period']['workload_planned_percent'] . ' %</td>
+        <td class="col-fixed-width"><span class="label">ปริมาณที่แล้วเสร็จจริง</span>' . $rsInspection['period']['workload_actual_completed_percent'] . ' %</td>
+        <td class="col-fixed-width"><span class="label">ปริมาณงานคงเหลือ</span>' . $rsInspection['period']['workload_remaining_percent'] . ' %</td>
+      </tr>
+    </table>
+
+    <table style="width:100%; border:1;padding:5px;">
+      <thead>
+      <tr style="border:1;">
+          <th style="border:1;padding:5px;" width="10%">ลำดับที่</th>
+          <th style="border:1;padding:5px;" width="25%">รายละเอียดการตรวจสอบ</th>
+          <th style="border:1;padding:5px;" >หมายเหตุ</th>
+      </tr>
+      </thead>
+    <tbody>';
+
+foreach ($rsInspection['periodDetails'] as $row) {
+    $tableBody .= '
+      <tr style="border:1;">
+        <td style="border:1;padding:5px;">'. $row['order_no'] . '</td>
+        <td style="border:1;padding:5px;">'. $row['details'] . '</td>
+        <td style="border:1;padding:5px;">'. $row['remark'] .'</td>
+      </tr>       
+      ';
+};
+
+$html3 .= $tableBody;
+$html3 .= '
+    </tbody>
+  </table>
+
+  <table style="width:100%; border:0;padding:0;">
+    <tr>
+      <td class="col-fixed-width"><span class="label">ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน</span>' . $rsInspection['plan_status']['plan_status_name'] . ' %</td>
+    </tr>
+  </table>
+  
+  <table style="width:100%; border:0;padding:0;">
+    <tr>
+      <td class="col-fixed-width"><span class="label">หมายเหตุ:</span>' . $rsInspection['plan_status']['plan_status_name'] . ' %</td>
+    </tr>
+    <tr>
+      <textarea rows="4" style="min-height: 4em;height: auto;">' . $rsInspection['period']['remark'] . '</textarea>
+    </tr>
+  </table>
+  
+  <table style="width:100%; border:0;padding:0;">
+    <tr>
+      <td class="col-fixed-width"><span class="label">ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร</span></td>
+      <td class="col-fixed-width"><span class="label"><input type="radio" checked>อนุมัติเบิกจ่าย</span></td>
+      <td class="col-fixed-width"><span class="label"><input type="radio">ไม่อนุมัติเบิกจ่าย</span></td>
+    </tr>
+  </table>
+
 <div class="company-footer">
         <table>
 
@@ -807,184 +839,7 @@ $html3='
         </table>
         </div>
 </div>
-
-<div class="d-flex justify-content-between">
-        <div class="col d-flex justify-content-start">
-        <div class="fw-bold" style="width: 200px;">ผู้รับเหมา</div>
-        <div>'.$rsInspection['header']['supplier_name'].'</div>
-        </div>
-    </div>
-
-    <div class="d-flex justify-content-between">
-        <div class="col d-flex justify-content-start">
-        <div class="fw-bold" style="width: 200px;">โครงการ</div>
-        <div >'.$rsInspection['header']['project_name'].'</div>
-        </div>
-
-        <div class="col col-4 d-flex justify-content-start">
-        <div class="fw-bold" style="width: 200px;">สถานที่</div>
-        <div>'.$rsInspection['header']['location_name'].'</div>
-        </div>
-    </div>
-
-    <div class="d-flex justify-content-between">
-        <div class="col d-flex justify-content-start">
-        <div class="fw-bold" style="width: 200px;">งาน</div>
-        <div>'.$rsInspection['header']['working_name_th']. '('.$rsInspection['header']['working_name_en'].')</div>
-        </div>
-    </div>
-
-    <div class="d-flex justify-content-between">
-        <div class="col col-4 d-flex justify-content-start">
-        <div class="fw-bold" style="width: 200px;">ระยะเวลาดำเนินการ</div>
-        <div >'.$rsInspection['header']['working_date_from'].'</div>
-        </div>
-
-        <div class="col col-4 d-flex justify-content-start">
-        <div class="fw-bold" style="width: 200px;">ถึง</div>
-        <div>'.$rsInspection['header']['working_date_to'].'</div>
-        </div>
-
-        <div class="col col-4 d-flex justify-content-start">
-        <div class="fw-bold" style="width: 200px;">(รวม '.$rsInspection['header']['working_day'].' วัน)</div>
-        </div>
-    </div>
-
-    <hr class="hr border border-dark">
-
-    <div class="d-flex justify-content-between">
-        <div class="col col-6 d-flex justify-content-start">
-        <div class="fw-bold" style="width: 200px;">เลขที่ PO</div>
-        <div >'.$rsInspection['header']['po_number'].'</div>
-        </div>
-
-        <div class="col col-6 d-flex justify-content-start">
-        <div class="fw-bold" style="width: 200px;">มูลค่างานตาม PO</div>
-        <div>'. number_format($rsInspection['header']['contract_value'],2).' บาท(Includeing VAT'.$rsInspection['header']['is_include_vat'].'%)</div>
-        </div>
-    </div>
-
-    <hr class="hr border border-dark">
-
-    <div class="d-flex">
-        <div class="col-3 border-end border-dark-subtle m-0 p-0">
-        <div class="col d-flex justify-content-start">
-            <div class="fw-bold" style="width: 200px;">เบิกงวดงานที่</div>
-            <div>'. $rsInspection['period']['period_number'].'</div>
-        </div>
-
-        <div class="col d-flex flex-column justify-content-start">
-            <div class="col d-flex justify-content-start">
-            <input type="checkbox" name="deposit" onclick="return false;" checked>
-            <div class="fw-bold" style="width: 200px;">มี Deposit</div>
-            <div>'.$rsInspection['header']['deposit_percent'].'</div>
-            </div>
-            
-            <div class="col d-flex justify-content-start">
-            <input type="checkbox" name="deposit" onclick="return false;">
-            <div class="fw-bold" style="width: 200px;">ไม่มี Deposit</div>
-            </div>
-        </div>
-        </div>
-
-        <div class="col-9">
-        <div class="col d-flex justify-content-between m-1">
-            <div class="col-5">ยอดเบิกเงินงวดปัจจุบัน</div>
-            <div class="col-5 text-end">'. number_format($rsInspection['period']['interim_payment'],2).' บาท (Including VAT7%) คิดเป็น</div>
-            <div class="col-2 text-end ">'. $rsInspection['period']['interim_payment_percent'].' %</div>
-        </div>
-
-        <div class="col d-flex justify-content-between m-1">
-            <div class="col-5">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</div>
-            <div class="col-5 text-end">'. number_format($rsInspection['period']['interim_payment_less_previous'],2).' บาท (Including VAT7%) คิดเป็น</div>
-            <div class="col-2 text-end ">'. $rsInspection['period']['interim_payment_less_previous_percent'].' %</div>
-        </div>
-
-        <div class="col d-flex justify-content-between m-1">
-            <div class="col-5">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</div>
-            <div class="col-5 text-end">'. number_format($rsInspection['period']['interim_payment_accumulated'],2).' บาท (Including VAT7%) คิดเป็น</div>
-            <div class="col-2 text-end ">'. $rsInspection['period']['interim_payment_accumulated_percent'].' %</div>
-        </div>
-
-        <div class="col d-flex justify-content-between m-1">
-            <div class="col-5">ยอดเงินงวดคงเหลือ</div>
-            <div class="col-5 text-end">'. number_format($rsInspection['period']['interim_payment_remain'],2).' บาท (Including VAT7%) คิดเป็น</div>
-            <div class="col-2 text-end ">'. $rsInspection['period']['interim_payment_remain_percent'].' %</div>
-        </div>
-
-        </div>
-    </div>
-
-    <hr class="hr border border-dark">
-
-    <div class="d-flex justify-content-between">
-        <div class="col col-4 d-flex justify-content-between">
-        <div>ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</div>
-        <div>'. $rsInspection['period']['workload_planned_percent'].' %</div>
-        </div>
-
-        <div class="col col-4 d-flex justify-content-between">
-        <div>ปริมาณที่แล้วเสร็จจริง</div>
-        <div>'. $rsInspection['period']['workload_actual_completed_percent'].' %</div>
-        </div>
-
-        <div class="col col-4 d-flex justify-content-between">
-        <div>ปริมาณงานคงเหลือ</div>
-        <div>'. $rsInspection['period']['workload_remaining_percent'].' %</div>
-        </div>
-    </div>
-
-    <div class="card border border-1 border-dark m-1">
-        <div class="card-body p-0">
-        <table class="table table-bordered justify-content-center text-center" id="tableOrder">
-            <thead>
-            <tr>
-                <th class="p-1" width="10%">ลำดับที่</th>
-                <th class="p-1" width="20%">รายละเอียดการตรวจสอบ</th>
-                <th class="p-1">หมายเหตุ</th>
-            </tr>
-            </thead>
-            <tbody id="tbody-order">';
-
-foreach ($rsInspection['periodDetails'] as $row) {
-    $tableBody .= '
-                    <tr>
-                      <td class="tdPeriod text-right py-0 px-1">'. $row['order_no'] .'</td>
-                      <td class="tdPeriod text-right py-0 px-1">'. $row['details'] .'</td>
-                      <td class="tdPeriod text-right py-0 px-1">'. $row['remark'] .'</td>
-                    </tr>       
-                    ';
-};
-
-$html3 .= $tableBody;
-$html3 .=          '</tbody>
-                    </table>
-                  </div>
-                </div>
-
-                <div class="d-flex justify-content-between">
-                  <div class="col d-flex justify-content-start">
-                    <div>ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน : '. $rsInspection['plan_status']['plan_status_name'].' %</div>
-                  </div>
-                </div>
-
-                <div>หมายเหตุ:</div>
-                <div class="form-floating">
-                  <textarea name="remark" class="form-control" id="remark" rows="4" style="min-height: 4em;height: auto;" readonly>'. $rsInspection['period']['remark'].'</textarea>
-                </div>
-
-                <div class="col d-flex justify-content-start">
-                  <div>ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร</div>
-                  <div class="col d-flex justify-content-start">
-                    <input type="radio" name="disbursement" onclick="return false;" checked>
-                    <div class="fw-bold" style="width: 200px;">อนุมัติเบิกจ่าย</div>
-                  </div>
-                  
-                  <div class="col d-flex justify-content-start">
-                    <input type="radio" name="disbursement" onclick="return false;">
-                    <div class="fw-bold" style="width: 200px;">ไม่อนุมัติเบิกจ่าย</div>
-                  </div>
-                </div>';
+';
 
 $mpdf = new \Mpdf\Mpdf([
     'mode' => 'utf-8',
@@ -997,10 +852,11 @@ $mpdf = new \Mpdf\Mpdf([
     'margin_left' => 15,
     'margin_right' => 15
 ]);
-$pdfFilename = "ipc_" . $rsIpc['pomain']['po_number'] . "_" .  $rsIpc['ipc']['period_number']  . ".pdf";
+$pdfFilename = "IPC_" . $rsIpc['pomain']['po_number'] . "_" .  $rsIpc['ipc']['period_number']  . ".pdf";
 $mpdf->WriteHTML($html1);
 $mpdf->AddPage();
 $mpdf->WriteHTML($html2);
 $mpdf->AddPage();
 $mpdf->WriteHTML($html3);
+
 $mpdf->Output($pdfFilename, "I"); // แสดง PDF ใน browser
