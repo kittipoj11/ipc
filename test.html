@@ -1,0 +1,267 @@
+$html2 = '
+    <style>
+      body {
+        font-family: "dejavusans", sans-serif;
+        font-size: 12px;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid red;
+        border: none;
+        /* cellpadding="4";
+      cellspacing="0";*/
+      }
+
+      td {
+        border: 1px solid #333;
+        padding: 8px;
+        vertical-align: top;
+        border: none;
+      }
+
+      .col-fixed-width {
+        width: 150px; /* คอลัมน์แรก fix 150px */
+      }
+
+      .title {
+        text-align: start;
+        font-weight: bold;
+        font-size: 12pt;
+        margin-bottom: 15px;
+      }
+
+      .label {
+        font-weight: bold;
+      }
+
+      .box {
+        border: 1px solid #000;
+        padding: 5px;
+        font-weight: bold;
+      }
+      .black-box {
+        border: 1px solid #000;
+        padding: 5px;
+        font-weight: bold;
+        background-color: #000;
+        color: #fff;
+      }
+
+      .right {
+        text-align: right;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .signature-block {
+        margin-top: 5px;
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .signature-block .sig-line {
+        width: 200px;
+        border-bottom: 1px solid #000;
+        margin-left: 50px;
+        margin-right: 10px;
+      }
+      .signature-details {
+        text-align: left;
+        margin-top: 5px;
+      }
+      .signature-details p {
+        margin: 0;
+        font-size: 12px;
+      }
+
+    table .left-footer {
+        text-align: left;
+      }
+      table .right-footer {
+        text-align: right;
+      }
+      table td p {
+        margin: 0;
+        font-size: 10px;
+      }
+      .small-text {
+        font-size: 10px;
+      }
+
+    .company-footer {
+        margin-top: 5px;
+        font-size: 10px;
+        text-align: right;
+        border-top: 1px solid #ccc;
+        padding-top: 0px;
+    }
+    </style>
+
+<div class="container">
+    <div class="title black-box">INTERIM CERTIFICATE</div>
+
+    <table>
+    <tr>
+        <td class="col-fixed-width"><span class="label">DATE</span></td>
+        <td>18<sup>th</sup> May 2023</td>
+    </tr>
+    <tr>
+        <td class="col-fixed-width"><span class="label">PROJECT</span></td>
+        <td>' . $rsIpc['pomain']['project_name'] . '</td>
+    </tr>
+    <tr>
+        <td class="col-fixed-width"><span class="label">OWNER</span></td>
+        <td>IMPACT Exhibition Management Co., Ltd.<br>47/569-576, 10th floor, Bangkok Land Building,<br>Popular 3 Road, Banmai Sub-district,<br>Pakkred District, Nonthaburi 11120</td>
+    </tr>
+    <tr>
+        <td class="col-fixed-width"><span class="label">AGREEMENT DATE</span></td>
+        <td>' . $rsIpc['ipc']['agreement_date'] . '</td>
+    </tr>
+    <tr>
+        <td class="col-fixed-width"><span class="label">CONTRACTOR</span></td>
+        <td>' . $rsIpc['ipc']['contractor'] . '</td>
+    </tr>
+    <tr>
+        <td class="col-fixed-width"><span class="label">CONTRACT VALUE</span></td>
+        <td>
+        <table style="width:100%; border:0;padding:0;">
+            <tr>
+            <td style="text-align:left; border:0;padding:0;">(Including Vat 7%)</td>
+            <td style="text-align:right; border:0;padding:0;">' . number_format($rsIpc['ipc']['contract_value'], 2) . '</td>
+            </tr>
+        </table>
+    </td>
+    </tr>
+    </table>
+
+    <div class="box">INTERIM PAYMENT CLAIM No.1</div>
+
+    <table>
+        <tr>
+            <td>Total Value Of Interim Payment</td>
+            <td class="right">' . number_format($rsIpc['ipc']['total_value_of_interim_payment'], 2) . '</td>
+        </tr>
+        <tr>
+            <td>Less Previous Interim Payment</td>
+            <td class="right">' . number_format($rsIpc['ipc']['less_previous_interim_payment'], 2) . '</td>
+        </tr>
+        <tr>
+            <td>Net Value of Current Claim</td>
+            <td class="right">' . number_format($rsIpc['ipc']['net_value_of_current_claim'], 2) . '</td>
+        </tr>
+        <tr>
+            <td>Less Retention 5% (Exclu. VAT)</td>
+            <td class="right">' . number_format($rsIpc['ipc']['less_retension_exclude_vat'], 2) . '</td>
+        </tr>
+        <tr>
+        <td colspan="2" style="height:25px;"></td>
+        </tr>    
+        <tr>
+            <td><span class="label">NET AMOUNT DUE FOR PAYMENT No.1</span></td>
+            <td class="right label">' . number_format($rsIpc['ipc']['net_amount_due_for_payment'], 2) . '</td>
+        </tr>
+        <tr>
+        <td colspan="2" style="height:25px;"></td>
+        </tr>  
+        <tr>
+            <td>Total Value of Retention (Inclu. this certificate)</td>
+            <td class="right"><span style="float:right;">' . number_format($rsIpc['ipc']['total_value_of_retention'], 2) . '</span></td>
+        </tr>
+        <tr>
+            <td>Total Value of Certification made (Inclu. this certificate)</td>
+            <td class="right"><span style="float:right;">' . number_format($rsIpc['ipc']['total_value_of_certification_made'], 2) . '</span></td>
+        </tr>
+        <tr>
+            <td>Resulting Balance of Contract Sum Outstanding</td>
+            <td class="right"><span style="float:right;">' . number_format($rsIpc['ipc']['resulting_balance_of_contract_sum_outstanding'], 2) . '</span></td>
+        </tr>    
+    </table>
+
+    <table>
+    <tr>
+        <td colspan="2" style="height:25px;"></td>
+    </tr>  
+
+    <tr>
+        <td class="col-fixed-width center">
+            <div class="signature-block">
+                <p>By : <img src="images/signature.jpg" width="120"></p>
+                <div class="sig-line"></div>
+                <div class="signature-details">
+                    <p>( Watchara Chanthrasopa )</p>
+                    <p>Head of Project Management Department</p>
+                </div>
+            </div>
+        </td>
+
+        <td class="col-fixed-width center">
+            <div class="signature-block">
+                By : <img src="images/signature.jpg" width="120"><br>
+                <div class="sig-line"></div>
+                <div class="signature-details">
+                    ( Tanawat Worasakdinan ) <br>
+                    Cost Control Manager
+                </div>
+            </div>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="2" style="height:25px;"></td>
+    </tr>  
+
+    <tr>
+        <td class="col-fixed-width center">
+
+        </td>
+
+        <td class="col-fixed-width center">
+            <div class="signature-block">
+                By : <img src="images/signature.jpg" width="120"><br>
+                    ( Apichaya Sindhuprama ) <br>
+                    Project Manager
+            </div>
+        </td>
+    </tr>
+    </table>
+<div class="company-footer">
+        <table>
+
+
+            <tr>
+                <td class="left-footer">
+                    <div class="left-footer small-text">
+                        IMPACT ARENA<br>
+                        IMPACT FORUM<br>
+                        IMPACT CHALLENGER<br>
+                        IMPACT EXHIBITION CENTER<br>
+                        NOVOTEL BANGKOK IMPACT<br>
+                    </div>
+                </td>
+
+                <td class="right-footer">
+                    <div class="right-footer small-text">
+                        IMPACT EXHIBITION MANAGEMENT CO., LTD.<br>
+                        10<sup>th</sup> Floor, Bangkok Land Building, 47/569-576 Popular 3 Road,<br>
+                        Banmai Sub-district, Pakkred District, Nonthaburi 11120<br>
+                        GREATER BANGKOK, THAILAND<br>
+                        Tel : <span class="small-text">+66(0) 2833-4455</span> Fax : <span class="small-text">+66(0) 2833-4456</span><br>
+                        E-mail : <span class="small-text">info@impact.co.th</span> Website : <span class="small-text">www.impact.co.th</span><br>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </div>
+</div>

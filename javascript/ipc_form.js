@@ -46,7 +46,7 @@ function loadPage(page = 1) {
       });
       break;
 
-    case 2://หน้าที่ 1 เป็น Inspection เสมอ
+    case 2://หน้าที่ 2 เป็น Inspection เสมอ
       // ใช้ Object.keys วนลบ property ใน dataSent
       Object.keys(dataSent).forEach(key => delete dataSent[key]);
       dataSent.action = "previewInspection";
@@ -77,18 +77,18 @@ function loadPage(page = 1) {
       dataSent.page = page;
 
       $.ajax({
-        url:"ipc_handler_api.php",
-        type:"post",
-        contentType:"application/json",
-        dataType:"json",
-        data:JSON.stringify(dataSent),
-      }).done(function(result){
+        url: "ipc_handler_api.php",
+        type: "post",
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify(dataSent),
+      }).done(function (result) {
         // console.log(result);
-        if(result){
+        if (result) {
           content = loadAttach(result);
           $("#content").html(content);
         }
-        else{
+        else {
           $("#content").html("");
         }
       })
@@ -120,7 +120,7 @@ function renderPagination(totalPages, currentPage) {
           <a class="page-link" href="#" onclick="loadPage(${currentPage + 1})">Next</a>
         </li>
       `;
-      $(".pagination").html(pagination);
+  $(".pagination").html(pagination);
 }
 
 function loadIpc(data) {
@@ -341,14 +341,24 @@ function loadInspection(data) {
                     <table class="table table-bordered justify-content-center text-center" id="tableOrder">
                       <thead>
                         <tr>
-                          <th class="p-1" width="5%">ลำดับที่</th>
+                          <th class="p-1" width="10%">ลำดับที่</th>
                           <th class="p-1" width="20%">รายละเอียดการตรวจสอบ</th>
                           <th class="p-1">หมายเหตุ</th>
                         </tr>
                       </thead>
 
-                      <tbody id="tbody-order">
-
+                      <tbody id="tbody-order">`;
+  let tableBody = "";
+  $.each(data['periodDetails'], function (index, detail) {
+    tableBody += `
+                    <tr>
+                      <td class="tdPeriod text-right py-0 px-1">${detail.order_no}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${detail.details}</td>
+                      <td class="tdPeriod text-right py-0 px-1">${detail.remark}</td>
+                    </tr>       
+                    `;
+  });
+  content += `           ${tableBody}
                       </tbody>
                     </table>
                   </div>
@@ -382,31 +392,31 @@ function loadInspection(data) {
 }
 
 function loadAttach(data) {
-      let content = "";
+  let content = "";
 
-      content += `
+  content += `
         <div class="card mb-3 shadow-sm">
           <div class="card-body">
             <h5 class="card-title">${data.file_name}</h5>
             <p class="card-text">${data.file_type}</p>
       `;
 
-      if (data.file_type === "image/jpeg") {
-        content += `<img src="${data.file_path}" class="img-fluid rounded">`;
-      } else if (data.file_type === "application/pdf") {
-        content += `
+  if (data.file_type === "image/jpeg") {
+    content += `<img src="${data.file_path}" class="img-fluid rounded">`;
+  } else if (data.file_type === "application/pdf") {
+    content += `
           <div class="ratio ratio-16x9">
             <iframe src="${data.file_path}" frameborder="0"></iframe>
           </div>
         `;
-      }
+  }
 
-      content += `
+  content += `
           </div>
         </div>
       `;
-console.log(content);
-    return content;
+  console.log(content);
+  return content;
 }
 
 function refreshForm() {
@@ -426,26 +436,26 @@ function refreshForm() {
   }
 }
 
-  function formatNumber(num) {
-    return num.toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  }
-
-  // ฟังก์ชันบังคับใช้ comma เสมอ
-  function formatWithComma(num) {
-    return Number(num).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  }
-
-    // ฟังก์ชันกดพิมพ์ PDF
-  function printPDF(ipcId) {
-    window.open("ipc_generate_pdf.php?ipc_id=" + ipcId, "_blank");
+function formatNumber(num) {
+  return num.toLocaleString('th-TH', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 }
-  
+
+// ฟังก์ชันบังคับใช้ comma เสมอ
+function formatWithComma(num) {
+  return Number(num).toLocaleString('th-TH', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+// ฟังก์ชันกดพิมพ์ PDF
+function printPDF(ipcId, inspectionId) {
+  window.open("ipc_generate_pdf.php?ipc_id=" + ipcId + "&inspection_id=" + inspectionId, "_blank");
+}
+
 $(document).ready(function () {
   const responseMessage = $("#response-message");
 

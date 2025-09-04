@@ -27,7 +27,7 @@ $html = '
                         </div> -->
                           <div class="info-row">
                             <div class="fw-bold" style="width: 200px;">PROJECT</div>
-                            <div class="flex-grow-1"><?= $rsIpc['pomain']['project_name'] ?></div>
+                            <div class="flex-grow-1"><?= $rsIpc["pomain"]["project_name"] ?></div>
                           </div>
                           <div class="info-row">
                             <div class="fw-bold" style="width: 200px;">OWNER</div>
@@ -41,16 +41,16 @@ $html = '
                           <div class="info-row">
                             <div class="fw-bold" style="width: 200px;">AGREEMENT DATE</div>
                             <!-- <div class="flex-grow-1">25<sup>th</sup> April 2023 (IMPO23020769-1)</div> -->
-                            <div class="flex-grow-1"><?= $rsIpc['ipc']['agreement_date'] ?></div>
+                            <div class="flex-grow-1"><?= $rsIpc["ipc"]["agreement_date"] ?></div>
                           </div>
                           <div class="info-row">
                             <div class="fw-bold" style="width: 200px;">CONTRACTOR</div>
-                            <div class="flex-grow-1"><?= $rsIpc['ipc']['contractor'] ?></div>
+                            <div class="flex-grow-1"><?= $rsIpc["ipc"]["contractor"] ?></div>
                           </div>
                           <div class="info-row">
                             <div class="fw-bold" style="width: 200px;">CONTRACT VALUE</div>
                             <div class="flex-grow-1">(Including Vat 7%)</div>
-                            <div class="flex-grow-1" style="text-align: right; font-weight: bold;"><?= number_format($rsIpc['ipc']['contract_value'], 2) ?></div>
+                            <div class="flex-grow-1" style="text-align: right; font-weight: bold;"><?= number_format($rsIpc["ipc"]["contract_value"], 2) ?></div>
                           </div>
                         </div>
 
@@ -61,39 +61,39 @@ $html = '
                         <div class="payment-details">
                           <div class="item">
                             <div class="flex-grow-1">Total Value Of Interim Payment</div>
-                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['total_value_of_interim_payment'], 2) ?></div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc["ipc"]["total_value_of_interim_payment"], 2) ?></div>
                           </div>
                           <div class="item">
                             <div class="flex-grow-1">Less Previous Interim Payment</div>
-                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['less_previous_interim_payment'], 2) ?></div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc["ipc"]["less_previous_interim_payment"], 2) ?></div>
                           </div>
                           <div class="item">
                             <div class="flex-grow-1">Net Value of Current Claim</div>
-                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['net_value_of_current_claim'], 2) ?></div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc["ipc"]["net_value_of_current_claim"], 2) ?></div>
                           </div>
                           <div class="item">
                             <div class="flex-grow-1">Less Retention 5% (Exclu. VAT)</div>
-                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['less_retension_exclude_vat'], 2) ?></div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc["ipc"]["less_retension_exclude_vat"], 2) ?></div>
                           </div>
                         </div>
 
                         <div class="d-flex justify-content-between fw-bold" style="font-size: 18px;">
                           <div class="">NET AMOUNT DUE FOR PAYMENT No.1</div>
-                          <div class="text-end"><?= number_format($rsIpc['ipc']['net_amount_due_for_payment'], 2) ?></div>
+                          <div class="text-end"><?= number_format($rsIpc["ipc"]["net_amount_due_for_payment"], 2) ?></div>
                         </div>
 
                         <div class="payment-details">
                           <div class="item">
                             <div class="flex-grow-1">Total Value of Retention (Inclu. this certificate)</div>
-                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['total_value_of_retention'], 2) ?></div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc["ipc"]["total_value_of_retention"], 2) ?></div>
                           </div>
                           <div class="item">
                             <div class="flex-grow-1">Total Value of Certification made (Inclu. this certificate)</div>
-                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['total_value_of_certification_made'], 2) ?></div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc["ipc"]["total_value_of_certification_made"], 2) ?></div>
                           </div>
                           <div class="item">
                             <div class="flex-grow-1">Resulting Balance of Contract Sum Outstanding</div>
-                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc['ipc']['resulting_balance_of_contract_sum_outstanding'], 2) ?></div>
+                            <div class="text-end" style="width: 150px;"><?= number_format($rsIpc["ipc"]["resulting_balance_of_contract_sum_outstanding"], 2) ?></div>
                           </div>
                         </div>
 
