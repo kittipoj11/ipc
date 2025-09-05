@@ -17,157 +17,113 @@ $rsIpc = $ipc->getIpcByIpcId($ipcId);
 $inspection = new Inspection($pdo);
 $rsInspection = $inspection->getByInspectionId($inspectionId);
 
+$mpdf = new \Mpdf\Mpdf([
+    'mode' => 'utf-8',
+    'default_font' => 'thsarabun',
+    'autoScriptToLang' => true,
+    'autoLangToFont' => true,
+    'format' => 'A4',
+    'margin_top' => 20,
+    'margin_bottom' => 40,
+    'margin_left' => 10,
+    'margin_right' => 10
+]);
+
+$mpdf->SetHTMLHeader('
+<div class="header">
+    <div class="logo">
+        <img src="images/impact_logo.jpg" alt="IMPACT MUANG THONG THANI Logo">
+    </div>
+</div>
+');
+
+$mpdf->SetHTMLFooter('
+<div class="company-footer">
+  <table>
+    <tr>
+      <td class="left-footer">
+        <div class="left-footer small-text">
+            IMPACT ARENA<br>
+            IMPACT FORUM<br>
+            IMPACT CHALLENGER<br>
+            IMPACT EXHIBITION CENTER<br>
+            NOVOTEL BANGKOK IMPACT<br>
+        </div>
+      </td>
+
+      <td class="right-footer">
+        <div class="right-footer small-text">
+            IMPACT EXHIBITION MANAGEMENT CO., LTD.<br>
+            10<sup>th</sup> Floor, Bangkok Land Building, 47/569-576 Popular 3 Road,<br>
+            Banmai Sub-district, Pakkred District, Nonthaburi 11120<br>
+            GREATER BANGKOK, THAILAND<br>
+            Tel : <span class="small-text">+66(0) 2833-4455</span> Fax : <span class="small-text">+66(0) 2833-4456</span><br>
+            E-mail : <span class="small-text">info@impact.co.th</span> Website : <span class="small-text">www.impact.co.th</span><br>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+<div style="border-top:1px solid #000; font-size:9pt; text-align: center; padding-top:5px;">
+    © 2025 Impact Exhibition Management Co.,Ltd. — หน้า {PAGENO} / {nb}
+</div>
+');
+
 $html1 = '
 <style>
-      body {
-        font-family: "dejavusans", sans-serif;
-        margin: 0;
-        padding: 40px;
-        background-color: #fff;
-        color: #000;
-        line-height: 1.6;
-      }
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        border: 1px solid #ddd;
-        padding: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-      .header {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 10px;
-      }
-      .header .logo {
-        width: 150px;
-        margin-right: 20px;
-      }
-      .header .logo img {
-        max-width: 100%;
-        height: auto;
-      }
-      .header .title-block {
-        flex-grow: 1;
-      }
-      .header .title-block h2 {
-        margin: 0;
-      }
-      .header .title-block h2 {
-        font-size: 18px;
-        font-weight: normal;
-        margin: 5px 0 0 0;
-      }
-      .header .refs {
-        text-align: right;
-        font-size: 12px;
-      }
-      .header .refs p {
-        margin: 0;
-      }
-      .info-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        margin-bottom: 5px;
-      }
-      .info-label {
-        font-weight: bold;
-      }
-      .content {
-        margin-top: 2px;
-      }
-      .content .salutation {
-        margin-bottom: 20px;
-        font-size: 12px;
-      }
-      .content .body-text {
-        font-size: 12px;
-      }
-      .body-text p {
-        margin: 0 0 10px 0;
-      }
-      .body-text ol {
-        padding-left: 20px;
-        list-style: none;
-        counter-reset: my-awesome-counter;
-      }
-      .body-text ol li {
-        counter-increment: my-awesome-counter;
-        position: relative;
-        margin-bottom: 15px;
-        line-height: 1.5;
-      }
-      .body-text ol li::before {
-        content: counter(my-awesome-counter) ".";
-        position: absolute;
-        left: -20px;
-        font-weight: bold;
-      }
-      .signature-block {
-        margin-top: 25px;
-        display: flex;
-        align-items: flex-start;
-        flex-direction: column;
-      }
-      .signature-block .sig-line {
-        width: 200px;
-        border-bottom: 1px solid #000;
-        margin-left: 50px;
-        margin-right: 10px;
-      }
-      .signature-details {
-        text-align: left;
-        margin-top: 10px;
-      }
-      .signature-details p {
-        margin: 0;
-        font-size: 12px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        border: 1px solid black;
-        border: none;
-        /* cellpadding="4";
-      cellspacing="0";*/
-      }
-      td {
-        border: 1px solid #333;
-        padding: 8px;
-        vertical-align: top;
-        border: none;
-      }
-      table .left-footer {
-        text-align: left;
-      }
-      table .right-footer {
-        text-align: right;
-      }
-      table td p {
-        margin: 0;
-        font-size: 10px;
-      }
-      .small-text {
-        font-size: 10px;
-      }
-    .company-footer {
-        margin-top: 5px;
-        font-size: 10px;
-        text-align: right;
-        border-top: 1px solid #ccc;
-        padding-top: 0px;
-    }
+  body {
+    font-family: "dejavusans", sans-serif;
+    margin: 0;
+    padding: 40px;
+    background-color: #fff;
+    color: #000;
+    line-height: 1.6;
+  }
 
-    </style>
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+  .info-label {
+    font-weight: bold;
+  }
+  .content {
+    margin-top: 2px;
+    // border: 1px solid red;
+  }
+  .content .salutation {
+    margin-bottom: 20px;
+    font-size: 12px;
+  }
+  .content .body-text {
+    font-size: 12px;
+  }
+  .body-text p {
+    margin: 0 0 10px 0;
+  }
+  .body-text ol {
+    padding-left: 20px;
+    list-style: none;
+    counter-reset: my-awesome-counter;
+  }
+  .body-text ol li {
+    counter-increment: my-awesome-counter;
+    position: relative;
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+  .body-text ol li::before {
+    content: counter(my-awesome-counter) ".";
+    position: absolute;
+    left: -20px;
+    font-weight: bold;
+  }
+</style>
 
 <div class="card-body m-0 p-0">
     <div class="container">
-        <div class="header">
-            <div class="logo">
-                <img src="images/impact_logo.jpg" alt="IMPACT MUANG THONG THANI Logo">
-            </div>
-        </div>
         <div class="header">
             <div class="title-block">
                 <h2>PROJECT MANAGEMENT DEPARTMENT</h2>
@@ -234,154 +190,11 @@ $html1 = '
                 <p>Executive Director</p>
             </div>
         </div>
-
-<div class="company-footer">
-        <table>
-
-
-            <tr>
-                <td class="left-footer">
-                    <div class="left-footer small-text">
-                        IMPACT ARENA<br>
-                        IMPACT FORUM<br>
-                        IMPACT CHALLENGER<br>
-                        IMPACT EXHIBITION CENTER<br>
-                        NOVOTEL BANGKOK IMPACT<br>
-                    </div>
-                </td>
-
-                <td class="right-footer">
-                    <div class="right-footer small-text">
-                        IMPACT EXHIBITION MANAGEMENT CO., LTD.<br>
-                        10<sup>th</sup> Floor, Bangkok Land Building, 47/569-576 Popular 3 Road,<br>
-                        Banmai Sub-district, Pakkred District, Nonthaburi 11120<br>
-                        GREATER BANGKOK, THAILAND<br>
-                        Tel : <span class="small-text">+66(0) 2833-4455</span> Fax : <span class="small-text">+66(0) 2833-4456</span><br>
-                        E-mail : <span class="small-text">info@impact.co.th</span> Website : <span class="small-text">www.impact.co.th</span><br>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        </div>
-</div>
-
-
     </div>
-
 </div>
 ';
 
 $html2 = '
-    <style>
-      body {
-        font-family: "dejavusans", sans-serif;
-        font-size: 12px;
-      }
-
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        border: 1px solid #ddd;
-        padding: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        border: 1px solid red;
-        border: none;
-        /* cellpadding="4";
-      cellspacing="0";*/
-      }
-
-      td {
-        border: 1px solid #333;
-        padding: 8px;
-        vertical-align: top;
-        border: none;
-      }
-
-      .col-fixed-width {
-        width: 150px; /* คอลัมน์แรก fix 150px */
-      }
-
-      .title {
-        text-align: start;
-        font-weight: bold;
-        font-size: 12pt;
-        margin-bottom: 15px;
-      }
-
-      .label {
-        font-weight: bold;
-      }
-
-      .box {
-        border: 1px solid #000;
-        padding: 5px;
-        font-weight: bold;
-      }
-      .black-box {
-        border: 1px solid #000;
-        padding: 5px;
-        font-weight: bold;
-        background-color: #000;
-        color: #fff;
-      }
-
-      .right {
-        text-align: right;
-      }
-
-      .center {
-        text-align: center;
-      }
-
-      .signature-block {
-        margin-top: 5px;
-        display: flex;
-        align-items: flex-start;
-        flex-direction: column;
-      }
-      .signature-block .sig-line {
-        width: 200px;
-        border-bottom: 1px solid #000;
-        margin-left: 50px;
-        margin-right: 10px;
-      }
-      .signature-details {
-        text-align: left;
-        margin-top: 5px;
-      }
-      .signature-details p {
-        margin: 0;
-        font-size: 12px;
-      }
-
-    table .left-footer {
-        text-align: left;
-      }
-      table .right-footer {
-        text-align: right;
-      }
-      table td p {
-        margin: 0;
-        font-size: 10px;
-      }
-      .small-text {
-        font-size: 10px;
-      }
-
-    .company-footer {
-        margin-top: 5px;
-        font-size: 10px;
-        text-align: right;
-        border-top: 1px solid #ccc;
-        padding-top: 0px;
-    }
-    </style>
-
 <div class="container">
     <div class="title black-box">INTERIM CERTIFICATE</div>
 
@@ -409,10 +222,10 @@ $html2 = '
     <tr>
         <td class="col-fixed-width"><span class="label">CONTRACT VALUE</span></td>
         <td>
-        <table style="width:100%; border:0;padding:0;">
+        <table style="width:100%;">
             <tr>
-            <td style="text-align:left; border:0;padding:0;">(Including Vat 7%)</td>
-            <td style="text-align:right; border:0;padding:0;">' . number_format($rsIpc['ipc']['contract_value'], 2) . '</td>
+            <td style="text-align:left;">(Including Vat 7%)</td>
+            <td style="text-align:right;">' . number_format($rsIpc['ipc']['contract_value'], 2) . '</td>
             </tr>
         </table>
     </td>
@@ -509,163 +322,50 @@ $html2 = '
         </td>
     </tr>
     </table>
-<div class="company-footer">
-        <table>
-
-
-            <tr>
-                <td class="left-footer">
-                    <div class="left-footer small-text">
-                        IMPACT ARENA<br>
-                        IMPACT FORUM<br>
-                        IMPACT CHALLENGER<br>
-                        IMPACT EXHIBITION CENTER<br>
-                        NOVOTEL BANGKOK IMPACT<br>
-                    </div>
-                </td>
-
-                <td class="right-footer">
-                    <div class="right-footer small-text">
-                        IMPACT EXHIBITION MANAGEMENT CO., LTD.<br>
-                        10<sup>th</sup> Floor, Bangkok Land Building, 47/569-576 Popular 3 Road,<br>
-                        Banmai Sub-district, Pakkred District, Nonthaburi 11120<br>
-                        GREATER BANGKOK, THAILAND<br>
-                        Tel : <span class="small-text">+66(0) 2833-4455</span> Fax : <span class="small-text">+66(0) 2833-4456</span><br>
-                        E-mail : <span class="small-text">info@impact.co.th</span> Website : <span class="small-text">www.impact.co.th</span><br>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        </div>
-</div>
 ';
 
+$tableDetails='';
 $html3= '    
-<style>
-      body {
-        font-family: "dejavusans", sans-serif;
-        font-size: 12px;
-      }
-
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        border: 1px solid #ddd;
-        padding: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        border: 1px solid red;
-        border: none;
-        /* cellpadding="4";
-      cellspacing="0";*/
-      }
-
-      td {
-        border: 1px solid #333;
-        padding: 8px;
-        vertical-align: top;
-        border: none;
-      }
-
-      .col-fixed-width {
-        width: 150px; /* คอลัมน์แรก fix 150px */
-      }
-
-      .title {
-        text-align: center;
-        font-weight: bold;
-        font-size: 12pt;
-        margin-bottom: 15px;
-      }
-
-      .label {
-        font-weight: bold;
-      }
-
-      .box {
-        border: 1px solid #000;
-        padding: 5px;
-        font-weight: bold;
-      }
-      .black-box {
-        border: 1px solid #000;
-        padding: 5px;
-        font-weight: bold;
-        background-color: #000;
-        color: #fff;
-      }
-
-      .right {
-        text-align: right;
-      }
-
-      .center {
-        text-align: center;
-      }
-
-    table .left-footer {
-        text-align: left;
-      }
-      table .right-footer {
-        text-align: right;
-      }
-      table td p {
-        margin: 0;
-        font-size: 10px;
-      }
-      .small-text {
-        font-size: 10px;
-      }
-
-    .company-footer {
-        margin-top: 5px;
-        font-size: 10px;
-        text-align: right;
-        border-top: 1px solid #ccc;
-        padding-top: 0px;
-    }
-    </style>
-
     <div class="container">
     <div class="title center">การตรวจรับงาน<br>Project Management Department</div>
 
-    <table>
+    <table class="small-text">
       <tr>
-        <td>
-          <table style="width:100%; border:0;padding:0;">
+        <td colspan=2>
+          <table style="">
             <tr>
-              <td class="col-fixed-width"><span class="label">ผู้รับเหมา</span></td>
+              <td class="col-fixed-width"><span class="label">ชื่อผู้รับเหมา/SUPPLIER :</span></td>
               <td>' . $rsInspection['header']['supplier_name'] . '</td>
             </tr>
           </table>
         </td>
+      </tr>
+      
+      <tr>
         <td>
-          <table style="width:100%; border:0;padding:0;">
+          <table style="">
             <tr>
-              <td class="col-fixed-width"><span class="label">โครงการ</span></td>
+              <td class="col-fixed-width"><span class="label">โครงการ :</span></td>
               <td>' . $rsInspection['header']['project_name'] . '</td>
             </tr>
           </table>
         </td>
-      </tr>
-      <tr>
         <td>
-          <table style="width:100%; border:0;padding:0;">
+          <table style="">
             <tr>
-        <td class="col-fixed-width"><span class="label">สถานที่</span></td>
+        <td class="col-fixed-width"><span class="label">สถานที่ :</span></td>
         <td>' . $rsInspection['header']['location_name'] . '</td>
             </tr>
           </table>
         </td>
-        <td>
-          <table style="width:100%; border:0;padding:0;">
+      </tr>
+
+      <tr>
+        <td colspan=2>
+          <table style="">
             <tr>
-        <td class="col-fixed-width"><span class="label">งาน</span></td>
-        <td>' . $rsInspection['header']['working_name_th'] . '(' . $rsInspection['header']['working_name_en'] . ')</td>
+              <td class="col-fixed-width"><span class="label">งาน :</span></td>
+              <td>' . $rsInspection['header']['working_name_th'] . '(' . $rsInspection['header']['working_name_en'] . ')</td>
             </tr>
           </table>
         </td>
@@ -674,7 +374,7 @@ $html3= '
 
     <table>
       <tr>
-          <td class="col-fixed-width"><span class="label">ระยะเวลาดำเนินการ</span></td>
+          <td class="col-fixed-width"><span class="label">ระยะเวลาดำเนินการ :</span></td>
           <td>' . $rsInspection['header']['working_date_from'] . '</td>
           <td class="col-fixed-width"><span class="label">ถึง</span></td>
           <td>' . $rsInspection['header']['working_date_to'] . '</td>
@@ -687,7 +387,7 @@ $html3= '
     <table>
       <tr>
         <td>
-          <table style="width:100%; border:0;padding:0;">
+          <table style="">
             <tr>
               <td class="col-fixed-width"><span class="label">เลขที่ PO</span></td>
               <td>' . $rsInspection['header']['po_number'] . '</td>
@@ -695,7 +395,7 @@ $html3= '
           </table>
         </td>
         <td>
-          <table style="width:100%; border:0;padding:0;">
+          <table style="">
             <tr>
               <td class="col-fixed-width"><span class="label">มูลค่างานตาม PO</span></td>
               <td>' . number_format($rsInspection['header']['contract_value'], 2) . ' บาท(Includeing VAT' . $rsInspection['header']['is_include_vat'] . '%)</td>
@@ -709,43 +409,43 @@ $html3= '
 
     <table>
       <tr>
-        <td style="width:30%;">
-          <table style="width:100%; border:0;padding:0;">
+        <td style="width:25%;">
+          <table style="">
             <tr>
-              <td class="col-fixed-width"><span class="label">เบิกงวดงานที่</span></td>
-              <td>' . $rsInspection['period']['period_number'] . '</td>
+              <td colspan=2><span class="label">เบิกงวดงานที่</span></td>
+              <td width="30%">' . $rsInspection['period']['period_number'] . '</td>
             </tr>
             <tr>
-              <td class="col-fixed-width"><input type="checkbox" checked></td>
-              <td>มี Deposit' . $rsInspection['header']['deposit_percent'] . '</td>
+              <td width="30"><input type="checkbox" checked="checked"></td>
+              <td colspan=2>มี Deposit ' . $rsInspection['header']['deposit_percent'] . ' %</td>
             </tr>
             <tr>
-              <td class="col-fixed-width"><input type="checkbox"></td>
-              <td>ไม่มี Deposit</td>
+              <td width="30"><input type="checkbox"></td>
+              <td colspan=2>ไม่มี Deposit</td>
             </tr>
           </table>
         </td>
         <td>
-          <table style="width:100%; border:0;padding:0;">
+          <table style="border-left: 1px solid black;">
             <tr>
-              <td class="col-fixed-width"><span class="label">ยอดเบิกเงินงวดปัจจุบัน</span></td>
-              <td class="col-fixed-width"><span class="label">' . number_format($rsInspection['period']['interim_payment'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
-              <td style="text-align:right; border:0;padding:0;">' . $rsInspection['period']['interim_payment_percent'] . ' %</td>
+              <td width="40%"><span class="label-normal">ยอดเบิกเงินงวดปัจจุบัน</span></td>
+              <td width="50%" style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td style="text-align:right;">' . $rsInspection['period']['interim_payment_percent'] . ' %</td>
             </tr>
             <tr>
-              <td class="col-fixed-width"><span class="label">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</span></td>
-              <td class="col-fixed-width"><span class="label">' . number_format($rsInspection['period']['interim_payment_less_previous'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
-              <td style="text-align:right; border:0;padding:0;">' . $rsInspection['period']['interim_payment_less_previous_percent'] . ' %</td>
+              <td width="40%"><span class="label-normal">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</span></td>
+              <td width="50%" style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment_less_previous'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td style="text-align:right;">' . $rsInspection['period']['interim_payment_less_previous_percent'] . ' %</td>
             </tr>
             <tr>
-              <td class="col-fixed-width"><span class="label">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</span></td>
-              <td class="col-fixed-width"><span class="label">' . number_format($rsInspection['period']['interim_payment_accumulated'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
-              <td style="text-align:right; border:0;padding:0;">' . $rsInspection['period']['interim_payment_accumulated_percent'] . ' %</td>
+              <td width="40%"><span class="label-normal">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</span></td>
+              <td width="50%" style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment_accumulated'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td style="text-align:right;">' . $rsInspection['period']['interim_payment_accumulated_percent'] . ' %</td>
             </tr>
             <tr>
-              <td class="col-fixed-width"><span class="label">ยอดเงินงวดคงเหลือ</span></td>
-              <td class="col-fixed-width"><span class="label">' . number_format($rsInspection['period']['interim_payment_remain'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
-              <td style="text-align:right; border:0;padding:0;">' . $rsInspection['period']['interim_payment_remain_percent'] . ' %</td>
+              <td width="40%"><span class="label-normal">ยอดเงินงวดคงเหลือ</span></td>
+              <td width="50%" style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment_remain'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td style="text-align:right;">' . $rsInspection['period']['interim_payment_remain_percent'] . ' %</td>
             </tr>
           </table>
         </td>
@@ -754,15 +454,15 @@ $html3= '
 
     <hr class="hr border border-dark">
 
-    <table style="width:100%; border:0;padding:5px;">
+    <table style=" border:0;padding:5px;">
       <tr>
-        <td class="col-fixed-width"><span class="label">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน</span>' . $rsInspection['period']['workload_planned_percent'] . ' %</td>
-        <td class="col-fixed-width"><span class="label">ปริมาณที่แล้วเสร็จจริง</span>' . $rsInspection['period']['workload_actual_completed_percent'] . ' %</td>
-        <td class="col-fixed-width"><span class="label">ปริมาณงานคงเหลือ</span>' . $rsInspection['period']['workload_remaining_percent'] . ' %</td>
+        <td class="col-fixed-width"><span class="label">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน </span>' . $rsInspection['period']['workload_planned_percent'] . ' %</td>
+        <td class="col-fixed-width"><span class="label">ปริมาณที่แล้วเสร็จจริง </span>' . $rsInspection['period']['workload_actual_completed_percent'] . ' %</td>
+        <td class="col-fixed-width"><span class="label">ปริมาณงานคงเหลือ </span>' . $rsInspection['period']['workload_remaining_percent'] . ' %</td>
       </tr>
     </table>
 
-    <table style="width:100%; border:1;padding:5px;">
+    <table style=" border:1;padding:5px;">
       <thead>
       <tr style="border:1;">
           <th style="border:1;padding:5px;" width="10%">ลำดับที่</th>
@@ -773,7 +473,7 @@ $html3= '
     <tbody>';
 
 foreach ($rsInspection['periodDetails'] as $row) {
-    $tableBody .= '
+    $tableDetails .= '
       <tr style="border:1;">
         <td style="border:1;padding:5px;">'. $row['order_no'] . '</td>
         <td style="border:1;padding:5px;">'. $row['details'] . '</td>
@@ -782,81 +482,60 @@ foreach ($rsInspection['periodDetails'] as $row) {
       ';
 };
 
-$html3 .= $tableBody;
+$html3 .= $tableDetails;
 $html3 .= '
-    </tbody>
+</tbody>
   </table>
 
-  <table style="width:100%; border:0;padding:0;">
+  <table style="">
     <tr>
-      <td class="col-fixed-width"><span class="label">ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน</span>' . $rsInspection['plan_status']['plan_status_name'] . ' %</td>
+      <td class="col-fixed-width"><span class="label">ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน: </span>' . $rsInspection['plan_status']['plan_status_name'] . '</td>
     </tr>
   </table>
   
-  <table style="width:100%; border:0;padding:0;">
+  <table style="">
     <tr>
-      <td class="col-fixed-width"><span class="label">หมายเหตุ:</span>' . $rsInspection['plan_status']['plan_status_name'] . ' %</td>
+      <td class="col-fixed-width"><span class="label">หมายเหตุ:</span></td>
     </tr>
     <tr>
-      <textarea rows="4" style="min-height: 4em;height: auto;">' . $rsInspection['period']['remark'] . '</textarea>
+      <textarea rows="5" style="min-height: 4em;height: auto;width:100%;">' . $rsInspection['period']['remark'] . '</textarea>
     </tr>
   </table>
   
-  <table style="width:100%; border:0;padding:0;">
+  <table style="">
     <tr>
       <td class="col-fixed-width"><span class="label">ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร</span></td>
-      <td class="col-fixed-width"><span class="label"><input type="radio" checked>อนุมัติเบิกจ่าย</span></td>
+      <td class="col-fixed-width"><span class="label"><input type="radio" checked="checked">อนุมัติเบิกจ่าย</span></td>
       <td class="col-fixed-width"><span class="label"><input type="radio">ไม่อนุมัติเบิกจ่าย</span></td>
     </tr>
   </table>
-
-<div class="company-footer">
-        <table>
-
-
-            <tr>
-                <td class="left-footer">
-                    <div class="left-footer small-text">
-                        IMPACT ARENA<br>
-                        IMPACT FORUM<br>
-                        IMPACT CHALLENGER<br>
-                        IMPACT EXHIBITION CENTER<br>
-                        NOVOTEL BANGKOK IMPACT<br>
-                    </div>
-                </td>
-
-                <td class="right-footer">
-                    <div class="right-footer small-text">
-                        IMPACT EXHIBITION MANAGEMENT CO., LTD.<br>
-                        10<sup>th</sup> Floor, Bangkok Land Building, 47/569-576 Popular 3 Road,<br>
-                        Banmai Sub-district, Pakkred District, Nonthaburi 11120<br>
-                        GREATER BANGKOK, THAILAND<br>
-                        Tel : <span class="small-text">+66(0) 2833-4455</span> Fax : <span class="small-text">+66(0) 2833-4456</span><br>
-                        E-mail : <span class="small-text">info@impact.co.th</span> Website : <span class="small-text">www.impact.co.th</span><br>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        </div>
-</div>
 ';
 
-$mpdf = new \Mpdf\Mpdf([
-    'mode' => 'utf-8',
-    'default_font' => 'thsarabun',
-    'autoScriptToLang' => true,
-    'autoLangToFont' => true,
-    'format' => 'A4',
-    'margin_top' => 10,
-    'margin_bottom' => 10,
-    'margin_left' => 15,
-    'margin_right' => 15
-]);
+$html4 = '
+<form>
+    <p><strong>1. ท่านพึงพอใจกับการให้บริการหรือไม่?</strong><br>
+        <input type="radio" name="q1" value="yes" checked="checked"> พึงพอใจ<br>
+        <input type="radio" name="q1" value="no"> ไม่พึงพอใจ
+    </p>
+
+    <p><strong>2. สิ่งที่ท่านต้องการเพิ่มเติม (เลือกได้มากกว่า 1 ข้อ):</strong><br>
+        <input type="checkbox" name="q2[]" value="delivery" checked="checked"> จัดส่งรวดเร็ว<br>
+        <input type="checkbox" name="q2[]" value="support"> บริการหลังการขาย<br>
+        <input type="checkbox" name="q2[]" value="price"> ราคาย่อมเยา<br>
+        <input type="checkbox" name="q2[]" value="quality"> คุณภาพสินค้า
+    </p>
+</form>
+';
+
+$stylesheet = file_get_contents('pdfstyle.css');
+$mpdf->WriteHTML($stylesheet, 1);  // 1 = CSS
+
 $pdfFilename = "IPC_" . $rsIpc['pomain']['po_number'] . "_" .  $rsIpc['ipc']['period_number']  . ".pdf";
 $mpdf->WriteHTML($html1);
 $mpdf->AddPage();
 $mpdf->WriteHTML($html2);
 $mpdf->AddPage();
 $mpdf->WriteHTML($html3);
+// $mpdf->WriteHTML($html4);
 
 $mpdf->Output($pdfFilename, "I"); // แสดง PDF ใน browser

@@ -600,5 +600,34 @@ $mpdf->WriteHTML($html);
 
 $mpdf->Output();
 
+// กำหนด Header และ Footer ให้แสดงทุกหน้า
+// ✅ Header
+$mpdf->SetHTMLHeader('
+<table width="100%">
+    <tr>
+        <td width="15%"><img src="logo.png" height="40"></td>
+        <td width="85%" style="text-align: left;">
+            <strong>บริษัท ตัวอย่าง จำกัด</strong><br>
+            123 ถนนสุขุมวิท แขวงคลองเตย กรุงเทพฯ 10110
+        </td>
+    </tr>
+</table>
+<hr>
+');
+
+// ✅ Footer
+$mpdf->SetHTMLFooter('
+<div style="border-top:1px solid #000; font-size:9pt; text-align: center; padding-top:5px;">
+    © 2025 Example Co.,Ltd. — หน้า {PAGENO} / {nb}
+</div>
+');
+
+โดยที่
+{PAGENO} = เลขหน้าปัจจุบัน
+{nb} = จำนวนหน้าทั้งหมด
+
+// ✅ โหลดไฟล์ CSS
+$stylesheet = file_get_contents('style.css');→ โหลดไฟล์ CSS
+$mpdf->WriteHTML($stylesheet, 1);  // 1 = CSS → ต้องใส่ 1 เพื่อบอกว่าเป็น CSS ไม่ใช่ HTML
 /////////////////////////////////////////////////////////////////////////////
 
