@@ -38,8 +38,9 @@ class User
         $user_data = $stmt->fetch();
 
         // ตรวจสอบว่าเจอผู้ใช้ และรหัสผ่านที่ hash ไว้ตรงกันหรือไม่
-        // if ($user_data && password_verify($password, $user_data['password'])) {
-        if ($user_data) {
+        $hashed_password = $user_data['password'];
+        if ($user_data && password_verify($password, $hashed_password)) {
+        // if ($user_data) {
             // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูลผู้ใช้ทั้งหมด
             return $user_data;
             // return true;
@@ -168,83 +169,60 @@ class User
     public function save(array $data)
     {
         $userId = $data['user_id'] ?? 0;
+        // ❗️ สำคัญมาก: ต้อง Hash รหัสผ่านก่อนเก็บลงฐานข้อมูลเสมอ
+        // $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+        $hashedPassword = $data['password'];//ตอนนี้ใช้การเก็บค่าโดยตรง   ซึ่งต่อไปต้องแยก transaction ของการเก็บรหัสผ่่านไว้อีกฟังก์ชั่นหนึ่ง
         if (empty($userId)) {
-            // ❗️ สำคัญมาก: ต้อง Hash รหัสผ่านก่อนเก็บลงฐานข้อมูลเสมอ
-            $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
 
             $sql = "INSERT INTO users (user_code, username, password, full_name, role_id, department_id, signature_path)
-                VALUES (:user_code, :username, :password, :full_name, :role_id, :department_id, )";
-        } else {
-        }
-        return (int)$userId;
-    }
+                VALUES (:user_code, :username, :password, :full_name, :role_id, :department_id, :signature_path)";
 
-    public function create(array $userData)
-    {
-        // ❗️ สำคัญมาก: ต้อง Hash รหัสผ่านก่อนเก็บลงฐานข้อมูลเสมอ
-        $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
-
-        $sql = "INSERT INTO users (username, password, full_name, role_id, department_id, user_code)
-                VALUES (:username, :password, :full_name, :role_id, :department_id, :user_code)";
-
-        try {
             $stmt = $this->db->prepare($sql);
             /* //รูปแบบเดิม
+            $stmt->bindParam(':user_code', $user_code, PDO::PARAM_STR);
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-            $stmt->bindParam(':full_name', $full_name, PDO::PARAM_STR);
             $stmt->bindParam(':password', $hashedPassword, PDO::PARAM_STR);
+            $stmt->bindParam(':full_name', $full_name, PDO::PARAM_STR);
             $stmt->bindParam(':role_id', $role_id, PDO::PARAM_INT);
             $stmt->bindParam(':department_id', $department_id, PDO::PARAM_INT);
             $stmt->execute();
             */
-
             $stmt->execute([
-                ':username'      => $userData['username'],
+                ':user_code'     => $data['user_code'],
+                ':username'      => $data['username'],
                 ':password'      => $hashedPassword, // ใช้รหัสผ่านที่เข้ารหัสแล้ว
-                ':full_name'     => $userData['full_name'],
-                ':role_id'       => $userData['role_id'],
-                ':department_id' => $userData['department_id'],
-                ':user_code'     => $userData['user_code']
+                ':full_name'     => $data['full_name'],
+                ':role_id'       => $data['role_id'],
+                ':department_id' => $data['department_id'],
+                ':signature_path' => $data['signature_path'],
             ]);
-
             // คืนค่า ID ของแถวที่เพิ่งเพิ่มเข้าไปใหม่
-            return $this->db->lastInsertId();
-        } catch (PDOException $e) {
-            // ในสถานการณ์จริง ควรจะ Log error แทนการ echo
-            // error_log($e->getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * อัปเดตข้อมูลผู้ใช้ (UPDATE)
-     * @param int $userId ID ของผู้ใช้ที่ต้องการแก้ไข
-     * @param array $userData ข้อมูลใหม่ที่ต้องการอัปเดต
-     * @return bool true หากสำเร็จ, false หากล้มเหลว
-     */
-    public function update(int $userId, array $userData)
-    {
-        // ไม่ควรอัปเดต username ซึ่งมักใช้เป็น key ในการ login
-        $sql = "UPDATE users 
-                SET full_name = :full_name
+            $userId =  $this->db->lastInsertId();
+        } else {
+            // ไม่ควรอัปเดต username ซึ่งมักใช้เป็น key ในการ login
+            $sql = "UPDATE users 
+                SET user_code = :user_code
+                , full_name = :full_name
+                , password = :password
                 , role_id = :role_id
                 , department_id = :department_id
-                , user_code = :user_code
+                , signature_path = :signature_path
                 WHERE user_id = :user_id";
-
-        try {
             $stmt = $this->db->prepare($sql);
-            return $stmt->execute([
-                ':full_name'     => $userData['full_name'],
-                ':role_id'       => $userData['role_id'],
-                ':department_id' => $userData['department_id'],
-                ':user_code'     => $userData['user_code'],
-                ':user_id'       => $userId
+            $stmt->execute([
+                ':user_code'     => $data['user_code'],
+                ':password'      => $hashedPassword,
+                ':full_name'     => $data['full_name'],
+                ':role_id'       => $data['role_id'],
+                ':department_id' => $data['department_id'],
+                ':signature_path' => $data['signature_path'],
+                ':user_id'       => $userId,
             ]);
-        } catch (PDOException $e) {
-            return false;
         }
+        return (int)$userId;
     }
+
+
 
     /**
      * ลบผู้ใช้ (DELETE)

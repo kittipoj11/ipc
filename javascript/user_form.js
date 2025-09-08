@@ -20,8 +20,8 @@ $(document).ready(function () {
     const headerData = {
       user_id: userId,
       user_code: $("#user_code").val(),
-      username: $("#username").val(),
       full_name: $("#full_name").val(),
+      password: $("#password").val(),
       role_id: $("#role_id").val(),
       department_id: $("#department_id").val(),
       signature_path: $("#signature_path").val(),

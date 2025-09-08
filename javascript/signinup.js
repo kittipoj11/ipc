@@ -6,6 +6,7 @@ $(document).ready(function () {
     e.preventDefault();
 
     const data_sent = {
+      action:'check_login',
       username: $("#username").val(),
       password: $("#password").val(),
     };
@@ -13,7 +14,7 @@ $(document).ready(function () {
     console.log(data_sent);
     // return;
     $.ajax({
-      url: "api_handler_role.php",
+      url: "user_handler_api.php",
       type: "POST",
       contentType: "application/json",
       dataType: "json",

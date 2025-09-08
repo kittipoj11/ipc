@@ -121,6 +121,13 @@ require_once 'auth.php';
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
+                        <label for="password" class="input-group-text">รหัสผ่าน</label>
+                        <input type="text" class="form-control" name="password" id="password" value="<?= (isset($rsUser['password']) ? $rsUser['password'] : '') ?>" <?= $disabled ?>>
+                      </div>
+                    </div>
+
+                    <div class="row m-1">
+                      <div class="col-4 input-group input-group-sm">
                         <label for="full_name" class="input-group-text">ชื่อพนักงาน</label>
                         <input type="text" class="form-control" name="full_name" id="full_name" value="<?= (isset($rsUser['full_name']) ? $rsUser['full_name'] : '') ?>">
                       </div>
