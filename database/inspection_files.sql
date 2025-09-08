@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 22, 2025 at 08:41 AM
+-- Generation Time: Sep 08, 2025 at 04:37 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -41,8 +41,14 @@ CREATE TABLE `inspection_files` (
 --
 
 INSERT INTO `inspection_files` (`file_id`, `inspection_id`, `file_name`, `file_path`, `file_type`, `uploaded_at`) VALUES
-(2, 10, 'document_workflow_er_diagram.png', 'uploads/68a306c28ee44.png', 'image/png', '2025-08-18 10:56:02'),
-(4, 10, 'Report Test2.pdf', 'uploads/68a306ede2018.pdf', 'application/pdf', '2025-08-18 10:56:45');
+(1, 1, 'IPC_cover.jpg', 'uploads/68aecf2896539.jpg', 'image/jpeg', '2025-08-27 09:26:00'),
+(2, 1, 'Quick Hinge Adjustment Guide.jpg', 'uploads/68aecf4f99809.jpg', 'image/jpeg', '2025-08-27 09:26:39'),
+(3, 1, 'IPC_cover.jpg', 'uploads/68afe0f20656b.jpg', 'image/jpeg', '2025-08-28 04:54:10'),
+(7, 3, 'IPC_cover.jpg', 'uploads/68b1496ea147d.jpg', 'image/jpeg', '2025-08-29 06:32:14'),
+(9, 2, 'Quick Hinge Adjustment Guide.jpg', 'uploads/68b149e83ef7e.jpg', 'image/jpeg', '2025-08-29 06:34:16'),
+(11, 4, 'IPC_cover.jpg', 'uploads/68b14b4d77899.jpg', 'image/jpeg', '2025-08-29 06:40:13'),
+(13, 4, 'image3.jpg', 'uploads/68b14b7cda190.jpg', 'image/jpeg', '2025-08-29 06:41:00'),
+(15, 3, 'Untitled.jpg', 'uploads/68b14c61e9dad.jpg', 'image/jpeg', '2025-08-29 06:44:49');
 
 --
 -- Indexes for dumped tables
@@ -63,7 +69,7 @@ ALTER TABLE `inspection_files`
 -- AUTO_INCREMENT for table `inspection_files`
 --
 ALTER TABLE `inspection_files`
-  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables

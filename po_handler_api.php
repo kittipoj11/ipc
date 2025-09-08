@@ -19,6 +19,7 @@ $inspection = new Inspection($pdo);
 $doc = new DocumentService($pdo, $po, $inspection);
 
 $requestData = json_decode(file_get_contents('php://input'), true);
+
 if (isset($requestData['action']) && $requestData['action'] == 'save') {
     if (!isset($requestData['headerData']) || !isset($requestData['periodsData'])) {
         throw new Exception('Invalid data structure.');

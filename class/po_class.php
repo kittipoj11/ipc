@@ -15,7 +15,7 @@ class Po
         public function save(array $data): int
     {
         $poId = $data['po_id'] ?? 0;
-         $_SESSION['before po save AAAAAAAAAAAAAAAAA'] = $poId;
+        //  $_SESSION['before po save AAAAAAAAAAAAAAAAA'] = $poId;
         if (empty($poId)) { //ถ้าไม่มีค่าหรือมีค่าเป็น 0
             // --- CREATE MODE ---
             // ถ้าจะสร้าง id มี prefix ด้วยตนเอง สมมติให้ prefix เป็น PO เช่น $poId = uniqid('PO', true);

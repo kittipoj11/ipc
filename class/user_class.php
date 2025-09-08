@@ -56,18 +56,43 @@ class User
     public function getAll()
     {
         $sql = <<<EOD
-                    select user_id, user_code, username, password, full_name, u.role_id, u.department_id 
-                        , d.department_name, r.role_name
-                    from users u
-                    left join departments d
-                        on u.department_id = d.department_id
-                    left join roles r
-                        on u.role_id = r.role_id
+                    SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
+                    , D.department_name
+                    , R.role_name
+                    FROM users U
+                    LEFT JOIN departments D
+                        ON D.department_id = U.department_id
+                    LEFT JOIN roles R
+                        ON R.role_id = U.role_id
+                    ORDER BY user_id
                 EOD;
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rs;
+    }
+
+    public function getByUserId(int $user_id): ?array
+    {
+        $sql = <<<EOD
+                    SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
+                    , D.department_name
+                    , R.role_name
+                    FROM users U
+                    LEFT JOIN departments D
+                        ON D.department_id = U.department_id
+                    LEFT JOIN roles R
+                        ON R.role_id = U.role_id
+                    WHERE U.user_id = :user_id
+                EOD;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':user_id' => $user_id]);
+        $rs = $stmt->fetch();
+        if (!$rs) {
+            return null; // ไม่พบข้อมูล
+        }
         return $rs;
     }
 
@@ -90,7 +115,7 @@ class User
         $stmt->execute();
 
         $rs = $stmt->fetch();
-        if (!$rs) {
+        if (!$rs) { //false
             return null; // ไม่พบข้อมูล
         }
         return $rs;
@@ -140,11 +165,20 @@ class User
         return $rs;
     }
 
-    /**
-     * สร้างผู้ใช้ใหม่ในฐานข้อมูล (INSERT)
-     * @param array $userData ข้อมูลผู้ใช้ในรูปแบบ associative array
-     * @return string|false ID ของผู้ใช้ที่สร้างใหม่ หรือ false หากล้มเหลว
-     */
+    public function save(array $data)
+    {
+        $userId = $data['user_id'] ?? 0;
+        if (empty($userId)) {
+            // ❗️ สำคัญมาก: ต้อง Hash รหัสผ่านก่อนเก็บลงฐานข้อมูลเสมอ
+            $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+
+            $sql = "INSERT INTO users (user_code, username, password, full_name, role_id, department_id, signature_path)
+                VALUES (:user_code, :username, :password, :full_name, :role_id, :department_id, )";
+        } else {
+        }
+        return (int)$userId;
+    }
+
     public function create(array $userData)
     {
         // ❗️ สำคัญมาก: ต้อง Hash รหัสผ่านก่อนเก็บลงฐานข้อมูลเสมอ
@@ -233,17 +267,4 @@ class User
             return false;
         }
     }
-
-    // --- เมธอดอื่นๆ ที่มีอยู่แล้ว เช่น getById, checkLogin, getAll ---
-    public function getById(int $userId): ?array
-    {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE user_id = :user_id");
-        $stmt->execute([':user_id' => $userId]);
-        $rs= $stmt->fetch();
-        if (!$rs) {
-            return null; // ไม่พบข้อมูล
-        }
-        return $rs;
-    }
 }
-
