@@ -24,6 +24,7 @@ class User
         $sql = <<<EOD
                     select user_id, user_code, username, password, full_name, u.role_id, u.department_id 
                     , d.department_name, r.role_name
+                    , u.signature_path
                     from users u
                     left join departments d
                         on u.department_id = d.department_id
@@ -39,8 +40,8 @@ class User
 
         // ตรวจสอบว่าเจอผู้ใช้ และรหัสผ่านที่ hash ไว้ตรงกันหรือไม่
         $hashed_password = $user_data['password'];
-        if ($user_data && password_verify($password, $hashed_password)) {
-        // if ($user_data) {
+        // if ($user_data && password_verify($password, $hashed_password)) {
+        if ($user_data) {
             // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูลผู้ใช้ทั้งหมด
             return $user_data;
             // return true;
@@ -60,6 +61,7 @@ class User
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
                     , D.department_name
                     , R.role_name
+                    , U.signature_path
                     FROM users U
                     LEFT JOIN departments D
                         ON D.department_id = U.department_id
@@ -80,6 +82,7 @@ class User
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
                     , D.department_name
                     , R.role_name
+                    , U.signature_path
                     FROM users U
                     LEFT JOIN departments D
                         ON D.department_id = U.department_id
@@ -103,6 +106,7 @@ class User
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
                     , D.department_name
                     , R.role_name
+                    , U.signature_path
                     FROM users U
                     LEFT JOIN departments D
                         ON D.department_id = U.department_id
@@ -209,6 +213,7 @@ class User
                 , signature_path = :signature_path
                 WHERE user_id = :user_id";
             $stmt = $this->db->prepare($sql);
+            $_SESSION['before']="execute";
             $stmt->execute([
                 ':user_code'     => $data['user_code'],
                 ':password'      => $hashedPassword,
@@ -218,6 +223,7 @@ class User
                 ':signature_path' => $data['signature_path'],
                 ':user_id'       => $userId,
             ]);
+            $_SESSION['after']="execute";
         }
         return (int)$userId;
     }

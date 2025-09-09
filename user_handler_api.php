@@ -20,7 +20,7 @@ if (isset($requestData['action'])) {
     switch ($requestData['action']) {
         case 'check_login':
             try {
-                // ตรวจสอบว่ามีการส่งข้อมูล username และ password มาหรือไม่
+                // ตรวจสอบว่ามีการส่งข้อมูล username และ password 
                 if (isset($requestData['username']) && isset($requestData['password'])) {
                     $username = $requestData['username'] ?? '';
                     $password = $requestData['password'] ?? '';
@@ -83,8 +83,10 @@ if (isset($requestData['action'])) {
             try {
                 $pdo->beginTransaction();
                 $saveUserId = $user->save($requestData['headerData']);
+                $_SESSION['save']="success";
                 // ถ้า $saveUserId ยังคงเป็น 0 หรือว่าง แสดงว่าเกิดข้อผิดพลาด
                 $pdo->commit();
+                // uploadFile();
 
                 $response = [
                     'status' => 'success',
@@ -108,6 +110,50 @@ if (isset($requestData['action'])) {
             break;
 
         default:
+    }
+}
+
+function uploadFile()
+{
+    // $_FILES["file"] จะได้ array แบบนี้ (ถ้า input name="file")       
+    // Array
+    // (
+    //     [name] => myphoto.jpg          // ชื่อไฟล์จริงที่เลือก
+    //     [type] => image/jpeg           // MIME type
+    //     [tmp_name] => /tmp/php7h4sd2   // ที่อยู่ไฟล์ชั่วคราวที่ PHP เก็บไว้
+    //     [error] => 0                   // error code (0 = OK)
+    //     [size] => 15342                // ขนาดไฟล์ (ไบต์)
+    // )
+    //ตรวจสอบขนาดไฟล์ว่าไม่ให้เกินที่กำหนด ในที่นี้กำหนดให้ไม่เกิน 2MB
+    $fileSize = $_FILES['files']['size'];
+    $tmp_name = $_FILES['files']['tmp_name'];
+    if ($fileSize > 2000000) { // 2MB limit
+        throw new Exception("File size exceeds 2MB.");
+    }
+    // ตรวจสอบว่ามีไฟล์จริงหรือไม่
+    if (isset($_FILES['files'])) {
+        $filename = basename($_POST["filename"]);
+        $_SESSION['filename'] = $filename;
+        // $fileExtension = pathinfo($filename, PATHINFO_EXTENSION);
+        // $FileName = uniqid() . '.' . $fileExtension;//ถ้าจะเปลี่ยนชื่อ ซึ่งไม่จำเป็น
+        // โฟลเดอร์สำหรับเก็บไฟล์
+        $uploadDir = "uploads/signatures/";
+
+        // ตรวจสอบว่าโฟลเดอร์ uploads/signatures/ มีอยู่หรือไม่ ถ้าไม่มีให้สร้าง
+        if (!is_dir($uploadDir)) {
+            if (!mkdir($uploadDir, 0777, true)) { // สร้างโฟลเดอร์และตั้ง permission (0777 คือ read, write, execute สำหรับทุก user)
+                throw new Exception("Failed to create uploads directory.");
+            }
+        }
+
+        // $uploadFile = $uploadDir . $filename;
+        $uploadFile =  $filename;
+        // เป็นฟังก์ชันพิเศษของ PHP เอาไว้ ย้ายไฟล์จาก tmp ไปเก็บไว้ในที่ที่เราต้องการ โดย true ถ้าย้ายสำเร็จ
+        if (move_uploaded_file($tmp_name, $uploadFile)) {
+        } else {
+            // $_SESSION['insert inspection_files'] = 'Completed';
+            throw new Exception("Failed to upload file.");
+        }
     }
 }
 

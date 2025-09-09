@@ -568,7 +568,6 @@ class Inspection
 
             // บันทึก inspection_files
             if (isset($_FILES['files'])) {
-                // $_SESSION['File is selected'] = $_FILES['files'];
                 // โฟลเดอร์สำหรับเก็บไฟล์
                 $uploadDir = 'uploads/';
 

@@ -16,6 +16,7 @@ $(document).ready(function () {
 
     const myForm = $("#myForm");
     const userId = myForm.data("user-id");
+    const $signature_path = "uploads/signatures/" . $("#signature_path").val();
 
     const headerData = {
       user_id: userId,
@@ -24,7 +25,7 @@ $(document).ready(function () {
       password: $("#password").val(),
       role_id: $("#role_id").val(),
       department_id: $("#department_id").val(),
-      signature_path: $("#signature_path").val(),
+      signature_path: $signature_path,
     };
 
     const data_sent = {
@@ -76,18 +77,28 @@ $(document).ready(function () {
     window.history.back();
   });
 
-  // รอตรวจสอบฟังก์ชัน
-  $(document).on("click", "#btnAttach", function (e) {
-    e.preventDefault();
+  let selectedFile; // เก็บไฟล์ที่เลือก
 
-    const po_id = $("#po_id").val();
-    const period_id = $("#period_id").val();
-    const inspection_id = $("#inspection_id").val();
-
-    // console.log(`po_id = ${po_id}`);
-    // console.log(`period_id = ${period_id}`);
-    // console.log(`inspection_id = ${inspection_id}`);
-    window.location.href = `inspection_attach_form.php?po_id=${po_id}&period_id=${period_id}&inspection_id=${inspection_id}&mode=`;
+  // preview บน modal
+  $("#fileInput").on("change", function (e) {
+    const file = e.target.files[0];
+    if (file) {
+      selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        $("#modalPreview").attr("src", ev.target.result).show();
+      }
+      reader.readAsDataURL(file);
+    }
   });
+
+  // กด OK -> แสดงที่หน้าหลัก
+$("#btnOk").on("click", function(){
+  if(selectedFile){
+    $("#mainPreview").attr("src", URL.createObjectURL(selectedFile)).show();
+    $("#signature_path").val(selectedFile.name);
+    $("#imageModal").modal("hide");
+  }
+});
 
 });

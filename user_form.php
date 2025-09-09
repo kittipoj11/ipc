@@ -148,7 +148,7 @@ require_once 'auth.php';
                     </div>
 
                     <div class="row m-1">
-                      <div class="col-3 input-group input-group-sm">
+                      <div class="col-4 input-group input-group-sm">
                         <label for="department_id" class="input-group-text">แผนก</label>
                         <select class="form-select form-control" name="department_id" id="department_id">
                           <option value="">...</option>
@@ -164,31 +164,28 @@ require_once 'auth.php';
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
-                        <label for="signature_path" class="input-group-text">ลายเซ็น</label>
-                        <input type="text" class="form-control" name="signature_path" id="signature_path" value="<?= (isset($rsUser['signature_path']) ? $rsUser['signature_path'] : '') ?>">
+                        <a href="" class="btn btn-primary btn-sm btnAdd <?= $mode ?>" title="Add" style="margin: 0px 5px 5px 5px;" data-bs-toggle="modal" data-bs-target="#imageModal">
+                          <!-- <i class="fa-solid fa-plus"></i> -->
+                          เลือกลายเซ็นต์
+                        </a>
                       </div>
                     </div>
 
-                    <!-- <div class="row m-1">
+                    <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
-                        <label for="working_name_th" class="input-group-text">ชื่องาน(ภาษาไทย)</label>
-                        <input type="text" class="form-control" name="working_name_th" id="working_name_th" value="<?= (isset($rsUser['working_name_th']) ? $rsUser['working_name_th'] : '') ?>">
-                      </div>
-
-                      <div class="col-4 input-group input-group-sm">
-                        <label for="working_name_en" class="input-group-text">ชื่องาน(ภาษาอังกฤษ)</label>
-                        <input type="text" class="form-control" name="working_name_en" id="working_name_en" value="<?= (isset($rsUser['working_name_en']) ? $rsUser['working_name_en'] : '') ?>">
+                        <input type="text" class="form-control" name="signature_path" id="signature_path" placeholder="ชื่อไฟล์" value="<?= (isset($rsUser['signature_path']) ? $rsUser['signature_path'] : '') ?>">
                       </div>
                     </div>
-                    <hr> -->
+
+                    <!--  width="500" height="600" -->
+                    <div class="row m-1">
+                      <div class="col-4 input-group input-group-sm" width="600px" height="300px">
+                        <img id="mainPreview" src="<?= (isset($rsUser['signature_path']) ? $rsUser['signature_path'] : '') ?>" alt="" style="max-width:600px;" class="border rounded" alt="...">
+                      </div>
+                    </div>
+                    <!-- </div> -->
 
                     <hr>
-
-
-                    <!-- <div class="card-footer p-0 d-flex justify-content-end">
-                      <input type="submit" name="submit" id="submit" class="btn btn-primary btn-sm m-1" value="บันทึก">
-                      <button type="button" name="btnCancel" id="btnCancel" class="btn btn-secondary btn-sm m-1">ยกเลิก</button>
-                    </div> -->
 
                     <div class="container-fluid  p-0 d-flex justify-content-between">
                       <button type="button" name="btnBack" class="btn btn-primary btn-sm m-1 btnBack"> <i class="fi fi-rr-left"></i> </button>
@@ -197,6 +194,34 @@ require_once 'auth.php';
                         <button type="button" name="btnCancel" class="btn btn-warning btn-sm m-1 btnCancel">ยกเลิก</button>
                       </div>
                     </div>
+
+                    <!-- Modal : ลายเซ็นต์ -->
+                    <div class="modal fade" id="imageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">เลือกไฟล์ลายเซ็นต์</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <!-- /.modal-header -->
+                          <div class="modal-body">
+                            <input type="file" class="form-control" id="fileInput" accept="image/jpeg" required>
+                            <small class="form-text">อนุญาตเฉพาะไฟล์ JPG</small>
+                            <img id="modalPreview" src="" alt="" style="max-width:100%; margin-top:10px; display:none;" class="border rounded">
+                          </div>
+                          <!-- /.modal-body -->
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button><!-- data-bs-dismiss="modal" ต้องการให้ Modal ปิดเมื่อปุ่มถูกคลิก -->
+                            <button type="button" class="btn btn-primary" id="btnOk">OK</button>
+                          </div>
+                          <!-- /.modal-footer -->
+                        </div>
+                        <!-- /.modal-content -->
+                      </div>
+                      <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
 
                   </form>
                 </div>
