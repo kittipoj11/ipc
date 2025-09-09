@@ -69,6 +69,8 @@ require_once 'auth.php';
 
       $user = new User($pdo);
       $rsUser = $user->getByUserId($_REQUEST['user_id']);
+      $dirname = dirname($rsUser['signature_path']);
+      $basename = basename($rsUser['signature_path']);
     }
 
     $role = new role($pdo);
@@ -101,7 +103,7 @@ require_once 'auth.php';
                 </div>
 
                 <div class="card-body m-0 p-0">
-                  <form name="myForm" id="myForm" action="" method="post"
+                  <form name="myForm" id="myForm" action="" method="post" enctype="multipart/form-data"
                     data-user-id=<?= (isset($rsUser['user_id']) ? $rsUser['user_id'] : '') ?>>
                     <input type="text" class="d-none" name="user_id" id="user_id" value=<?= (isset($_REQUEST['user_id']) ? $_REQUEST['user_id'] : '') ?>>
 
@@ -173,14 +175,14 @@ require_once 'auth.php';
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
-                        <input type="text" class="form-control" name="signature_path" id="signature_path" placeholder="ชื่อไฟล์" value="<?= (isset($rsUser['signature_path']) ? $rsUser['signature_path'] : '') ?>">
+                        <input type="text" class="form-control" name="signature_path" id="signature_path" placeholder="ชื่อไฟล์" value="<?= $basename ?>">
                       </div>
                     </div>
 
                     <!--  width="500" height="600" -->
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm" width="600px" height="300px">
-                        <img id="mainPreview" src="<?= (isset($rsUser['signature_path']) ? $rsUser['signature_path'] : '') ?>" alt="" style="max-width:600px;" class="border rounded" alt="...">
+                        <img id="mainPreview" src="<?= $dirname . $basename ?>" alt="" style="max-width:600px;" class="border rounded" alt="...">
                       </div>
                     </div>
                     <!-- </div> -->
@@ -206,7 +208,7 @@ require_once 'auth.php';
                           </div>
                           <!-- /.modal-header -->
                           <div class="modal-body">
-                            <input type="file" class="form-control" id="fileInput" accept="image/jpeg" required>
+                            <input type="file" class="form-control" id="fileInput" name="fileInput" accept="image/jpeg">
                             <small class="form-text">อนุญาตเฉพาะไฟล์ JPG</small>
                             <img id="modalPreview" src="" alt="" style="max-width:100%; margin-top:10px; display:none;" class="border rounded">
                           </div>

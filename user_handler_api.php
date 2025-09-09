@@ -11,7 +11,7 @@ require_once 'class/connection_class.php';
 require_once 'class/user_class.php';
 
 $requestData = json_decode(file_get_contents('php://input'), true);
-
+$_SESSION['requestData'] = $requestData;
 if (isset($requestData['action'])) {
     $connection = new Connection();
     $pdo = $connection->getDbConnection();
@@ -81,9 +81,10 @@ if (isset($requestData['action'])) {
 
         case 'save':
             try {
+                $_SESSION['headerData']= $requestData['headerData'];
                 $pdo->beginTransaction();
                 $saveUserId = $user->save($requestData['headerData']);
-                $_SESSION['save']="success";
+                $_SESSION['saveUserId']= $saveUserId;
                 // ถ้า $saveUserId ยังคงเป็น 0 หรือว่าง แสดงว่าเกิดข้อผิดพลาด
                 $pdo->commit();
                 // uploadFile();
@@ -124,16 +125,16 @@ function uploadFile()
     //     [error] => 0                   // error code (0 = OK)
     //     [size] => 15342                // ขนาดไฟล์ (ไบต์)
     // )
-    //ตรวจสอบขนาดไฟล์ว่าไม่ให้เกินที่กำหนด ในที่นี้กำหนดให้ไม่เกิน 2MB
-    $fileSize = $_FILES['files']['size'];
-    $tmp_name = $_FILES['files']['tmp_name'];
-    if ($fileSize > 2000000) { // 2MB limit
-        throw new Exception("File size exceeds 2MB.");
-    }
+    $_SESSION['filename'] = isset($_FILES['file']);
     // ตรวจสอบว่ามีไฟล์จริงหรือไม่
-    if (isset($_FILES['files'])) {
-        $filename = basename($_POST["filename"]);
-        $_SESSION['filename'] = $filename;
+    if (isset($_FILES['file'])) {
+        //ตรวจสอบขนาดไฟล์ว่าไม่ให้เกินที่กำหนด ในที่นี้กำหนดให้ไม่เกิน 2MB
+        $fileSize = $_FILES['file']['size'];
+        $tmp_name = $_FILES['file']['tmp_name'];
+        if ($fileSize > 2000000) { // 2MB limit
+            throw new Exception("File size exceeds 2MB.");
+        }
+        $filename = basename($_POST["signature_path"]);
         // $fileExtension = pathinfo($filename, PATHINFO_EXTENSION);
         // $FileName = uniqid() . '.' . $fileExtension;//ถ้าจะเปลี่ยนชื่อ ซึ่งไม่จำเป็น
         // โฟลเดอร์สำหรับเก็บไฟล์
@@ -146,8 +147,7 @@ function uploadFile()
             }
         }
 
-        // $uploadFile = $uploadDir . $filename;
-        $uploadFile =  $filename;
+        $uploadFile = $uploadDir . $filename;
         // เป็นฟังก์ชันพิเศษของ PHP เอาไว้ ย้ายไฟล์จาก tmp ไปเก็บไว้ในที่ที่เราต้องการ โดย true ถ้าย้ายสำเร็จ
         if (move_uploaded_file($tmp_name, $uploadFile)) {
         } else {

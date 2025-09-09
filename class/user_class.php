@@ -93,7 +93,7 @@ class User
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':user_id' => $user_id]);
-        $rs = $stmt->fetch();
+        $rs = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
