@@ -32,7 +32,6 @@ class InspectionService
             $userId = $_SESSION['user_id'];
             // 2.หา current_approval_level, workflow_id จาก inspection
             $rsInspection = $this->inspection->getByInspectionId($periodData['inspection_id']);
-            // $_SESSION['getByInspectionId AAAAAAAAAAAAA'] = $rsInspection;
 
             // 3.หา workflow_step
             $inspectionId = $periodData['inspection_id'];
@@ -42,17 +41,15 @@ class InspectionService
 
             $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
             $nextApproverId = $rsWorkflow['approver_id'];
-            // $_SESSION['getStep BBBBBBBBBBBBBB'] = $rsWorkflow;
+
             // 4.save inspection
             $this->inspection->save($periodData, $detailsData);
-            // $_SESSION['save CCCCCCCCCCCCCCCCCCC'] = "Save success";
 
             // 5.update inspection status
             $this->inspection->updateStatus($inspectionId, 'pending-submit', $nextApproverId, $nextLevel);
-            // $_SESSION['updateStatus DDDDDDDDDDDDDDDDDd'] = "updateStatus success";
+
             // 6.log history 
             $this->inspection->logHistory($inspectionId, $userId, 'Inspection Created');
-            // $_SESSION['logHistory EEEEEEEEEEEEEE'] = "logHistory success";
             $this->db->commit();
             // $this->db->rollBack();
             return $inspectionId;
@@ -77,15 +74,12 @@ class InspectionService
 
             // 2.หา current_approval_level, workflow_id จาก inspection
             $rsInspection = $this->inspection->getByInspectionId($inspectionId);
-            // $_SESSION['getByInspectionId AAAAAAAAAAAAA'] = $rsInspection;
 
             // 3.save inspection
             $this->inspection->save($periodData, $detailsData);
-            // $_SESSION['save CCCCCCCCCCCCCCCCCCC'] = "Update success";
 
             // 4.log history 
             $this->inspection->logHistory($inspectionId, $userId, 'Inspection Updated');
-            // $_SESSION['logHistory EEEEEEEEEEEEEE'] = "logHistory success";
             $this->db->commit();
             return $inspectionId;
         } catch (Exception $e) {
@@ -98,51 +92,45 @@ class InspectionService
         }
     }
 
-    public function approveInspection($inspectionId): int
+    public function approveInspection($inspectionId, $orderInBlock): int
     {
         try {
             $this->db->beginTransaction();
-            // 1.ดึง user_id จาก SESSION
+            // 1.ดึง user_id จาก SESSION(เป็นผู้ที่ทำการ approve)
             $userId = $_SESSION['user_id'];
 
-            // 2.หา current_approval_level, workflow_id จาก inspection
+            // 2.หา current_approval_level, workflow_id จาก inspection ว่าตอนนี้มีค่าเป็นอะไร
             $rsInspection = $this->inspection->getByInspectionId($inspectionId);
-            // $_SESSION['getByInspectionId AAAAAAAAAAAAA']='success';
             // return $inspectionId;
             
-            // 3.หา workflow_step
+            // 3.หา workflow_step ลำดับถัดไป
             $currentLevel = $rsInspection['period']['current_approval_level'];
             $nextLevel = $currentLevel + 1;
             $workflowId = $rsInspection['period']['workflow_id'];
             
             $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
-            // $_SESSION['getStep BBBBBBBBBBBBBBB']='success';
             
             // 4.update po status ???
             $poId = $rsInspection['period']['po_id'];
             $this->po->updateStatus($poId, 2);
             
             // 4.update inspection status
-            // ตรวจสอบ $rsWorkflow ว่ามีข้อมูลหรือไม่
+            // ตรวจสอบ $rsWorkflow
             if ($rsWorkflow) {
+                // ถ้ายังมีข้อมูล  แสดงว่ายังไม่ใช่ลำดับสุดท้าย
                 $nextApproverId = $rsWorkflow['approver_id'];
-                $this->inspection->updateStatus($inspectionId, 'pending-approve', $nextApproverId, $nextLevel);
-                // $_SESSION['updateStatus CCCCCCCCCCCCCCCCC']='success';
+                $this->inspection->updateStatus($inspectionId, 'pending-approve', $nextApproverId, $nextLevel, $userId, $orderInBlock);
                 
                 // 5.log history 
                 $this->inspection->logHistory($inspectionId, $userId, "Approved at Step {$currentLevel}");
-                // $_SESSION['logHistory DDDDDDDDDDDDDDDDDD']='success';
-                
             } else {
                 //inspection_status สถานะปัจจุบัน (Completed)
                 //current_approver_id บอกว่าไม่มีใครต้องทำอะไรต่อ (Null) 
                 //current_level บอกประวัติว่าไปถึงขั้นตอนไหน (ขั้นตอนสุดท้าย)
                 $this->inspection->updateStatus($inspectionId, 'completed', NULL, $currentLevel);
-                // $_SESSION['updateStatus EEEEEEEEEEEEEEEEEEe']='success';
                 
                 // 5.log history 
                 $this->inspection->logHistory($inspectionId, $userId, "Final Approved at Step {$currentLevel}. Status: Completed");
-                // $_SESSION['logHistory FFFFFFFFFFFFFFFF']='success';
 
                 // ถ้าเป็น inspection(มี workflow_id = 1) จะทำการสร้างเอกสาร ipc(workflow_id=2)
                 if ($rsInspection['period']['workflow_id'] === 1) {
@@ -174,12 +162,9 @@ class InspectionService
                     ];
 
                     $ipcId = $this->ipc->create($ipcData);
-                    // $_SESSION['create GGGGGGGGGGGGGGG']='success';
                     
                     // 2.หา current_approval_level, workflow_id จาก ipc
-                    // $_SESSION['ipcId HHHHHHHHHHHHHHHH']=$ipcId;
                     $rsIpc = $this->ipc->getIpcByIpcId($ipcId);
-                    // $_SESSION['getByIpcId HHHHHHHHHHHHHHHH']='success';
                     
                     // 3.หา workflow_step
                     $nextLevel = 1;
@@ -187,15 +172,12 @@ class InspectionService
                     
                     $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
                     $nextApproverId = $rsWorkflow['approver_id'];
-                    // $_SESSION['getStep IIIIIIIIIIIIIIIII']='success';
                     
                     // 5.update ipc status
                     $this->ipc->updateStatus($ipcId, 'pending-submit', $nextApproverId, $nextLevel);
-                    // $_SESSION['updateStatus JJJJJJJJJJJJJJJJJJJJ']='success';
                     
                     // 6.log history 
                     $this->ipc->logHistory($ipcId, $userId, 'IPC Created');
-                    // $_SESSION['logHistory KKKKKKKKKKKKKKKK']='success';
                 }
             }
             $this->db->commit();
@@ -205,7 +187,6 @@ class InspectionService
                 $this->db->rollBack();
             }
             // สามารถบันทึก error หรือโยน exception ต่อไปได้
-            // $_SESSION['rollback GGGGGGGGGGGGG'] = $e->getMessage();
             error_log($e->getMessage());
             return 0;
         }

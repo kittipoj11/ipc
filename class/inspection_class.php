@@ -266,7 +266,7 @@ class Inspection
     public function getCurrentApprovalType($inspectionId): ?array
     {
         $sql = "SELECT I.`inspection_status`, I.`current_approval_level`, I.`current_approver_id` 
-                , W.approval_type_text
+                , W.approval_type_text, W.order_in_block
                 FROM `inspection` I
                 INNER JOIN workflow_steps W
                     ON I.workflow_id = W.workflow_id AND current_approval_level = approval_level
@@ -427,20 +427,32 @@ class Inspection
         return (int)$inspectionId;
     }
 
-        public function updateStatus($inspectionId, $inspectionStatus, $currentApproverId, $currentApprovalLevel)
+    /**
+     * updateStatus เมื่อมีการ approve
+     * @param int $inspectionId 
+     * @param int $inspectionStatus 
+     * @param int $approverId ID 
+     * @param int $approvalLevel ลำดับของการ approve
+     * @return bool true หากสำเร็จ, false หากล้มเหลว
+     */
+        public function updateStatus($inspectionId, $inspectionStatus, $approverId, $approvalLevel, $currentApproverId=0, $orderInBlock=0)
     {
         $sql = "UPDATE `inspection`
                 SET `inspection_status` = :inspection_status
-                , `current_approver_id` = :current_approver_id
-                , `current_approval_level` = :current_approval_level
+                , `current_approver_id` = :approver_id
+                , `current_approval_level` = :approval_level
+                , `approved1_id`=  IF(:order_in_block = 1, :current_approver_id, approved1_id)
+                , `approved2_id`=  IF(:order_in_block = 2, :current_approver_id, approved2_id)
                 WHERE `inspection_id` = :inspection_id";
 
         $stmt = $this->db->prepare($sql);
         // $stmt->bindParam(':po_number', $po_number, PDO::PARAM_STR);
         $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
-        $stmt->bindParam(':current_approver_id', $currentApproverId, PDO::PARAM_INT);
-        $stmt->bindParam(':current_approval_level', $currentApprovalLevel, PDO::PARAM_INT);
+        $stmt->bindParam(':approver_id', $approverId, PDO::PARAM_INT);
+        $stmt->bindParam(':approval_level', $approvalLevel, PDO::PARAM_INT);
         $stmt->bindParam(':inspection_status', $inspectionStatus, PDO::PARAM_STR);
+        $stmt->bindParam(':current_approver_id', $currentApproverId, PDO::PARAM_INT);
+        $stmt->bindParam(':order_in_block', $orderInBlock, PDO::PARAM_INT);
 
         // $stmtUpdatePoMain->execute();
         $stmt->execute();
@@ -513,7 +525,7 @@ class Inspection
     // เพิ่มเติมในส่วน ipc
 
 
-    // ทำการ update level เมื่อมีการ approve
+    // ไม่ใช้แล้ว
     public function updateApprovalLevel(array $approvalData): int
     {
         $isApprove = $approvalData['is_approve'];

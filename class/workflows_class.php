@@ -102,7 +102,7 @@ class Workflows
     {
         $_SESSION['workflowId']=$workflowId;
         $_SESSION['approvalLevel']=$approvalLevel;
-        $sql = "SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text` 
+        $sql = "SELECT `workflow_step_id`, `workflow_id`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `order_in_block` 
                 FROM workflow_steps 
                 WHERE workflow_id = :workflow_id 
                     AND approval_level = :approval_level";

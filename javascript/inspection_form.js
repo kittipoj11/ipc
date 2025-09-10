@@ -179,18 +179,20 @@ $(document).ready(function () {
   function sendRequest(action, data){
     const myForm = $("#myForm");
     const inspectionId = myForm.data("inspection-id");
+    const orderInBlock = myForm.data("order-in-block");
     const userId = myForm.data("user-id"); //ไม่ต้องส่งไปก็ได้เพราะ  เรียกใช้ $_SESSION['user_id] ใน inspection_handler_api.php หรือ inspection_service_class.php
 
     const data_sent = {
       action: action,
       inspectionId: inspectionId,
       userId: userId,
+      orderInBlock: orderInBlock,
       ...data,
     };
     // console.log(action);
-    // console.log(JSON.stringify(data_sent));
+    console.log(JSON.stringify(data_sent));
     // return;
-    // console.log(`data_sent: ${data_sent}`);
+    console.log(`data_sent: ${JSON.stringify(data_sent)}`);
     $.ajax({
       url: "inspection_handler_api.php",
       type: "POST",
