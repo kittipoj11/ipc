@@ -27,6 +27,3 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'selectInspectionFiles'
 } else {
     // fetchAll($inspection);
 }
-
-
-

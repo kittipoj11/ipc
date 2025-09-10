@@ -10,52 +10,68 @@ $(document).ready(function () {
       .show()
       .delay(5000)
       .fadeOut();
-  }
+  }  
 
-  $("#myForm").on("submit", function (e) {
+  // preview บน modal
+  $("#fileInput").on("change", function (e) {
+    const file = e.target.files[0];
+    if (file) {
+      selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        $("#imgModalPreview").attr("src", ev.target.result).show();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // กด OK -> แสดงที่หน้าหลัก
+  $("#btnOk").on("click", function () {
+    if (selectedFile) {
+      $("#imgMainPreview").attr("src", URL.createObjectURL(selectedFile)).show();
+      $("#filename").val(selectedFile.name);
+      $("#imageModal").modal("hide");
+    }
+  });
+
+  $("#myForm").on("submit", async function (e) {
     // $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();
 
+    // 1) upload รูปก่อน
+    if(selectedFile){ 
+      const resUpload = await uploadSignatureFile(selectedFile);
+    }
+    
+    // 2) save user + path ของรูป
     const myForm = $("#myForm");
     const userId = myForm.data("user-id");
-    // const $signature_path = $("#signature_path").val();// หรือ
-    const $signature_path_ = `uploads/signatures/${$("#signature_path").val()}`;
-    const $signature_path = `uploads/signatures/${$("#signature_path").val() || (selectedFile ? selectedFile.name : "")}`;
+    const filename = `uploads/signatures/${$("#filename").val()}`;
 
+    const headerData = {
+      user_id: userId,
+      user_code: $("#user_code").val(),
+      username: $("#username").val(),
+      full_name: $("#full_name").val(),
+      password: $("#password").val(),
+      role_id: $("#role_id").val(),
+      department_id: $("#department_id").val(),
+      filename: filename,
+    };
 
-    let formData = new FormData();
-    formData.append("action", "save");
-
-    // ใส่ไฟล์จริง
-    formData.append("file", selectedFile);
-    formData.append("filename", $("#signature_path").val());
-
-    // JSON -> string ใส่ไปใน headerData
-    formData.append(
-      "headerData",
-      JSON.stringify({
-        user_id: userId,
-        user_code: $("#user_code").val(),
-        full_name: $("#full_name").val(),
-        password: $("#password").val(),
-        role_id: $("#role_id").val(),
-        department_id: $("#department_id").val(),
-        signature_path: $signature_path,
-      })
-    );
-
+    const data_sent = {
+      headerData: headerData,
+      action: "save",
+    };
 
     $.ajax({
       url: "user_handler_api.php",
       type: "POST",
-      contentType: false,
-      cache: false,
-      processData: false,
-      data: formData,
-      dataType: "json", // สำคัญ: บอกให้ jQuery แปลง response เป็น JSON
+      contentType: "application/json",
+      dataType: 'json',
+      data: JSON.stringify(data_sent),
     })
       .done(function (result) {
-        // console.log(`result: ${result}`);
         responseMessage.text(result.message).css("color", "green");
         Swal.fire({
           icon: "success",
@@ -73,7 +89,6 @@ $(document).ready(function () {
           // timer: 15000
         }).then((result) => {
           if (result.isConfirmed) {
-            // loadData(); // โหลดข้อมูลใหม่ทั้งหมด
             window.location.href = "user_list.php";
           }
         });
@@ -91,25 +106,31 @@ $(document).ready(function () {
     window.history.back();
   });
 
-  // preview บน modal
-  $("#fileInput").on("change", function (e) {
-    const file = e.target.files[0];
-    if (file) {
-      selectedFile = file;
-      const reader = new FileReader();
-      reader.onload = function (ev) {
-        $("#modalPreview").attr("src", ev.target.result).show();
-      };
-      reader.readAsDataURL(file);
-    }
-  });
 
-  // กด OK -> แสดงที่หน้าหลัก
-  $("#btnOk").on("click", function () {
-    if (selectedFile) {
-      $("#mainPreview").attr("src", URL.createObjectURL(selectedFile)).show();
-      $("#signature_path").val(selectedFile.name);
-      $("#imageModal").modal("hide");
-    }
+  
+function uploadSignatureFile(selectedFile) {
+  return new Promise((resolve, reject) => {
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    $.ajax({
+      url: "upload_handler_api.php",
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (res) {
+        if (res.status === "ok") {
+          resolve(res); // คืน path + filename
+        } else {
+          reject(res.message);
+        }
+      },
+      error: function (xhr) {
+        reject("upload error");
+      }
+    });
   });
+}
+
 });

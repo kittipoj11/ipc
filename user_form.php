@@ -69,8 +69,8 @@ require_once 'auth.php';
 
       $user = new User($pdo);
       $rsUser = $user->getByUserId($_REQUEST['user_id']);
-      $dirname = dirname($rsUser['signature_path']);
-      $basename = basename($rsUser['signature_path']);
+      $dirname = dirname($rsUser['filename']);
+      $basename = basename($rsUser['filename']);
     }
 
     $role = new role($pdo);
@@ -175,14 +175,14 @@ require_once 'auth.php';
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
-                        <input type="text" class="form-control" name="signature_path" id="signature_path" placeholder="ชื่อไฟล์" value="<?= $basename ?>">
+                        <input type="text" class="form-control" name="filename" id="filename" placeholder="ชื่อไฟล์" value="<?= $basename ?>">
                       </div>
                     </div>
 
                     <!--  width="500" height="600" -->
                     <div class="row m-1">
-                      <div class="col-4 input-group input-group-sm" width="600px" height="300px">
-                        <img id="mainPreview" src="<?= $dirname . $basename ?>" alt="" style="max-width:600px;" class="border rounded" alt="...">
+                      <div class="col-4 input-group input-group-sm" width="100%">
+                        <img id="imgMainPreview" src="<?= $rsUser['filename'] ?>" alt="" style="max-width:100%;" class="border rounded" alt="...">
                       </div>
                     </div>
                     <!-- </div> -->
@@ -210,7 +210,7 @@ require_once 'auth.php';
                           <div class="modal-body">
                             <input type="file" class="form-control" id="fileInput" name="fileInput" accept="image/jpeg">
                             <small class="form-text">อนุญาตเฉพาะไฟล์ JPG</small>
-                            <img id="modalPreview" src="" alt="" style="max-width:100%; margin-top:10px; display:none;" class="border rounded">
+                            <img id="imgModalPreview" src="" alt="" style="max-width:100%; margin-top:10px; display:none;" class="border rounded">
                           </div>
                           <!-- /.modal-body -->
                           <div class="modal-footer">

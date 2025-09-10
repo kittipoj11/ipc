@@ -11,7 +11,14 @@ require_once 'class/connection_class.php';
 require_once 'class/user_class.php';
 
 $requestData = json_decode(file_get_contents('php://input'), true);
-$_SESSION['requestData'] = $requestData;
+
+if (!$requestData) {
+    echo json_encode(["status" => "fail", "message" => "invalid json"]);
+    exit;
+}
+// $requestData = $_REQUEST;
+// $_SESSION['requestData'] = $requestData;
+// return;
 if (isset($requestData['action'])) {
     $connection = new Connection();
     $pdo = $connection->getDbConnection();
@@ -81,13 +88,10 @@ if (isset($requestData['action'])) {
 
         case 'save':
             try {
-                $_SESSION['headerData']= $requestData['headerData'];
                 $pdo->beginTransaction();
                 $saveUserId = $user->save($requestData['headerData']);
-                $_SESSION['saveUserId']= $saveUserId;
                 // ถ้า $saveUserId ยังคงเป็น 0 หรือว่าง แสดงว่าเกิดข้อผิดพลาด
                 $pdo->commit();
-                // uploadFile();
 
                 $response = [
                     'status' => 'success',
@@ -109,7 +113,34 @@ if (isset($requestData['action'])) {
                 echo json_encode($response);
             }
             break;
+        case 'delete':
+            try {
+                $deletedUserId = $requestData['headerData']['user_id'];
+                $pdo->beginTransaction();
+                $user->delete($deletedUserId);
+                // ถ้า $deletedUserId ยังคงเป็น 0 หรือว่าง แสดงว่าเกิดข้อผิดพลาด
+                $pdo->commit();
 
+                $response = [
+                    'status' => 'success',
+                    'message' => 'ลบข้อมูล USER ID: ' . $deletedUserId . ' เรียบร้อยแล้ว',
+                    'data' => ['user_id' => $deletedUserId]
+                ];
+                echo json_encode($response);
+            } catch (Exception $e) {
+                if ($pdo->inTransaction()) {
+                    $pdo->rollBack();
+                }
+                // สามารถบันทึก error หรือโยน exception ต่อไปได้
+                // error_log($e->getMessage());
+                $response = [
+                    'status' => 'fail',
+                    'message' => 'ลบข้อมูลไม่สำเร็จ',
+                    'data' => ['user_id' => $deletedUserId]
+                ];
+                echo json_encode($response);
+            }
+            break;
         default:
     }
 }
@@ -134,7 +165,7 @@ function uploadFile()
         if ($fileSize > 2000000) { // 2MB limit
             throw new Exception("File size exceeds 2MB.");
         }
-        $filename = basename($_POST["signature_path"]);
+        $filename = basename($_POST["filename"]);
         // $fileExtension = pathinfo($filename, PATHINFO_EXTENSION);
         // $FileName = uniqid() . '.' . $fileExtension;//ถ้าจะเปลี่ยนชื่อ ซึ่งไม่จำเป็น
         // โฟลเดอร์สำหรับเก็บไฟล์

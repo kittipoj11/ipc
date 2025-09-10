@@ -18,7 +18,7 @@
 
   <!-- input แก้ไขชื่อไฟล์ -->
   <div class="mt-3">
-    <input type="text" id="fileName" class="form-control w-50" placeholder="ชื่อไฟล์" readonly>
+    <input type="text" id="txtFileName" class="form-control w-50" placeholder="ชื่อไฟล์" readonly>
   </div>
 
   <!-- preview หลัก -->
@@ -41,7 +41,7 @@
         </div>
         <div class="modal-body">
           <input type="file" id="fileInput" accept="image/jpeg" class="form-control">
-          <img id="modalPreview" src="" alt="" style="max-width:100%; margin-top:10px; display:none;" class="border rounded">
+          <img id="imgModalPreview" src="" alt="" style="max-width:100%; margin-top:10px; display:none;" class="border rounded">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" id="btnOk">OK</button>
@@ -60,7 +60,7 @@ $("#fileInput").on("change", function(e){
     selectedFile = file;
     const reader = new FileReader();
     reader.onload = function(ev){
-      $("#modalPreview").attr("src", ev.target.result).show();
+      $("#imgModalPreview").attr("src", ev.target.result).show();
     }
     reader.readAsDataURL(file);
   }
@@ -70,8 +70,8 @@ $("#fileInput").on("change", function(e){
 $("#btnOk").on("click", function(){
   if(selectedFile){
     $("#mainPreview").attr("src", URL.createObjectURL(selectedFile)).show();
-    $("#fileName").val(selectedFile.name);
-    $("#imageModal").modal("hide");
+    $("#txtFileName").val(selectedFile.name);
+    // $("#imageModal").modal("hide");
   }
 });
 
@@ -81,7 +81,7 @@ $("#btnSave").on("click", function(){
 
   let formData = new FormData();
   formData.append("file", selectedFile);
-  formData.append("filename", $("#fileName").val());
+  formData.append("filename", $("#txtFileName").val());
 
   $.ajax({
     url: "upload.php",
