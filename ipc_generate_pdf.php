@@ -17,6 +17,15 @@ $rsIpc = $ipc->getIpcByIpcId($ipcId);
 $inspection = new Inspection($pdo);
 $rsInspection = $inspection->getByInspectionId($inspectionId);
 
+
+$approver = [];
+foreach ($rsInspection['approver'] as $row) {
+  $key = $row['order_in_block'];
+  unset($row['order_in_block']); // ลบ key 'id' ออกจาก value
+  $approver[$key] = $row;
+}
+$_SESSION['approver']=$approver;
+
 $mpdf = new \Mpdf\Mpdf([
     'mode' => 'utf-8',
     'default_font' => 'thsarabun',
@@ -512,12 +521,15 @@ $html3 .= '
 
 <table>
     <tr>
+        <td colspan="2" style="height:25px;"></td>
+    </tr>  
+    <tr>
         <td class="col-fixed-width center">
             <div class="signature-block">
-                <p>By : <img src="images/signature.jpg" width="120"></p>
+                <p>By : <img src="' . $approver['1']['signature'] . '" width="120"></p>
                 <div class="sig-line"></div>
                 <div class="signature-details">
-                    <p>( ' . $rsInspection['period']['remark'] . ' )</p>
+                    <p>( ' . $approver['1']['full_name'] . ' )</p>
                     <p>Head of Project Management Department</p>
                 </div>
             </div>
@@ -525,11 +537,11 @@ $html3 .= '
 
         <td class="col-fixed-width center">
             <div class="signature-block">
-                By : <img src="images/signature.jpg" width="120"><br>
+                By : <img src="' . $approver['2']['signature'] . '" width="120"><br>
                 <div class="sig-line"></div>
                 <div class="signature-details">
-                    ( Tanawat Worasakdinan ) <br>
-                    Cost Control Manager
+                  <p>( ' . $approver['2']['full_name'] . ' )</p>
+                  <p>Cost Control Manager</p>
                 </div>
             </div>
         </td>

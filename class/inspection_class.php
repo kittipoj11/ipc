@@ -154,12 +154,45 @@ class Inspection
         $stmt->execute();
         $rsPlanStatus = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
-        // 6. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
+        // 6. ดึงข้อมูล approver แยกเป็น row ออกมา
+        // $sql = "SELECT inspection_id, approver_id, order_in_block, full_name, filename as signature
+        //         FROM (
+        //             SELECT inspection_id, approved1_by AS approver_id, 1 AS order_in_block
+        //             FROM inspection
+        //             UNION ALL
+        //             SELECT inspection_id, approved2_by AS approver_id, 2 AS order_in_block
+        //             FROM inspection
+        //             ) TMP
+        //         LEFT JOIN users ON approver_id = user_id                
+        //         WHERE inspection_id = :inspection_id";
+        // $stmt = $this->db->prepare($sql);
+        // $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
+        // $stmt->execute();
+        // $rsApprover = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // $_SESSION['rsApprover'] = $rsApprover;
+
+        $sql = "SELECT W.approver_id, W.order_in_block, W.approval_level
+                , U.full_name, case when I.current_approval_level >= W.approval_level then U.filename else '' end as signature
+                from workflow_steps W
+                inner join users U on W.approver_id = U.user_id
+                inner join inspection I on I.workflow_id = W.workflow_id
+                where I.workflow_id = :workflow_id
+                and W.order_in_block > 0
+                and I.inspection_id = :inspection_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
+        $stmt->bindParam(':workflow_id', $rsInspection['workflow_id'], PDO::PARAM_INT);
+        $stmt->execute();
+        $rsApprover = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $_SESSION['rsApprover'] = $rsApprover;
+
+        // 7. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
         $result = [
             'header' => $rsPoMain,
             'period' => $rsInspection,
             'periodDetails' => $rsInspectionDetails, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
             'plan_status' => $rsPlanStatus, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 5
+            'approver' => $rsApprover, // ข้อมูล approver ที่ได้จากขั้นตอนที่ 6
         ];
         return $result;
     }
