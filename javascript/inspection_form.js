@@ -11,16 +11,16 @@ $(document).ready(function () {
       .fadeOut();
   }
 
-  let contract_value = isNaN(parseFloat($("#contract_value").val())) ? 0 : parseFloat($("#contract_value").val());
-  let interim_payment = parseFloat($("#interim_payment").val());
-  let interim_payment_less_previous = isNaN(parseFloat($("#interim_payment_less_previous").val())) ? 0 : parseFloat($("#interim_payment_less_previous").val());
-  let interim_payment_accumulated = isNaN(parseFloat($("#interim_payment_accumulated").val())) ? 0 : parseFloat($("#interim_payment_accumulated").val());
-  let interim_payment_remain = isNaN(parseFloat($("#interim_payment_remain").val())) ? 0 : parseFloat($("#interim_payment_remain").val());
+  // let contract_value = isNaN(parseFloat($("#contract_value").val())) ? 0 : parseFloat($("#contract_value").val());
+  // let interim_payment = parseFloat($("#interim_payment").val());
+  // let interim_payment_less_previous = isNaN(parseFloat($("#interim_payment_less_previous").val())) ? 0 : parseFloat($("#interim_payment_less_previous").val());
+  // let interim_payment_accumulated = isNaN(parseFloat($("#interim_payment_accumulated").val())) ? 0 : parseFloat($("#interim_payment_accumulated").val());
+  // let interim_payment_remain = isNaN(parseFloat($("#interim_payment_remain").val())) ? 0 : parseFloat($("#interim_payment_remain").val());
 
-  let interim_payment_percent = isNaN(parseFloat($("#interim_payment_percent").val())) ? 0 : parseFloat($("#interim_payment_percent").val());
-  let interim_payment_less_previous_percent = isNaN(parseFloat($("#interim_payment_less_previous_percent").val())) ? 0 : parseFloat($("#interim_payment_less_previous_percent").val());
-  let interim_payment_accumulated_percent = isNaN(parseFloat($("#interim_payment_accumulated_percent").val())) ? 0 : parseFloat($("#interim_payment_accumulated_percent").val());
-  let interim_payment_remain_percent = isNaN(parseFloat($("#interim_payment_remain_percent").val())) ? 0 : parseFloat($("#interim_payment_remain_percent").val());
+  // let interim_payment_percent = isNaN(parseFloat($("#interim_payment_percent").val())) ? 0 : parseFloat($("#interim_payment_percent").val());
+  // let interim_payment_less_previous_percent = isNaN(parseFloat($("#interim_payment_less_previous_percent").val())) ? 0 : parseFloat($("#interim_payment_less_previous_percent").val());
+  // let interim_payment_accumulated_percent = isNaN(parseFloat($("#interim_payment_accumulated_percent").val())) ? 0 : parseFloat($("#interim_payment_accumulated_percent").val());
+  // let interim_payment_remain_percent = isNaN(parseFloat($("#interim_payment_remain_percent").val())) ? 0 : parseFloat($("#interim_payment_remain_percent").val());
 
   $("#btnAdd").click(function () {
     let order_no;
@@ -179,20 +179,18 @@ $(document).ready(function () {
   function sendRequest(action, data){
     const myForm = $("#myForm");
     const inspectionId = myForm.data("inspection-id");
-    const orderInBlock = myForm.data("order-in-block");
     const userId = myForm.data("user-id"); //ไม่ต้องส่งไปก็ได้เพราะ  เรียกใช้ $_SESSION['user_id] ใน inspection_handler_api.php หรือ inspection_service_class.php
 
     const data_sent = {
       action: action,
       inspectionId: inspectionId,
       userId: userId,
-      orderInBlock: orderInBlock,
       ...data,
     };
-    // console.log(action);
-    console.log(JSON.stringify(data_sent));
+    // console.log(JSON.stringify(data_sent));
+    // exit;
     // return;
-    console.log(`data_sent: ${JSON.stringify(data_sent)}`);
+    // console.log(`data_sent: ${JSON.stringify(data_sent)}`);
     $.ajax({
       url: "inspection_handler_api.php",
       type: "POST",
@@ -289,12 +287,15 @@ $(document).ready(function () {
       detailsData: detailsData,
     };
     if(currentApprovalLevel == 0){
+      // console.log(`currentApprovalLevel = ${currentApprovalLevel}`);
       sendRequest('save',data);
     }else{
+      // console.log(`currentApprovalLevel = ${currentApprovalLevel}`);
       sendRequest('update',data);
     }
   });
 
+  // Approval *****************
   $(".approve").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
       e.preventDefault();

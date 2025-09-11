@@ -53,7 +53,6 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'create') {
     echo json_encode($rs);
 
 } else {
-    fetchAll($approval_status);
 }
 
 //หลังทำการ Insert, Update หรือ Delete แล้วทำการ fetch ข้อมูลมาแสดงใหม่

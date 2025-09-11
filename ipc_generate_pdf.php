@@ -509,6 +509,32 @@ $html3 .= '
       <td class="col-fixed-width"><span class="label"><input type="radio">ไม่อนุมัติเบิกจ่าย</span></td>
     </tr>
   </table>
+
+<table>
+    <tr>
+        <td class="col-fixed-width center">
+            <div class="signature-block">
+                <p>By : <img src="images/signature.jpg" width="120"></p>
+                <div class="sig-line"></div>
+                <div class="signature-details">
+                    <p>( ' . $rsInspection['period']['remark'] . ' )</p>
+                    <p>Head of Project Management Department</p>
+                </div>
+            </div>
+        </td>
+
+        <td class="col-fixed-width center">
+            <div class="signature-block">
+                By : <img src="images/signature.jpg" width="120"><br>
+                <div class="sig-line"></div>
+                <div class="signature-details">
+                    ( Tanawat Worasakdinan ) <br>
+                    Cost Control Manager
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
 ';
 
 $html4 = '

@@ -96,17 +96,6 @@ class DocumentService
             //             FROM `workflow_steps`
             //             WHERE `workflow_id` = :workflow_id
             //             ORDER BY approval_level asc";
-
-            //     $stmtWorkflowSteps = $this->db->prepare($sql);
-            //     $stmtWorkflowSteps->bindParam(':workflow_id', $workflowId, PDO::PARAM_INT);
-            //     $stmtWorkflowSteps->execute();
-            //     $rsWorkflowSteps = $stmtWorkflowSteps->fetchAll();
-
-            //     // INSERT inspection_approvals
-            //     $sql = "INSERT INTO `inspection_approvals`(`inspection_id`, `period_id`, `po_id`, `period_number`, `approval_level`, `approver_id`, `approval_type_id`, `approval_type_text`, `approval_status_id`) 
-            //             VALUES (:inspection_id, :period_id, :po_id, :period_number, :approval_level, :approver_id, :approval_type_id, :approval_type_text, :approval_status_id)";
-            //     $stmtCreateInspectApprovals = $this->db->prepare($sql);
-
                 foreach ($createItems as &$item) {
                     // CREATE po_periods $poId
                     $item['po_id']=$poId;
@@ -115,28 +104,7 @@ class DocumentService
                     $item['period_id']=$periodId;
                     // CREATE inspection and inspection_details
                     $this->inspection->createFromPoPeriod($item);
-
-
-            //         $approvalStatusId = 1;
-            //         foreach ($rsWorkflowSteps as $row) {
-            //             $stmtCreateInspectApprovals->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
-            //             $stmtCreateInspectApprovals->bindParam(':period_id', $periodId, PDO::PARAM_INT);
-            //             $stmtCreateInspectApprovals->bindParam(':po_id', $poId, PDO::PARAM_INT);
-            //             $stmtCreateInspectApprovals->bindParam(':period_number', $item['period_number'], PDO::PARAM_INT);
-            //             $stmtCreateInspectApprovals->bindParam(':approval_level', $approvalLevel,  PDO::PARAM_INT);
-            //             $stmtCreateInspectApprovals->bindParam(':approver_id', $row['approver_id'], PDO::PARAM_INT);
-            //             $stmtCreateInspectApprovals->bindParam(':approval_type_id', $row['approval_type_id'], PDO::PARAM_INT);
-            //             $stmtCreateInspectApprovals->bindParam(':approval_type_text', $row['approval_type_text'], PDO::PARAM_STR);
-            //             $stmtCreateInspectApprovals->bindParam(':approval_status_id', $approvalStatusId, PDO::PARAM_INT);
-            //             $stmtCreateInspectApprovals->execute();
-            //         }
-            //         $stmtCreateInspectApprovals->closeCursor();
                 }
-                // $_SESSION['createItems after UUUUUUUUUUUUUUUU'] = $createItems;
-                // foreach ($createItems as $item) {
-                //     // CREATE inspection
-                //     $this->inspection->saveFromPoPeriod($item);
-                // }
             }
             $this->db->commit();
             // คืนค่า PO ID ที่บันทึกสำเร็จกลับไป

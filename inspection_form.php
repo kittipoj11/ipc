@@ -123,7 +123,7 @@ require_once 'auth.php';
     $rsInspection = $inspection->getByInspectionId($inspectionId);
 
     $rsCurrentApprovalType  = $inspection->getCurrentApprovalType($inspectionId);
-
+$_SESSION['$rsCurrentApprovalType']=$rsCurrentApprovalType;
     $plan_status = new Plan_status($pdo);
     $rsPlanStatus = $plan_status->getAll();
 

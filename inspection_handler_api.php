@@ -18,6 +18,7 @@ $requestData = json_decode(file_get_contents('php://input'), true);
 
 $userId = $_SESSION['user_id'] ?? 0;
 
+$_SESSION['action1']=$requestData['action'];
 if (isset($requestData['action']) && $userId > 0) {
     $connection = new Connection();
     $pdo = $connection->getDbConnection();
@@ -27,14 +28,14 @@ if (isset($requestData['action']) && $userId > 0) {
     $ipc = new Ipc($pdo);
     $workflow = new Workflows($pdo);
     $inspectionService = new InspectionService($pdo, $po, $inspection, $ipc,$workflow);
-
+$_SESSION['action2']=$requestData['action'];
     switch ($requestData['action']) {
         case 'save':
             // $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
             $savedInspectionId = $inspectionService->saveInspection($requestData['periodData'], $requestData['detailsData']);
             $response = [
                 'status' => 'success',
-                'message' => 'บันทึกข้อมูล PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
+                'message' => 'บันทึกข้อมูล INSPECTION ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
                 'data' => ['inspection_id' => $savedInspectionId]
             ];
             echo json_encode($response);
@@ -45,7 +46,7 @@ if (isset($requestData['action']) && $userId > 0) {
             $savedInspectionId = $inspectionService->updateInspection($requestData['periodData'], $requestData['detailsData']);
             $response = [
                 'status' => 'success',
-                'message' => 'ปรับปรุงข้อมูล PO ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
+                'message' => 'ปรับปรุงข้อมูล INSPECTION ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',
                 'data' => ['inspection_id' => $savedInspectionId]
             ];
             echo json_encode($response);
@@ -53,7 +54,7 @@ if (isset($requestData['action']) && $userId > 0) {
 
         case 'approve':
             // $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
-            $savedInspectionId = $inspectionService->approveInspection($requestData['inspectionId'], $requestData['orderInBlock']);
+            $savedInspectionId = $inspectionService->approveInspection($requestData['inspectionId']);
             $response = [
                 'status' => 'success',
                 'message' => 'อนุมัติ Inspection ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',

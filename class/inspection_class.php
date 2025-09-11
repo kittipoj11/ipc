@@ -16,16 +16,16 @@ class Inspection
 
     public function getPoMainAll(): array
     {
-        $po=new Po($this->db);
-        $rs = $rs=$po->getAll();
+        $po = new Po($this->db);
+        $rs = $rs = $po->getAll();
         return $rs;
     }
 
     public function getPoMainByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
-        $po=new Po($this->db);
-        $rs=$po->getPoMainByPoId($poId);
+        $po = new Po($this->db);
+        $rs = $po->getPoMainByPoId($poId);
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
@@ -36,17 +36,17 @@ class Inspection
     public function getByPoId($poId): ?array
     {
         // ดึงข้อมูลจากตารางหลัก - po_main
-        $po=new Po($this->db);
-        $rs=$po->getPoMainByPoId($poId);
+        $po = new Po($this->db);
+        $rs = $po->getPoMainByPoId($poId);
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
 
         // ดึงข้อมูลจากตารางรอง
         $rs['periods'] = $this->getAllPeriodByPoId($poId);
-        
+
         // $rs2 = $this->po->getByPoId($poId);
-        
+
         // $po = new Po($this->db);
         // $rs2=$po->getByPoId($poId);
 
@@ -116,20 +116,20 @@ class Inspection
     public function getByInspectionId(int $inspectionId): ?array
     {
         // 1. ดึงข้อมูลของ inspection ที่ต้องการ
-        $sql = "SELECT P.`inspection_id`, P.`period_id`, P.`po_id`, P.`period_number`, P.`workflow_id`
-                , P.`workload_planned_percent`, P.`workload_actual_completed_percent`, P.`workload_remaining_percent`, P.`workload_accumulated_percent`
-                , P.`interim_payment`, P.`interim_payment_percent`, P.`interim_payment_less_previous`, P.`interim_payment_less_previous_percent`
-                , P.`interim_payment_accumulated`, P.`interim_payment_accumulated_percent`, P.`interim_payment_remain`, P.`interim_payment_remain_percent`
-                , P.`retention_value`, P.`plan_status_id`, P.`is_paid`, P.`is_retention`, P.`disbursement`, P.`remark`, P.`inspection_status`
-                , P.`current_approval_level`, P.`current_approver_id`, P.`created_by`, P.`created_at`, P.`updated_at` 
-                , COALESCE(P2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
-                FROM inspection P
+        $sql = "SELECT I.`inspection_id`, I.`period_id`, I.`po_id`, I.`period_number`, I.`workflow_id`
+                , I.`workload_planned_percent`, I.`workload_actual_completed_percent`, I.`workload_remaining_percent`, I.`workload_accumulated_percent`
+                , I.`interim_payment`, I.`interim_payment_percent`, I.`interim_payment_less_previous`, I.`interim_payment_less_previous_percent`
+                , I.`interim_payment_accumulated`, I.`interim_payment_accumulated_percent`, I.`interim_payment_remain`, I.`interim_payment_remain_percent`
+                , I.`retention_value`, I.`plan_status_id`, I.`is_paid`, I.`is_retention`, I.`disbursement`, I.`remark`, I.`inspection_status`
+                , I.`current_approval_level`, I.`current_approver_id`, I.`created_by`, I.`created_at`, I.`updated_at`, I.`approved1_by`, I.`approved2_by` 
+                , COALESCE(I2.interim_payment_accumulated, 0) AS previous_interim_payment_accumulated
+                FROM inspection I
                 INNER JOIN po_main O
-                    ON P.po_id = O.po_id
-                LEFT JOIN inspection P2 
-                    ON P2.po_id = P.po_id AND P2.period_number = P.period_number - 1
-                WHERE P.inspection_id = :inspection_id
-                ORDER BY P.po_id, P.period_number";
+                    ON I.po_id = O.po_id
+                LEFT JOIN inspection I2 
+                    ON I2.po_id = I.po_id AND I2.period_number = I.period_number - 1
+                WHERE I.inspection_id = :inspection_id
+                ORDER BY I.po_id, I.period_number";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$inspectionId]);
@@ -145,19 +145,7 @@ class Inspection
         // 4. ดึงข้อมูล InspectionDetails ทั้งหมดของ Inspection นี้ 
         $rsInspectionDetails = $this->getDetailsByInspectionId($inspectionId);
 
-        // 5. ดึงข้อมูล Inspection Approvals ของ inspection_id ที่มี approval_level = current_approval_level
-        // $sql = "SELECT inspection_approval_id, inspection_id, period_id, po_id, period_number
-        //         , approval_level, approver_id, approval_type_id, approval_type_text, approval_status_id, approval_date, approval_comment 
-        //         FROM inspection_approvals 
-        //         WHERE inspection_id = :inspection_id
-        //         AND approval_level = :approval_level";
-        // $stmt = $this->db->prepare($sql);
-        // $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
-        // $stmt->bindParam(':approval_level', $rsInspection['current_approval_level'], PDO::PARAM_INT);
-        // $stmt->execute();
-        // $rsInspectionApprovals = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
-
-        // 6. ดึงข้อมูล Plan Status
+        // 5. ดึงข้อมูล Plan Status
         $sql = "select plan_status_id, plan_status_name, is_deleted 
                 from plan_status
                 where plan_status_id = :id";
@@ -166,15 +154,13 @@ class Inspection
         $stmt->execute();
         $rsPlanStatus = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
-        // 7. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
+        // 6. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
         $result = [
             'header' => $rsPoMain,
             'period' => $rsInspection,
             'periodDetails' => $rsInspectionDetails, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 4
-            // 'periodApprovals' => $rsInspectionApprovals, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 5
-            'plan_status' => $rsPlanStatus, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 6
+            'plan_status' => $rsPlanStatus, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 5
         ];
-
         return $result;
     }
 
@@ -281,8 +267,8 @@ class Inspection
         return $rs;
     }
 
-// ฟังก์ชั่นนี้เป็นการ update จากการกดปุ่ม save(บันทึก) ในหน้า inspection form
-// ต้อง update ฟิลด์ current_approval_level, current_approver_id เพิ่มจาก workflow_step
+    // ฟังก์ชั่นนี้เป็นการ update จากการกดปุ่ม save(บันทึก) ในหน้า inspection form
+    // ต้อง update ฟิลด์ current_approval_level, current_approver_id เพิ่มจาก workflow_step
     public function save(array $periodData, array $detailsData): int
     {
         // กำหนดค่าให้ตัวแปร $inspectionId ที่ส่งมา
@@ -347,7 +333,7 @@ class Inspection
 
             // $stmtUpdatePoMain->execute();
             $stmtInspectionPeriods->execute();
-            // $_SESSION['period data']= $periodData;
+            // $_SESSION['execute OOOOOOOOOOOOO']= 'Exe';
             $stmtInspectionPeriods->closeCursor();
         }
 
@@ -435,28 +421,29 @@ class Inspection
      * @param int $approvalLevel ลำดับของการ approve
      * @return bool true หากสำเร็จ, false หากล้มเหลว
      */
-        public function updateStatus($inspectionId, $inspectionStatus, $approverId, $approvalLevel, $currentApproverId=0, $orderInBlock=0)
+    // public function updateStatus($inspectionId, $inspectionStatus, $approverId, $approvalLevel)
+    public function updateStatus($inspectionId, $inspectionStatus, $approverId, $approvalLevel, $currentApproverId = 0, $orderInBlock = 0)
     {
         $sql = "UPDATE `inspection`
                 SET `inspection_status` = :inspection_status
                 , `current_approver_id` = :approver_id
                 , `current_approval_level` = :approval_level
-                , `approved1_id`=  IF(:order_in_block = 1, :current_approver_id, approved1_id)
-                , `approved2_id`=  IF(:order_in_block = 2, :current_approver_id, approved2_id)
+                , `approved1_by` = CASE WHEN :order_in_block_1 = 1 THEN :current_approver_id_1 ELSE approved1_by END
+                , `approved2_by` = CASE WHEN :order_in_block_2 = 2 THEN :current_approver_id_2 ELSE approved2_by END
                 WHERE `inspection_id` = :inspection_id";
 
         $stmt = $this->db->prepare($sql);
-        // $stmt->bindParam(':po_number', $po_number, PDO::PARAM_STR);
         $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
         $stmt->bindParam(':approver_id', $approverId, PDO::PARAM_INT);
         $stmt->bindParam(':approval_level', $approvalLevel, PDO::PARAM_INT);
         $stmt->bindParam(':inspection_status', $inspectionStatus, PDO::PARAM_STR);
-        $stmt->bindParam(':current_approver_id', $currentApproverId, PDO::PARAM_INT);
-        $stmt->bindParam(':order_in_block', $orderInBlock, PDO::PARAM_INT);
+        $stmt->bindParam(':current_approver_id_1', $currentApproverId, PDO::PARAM_INT);
+        $stmt->bindParam(':order_in_block_1', $orderInBlock, PDO::PARAM_INT);
+        $stmt->bindParam(':current_approver_id_2', $currentApproverId, PDO::PARAM_INT);
+        $stmt->bindParam(':order_in_block_2', $orderInBlock, PDO::PARAM_INT);
 
-        // $stmtUpdatePoMain->execute();
         $stmt->execute();
-        // $_SESSION['period data']= $periodData;
+        // $_SESSION['after execute'] = $stmt->execute();
         $stmt->closeCursor();
     }
 
@@ -468,11 +455,11 @@ class Inspection
         $stmt->closeCursor();
     }
 
-  // ทำการบันทึกข้อมูล inspection เพื่อกำหนดค่าดังนี้ 
-  // inspection_status เป็น 'draft'(เป็นค่า default ที่กำหนดใน database) 
-  // current_approval_level เป็น 0 (เป็นค่า default ที่กำหนดใน database เพราะ inspecion_status = 'draft')
-  // current_approver_id เป็น 0(เป็นค่า default ที่กำหนดใน database เพราะถูกสร้างจาก po_period ยังไม่ได้ถูก save จาก inspection) 
-  // และบันทึก inspection_approval_history.action เป็น 'create document'
+    // ทำการบันทึกข้อมูล inspection เพื่อกำหนดค่าดังนี้ 
+    // inspection_status เป็น 'draft'(เป็นค่า default ที่กำหนดใน database) 
+    // current_approval_level เป็น 0 (เป็นค่า default ที่กำหนดใน database เพราะ inspecion_status = 'draft')
+    // current_approver_id เป็น 0(เป็นค่า default ที่กำหนดใน database เพราะถูกสร้างจาก po_period ยังไม่ได้ถูก save จาก inspection) 
+    // และบันทึก inspection_approval_history.action เป็น 'create document'
     public function createFromPoPeriod(array $periodData)
     {
         $sql = "INSERT INTO `inspection`(`po_id`, `period_number`, `period_id`, `workload_planned_percent`, `interim_payment`, `interim_payment_percent`, `workflow_id`, created_by) 
@@ -487,11 +474,11 @@ class Inspection
         $stmt->bindParam(':created_by', $_SESSION['user_id'], PDO::PARAM_STR);
         // $stmt->bindParam(':current_approver_id', 0, PDO::PARAM_STR);
         // $stmt->bindParam(':workflow_id', 1, PDO::PARAM_INT);//ทำไม error ตรงนี้
-        
+
         $stmt->execute();
         $stmt->closeCursor();
         $inspectionId = $this->db->lastInsertId();
-        
+
         // INSERT inspection_period_details
         $sql = "INSERT INTO `inspection_details`(`inspection_id`) 
                 VALUES (:inspection_id)";
@@ -500,7 +487,7 @@ class Inspection
         $stmt->execute();
         $stmt->closeCursor();
     }
-    
+
     public function updateFromPoPeriod(array $periodData)
     {
         $sql = "UPDATE `inspection`
@@ -517,7 +504,7 @@ class Inspection
         $stmt->bindParam(':interim_payment', $periodData['interim_payment'],  PDO::PARAM_STR);
         $stmt->bindParam(':interim_payment_percent', $periodData['interim_payment_percent'], PDO::PARAM_STR);
         $stmt->bindParam(':current_approver_id', $_SESSION['user_id'], PDO::PARAM_STR);
-        
+
         $stmt->execute();
         $stmt->closeCursor();
     }

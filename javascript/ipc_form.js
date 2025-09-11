@@ -59,7 +59,6 @@ function loadPage(page = 1) {
         dataType: "json",
         data: JSON.stringify(dataSent),
       }).done(function (result) {
-        console.log(result);
         // console.log(result);
         if (result) {
           content = loadInspection(result);
@@ -366,7 +365,7 @@ function loadInspection(data) {
 
                 <div class="d-flex justify-content-between">
                   <div class="col d-flex justify-content-start">
-                    <div>ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน : ${data.plan_status.plan_status_name} %</div>
+                    <div>ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน : ${data.plan_status ? data.plan_status.plan_status_name : ''}</div>
                   </div>
                 </div>
 

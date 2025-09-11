@@ -49,7 +49,7 @@ class Po
             $stmt->bindParam(':working_date_to', $data['working_date_to'], PDO::PARAM_STR);
             $stmt->bindParam(':working_day', $data['working_day'], PDO::PARAM_INT);
             $stmt->bindParam(':number_of_period', $data['number_of_period'], PDO::PARAM_INT);
-            $stmt->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
+            $stmt->bindParam(':create_by', $_SESSION['user_id'], PDO::PARAM_STR);
             $stmt->bindParam(':workflow_id', $data['workflowId'], PDO::PARAM_INT);
             $stmt->execute();
             $stmt->closeCursor();
@@ -97,7 +97,7 @@ class Po
             $stmt->bindParam(':working_date_to', $data['working_date_to'], PDO::PARAM_STR);
             $stmt->bindParam(':working_day', $data['working_day'], PDO::PARAM_INT);
             $stmt->bindParam(':number_of_period', $data['number_of_period'], PDO::PARAM_INT);
-            // $stmt->bindParam(':create_by', $_SESSION['user_code'], PDO::PARAM_STR);
+            // $stmt->bindParam(':create_by', $_SESSION['user_id'], PDO::PARAM_STR);
             // $stmt->bindParam(':workflow_id', $workflowId, PDO::PARAM_INT);
             $stmt->bindParam(':po_id', $poId, PDO::PARAM_INT);
             // $stmt->execute();
