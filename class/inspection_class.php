@@ -172,7 +172,9 @@ class Inspection
         // $_SESSION['rsApprover'] = $rsApprover;
 
         $sql = "SELECT W.approver_id, W.order_in_block, W.approval_level
-                , U.full_name, case when I.current_approval_level >= W.approval_level then U.filename else '' end as signature
+                , U.full_name
+                , case when I.current_approval_level > W.approval_level then U.filename else '' end as signature
+                , case when I.current_approval_level > W.approval_level then 'inline-block' else 'none' end as display
                 from workflow_steps W
                 inner join users U on W.approver_id = U.user_id
                 inner join inspection I on I.workflow_id = W.workflow_id
@@ -184,7 +186,7 @@ class Inspection
         $stmt->bindParam(':workflow_id', $rsInspection['workflow_id'], PDO::PARAM_INT);
         $stmt->execute();
         $rsApprover = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $_SESSION['rsApprover'] = $rsApprover;
+        // $_SESSION['rsApprover'] = $rsApprover;
 
         // 7. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
         $result = [

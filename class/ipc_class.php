@@ -103,12 +103,28 @@ class Ipc
         // 3. ดึงข้อมูลของ po_main ของ period_id ที่ต้องการ
         $rsPoMain = $this->getPoMainByPoId($rsIpc['po_id']);
 
+        // 6. ดึงข้อมูล approver แยกเป็น row ออกมา
+        $sql = "SELECT W.approver_id, W.order_in_block, W.approval_level
+                , U.full_name
+                , case when I.current_approval_level > W.approval_level then U.filename else '' end as signature
+                , case when I.current_approval_level > W.approval_level then 'inline-block' else 'none' end as display
+                from workflow_steps W
+                inner join users U on W.approver_id = U.user_id
+                inner join ipc I on I.workflow_id = W.workflow_id
+                where I.workflow_id = :workflow_id
+                and W.order_in_block > 0
+                and I.ipc_id = :ipc_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':ipc_id', $ipcId, PDO::PARAM_INT);
+        $stmt->bindParam(':workflow_id', $rsIpc['workflow_id'], PDO::PARAM_INT);
+        $stmt->execute();
+        $rsApprover = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         // 7. จัดโครงสร้างข้อมูลใหม่เพื่อความเข้าใจง่าย
         $result = [
             'pomain' => $rsPoMain,
             'ipc' => $rsIpc,
-            // 'periodApprovals' => $rsInspectionApprovals, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 5
-            // 'maxInspectionApproval' => $rsMaxInspectionApproval, // ข้อมูล period details ที่ได้จากขั้นตอนที่ 6
+            'approver' => $rsApprover, // ข้อมูล approver ที่ได้จากขั้นตอนที่ 6
         ];
 
         return $result;

@@ -219,6 +219,20 @@ ob_start(); // Start get HTML code
     .status-completed {
       background-color: #28a745;
     }
+
+    .signature-block {
+  margin-top: 0px;
+  /* display: flex; */
+  align-items: flex-start;
+  flex-direction: column;
+  /* border: 1px solid blue; */
+}
+.signature-block .sig-line {
+  width: 200px;
+  border-bottom: 1px solid #000;
+  margin-left: 50px;
+  margin-right: 10px;
+}
   </style>
 </head>
 

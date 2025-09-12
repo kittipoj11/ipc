@@ -110,7 +110,7 @@ class InspectionService
             // 3.1 หา workflow_step ปัจจุบันก่อน  เพื่อนำค่า order_in_block เพื่อมาบันทึกค่าให้ approved1_by หรือ approved2_by ถ้ามีการกำหนดไว้
             $rsWorkflow = $this->workflow->getStep($workflowId, $currentLevel);
             $orderInBlock = $rsWorkflow['order_in_block'];
-            $_SESSION['order in block'] = $orderInBlock;
+            // $_SESSION['order in block'] = $orderInBlock;
 
             // 3.2 หา workflow_step ลำดับถัดไป
             $nextLevel = $currentLevel + 1;
@@ -135,7 +135,7 @@ class InspectionService
                 //inspection_status สถานะปัจจุบัน (Completed)
                 //current_approver_id บอกว่าไม่มีใครต้องทำอะไรต่อ (Null) 
                 //current_level บอกประวัติว่าไปถึงขั้นตอนไหน (ขั้นตอนสุดท้าย)
-                $this->inspection->updateStatus($inspectionId, 'completed', NULL, $currentLevel, $userId, $orderInBlock);
+                $this->inspection->updateStatus($inspectionId, 'completed', NULL, $nextLevel, $userId, $orderInBlock);
 
                 // 5.log history 
                 $this->inspection->logHistory($inspectionId, $userId, "Final Approved at Step {$currentLevel}. Status: Completed");
@@ -265,7 +265,7 @@ class InspectionService
                 //inspection_status สถานะปัจจุบัน (Completed)
                 //current_approver_id บอกว่าไม่มีใครต้องทำอะไรต่อ (Null) 
                 //current_level บอกประวัติว่าไปถึงขั้นตอนไหน (ขั้นตอนสุดท้าย)
-                $this->ipc->updateStatus($ipcId, 'completed', NULL, $currentLevel);
+                $this->ipc->updateStatus($ipcId, 'completed', NULL, $nextLevel);
 
                 // 5.log history 
                 $this->ipc->logHistory($ipcId, $userId, "Final Approved at Step {$currentLevel}. Status: Completed");

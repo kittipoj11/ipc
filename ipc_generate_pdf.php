@@ -13,18 +13,24 @@ $inspectionId = $_REQUEST['inspection_id'];
 
 $ipc = new Ipc($pdo);
 $rsIpc = $ipc->getIpcByIpcId($ipcId);
+$ipcApprover = [];
+foreach ($rsIpc['approver'] as $row) {
+  $key = $row['order_in_block'];
+  unset($row['order_in_block']); // ลบ key 'id' ออกจาก value
+  $ipcApprover[$key] = $row;
+}
 
 $inspection = new Inspection($pdo);
 $rsInspection = $inspection->getByInspectionId($inspectionId);
 
 
-$approver = [];
+$inspectionApprover = [];
 foreach ($rsInspection['approver'] as $row) {
   $key = $row['order_in_block'];
   unset($row['order_in_block']); // ลบ key 'id' ออกจาก value
-  $approver[$key] = $row;
+  $inspectionApprover[$key] = $row;
 }
-$_SESSION['approver']=$approver;
+// $_SESSION['approver']=$inspectionApprover;
 
 $mpdf = new \Mpdf\Mpdf([
     'mode' => 'utf-8',
@@ -79,59 +85,7 @@ $mpdf->SetHTMLFooter('
 ');
 
 $html1 = '
-<style>
-  body {
-    font-family: "dejavusans", sans-serif;
-    margin: 0;
-    padding: 40px;
-    background-color: #fff;
-    color: #000;
-    line-height: 1.6;
-  }
-
-  .info-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    margin-bottom: 5px;
-  }
-  .info-label {
-    font-weight: bold;
-  }
-  .content {
-    margin-top: 2px;
-    // border: 1px solid red;
-  }
-  .content .salutation {
-    margin-bottom: 20px;
-    font-size: 12px;
-  }
-  .content .body-text {
-    font-size: 12px;
-  }
-  .body-text p {
-    margin: 0 0 10px 0;
-  }
-  .body-text ol {
-    padding-left: 20px;
-    list-style: none;
-    counter-reset: my-awesome-counter;
-  }
-  .body-text ol li {
-    counter-increment: my-awesome-counter;
-    position: relative;
-    margin-bottom: 15px;
-    line-height: 1.5;
-  }
-  .body-text ol li::before {
-    content: counter(my-awesome-counter) ".";
-    position: absolute;
-    left: -20px;
-    font-weight: bold;
-  }
-</style>
-
-<div class="card-body m-0 p-0">
+  <div class="card-body m-0 p-0">
     <div class="container">
         <div class="header">
             <div class="title-block">
@@ -191,14 +145,36 @@ $html1 = '
             </div>
         </div>
 
-        <div class="signature-block">
-            <p>By : <img src="images/signature.jpg" width="120"></p>
-            <div class="sig-line"></div>
-            <div class="signature-details">
-                <p>( Kunwadee Jintavorn )</p>
-                <p>Executive Director</p>
-            </div>
-        </div>
+        <table>
+          <tr>
+              <td colspan="2" style="height:25px;"></td>
+          </tr>  
+          <tr>
+              <td class="center">
+                <table>
+                  <tr>
+                    <td class="by">By :</td>
+                    <td>
+                      <div class="signature-block">
+                        <p><img src="' . $ipcApprover['4']['signature'] . '" width="120" style="display:' . $ipcApprover['4']['display'] . '"></p>
+                        <div class="sig-line">____________________________</div>
+                        <div class="signature-details">
+                            <p>( ' . $ipcApprover['4']['full_name'] . ' )</p>
+                            <p>Executive Director</p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+
+              <td class="center">
+                  <div class="signature-block">
+
+                  </div>
+              </td>
+          </tr>
+        </table>
     </div>
 </div>
 ';
@@ -290,26 +266,40 @@ $html2 = '
     </tr>  
 
     <tr>
-        <td class="col-fixed-width center">
-            <div class="signature-block">
-                <p>By : <img src="images/signature.jpg" width="120"></p>
-                <div class="sig-line"></div>
-                <div class="signature-details">
-                    <p>( Watchara Chanthrasopa )</p>
-                    <p>Head of Project Management Department</p>
+        <td class="center">
+          <table>
+            <tr>
+              <td class="by">By :</td>
+              <td>
+                <div class="signature-block">
+                  <p><img src="' . $ipcApprover['3']['signature'] . '" width="120" style="display:' . $ipcApprover['3']['display'] . '"></p>
+                  <div class="sig-line">____________________________</div>
+                  <div class="signature-details">
+                      <p>( ' . $ipcApprover['3']['full_name'] . ' )</p>
+                      <p>Head of Project Management Department</p>
+                  </div>
                 </div>
-            </div>
+              </td>
+            </tr>
+          </table>        
         </td>
 
-        <td class="col-fixed-width center">
-            <div class="signature-block">
-                By : <img src="images/signature.jpg" width="120"><br>
-                <div class="sig-line"></div>
-                <div class="signature-details">
-                    ( Tanawat Worasakdinan ) <br>
-                    Cost Control Manager
+        <td class="center">
+          <table>
+            <tr>
+              <td class="by">By :</td>
+              <td>
+                <div class="signature-block">
+                  <p><img src="' . $ipcApprover['2']['signature'] . '" width="120" style="display:' . $ipcApprover['2']['display'] . '"></p>
+                  <div class="sig-line">____________________________</div>
+                  <div class="signature-details">
+                      <p>( ' . $ipcApprover['2']['full_name'] . ' )</p>
+                      <p>Cost Control Manager</p>
+                  </div>
                 </div>
-            </div>
+              </td>
+            </tr>
+          </table> 
         </td>
     </tr>
 
@@ -318,16 +308,26 @@ $html2 = '
     </tr>  
 
     <tr>
-        <td class="col-fixed-width center">
+        <td class="center">
 
         </td>
 
-        <td class="col-fixed-width center">
-            <div class="signature-block">
-                By : <img src="images/signature.jpg" width="120"><br>
-                    ( Apichaya Sindhuprama ) <br>
-                    Project Manager
-            </div>
+        <td class="center">
+          <table>
+            <tr>
+              <td class="by">By :</td>
+              <td>
+                <div class="signature-block">
+                  <p><img src="' . $ipcApprover['1']['signature'] . '" width="120" style="display:' . $ipcApprover['1']['display'] . '"></p>
+                  <div class="sig-line">____________________________</div>
+                  <div class="signature-details">
+                      <p>( ' . $ipcApprover['1']['full_name'] . ' )</p>
+                      <p>Project Manager</p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table> 
         </td>
     </tr>
     </table>
@@ -524,26 +524,40 @@ $html3 .= '
         <td colspan="2" style="height:25px;"></td>
     </tr>  
     <tr>
-        <td class="col-fixed-width center">
-            <div class="signature-block">
-                <p>By : <img src="' . $approver['1']['signature'] . '" width="120"></p>
-                <div class="sig-line"></div>
-                <div class="signature-details">
-                    <p>( ' . $approver['1']['full_name'] . ' )</p>
-                    <p>Head of Project Management Department</p>
+        <td class="center">
+          <table>
+            <tr>
+              <td class="by">By :</td>
+              <td>
+                <div class="signature-block">
+                  <p><img src="' . $inspectionApprover['1']['signature'] . '" width="120" style="display:' . $inspectionApprover['1']['display'] . '"></p>
+                  <div class="sig-line">____________________________</div>
+                  <div class="signature-details">
+                      <p>( ' . $inspectionApprover['1']['full_name'] . ' )</p>
+                      <p>ผู้ตรวจสอบ</p>
+                  </div>
                 </div>
-            </div>
+              </td>
+            </tr>
+          </table> 
         </td>
 
-        <td class="col-fixed-width center">
-            <div class="signature-block">
-                By : <img src="' . $approver['2']['signature'] . '" width="120"><br>
-                <div class="sig-line"></div>
-                <div class="signature-details">
-                  <p>( ' . $approver['2']['full_name'] . ' )</p>
-                  <p>Cost Control Manager</p>
+        <td class="center">
+          <table>
+            <tr>
+              <td class="by">By :</td>
+              <td>
+                <div class="signature-block">
+                  <p><img src="' . $inspectionApprover['2']['signature'] . '" width="120" style="display:' . $inspectionApprover['2']['display'] . '"></p>
+                  <div class="sig-line">____________________________</div>
+                  <div class="signature-details">
+                      <p>( ' . $inspectionApprover['2']['full_name'] . ' )</p>
+                      <p>หัวหน้าฝ่ายบริหารโครงการ</p>
+                  </div>
                 </div>
-            </div>
+              </td>
+            </tr>
+          </table> 
         </td>
     </tr>
 </table>
