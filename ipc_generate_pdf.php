@@ -435,27 +435,34 @@ $html3= '
           </table>
         </td>
         <td>
-          <table style="border-left: 1px solid black;">
+          <table  style="border-left: 1px solid black; width:100%; table-layout:fixed;">
+            <colgroup>
+              <col style="width:20%">
+              <col>
+              <col style="width:5%">
+            </colgroup>
+            <tbody>
             <tr>
-              <td width="40%"><span class="label-normal">ยอดเบิกเงินงวดปัจจุบัน</span></td>
-              <td width="50%" style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td><span class="label-normal">ยอดเบิกเงินงวดปัจจุบัน</span></td>
+              <td style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
               <td style="text-align:right;">' . $rsInspection['period']['interim_payment_percent'] . ' %</td>
             </tr>
             <tr>
-              <td width="40%"><span class="label-normal">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</span></td>
-              <td width="50%" style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment_less_previous'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td><span class="label-normal">ยอดเบิกเงินงวดสะสมไม่รวมปัจจุบัน</span></td>
+              <td style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment_less_previous'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
               <td style="text-align:right;">' . $rsInspection['period']['interim_payment_less_previous_percent'] . ' %</td>
             </tr>
             <tr>
-              <td width="40%"><span class="label-normal">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</span></td>
-              <td width="50%" style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment_accumulated'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td><span class="label-normal">ยอดเบิกเงินงวดสะสมถึงปัจจุบัน</span></td>
+              <td style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment_accumulated'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
               <td style="text-align:right;">' . $rsInspection['period']['interim_payment_accumulated_percent'] . ' %</td>
             </tr>
             <tr>
-              <td width="40%"><span class="label-normal">ยอดเงินงวดคงเหลือ</span></td>
-              <td width="50%" style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment_remain'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
+              <td><span class="label-normal">ยอดเงินงวดคงเหลือ</span></td>
+              <td style="text-align:right;"><span class="label-normal">' . number_format($rsInspection['period']['interim_payment_remain'], 2) . ' บาท (Including VAT7%) คิดเป็น</span></td>
               <td style="text-align:right;">' . $rsInspection['period']['interim_payment_remain_percent'] . ' %</td>
             </tr>
+            </tbody>
           </table>
         </td>
       </tr>
@@ -463,7 +470,7 @@ $html3= '
 
     <hr class="hr border border-dark">
 
-    <table style=" border:0;padding:5px;">
+    <table style="border:0;padding:5px;">
       <tr>
         <td class="col-fixed-width"><span class="label">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน </span>' . $rsInspection['period']['workload_planned_percent'] . ' %</td>
         <td class="col-fixed-width"><span class="label">ปริมาณที่แล้วเสร็จจริง </span>' . $rsInspection['period']['workload_actual_completed_percent'] . ' %</td>
@@ -474,7 +481,7 @@ $html3= '
     <table style=" border:1;padding:5px;">
       <thead>
       <tr style="border:1;">
-          <th style="border:1;padding:5px;" width="10%">ลำดับที่</th>
+          <th style="border:1;padding:5px;width=50px" >ลำดับที่</th>
           <th style="border:1;padding:5px;" width="25%">รายละเอียดการตรวจสอบ</th>
           <th style="border:1;padding:5px;" >หมายเหตุ</th>
       </tr>
@@ -561,6 +568,8 @@ $html3 .= '
         </td>
     </tr>
 </table>
+
+
 ';
 
 $html4 = '
@@ -577,6 +586,28 @@ $html4 = '
         <input type="checkbox" name="q2[]" value="quality"> คุณภาพสินค้า
     </p>
 </form>
+<table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+    <colgroup>
+        <col style="width: 30%;">
+        <col style="width: 60%;">
+        <col style="width: 10%;">
+    </colgroup>
+    <thead>
+      <tr>
+        <th style="border: 1px solid black; text-align: left; padding: 5px;">Header 1 (30%)</th>
+        <th style="border: 1px solid black; text-align: left; padding: 5px;">Header 2 (60%)</th>
+        <th style="border: 1px solid black; text-align: left; padding: 5px;">Header 3 (10%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="border: 1px solid black; padding: 5px;">Data 1</td>
+        <td style="border: 1px solid black; padding: 5px;">Data 2</td>
+        <td style="border: 1px solid black; padding: 5px;">Data 3</td>
+      </tr>
+    </tbody>
+</table>
+    
 ';
 
 $stylesheet = file_get_contents('pdfstyle.css');
@@ -588,6 +619,7 @@ $mpdf->AddPage();
 $mpdf->WriteHTML($html2);
 $mpdf->AddPage();
 $mpdf->WriteHTML($html3);
-// $mpdf->WriteHTML($html4);
+$mpdf->AddPage();
+$mpdf->WriteHTML($html4);
 
 $mpdf->Output($pdfFilename, "I"); // แสดง PDF ใน browser
