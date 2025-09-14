@@ -6,6 +6,7 @@
     background-color: #fff;
     color: #000;
     line-height: 1.6;
+    box-sizing: border-box;
   }
 
   .info-row {
@@ -135,17 +136,21 @@ table {
   padding:0;
 }
 td {
-  width: 50%;
-  /* border: 1px solid #333; */
+  border: 1px solid #333;
   border: 1px solid red;
-  border: none;
+  /* border: none; */
   padding: 0px;
   vertical-align: top;
   font-size: 10px;
 }
 
+.td-w50 {
+  width: 50%;
+}
+
 .by{
-  width:50px;
+  width:10%;
+  text-align: right;
   /* width:25%; */
 }
 

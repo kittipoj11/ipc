@@ -41,7 +41,7 @@ $mpdf = new \Mpdf\Mpdf([
     'margin_top' => 20,
     'margin_bottom' => 40,
     'margin_left' => 10,
-    'margin_right' => 10
+    'margin_right' => 10,
 ]);
 
 $mpdf->SetHTMLHeader('
@@ -56,7 +56,7 @@ $mpdf->SetHTMLFooter('
 <div class="company-footer">
   <table>
     <tr>
-      <td class="left-footer">
+      <td class="left-footer td-w50">
         <div class="left-footer small-text">
             IMPACT ARENA<br>
             IMPACT FORUM<br>
@@ -66,7 +66,7 @@ $mpdf->SetHTMLFooter('
         </div>
       </td>
 
-      <td class="right-footer">
+      <td class="right-footer td-w50">
         <div class="right-footer small-text">
             IMPACT EXHIBITION MANAGEMENT CO., LTD.<br>
             10<sup>th</sup> Floor, Bangkok Land Building, 47/569-576 Popular 3 Road,<br>
@@ -150,11 +150,11 @@ $html1 = '
               <td colspan="2" style="height:25px;"></td>
           </tr>  
           <tr>
-              <td class="center">
+              <td class="center td-w50">
                 <table>
                   <tr>
                     <td class="by">By :</td>
-                    <td>
+                    <td class="center">
                       <div class="signature-block">
                         <p><img src="' . $ipcApprover['4']['signature'] . '" width="120" style="display:' . $ipcApprover['4']['display'] . '"></p>
                         <div class="sig-line">____________________________</div>
@@ -168,7 +168,7 @@ $html1 = '
                 </table>
               </td>
 
-              <td class="center">
+              <td class="center td-w50">
                   <div class="signature-block">
 
                   </div>
@@ -266,7 +266,7 @@ $html2 = '
     </tr>  
 
     <tr>
-        <td class="center">
+        <td class="center td-w50">
           <table>
             <tr>
               <td class="by">By :</td>
@@ -284,7 +284,7 @@ $html2 = '
           </table>        
         </td>
 
-        <td class="center">
+        <td class="center td-w50">
           <table>
             <tr>
               <td class="by">By :</td>
@@ -308,11 +308,11 @@ $html2 = '
     </tr>  
 
     <tr>
-        <td class="center">
+        <td class="center td-w50">
 
         </td>
 
-        <td class="center">
+        <td class="center td-w50">
           <table>
             <tr>
               <td class="by">By :</td>
@@ -531,7 +531,7 @@ $html3 .= '
         <td colspan="2" style="height:25px;"></td>
     </tr>  
     <tr>
-        <td class="center">
+        <td class="center td-w50">
           <table>
             <tr>
               <td class="by">By :</td>
@@ -549,7 +549,7 @@ $html3 .= '
           </table> 
         </td>
 
-        <td class="center">
+        <td class="center td-w50">
           <table>
             <tr>
               <td class="by">By :</td>
@@ -586,24 +586,22 @@ $html4 = '
         <input type="checkbox" name="q2[]" value="quality"> คุณภาพสินค้า
     </p>
 </form>
-<table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
-    <colgroup>
-        <col style="width: 30%;">
-        <col style="width: 60%;">
-        <col style="width: 10%;">
-    </colgroup>
-    <thead>
-      <tr>
-        <th style="border: 1px solid black; text-align: left; padding: 5px;">Header 1 (30%)</th>
-        <th style="border: 1px solid black; text-align: left; padding: 5px;">Header 2 (60%)</th>
-        <th style="border: 1px solid black; text-align: left; padding: 5px;">Header 3 (10%)</th>
-      </tr>
-    </thead>
+  <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
     <tbody>
       <tr>
-        <td style="border: 1px solid black; padding: 5px;">Data 1</td>
-        <td style="border: 1px solid black; padding: 5px;">Data 2</td>
-        <td style="border: 1px solid black; padding: 5px;">Data 3</td>
+        <td style="width: 20%;border: 1px solid red; padding: 5px;">Data 1</td>
+        <td style="border: 1px solid red; padding: 5px;">Data 2</td>
+        <td style="width: 5%;border: 1px solid red; padding: 5px;">%</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid red; padding: 5px;">Data 4Data 4Data 4Data 4Data 4Data 4Data 4</td>
+        <td style="border: 1px solid red; padding: 5px;">Data 5Data 5Data 5Data 5Data 5Data 5Data 5Data 5Data 5Data 5</td>
+        <td style="border: 1px solid red; padding: 5px;">%</td>
+      </tr>
+      <tr>
+        <td style="border: 1px solid red; padding: 5px;">Data 7</td>
+        <td style="border: 1px solid red; padding: 5px;">Data 8</td>
+        <td style="border: 1px solid red; padding: 5px;">%</td>
       </tr>
     </tbody>
 </table>
