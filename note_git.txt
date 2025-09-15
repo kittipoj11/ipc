@@ -1,0 +1,118 @@
+สั่งให้ git ทับ local ไฟล์ทั้งหมด
+1. git fetch --all
+2. git reset --hard origin/master or git reset --hard origin/main
+
+สรุปคำสั่ง 
+----------------------------------------- Config (1 time)----------------------------------
+git config --global user.name “Username"
+git config --global user.email “Email GitHub“
+git config --global –l 
+---------------------------------------- Start Git ------------------------------------------
+ขั้นตอนพื้นฐานในการสร้างโปรเจกต์ใหม่, บันทึกการเปลี่ยนแปลง, และอัปโหลดขึ้นไปยัง GitHub
+สมมติว่า repository ใหม่ ชื่อ temp
+1. git init
+    คำสั่งนี้ใช้เพื่อสร้าง Repository (ที่เก็บข้อมูล) ของ Git ขึ้นมาใหม่ในโฟลเดอร์ที่กำลังทำงานอยู่ 
+    มันจะสร้างโฟลเดอร์ซ่อนที่ชื่อว่า .git ขึ้นมาเพื่อใช้เก็บข้อมูลและประวัติการเปลี่ยนแปลงทั้งหมดของโปรเจกต์ 
+    ทำเพียงครั้งเดียวตอนเริ่มโปรเจกต์เท่านั้น
+
+2. git add .
+    ให้เอาไฟล์และโฟลเดอร์ทั้งหมดที่มีการเปลี่ยนแปลงในตอนนี้ (แทนด้วยเครื่องหมาย .) 
+    ไปไว้ในพื้นที่เตรียมการ (Staging Area)
+    เพื่อรอการบันทึก (commit) ในขั้นตอนถัดไป เหมือนกับการเลือกของใส่ตะกร้าเพื่อเตรียมจ่ายเงิน
+
+3. git commit -m "first commit หรือ ข้อความใดๆก็ได้"
+    การบันทึกการเปลี่ยนแปลงของไฟล์ที่อยู่ใน Staging Area ลงในประวัติของโปรเจกต์อย่างถาวร
+    -m ย่อมาจาก "message"
+
+4. git branch -M main
+    เปลี่ยนชื่อกิ่งหลัก (branch) เป็น 'main โดยปกติ Git จะสร้าง branch แรกชื่อว่า master
+    -M เป็นการบังคับเปลี่ยนชื่อ (force rename)
+
+5. git remote add origin https://github.com/kittipoj11/temp.git
+    คำสั่งนี้ใช้สร้างการเชื่อมต่อระหว่าง Git บนเครื่องคอมพิวเตอร์ของเรา (Local Repository) กับ Repository บน GitHub (Remote Repository)
+    - remote add คือการเพิ่มที่อยู่ของเซิร์ฟเวอร์
+    - origin เป็นชื่อเรียกสั้นๆ ที่ตั้งให้เป็นตัวแทนของ URL ยาวๆ นั้น
+    - https://github.com/kittipoj11/temp.git คือที่อยู่ของ Repository ปลายทางบน GitHub
+
+6. git push -u origin main  
+    เป็นคำสั่งอัปโหลด (push) โค้ดทั้งหมดที่เรา commit ไว้จาก branch main บนเครื่องของเรา ไปยัง Repository ที่ชื่อ origin (ซึ่งก็คือ GitHub)
+    -u (ย่อมาจาก --set-upstream) เป็นการตั้งค่าให้ branch main ของเครื่องเราผูกกับ branch main บน GitHub 
+    หลังจากใช้คำสั่งนี้ครั้งแรกแล้ว ครั้งต่อไปสามารถใช้แค่ git push ได้เลย
+
+์Note: ครั้งต่อไปจะทำคำสั่งข้อที่ 2,3,6
+---------------------------------------- Start Git Branch ------------------------------------------
+เมื่อต้องทำงานใน branch ใหม่
+git branch    
+git branch branch_name  
+git branch –b branch_name  
+git checkout branch_name  
+
+ขั้นตอนทั้งหมดที่ต้องทำต่อ
+### 1. ทำงานและบันทึกการเปลี่ยนแปลง (Commit)
+        1.1. ตรวจสอบสถานะไฟล์ที่เปลี่ยนแปลง
+            git status
+
+        1.2. เลือกไฟล์ทั้งหมดที่เปลี่ยนแปลงเพื่อเตรียมบันทึก (.) คือทั้งหมด
+            git add .
+
+        1.3. บันทึกการเปลี่ยนแปลงพร้อมข้อความอธิบาย
+            git commit -m "เพิ่มฟีเจอร์ A"
+
+### 2. Push Branch dev ขึ้นไปเก็บบนเซิร์ฟเวอร์ (Push)
+        git push -u origin dev
+        ใช้ครั้งแรกสำหรับ branch นี้
+
+### 3. อัปเดตโค้ดให้ทันสมัยอยู่เสมอ (Optional but Recommended)
+        3.1. สลับไปที่ branch main
+            git checkout main
+
+        3.2. ดึงข้อมูลล่าสุดของ main จากเซิร์ฟเวอร์
+            git pull origin main
+
+        3.3. สลับกลับมาที่ branch dev ของคุณ
+            git checkout dev
+
+        3.4. รวมโค้ดล่าสุดจาก main เข้ามาใน dev
+            git merge main
+
+### 4. เมื่อทำงานเสร็จ: สร้าง Pull Request (PR) นำโค้ดที่ทำไปรวมกับ main ผ่านสิ่งที่เรียกว่า Pull Request (PR) หรือ Merge Request (MR)
+        4.1. Push โค้ดล่าสุดของเราขึ้นไปบน dev
+        4.2. ไปที่หน้าเว็บของโปรเจกต์เราบน GitHub หรือ GitLab
+        4.3. ระบบมักจะแสดงปุ่ม "Compare & pull request" ให้กดทันที
+        4.4. ตั้งชื่อ PR, เขียนอธิบายการเปลี่ยนแปลง, และเลือกคนที่จะให้รีวิวโค้ดของเรา
+        4.5. กดสร้าง Pull Request
+
+### 5. Code Review และการ Merge
+        หลังจากสร้าง PR แล้ว เมื่อทุกอย่างเรียบร้อยและได้รับการอนุมัติ (Approve) ก็จะทำการ Merge หรือกดปุ่มรวมโค้ดบนหน้าเว็บ
+        เมื่อ Merge สำเร็จ โค้ดทั้งหมดที่ทำใน branch dev ก็จะเข้าไปอยู่ใน branch main เรียบร้อย
+
+### 6. ลบ Branch ที่ไม่ใช้แล้ว
+        6.1. ลบ branch dev บนเครื่องของเรา (ต้องสลับไปอยู่ branch อื่นก่อน เช่น main)
+            git checkout main
+            git branch -d dev
+
+        6.2. ลบ branch dev บนเซิร์ฟเวอร์ (GitHub)
+            git push origin --delete dev
+
+์Note: หากต้องการทำงานต่อบน dev เพื่อพัฒนาฟีเจอร์ใหม่ ต้องอัปเดต dev ให้มีข้อมูลล่าสุดจาก main ก่อนเสมอ
+# 1. สลับไปที่ branch dev ของคุณ
+    git checkout dev
+
+# 2. ดึงข้อมูลล่าสุดทั้งหมดจาก main มารวมกับ dev ที่คุณอยู่
+    git pull origin main
+    
+---------------------------------------- Start Git Merge -----------------------------------------
+git checkout master     
+git merge branch_name  
+git branch –d  
+git push origin -d <branch-name>
+-------------- Git Pull---------------
+git pull
+git commit –a –m “comment”
+git push
+-----------------------------------------
+ถ้าบน PC มี repository นี้อยู่  ต้องทำการ update ด้วย  โดยรันคำสั่งตามนี้
+git branch -m main master
+git fetch origin
+git branch -u origin/master master
+git remote set-head origin -a
