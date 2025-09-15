@@ -156,10 +156,10 @@ $html1 = '
             </div>
 
             <div class="body-text">
-                <ol>
-                    <li>1. The Project management Department of IMPACT Exhibition Management Company Limited is in charge of the management of the construction and development works in respect of all project at IMPACT Exhibition & Convention Center Muang Thong Thani, Chaeng wattana, Nonthaburi Province.</li>
-                    <li>2. In accordance with the terms of the Agreement between IMPACT Exhibition Management Co.,Ltd. and Winstar corp Co.,Ltd., IMPACT is obliged to make interim payment for the executed work.</li>
-                    <li>3. Interim payment for ' . $rsIpc["pomain"]["project_name"] . ' is now due and we attach to this letter certificate certifying that Such payment is due.</li>
+                <ol style="list-style-type: decimal; margin-left:20px;">
+                    <li>The Project management Department of IMPACT Exhibition Management Company Limited is in charge of the management of the construction and development works in respect of all project at IMPACT Exhibition & Convention Center Muang Thong Thani, Chaeng wattana, Nonthaburi Province.</li>
+                    <li>In accordance with the terms of the Agreement between IMPACT Exhibition Management Co.,Ltd. and Winstar corp Co.,Ltd., IMPACT is obliged to make interim payment for the executed work.</li>
+                    <li>Interim payment for ' . $rsIpc["pomain"]["project_name"] . ' is now due and we attach to this letter certificate certifying that Such payment is due.</li>
                 </ol>
             </div>
         </div>
