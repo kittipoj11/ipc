@@ -63,13 +63,13 @@ git checkout branch_name
 
 ### 3. อัปเดตโค้ดให้ทันสมัยอยู่เสมอ (Optional but Recommended)
         3.1. สลับไปที่ branch main
-            git checkout main
+            git checkout main(หรือ git switch main)
 
         3.2. ดึงข้อมูลล่าสุดของ main จากเซิร์ฟเวอร์
             git pull origin main
 
         3.3. สลับกลับมาที่ branch dev ของคุณ
-            git checkout dev
+            git checkout dev(หรือ git switch dev)
 
         3.4. รวมโค้ดล่าสุดจาก main เข้ามาใน dev
             git merge main
@@ -99,6 +99,10 @@ git checkout branch_name
 
 # 2. ดึงข้อมูลล่าสุดทั้งหมดจาก main มารวมกับ dev ที่คุณอยู่
     git pull origin main
+
+Note: สามารถสร้าง local branch dev ที่ track กับ remote ได้ทันที(ทำครั้งแรก)
+git checkout -b dev origin/dev 
+(ถ้าใช้ Git เวอร์ชันใหม่ใช้คำสั่ง: git switch dev)
     
 ---------------------------------------- Start Git Merge -----------------------------------------
 git checkout master     
