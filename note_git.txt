@@ -44,7 +44,6 @@ git config --global –l
 เมื่อต้องทำงานใน branch ใหม่
 git branch    
 git branch branch_name  
-git branch –b branch_name  
 git checkout branch_name  
 
 ขั้นตอนทั้งหมดที่ต้องทำต่อ
