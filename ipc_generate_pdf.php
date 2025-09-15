@@ -31,17 +31,36 @@ foreach ($rsInspection['approver'] as $row) {
   $inspectionApprover[$key] = $row;
 }
 // $_SESSION['approver']=$inspectionApprover;
+//////////////////////////////////////////
+$defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+$fontDirs = $defaultConfig['fontDir'];
+
+$defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+$fontData = $defaultFontConfig['fontdata'];
 
 $mpdf = new \Mpdf\Mpdf([
-    'mode' => 'utf-8',
-    'default_font' => 'thsarabun',
-    'autoScriptToLang' => true,
-    'autoLangToFont' => true,
-    'format' => 'A4',
-    'margin_top' => 20,
-    'margin_bottom' => 40,
-    'margin_left' => 10,
-    'margin_right' => 10,
+  // 'fontDir' => array_merge($fontDirs, [__DIR__ . '/fonts',]),
+  // 'fontdata' => $fontData + ['thsarabun' => [
+  //     // 'R' => 'Sarabun-Regular.ttf',
+  //     // 'B' => 'Sarabun-Bold.ttf',
+  //     // 'I' => 'Sarabun-Italic.ttf',
+  //     // 'BI' => 'Sarabun-BoldItalic.ttf',
+  //     'R' => 'Pothana2000.ttf',
+  //     'B' => 'Pothana2000.ttf',
+  //     'I' => 'Pothana2000.ttf',
+  //     'BI' => 'Pothana2000.ttf',
+  //   ]
+  // ],
+  'default_font' => 'Sarabun',
+  // 'default_font' => 'Pothana2000',
+  'mode' => 'utf-8',
+  'autoScriptToLang' => true,
+  'autoLangToFont' => true,
+  'format' => 'A4',
+  'margin_top' => 20,
+  'margin_bottom' => 40,
+  'margin_left' => 10,
+  'margin_right' => 10,
 ]);
 
 $mpdf->SetHTMLHeader('
@@ -470,30 +489,29 @@ $html3= '
 
     <hr class="hr border border-dark">
 
-    <table style="border:0;padding:5px;">
+    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
       <tr>
-        <td class="col-fixed-width"><span class="label">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน </span>' . $rsInspection['period']['workload_planned_percent'] . ' %</td>
-        <td class="col-fixed-width"><span class="label">ปริมาณที่แล้วเสร็จจริง </span>' . $rsInspection['period']['workload_actual_completed_percent'] . ' %</td>
-        <td class="col-fixed-width"><span class="label">ปริมาณงานคงเหลือ </span>' . $rsInspection['period']['workload_remaining_percent'] . ' %</td>
+        <td style="width: 33%;"><span class="label">ปริมาณที่ต้องแล้วเสร็จตามแผนงาน </span>' . $rsInspection['period']['workload_planned_percent'] . ' %</td>
+        <td style="width: 33%;"><span class="label">ปริมาณที่แล้วเสร็จจริง </span>' . $rsInspection['period']['workload_actual_completed_percent'] . ' %</td>
+        <td style=""><span class="label">ปริมาณงานคงเหลือ </span>' . $rsInspection['period']['workload_remaining_percent'] . ' %</td>
       </tr>
     </table>
 
-    <table style=" border:1;padding:5px;">
-      <thead>
-      <tr style="border:1;">
-          <th style="border:1;padding:5px;width=50px" >ลำดับที่</th>
-          <th style="border:1;padding:5px;" width="25%">รายละเอียดการตรวจสอบ</th>
-          <th style="border:1;padding:5px;" >หมายเหตุ</th>
+    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+      <tr>
+        <th style="border: 1px solid black;width: 7%;">ลำดับที่</th>
+        <th style="border: 1px solid black;width: 70%;">รายละเอียดการตรวจสอบ</th>
+        <th style="border: 1px solid black;">หมายเหตุ</th>
       </tr>
-      </thead>
+      </thead>      
     <tbody>';
 
 foreach ($rsInspection['periodDetails'] as $row) {
     $tableDetails .= '
-      <tr style="border:1;">
-        <td style="border:1;padding:5px;">'. $row['order_no'] . '</td>
-        <td style="border:1;padding:5px;">'. $row['details'] . '</td>
-        <td style="border:1;padding:5px;">'. $row['remark'] .'</td>
+      <tr>
+        <td style="border: 1px solid black;" class="right">'. $row['order_no'] . '</td>
+        <td style="border: 1px solid black;">'. $row['details'] . '</td>
+        <td style="border: 1px solid black;">'. $row['remark'] .'</td>
       </tr>       
       ';
 };
@@ -503,26 +521,30 @@ $html3 .= '
 </tbody>
   </table>
 
-  <table style="">
+  <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
     <tr>
-      <td class="col-fixed-width"><span class="label">ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน: </span>' . $rsInspection['plan_status']['plan_status_name'] . '</td>
+      <td><span class="label">ปริมาณที่ต้องแล้วเสร็จเมื่อเปรียบเทียบกับแผนงาน: </span>' . $rsInspection['plan_status']['plan_status_name'] . '</td>
     </tr>
   </table>
   
-  <table style="">
+  <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
     <tr>
-      <td class="col-fixed-width"><span class="label">หมายเหตุ:</span></td>
+      <td style="border: 1px solid black;"><span class="label">หมายเหตุ:</span></td>
     </tr>
     <tr>
-      <textarea rows="5" style="min-height: 4em;height: auto;width:100%;">' . $rsInspection['period']['remark'] . '</textarea>
+      <td style="border: 1px solid black;">
+        <textarea rows=5 style="width:100%;font-family:Sarabun; font-size:10px;">' . $rsInspection['period']['remark'] . 'ใส่ข้อความที่นี่(Enter message is here.)...
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis placeat qui alias temporibus? Excepturi saepe delectus dolor, nisi officia rem sapiente maxime inventore, odit veritatis sint, architecto sit id expedita?
+        </textarea>
+      </td>
     </tr>
   </table>
   
-  <table style="">
+  <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
     <tr>
-      <td class="col-fixed-width"><span class="label">ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร</span></td>
-      <td class="col-fixed-width"><span class="label"><input type="radio" checked="checked">อนุมัติเบิกจ่าย</span></td>
-      <td class="col-fixed-width"><span class="label"><input type="radio">ไม่อนุมัติเบิกจ่าย</span></td>
+      <td style="width: 50%;"><span class="label">ผู้รับเหมาได้ดำเนินการตามรายละเอียดดังกล่าวข้างต้น จึงเห็นสมควร</span></td>
+      <td style="width: 25%;"><span class="label"><input type="radio" checked="checked">อนุมัติเบิกจ่าย</span></td>
+      <td style=""><span class="label"><input type="radio">ไม่อนุมัติเบิกจ่าย</span></td>
     </tr>
   </table>
 
