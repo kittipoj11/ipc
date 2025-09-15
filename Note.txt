@@ -1,4 +1,4 @@
-/* คำแนะนำในการใช้ sesion, cookie, define():
+### คำแนะนำในการใช้ sesion, cookie, define():
 1. Sessions
 สำหรับข้อมูลผู้ใช้ (เช่น username, user ID, สิทธิ์การใช้งาน): Sessions เป็นตัวเลือกที่ดีที่สุด
 ตัวอย่างการใช้งาน Session:
