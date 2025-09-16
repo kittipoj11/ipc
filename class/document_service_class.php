@@ -110,18 +110,6 @@ class DocumentService
             // คืนค่า PO ID ที่บันทึกสำเร็จกลับไป
             return (int)$poId;
 
-
-
-
-
-
-
-
-
-
-
-
-
             // return true;
         } catch (Exception $e) {
             if ($this->db->inTransaction()) {

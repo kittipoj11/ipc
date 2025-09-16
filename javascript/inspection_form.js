@@ -176,7 +176,7 @@ $(document).ready(function () {
   // เช่นถ้าเป็นการ save จะดึงข้อมูลของ inspection บน form ส่งมาให้   เพื่อมาทำการ save 
   // ถ้าเป็นการ submit sinv reject ไม่ต้องส่งข้อมูลของ form มาเพราะไม่ได้ใช้ข้อมูลบน form แต่ใช้การเลื่อนหรือถอย level จากการดึงข้อมูลใน workflow_step 
   // แต่ทุก action ต้องส่ง data ที่มีข้อมูลอย่างน้อยคือ inspection-id, user-id
-  function sendRequest(action, data){
+  function sendRequest(action, data) {
     const myForm = $("#myForm");
     const inspectionId = myForm.data("inspection-id");
     const userId = myForm.data("user-id"); //ไม่ต้องส่งไปก็ได้เพราะ  เรียกใช้ $_SESSION['user_id] ใน inspection_handler_api.php หรือ inspection_service_class.php
@@ -202,7 +202,7 @@ $(document).ready(function () {
       //   $("#submit").prop("disabled", true);
       // },
     })
-    // ถ้า submit แสดง แต่ approve ไม่แสดง
+      // ถ้า submit แสดง แต่ approve ไม่แสดง
       .done(function (result) {
         // console.log(`result: ${result}`);
         responseMessage.text(result.message).css("color", "green");
@@ -243,17 +243,17 @@ $(document).ready(function () {
       po_id: $("#po_id").val(),
       period_id: $("#period_id").val(),
       inspection_id: $("#inspection_id").val(),
-      workload_actual_completed_percent:        $("#workload_actual_completed_percent").val() ?? 0,
+      workload_actual_completed_percent: $("#workload_actual_completed_percent").val() ?? 0,
       workload_remaining_percent: $("#workload_remaining_percent").val() ?? 0,
       workload_planned_percent: $("#workload_planned_percent").val() ?? 0,
       interim_payment: $("#interim_payment").val() ?? 0,
       interim_payment_percent: $("#interim_payment_percent").val() ?? 0,
-      interim_payment_less_previous:        $("#interim_payment_less_previous").val() ?? 0,
-      interim_payment_less_previous_percent:        $("#interim_payment_less_previous_percent").val() ?? 0,
+      interim_payment_less_previous: $("#interim_payment_less_previous").val() ?? 0,
+      interim_payment_less_previous_percent: $("#interim_payment_less_previous_percent").val() ?? 0,
       interim_payment_accumulated: $("#interim_payment_accumulated").val() ?? 0,
-      interim_payment_accumulated_percent:        $("#interim_payment_accumulated_percent").val() ?? 0,
+      interim_payment_accumulated_percent: $("#interim_payment_accumulated_percent").val() ?? 0,
       interim_payment_remain: $("#interim_payment_remain").val() ?? 0,
-      interim_payment_remain_percent:        $("#interim_payment_remain_percent").val() ?? 0,
+      interim_payment_remain_percent: $("#interim_payment_remain_percent").val() ?? 0,
       retention_value: $("#retention_value").val() ?? 0,
       plan_status_id: $("#plan_status_id").val() ?? 0,
       disbursement: disbursement, //$("#disbursement").val() ?? 0,
@@ -262,8 +262,8 @@ $(document).ready(function () {
       current_approval_level: currentApprovalLevel,
       workflow_id: workflowId,
     };
-// console.log(periodData);
-// return;
+    // console.log(periodData);
+    // return;
     const detailsData = [];
     $("#tbody-order tr").each(function () {
       const row = $(this);
@@ -286,27 +286,27 @@ $(document).ready(function () {
       periodData: periodData,
       detailsData: detailsData,
     };
-    if(currentApprovalLevel == 0){
+    if (currentApprovalLevel == 0) {
       // console.log(`currentApprovalLevel = ${currentApprovalLevel}`);
-      sendRequest('save',data);
-    }else{
+      sendRequest('save', data);
+    } else {
       // console.log(`currentApprovalLevel = ${currentApprovalLevel}`);
-      sendRequest('update',data);
+      sendRequest('update', data);
     }
   });
 
   // Approval *****************
   $(".approve").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
-      e.preventDefault();
+    e.preventDefault();
     // sendRequest($(".approve").data("approve-text"));
     // console.log("click");
     sendRequest("approve");
   });
-  
+
   $(".reject").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
-      e.preventDefault();
+    e.preventDefault();
     // const comments = $("#reject_comments").val().trim();
     const comments = "#reject_comments";
     // if (!comments) {
@@ -325,7 +325,7 @@ $(document).ready(function () {
     // header('Location: main.php?page=open_area_schedule_main');แบบนี้ไม่ได้
   });
 
-// รอตรวจสอบฟังก์ชัน
+  // รอตรวจสอบฟังก์ชัน
   $(document).on("click", "#btnAttach", function (e) {
     e.preventDefault();
 
@@ -342,36 +342,59 @@ $(document).ready(function () {
   function refreshForm() {
     const myForm = $('#myForm');
     // console.log(myForm.data('inspection-status'))interim_payment
-    $("#interim_payment").attr('readonly', false);
+
     // จัดการปุ่ม save
-    if ((myForm.data('inspection-status') =='draft') && myForm.data('created-by') == myForm.data('user-id')) {
+    if ((myForm.data('inspection-status') == 'draft') && myForm.data('created-by') == myForm.data('user-id')) {
       $("#submit").addClass('inline');
       $("#submit").removeClass('d-none');
-    } 
+    }
     else if (myForm.data('inspection-status') == 'pending-submit' && myForm.data('created-by') == myForm.data('user-id')) {
       $("#btnAction").addClass('inline');
       $("#btnAction").removeClass('d-none');
-    } 
+    }
     else {
       $("#submit").addClass('d-none');
       $("#submit").removeClass('inline');
     }
-    
+
     // จัดการปุ่ม action
-    if (myForm.data('inspection-status') == 'pending-submit' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+    if (myForm.data('inspection-status') == 'pending-submit' && myForm.data('created-by') == myForm.data('user-id')) {
       $("#btnAction").addClass('inline');
       $("#btnAction").removeClass('d-none');
-    } 
-    else if (myForm.data('inspection-status') =='pending-approve' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+    }
+    else if (myForm.data('inspection-status') == 'pending-submit' && myForm.data('current-approver-id') == myForm.data('user-id')) {
       $("#btnAction").addClass('inline');
       $("#btnAction").removeClass('d-none');
-    } 
-    else{
+    }
+    else if (myForm.data('inspection-status') == 'pending-approve' && myForm.data('current-approver-id') == myForm.data('user-id')) {
+      $("#btnAction").addClass('inline');
+      $("#btnAction").removeClass('d-none');
+    }
+    else {
       $("#btnAction").addClass('d-none');
       $("#btnAction").removeClass('inline');
     }
 
- 
+    // จัดหน้า form
+    if ((myForm.data('inspection-status') == 'draft') && myForm.data('created-by') == myForm.data('user-id')) {
+      // $("#checking").addClass('d-none');
+      // $("#checking").removeClass('inline');
+      $("#checking input,select,textarea").prop("disabled",true);
+
+    }
+    else if (myForm.data('inspection-status') == 'pending-submit' && myForm.data('created-by') == myForm.data('user-id')) {
+      $("#checking input,select,textarea").prop("disabled",true);
+      // $("#checking").addClass('d-none');
+      // $("#checking").removeClass('inline');
+    }
+    else {
+      // $("#checking input,select,textarea").prop("disabled",true);
+      // $("#checking").addClass('inline');
+      // $("#checking").removeClass('d-none');
+    }
+
+    // $("div input,select,textarea").prop("disabled",true);
+    
   }
 
   refreshForm();

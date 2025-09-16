@@ -18,7 +18,7 @@ $requestData = json_decode(file_get_contents('php://input'), true);
 
 $userId = $_SESSION['user_id'] ?? 0;
 
-$_SESSION['action1']=$requestData['action'];
+// $_SESSION['action1']=$requestData['action'];
 if (isset($requestData['action']) && $userId > 0) {
     $connection = new Connection();
     $pdo = $connection->getDbConnection();
@@ -28,7 +28,7 @@ if (isset($requestData['action']) && $userId > 0) {
     $ipc = new Ipc($pdo);
     $workflow = new Workflows($pdo);
     $inspectionService = new InspectionService($pdo, $po, $inspection, $ipc,$workflow);
-$_SESSION['action2']=$requestData['action'];
+// $_SESSION['action2']=$requestData['action'];
     switch ($requestData['action']) {
         case 'save':
             // $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);

@@ -148,21 +148,10 @@ public function getCurrentApprovalType($ipcId): ?array
         return $rs;
     }
 
-
-
-
-
-
-
-
-
-
-    
-
-
     public function create(array $ipcData): int
     {
-        
+        //$created_by = $_SESSION['user_id'];
+        $created_by = 1;
         // กำหนดค่าให้ตัวแปร $ipcId ที่ส่งมา
         // $ipcId = $ipcData['ipc_id'] ?? 0;
     
@@ -196,7 +185,7 @@ public function getCurrentApprovalType($ipcId): ?array
             $stmt->bindParam(':resulting_balance_of_contract_sum_outstanding', $ipcData['resulting_balance_of_contract_sum_outstanding'], PDO::PARAM_STR);
             $stmt->bindParam(':remark', $ipcData['remark'], PDO::PARAM_STR);
             $stmt->bindParam(':workflow_id', $ipcData['workflow_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':created_by', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':created_by', $created_by, PDO::PARAM_INT);
 
             $stmt->execute();
             $ipcId = $this->db->lastInsertId();

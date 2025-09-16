@@ -123,7 +123,7 @@ require_once 'auth.php';
     $rsInspection = $inspection->getByInspectionId($inspectionId);
 
     $rsCurrentApprovalType  = $inspection->getCurrentApprovalType($inspectionId);
-$_SESSION['$rsCurrentApprovalType']=$rsCurrentApprovalType;
+    $_SESSION['$rsCurrentApprovalType'] = $rsCurrentApprovalType;
     $plan_status = new Plan_status($pdo);
     $rsPlanStatus = $plan_status->getAll();
 
@@ -170,7 +170,9 @@ $_SESSION['$rsCurrentApprovalType']=$rsCurrentApprovalType;
                         <i class="fi fi-rr-clip"></i>
                       </button>
                       <!-- <p><strong>Status:</strong> <span class="status status-< ?php echo htmlspecialchars($rsInspection['period']['inspection_status']); ?>"><?php echo htmlspecialchars($rsInspection['period']['inspection_status']); ?></span></p> -->
-                      <p> <div class="status status-<?php echo htmlspecialchars($rsInspection['period']['inspection_status']); ?>"><?php echo htmlspecialchars($rsInspection['period']['inspection_status']); ?></div></p>
+                      <p>
+                      <div class="status status-<?php echo htmlspecialchars($rsInspection['period']['inspection_status']); ?>"><?php echo htmlspecialchars($rsInspection['period']['inspection_status']); ?></div>
+                      </p>
                     </div>
 
                     <!-- <div class="dropdown"> -->
@@ -423,7 +425,7 @@ $_SESSION['$rsCurrentApprovalType']=$rsCurrentApprovalType;
                       </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card" id="checking">
                       <div class="card-header d-none">
                       </div>
 

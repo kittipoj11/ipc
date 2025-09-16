@@ -529,10 +529,10 @@ $html3 .= '
   
   <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
     <tr>
-      <td style="border: 1px solid black;"><span class="label">หมายเหตุ:</span></td>
+      <td><span class="label">หมายเหตุ:</span></td>
     </tr>
     <tr>
-      <td style="border: 1px solid black;">
+      <td>
         <textarea rows=5 style="width:100%;font-family:Sarabun; font-size:10px;">' . $rsInspection['period']['remark'] . 'ใส่ข้อความที่นี่(Enter message is here.)...
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis placeat qui alias temporibus? Excepturi saepe delectus dolor, nisi officia rem sapiente maxime inventore, odit veritatis sint, architecto sit id expedita?
         </textarea>
