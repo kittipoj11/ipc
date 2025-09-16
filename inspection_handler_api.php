@@ -54,7 +54,7 @@ if (isset($requestData['action']) && $userId > 0) {
 
         case 'approve':
             // $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
-            $savedInspectionId = $inspectionService->approveInspection($requestData['inspectionId']);
+            $savedInspectionId = $inspectionService->approveInspection($requestData['periodData'], $requestData['detailsData']);
             $response = [
                 'status' => 'success',
                 'message' => 'อนุมัติ Inspection ID: ' . $savedInspectionId . ' เรียบร้อยแล้ว',

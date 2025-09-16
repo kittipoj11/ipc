@@ -533,9 +533,7 @@ $html3 .= '
     </tr>
     <tr>
       <td>
-        <textarea rows=5 style="width:100%;font-family:Sarabun; font-size:10px;">' . $rsInspection['period']['remark'] . 'ใส่ข้อความที่นี่(Enter message is here.)...
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis placeat qui alias temporibus? Excepturi saepe delectus dolor, nisi officia rem sapiente maxime inventore, odit veritatis sint, architecto sit id expedita?
-        </textarea>
+        <textarea rows=5 style="width:100%;font-family:Sarabun; font-size:10px;">' . $rsInspection['period']['remark'] . '</textarea>
       </td>
     </tr>
   </table>
@@ -616,8 +614,8 @@ $html4 = '
         <td style="width: 5%;border: 1px solid red; padding: 5px;">%</td>
       </tr>
       <tr>
-        <td style="border: 1px solid red; padding: 5px;">Data 4Data 4Data 4Data 4Data 4Data 4Data 4</td>
-        <td style="border: 1px solid red; padding: 5px;">Data 5Data 5Data 5Data 5Data 5Data 5Data 5Data 5Data 5Data 5</td>
+        <td style="border: 1px solid red; padding: 5px;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, minima?</td>
+        <td style="border: 1px solid red; padding: 5px;">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quibusdam, placeat ad temporibus quisquam nobis sit.</td>
         <td style="border: 1px solid red; padding: 5px;">%</td>
       </tr>
       <tr>
@@ -639,7 +637,7 @@ $mpdf->AddPage();
 $mpdf->WriteHTML($html2);
 $mpdf->AddPage();
 $mpdf->WriteHTML($html3);
-$mpdf->AddPage();
-$mpdf->WriteHTML($html4);
+// $mpdf->AddPage();
+// $mpdf->WriteHTML($html4);
 
 $mpdf->Output($pdfFilename, "I"); // แสดง PDF ใน browser

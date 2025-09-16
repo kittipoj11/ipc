@@ -93,12 +93,15 @@ class InspectionService
         }
     }
 
-    public function approveInspection($inspectionId): int
+    public function approveInspection(array $periodData, array $detailsData): int
     {
         try {
             $this->db->beginTransaction();
+            $inspectionId = $periodData['inspection_id'];
+
             // 1.ดึง user_id จาก SESSION(เป็นผู้ที่ทำการ approve)
             $userId = $_SESSION['user_id'];
+            $inspectionId = $periodData['inspection_id'];
 
             // 2.หา current_approval_level, workflow_id จาก inspection ว่าตอนนี้มีค่าเป็นอะไร
             $rsInspection = $this->inspection->getByInspectionId($inspectionId);
@@ -120,7 +123,10 @@ class InspectionService
             $poId = $rsInspection['period']['po_id'];
             $this->po->updateStatus($poId, 2);
 
-            // 4.update inspection status
+            // 5.save inspection
+            $this->inspection->save($periodData, $detailsData);
+
+            // 6.update inspection status
             // ตรวจสอบ $rsWorkflow
             if ($rsWorkflow) {
                 // ถ้ายังมีข้อมูล  แสดงว่ายังไม่ใช่ลำดับสุดท้าย
@@ -129,7 +135,7 @@ class InspectionService
                 // $userId คือ ผู้ที่ทำการ approve, $orderInBlock คือลำดับการวางชื่อของ userId ที่ทำการ approve นี้(ถ้าใน workflow_steps เป็น NULL หรือกำหนดเป็น 0 แสดงว่าไม่มี)
                 $this->inspection->updateStatus($inspectionId, 'pending-approve', $nextApproverId, $nextLevel, $userId, $orderInBlock);
 
-                // 5.log history 
+                // 7.log history 
                 $this->inspection->logHistory($inspectionId, $userId, "Approved at Step {$currentLevel}");
             } else {
                 //inspection_status สถานะปัจจุบัน (Completed)
@@ -137,7 +143,7 @@ class InspectionService
                 //current_level บอกประวัติว่าไปถึงขั้นตอนไหน (ขั้นตอนสุดท้าย)
                 $this->inspection->updateStatus($inspectionId, 'completed', NULL, $nextLevel, $userId, $orderInBlock);
 
-                // 5.log history 
+                // 7.log history 
                 $this->inspection->logHistory($inspectionId, $userId, "Final Approved at Step {$currentLevel}. Status: Completed");
 
                 // ถ้าเป็น inspection(มี workflow_id = 1) จะทำการสร้างเอกสาร ipc(workflow_id=2)

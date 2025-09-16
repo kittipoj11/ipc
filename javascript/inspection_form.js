@@ -299,9 +299,61 @@ $(document).ready(function () {
   $(".approve").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();
-    // sendRequest($(".approve").data("approve-text"));
-    // console.log("click");
-    sendRequest("approve");
+
+    const myForm = $("#myForm");
+    const currentApprovalLevel = myForm.data("current-approval-level");
+    const workflowId = myForm.data("workflow_id");
+    const disbursement = $('input[name^="disbursement"]:checked').val() || null; // ถ้าไม่มีการเลือก ให้เป็น null
+
+    const periodData = {
+      po_id: $("#po_id").val(),
+      period_id: $("#period_id").val(),
+      inspection_id: $("#inspection_id").val(),
+      workload_actual_completed_percent: $("#workload_actual_completed_percent").val() ?? 0,
+      workload_remaining_percent: $("#workload_remaining_percent").val() ?? 0,
+      workload_planned_percent: $("#workload_planned_percent").val() ?? 0,
+      interim_payment: $("#interim_payment").val() ?? 0,
+      interim_payment_percent: $("#interim_payment_percent").val() ?? 0,
+      interim_payment_less_previous: $("#interim_payment_less_previous").val() ?? 0,
+      interim_payment_less_previous_percent: $("#interim_payment_less_previous_percent").val() ?? 0,
+      interim_payment_accumulated: $("#interim_payment_accumulated").val() ?? 0,
+      interim_payment_accumulated_percent: $("#interim_payment_accumulated_percent").val() ?? 0,
+      interim_payment_remain: $("#interim_payment_remain").val() ?? 0,
+      interim_payment_remain_percent: $("#interim_payment_remain_percent").val() ?? 0,
+      retention_value: $("#retention_value").val() ?? 0,
+      plan_status_id: $("#plan_status_id").val() ?? 0,
+      disbursement: disbursement, //$("#disbursement").val() ?? 0,
+      remark: $("#remark").val() ?? "",
+      inspection_status: "pending-submit",
+      current_approval_level: currentApprovalLevel,
+      workflow_id: workflowId,
+    };
+    // console.log(periodData);
+    // return;
+    const detailsData = [];
+    $("#tbody-order tr").each(function () {
+      const row = $(this);
+
+      // สร้าง object สำหรับเก็บข้อมูลของแถวนี้
+      // row.removeData("crud"); ทำการ clear ค่า data-* ที่อยู่ใน cache ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
+      const detailRecord = {
+        inspection_id: $("#inspection_id").val(),
+        rec_id: row.attr("data-rec-id"), // ถ้าใช้ row.data() ให้ clear ก่อน  ไม่เช่นนั้นจะได้ค่าที่ยังเก็บอยู่ใน cache
+        order_crud: row.attr("data-crud"), //
+        order_no: row.find('input[name="order_no"]').val(), // ใช้ .find() เพื่อหา input ที่อยู่ในแถวนี้ แล้ว .val() เพื่อดึงค่า
+        detail: row.find('input[name="detail"]').val(),
+        remark: row.find('input[name="remark"]').val(),
+      };
+      // เพิ่ม object ของแถวนี้เข้าไปใน array หลัก
+      detailsData.push(detailRecord);
+    });
+
+    let data = {
+      periodData: periodData,
+      detailsData: detailsData,
+    };
+
+    sendRequest("approve", data);
   });
 
   $(".reject").on("click", function (e) {
@@ -376,14 +428,27 @@ $(document).ready(function () {
     }
 
     // จัดหน้า form
-    if ((myForm.data('inspection-status') == 'draft') && myForm.data('created-by') == myForm.data('user-id')) {
+    const select = document.getElementById("plan_status_id");
+    if ((myForm.data('inspection-status') == 'draft')) {
+      $("#checking input,textarea").prop("disabled", true);
+
+select.onmousedown = () => false; // บล็อกการเปิด dropdown
+    select.style.backgroundColor = "#eee";
       // $("#checking").addClass('d-none');
       // $("#checking").removeClass('inline');
-      $("#checking input,select,textarea").prop("disabled",true);
 
     }
-    else if (myForm.data('inspection-status') == 'pending-submit' && myForm.data('created-by') == myForm.data('user-id')) {
-      $("#checking input,select,textarea").prop("disabled",true);
+    else if (myForm.data('inspection-status') == 'pending-submit') {
+      $("#checking input,textarea").prop("disabled",true);
+select.onmousedown = () => false; // บล็อกการเปิด dropdown
+    select.style.backgroundColor = "#eee";
+      // $("#checking").addClass('d-none');
+      // $("#checking").removeClass('inline');
+    }
+    else if (myForm.data('inspection-status') == 'completed') {
+      $("#checking input,textarea").prop("disabled",true);
+select.onmousedown = () => false; // บล็อกการเปิด dropdown
+    select.style.backgroundColor = "#eee";
       // $("#checking").addClass('d-none');
       // $("#checking").removeClass('inline');
     }
