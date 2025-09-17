@@ -1,479 +1,187 @@
 <?php
-@session_start();
-require_once 'config.php';
-require_once 'auth.php';
+// --- Database Connection ---
+require_once  'class/connection_class.php';
+$connection = new Connection;
+$pdo = $connection->getDbConnection();
+// $pdo = new PDO("mysql:host=localhost;dbname=ipc_db;charset=utf8", "root", "");
 
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
-    exit();
-}
+// --- Summary Data ---
+$totalPO = $pdo->query("SELECT COUNT(*) FROM po_main")->fetchColumn();
+$totalInspection = $pdo->query("SELECT COUNT(*) FROM inspection")->fetchColumn();
+$totalIPC = $pdo->query("SELECT COUNT(*) FROM ipc")->fetchColumn();
+$closedPO = $pdo->query("SELECT COUNT(*) FROM po_main P INNER JOIN po_status S ON P.po_status = S.po_status_id WHERE S.po_status_name='Closed'")->fetchColumn();
+
+// --- Table Data ---
+$stmt = $pdo->query("
+    SELECT P.po_id, P.po_number, S.po_status_name,
+           (SELECT COUNT(*) FROM po_periods d WHERE d.po_id = P.po_id) AS total_periods,
+           (SELECT COUNT(*) FROM inspection i JOIN po_periods d ON i.period_id=d.period_id WHERE d.po_id = P.po_id) AS total_inspections,
+           (SELECT COUNT(*) FROM ipc ic JOIN inspection i ON ic.inspection_id=i.inspection_id JOIN po_periods d ON i.period_id=d.period_id WHERE d.po_id = P.po_id) AS total_ipc
+    FROM po_main p
+    INNER JOIN po_status S ON P.po_status = S.po_status_id
+    ORDER BY P.po_id DESC
+");
+$poList = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// --- Chart Data ---
+$chartPO = $pdo->query("SELECT po_status_name, COUNT(*) as cnt FROM po_main INNER JOIN po_status ON po_status = po_status_id  GROUP BY po_status_name")->fetchAll(PDO::FETCH_ASSOC);
+$chartIPC = $pdo->query("SELECT ipc_status, COUNT(*) as cnt FROM ipc GROUP BY ipc_status")->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <title>Purchase Order Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: #f8f9fa;
+        }
 
-    <?php include 'header_main.php'; ?>
+        .card-summary {
+            border-left: 5px solid;
+        }
 
-    <!-- Bootstrap 5.3.3 add by Poj-->
-    <link rel="stylesheet" href="plugins/bootstrap-5.3.3/dist/css/bootstrap.min.css">
-    <!-- ใช้แสดง icon ปุ่ม Insert, Update, Delete และ icon เมนูต่างๆบน sidebar-->
-    <link rel="stylesheet" href="plugins/fontawesome-free-6.5.1-web/css/all.min.css" type="text/css">
-    <!-- Google Font: Source Sans Pro -->
-    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"> -->
-    <!-- flaticon dist\bootstrap-icons-1.11.3\font\bootstrap-icons.min.css-->
-    <!-- <link rel="stylesheet" href="plugins/dist/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css"> -->
-    <!-- flaticon -->
-    <!-- <link rel="stylesheet" href="plugins/uicons-regular-rounded/css/uicons-regular-rounded.css"> -->
-    <!-- DataTables -->
-    <!-- <link rel="stylesheet" href="plugins/DataTables/datatables-bs4/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="plugins/DataTables/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="plugins/DataTables/datatables-buttons/css/buttons.bootstrap4.min.css"> -->
-    <!-- Theme style -->
-    <link rel="stylesheet" href="plugins/dist/css/adminlte.min.css">
+        .card-po {
+            border-color: #007bff;
+        }
+
+        .card-inspection {
+            border-color: #ffc107;
+        }
+
+        .card-ipc {
+            border-color: #28a745;
+        }
+
+        .card-closed {
+            border-color: #6c757d;
+        }
+    </style>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<body>
+    <div class="container my-4">
+        <!-- <h2 class="mb-4"><i class="bi bi-bar-chart"></i> Purchase Order Dashboard</h2> -->
 
-
-    <!-- Page Wrapper -->
-    <div class="wrapper">
-
-        <?php include 'sidebar.php'; ?>
-        <?php include 'navbar.php'; ?>
-
-        <!-- Main Content Start -->
-        <?php
-        require_once  'class/connection_class.php';
-        require_once  'class/supplier_class.php';
-
-        $connection = new Connection;
-        $pdo = $connection->getDbConnection();
-        $supplier = new Supplier($pdo);
-        $rs = $supplier->getAll();
-        ?>
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard v1</li>
-                            </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card card-summary card-po shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Total PO</h5>
+                        <h2><?= $totalPO ?></h2>
+                    </div>
+                </div>
             </div>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section class="content">
-                <div class="container-fluid">
-                    <!-- Small boxes (Stat box) -->
-                    <div class="row">
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-info">
-                                <div class="inner">
-                                    <h3>150</h3>
-
-                                    <p>New Orders</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-bag"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-success">
-                                <div class="inner">
-                                    <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                                    <p>Bounce Rate</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-stats-bars"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-warning">
-                                <div class="inner">
-                                    <h3>44</h3>
-
-                                    <p>User Registrations</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-person-add"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-danger">
-                                <div class="inner">
-                                    <h3>65</h3>
-
-                                    <p>Unique Visitors</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-pie-graph"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
-                        </div>
-                        <!-- ./col -->
+            <div class="col-md-3">
+                <div class="card card-summary card-inspection shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-warning">Total Inspection</h5>
+                        <h2><?= $totalInspection ?></h2>
                     </div>
-                    <!-- /.row -->
-                    <!-- Main row -->
-                    <div class="row">
-                        <!-- Left col -->
-                        <section class="col-lg-7 connectedSortable">
-                            <!-- Custom tabs (Charts with tabs)-->
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">
-                                        <i class="fas fa-chart-pie mr-1"></i>
-                                        Sales
-                                    </h3>
-                                    <div class="card-tools">
-                                        <ul class="nav nav-pills ml-auto">
-                                            <li class="nav-item">
-                                                <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Area</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" href="#sales-chart" data-toggle="tab">Donut</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div><!-- /.card-header -->
-                                <div class="card-body">
-                                    <div class="tab-content p-0">
-                                        <!-- Morris chart - Sales -->
-                                        <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;">
-                                            <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>
-                                        </div>
-                                        <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
-                                            <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>
-                                        </div>
-                                    </div>
-                                </div><!-- /.card-body -->
-                            </div>
-                            <!-- /.card -->
-
-                            <!-- TO DO List -->
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">
-                                        <i class="ion ion-clipboard mr-1"></i>
-                                        To Do List
-                                    </h3>
-
-                                    <div class="card-tools">
-                                        <ul class="pagination pagination-sm">
-                                            <li class="page-item"><a href="#" class="page-link">&laquo;</a></li>
-                                            <li class="page-item"><a href="#" class="page-link">1</a></li>
-                                            <li class="page-item"><a href="#" class="page-link">2</a></li>
-                                            <li class="page-item"><a href="#" class="page-link">3</a></li>
-                                            <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>
-
-                                        </ul>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body">
-                                    <ul class="todo-list" data-widget="todo-list">
-                                        <li>
-                                            <!-- drag handle -->
-                                            <span class="handle">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </span>
-                                            <!-- checkbox -->
-                                            <div class="icheck-primary d-inline ml-2">
-                                                <input type="checkbox" value="" name="todo1" id="todoCheck1">
-                                                <label for="todoCheck1"></label>
-                                            </div>
-                                            <!-- todo text -->
-                                            <span class="text">Design a nice theme</span>
-                                            <!-- Emphasis label -->
-                                            <small class="badge badge-danger"><i class="far fa-clock"></i> 2 mins</small>
-                                            <!-- General tools such as edit or delete-->
-                                            <div class="tools">
-                                                <i class="fas fa-edit"></i>
-                                                <i class="fas fa-trash-o"></i>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <span class="handle">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </span>
-                                            <div class="icheck-primary d-inline ml-2">
-                                                <input type="checkbox" value="" name="todo2" id="todoCheck2" checked>
-                                                <label for="todoCheck2"></label>
-                                            </div>
-                                            <span class="text">Make the theme responsive</span>
-                                            <small class="badge badge-info"><i class="far fa-clock"></i> 4 hours</small>
-                                            <div class="tools">
-                                                <i class="fas fa-edit"></i>
-                                                <i class="fas fa-trash-o"></i>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <span class="handle">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </span>
-                                            <div class="icheck-primary d-inline ml-2">
-                                                <input type="checkbox" value="" name="todo3" id="todoCheck3">
-                                                <label for="todoCheck3"></label>
-                                            </div>
-                                            <span class="text">Let theme shine like a star</span>
-                                            <small class="badge badge-warning"><i class="far fa-clock"></i> 1 day</small>
-                                            <div class="tools">
-                                                <i class="fas fa-edit"></i>
-                                                <i class="fas fa-trash-o"></i>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <span class="handle">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </span>
-                                            <div class="icheck-primary d-inline ml-2">
-                                                <input type="checkbox" value="" name="todo4" id="todoCheck4">
-                                                <label for="todoCheck4"></label>
-                                            </div>
-                                            <span class="text">Let theme shine like a star</span>
-                                            <small class="badge badge-success"><i class="far fa-clock"></i> 3 days</small>
-                                            <div class="tools">
-                                                <i class="fas fa-edit"></i>
-                                                <i class="fas fa-trash-o"></i>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <span class="handle">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </span>
-                                            <div class="icheck-primary d-inline ml-2">
-                                                <input type="checkbox" value="" name="todo5" id="todoCheck5">
-                                                <label for="todoCheck5"></label>
-                                            </div>
-                                            <span class="text">Check your messages and notifications</span>
-                                            <small class="badge badge-primary"><i class="far fa-clock"></i> 1 week</small>
-                                            <div class="tools">
-                                                <i class="fas fa-edit"></i>
-                                                <i class="fas fa-trash-o"></i>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <span class="handle">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </span>
-                                            <div class="icheck-primary d-inline ml-2">
-                                                <input type="checkbox" value="" name="todo6" id="todoCheck6">
-                                                <label for="todoCheck6"></label>
-                                            </div>
-                                            <span class="text">Let theme shine like a star</span>
-                                            <small class="badge badge-secondary"><i class="far fa-clock"></i> 1 month</small>
-                                            <div class="tools">
-                                                <i class="fas fa-edit"></i>
-                                                <i class="fas fa-trash-o"></i>
-                                            </div>
-                                        </li>
-                                        <?php
-                                        $html = "";
-                                        foreach ($rs as $row) {
-                                            $html = <<<EOD
-                                                        <li>
-                                                            <span class="handle">
-                                                                <i class="fas fa-ellipsis-v"></i>
-                                                                <i class="fas fa-ellipsis-v"></i>
-                                                            </span>
-                                                            <div class="icheck-primary d-inline ml-2">
-                                                                <input type="checkbox" value="" name="todo6" id="todoCheck6">
-                                                                <label for="todoCheck6"></label>
-                                                            </div>
-                                                            <span class="text">{$row['supplier_name']}</span>
-                                                            <small class="badge badge-secondary"><i class="far fa-clock"></i> {$row['supplier_id']} month</small>
-                                                            <div class="tools">
-                                                                <i class="fas fa-edit"></i>
-                                                                <i class="fas fa-trash-o"></i>
-                                                            </div>
-                                                        </li>
-                                                    EOD;
-                                            echo $html;
-                                        }
-                                        ?>
-                                    </ul>
-                                </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer clearfix">
-                                    <button type="button" class="btn btn-primary float-right"><i class="fas fa-plus"></i> Add
-                                        item</button>
-                                </div>
-                            </div>
-                            <!-- /.card -->
-                        </section>
-                        <!-- /.Left col -->
-                        <!-- right col (We are only adding the ID to make the widgets sortable)-->
-                        <section class="col-lg-5 connectedSortable">
-
-                            <!-- Map card -->
-                            <div class="card bg-gradient-primary">
-                                <div class="card-header border-0">
-                                    <h3 class="card-title">
-                                        <i class="fas fa-map-marker-alt mr-1"></i>
-                                        Visitors
-                                    </h3>
-                                    <!-- card tools -->
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-primary btn-sm daterange" title="Date range">
-                                            <i class="far fa-calendar-alt"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse" title="Collapse">
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                    </div>
-                                    <!-- /.card-tools -->
-                                </div>
-                                <div class="card-body">
-                                    <div id="world-map" style="height: 250px; width: 100%;"></div>
-                                </div>
-                                <!-- /.card-body-->
-                                <div class="card-footer bg-transparent">
-                                    <div class="row">
-                                        <div class="col-4 text-center">
-                                            <div id="sparkline-1"></div>
-                                            <div class="text-white">Visitors</div>
-                                        </div>
-                                        <!-- ./col -->
-                                        <div class="col-4 text-center">
-                                            <div id="sparkline-2"></div>
-                                            <div class="text-white">Online</div>
-                                        </div>
-                                        <!-- ./col -->
-                                        <div class="col-4 text-center">
-                                            <div id="sparkline-3"></div>
-                                            <div class="text-white">Sales</div>
-                                        </div>
-                                        <!-- ./col -->
-                                    </div>
-                                    <!-- /.row -->
-                                </div>
-                            </div>
-                            <!-- /.card -->
-
-                            <!-- solid sales graph -->
-                            <div class="card bg-gradient-info">
-                                <div class="card-header border-0">
-                                    <h3 class="card-title">
-                                        <i class="fas fa-th mr-1"></i>
-                                        Sales Graph
-                                    </h3>
-
-                                    <div class="card-tools">
-                                        <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <canvas class="chart" id="line-chart"
-                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                                </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer bg-transparent">
-                                    <div class="row">
-                                        <div class="col-4 text-center">
-                                            <input type="text" class="knob" data-readonly="true" value="20" data-width="60" data-height="60"
-                                                data-fgColor="#39CCCC">
-
-                                            <div class="text-white">Mail-Orders</div>
-                                        </div>
-                                        <!-- ./col -->
-                                        <div class="col-4 text-center">
-                                            <input type="text" class="knob" data-readonly="true" value="50" data-width="60" data-height="60"
-                                                data-fgColor="#39CCCC">
-
-                                            <div class="text-white">Online</div>
-                                        </div>
-                                        <!-- ./col -->
-                                        <div class="col-4 text-center">
-                                            <input type="text" class="knob" data-readonly="true" value="30" data-width="60" data-height="60"
-                                                data-fgColor="#39CCCC">
-
-                                            <div class="text-white">In-Store</div>
-                                        </div>
-                                        <!-- ./col -->
-                                    </div>
-                                    <!-- /.row -->
-                                </div>
-                                <!-- /.card-footer -->
-                            </div>
-                            <!-- /.card -->
-
-                        </section>
-                        <!-- right col -->
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-summary card-ipc shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-success">Total IPC</h5>
+                        <h2><?= $totalIPC ?></h2>
                     </div>
-                    <!-- /.row (main row) -->
-                </div><!-- /.container-fluid -->
-            </section>
-            <!-- /.content -->
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-summary card-closed shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-secondary">Closed PO</h5>
+                        <h2><?= $closedPO ?></h2>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- /.content-wrapper -->
 
-        <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ส่วน Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+        <!-- Charts -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">PO by Status</h5>
+                        <canvas id="poChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">IPC by Status</h5>
+                        <canvas id="ipcChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Modal >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+        <!-- Table -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">PO Periods</h5>
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>PO No</th>
+                            <th>Status</th>
+                            <th>Periods</th>
+                            <th>Inspections</th>
+                            <th>IPC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($poList as $row): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['po_number']) ?></td>
+                                <td><span class="badge bg-<?= $row['po_status_name'] == 'Closed' ? 'secondary' : 'primary' ?>">
+                                        <?= htmlspecialchars($row['po_status_name']) ?></span></td>
+                                <td><?= $row['total_periods'] ?></td>
+                                <td><?= $row['total_inspections'] ?></td>
+                                <td><?= $row['total_ipc'] ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-        <!-- Main Content End -->
+    <script>
+        // Chart Data
+        const poData = {
+            labels: <?= json_encode(array_column($chartPO, 'po_status_name')) ?>,
+            datasets: [{
+                label: 'PO Count',
+                data: <?= json_encode(array_column($chartPO, 'cnt')) ?>,
+                backgroundColor: ['#007bff', '#28a745', '#ffc107', '#6c757d', '#17a2b8']
+            }]
+        };
+        const ipcData = {
+            labels: <?= json_encode(array_column($chartIPC, 'ipc_status')) ?>,
+            datasets: [{
+                label: 'IPC Count',
+                data: <?= json_encode(array_column($chartIPC, 'cnt')) ?>,
+                backgroundColor: ['#28a745', '#ffc107', '#17a2b8', '#6c757d', '#007bff']
+            }]
+        };
 
-        <?php include 'logout_modal.php'; ?>
+        // Render Charts
+        new Chart(document.getElementById('poChart'), {
+            type: 'pie',
+            data: poData
+        });
+        new Chart(document.getElementById('ipcChart'), {
+            type: 'pie',
+            data: ipcData
+        });
+    </script>
+</body>
 
-        <?php include 'footer_bar.php'; ?>
-
-
-        <!-- ./wrapper -->
-
-        <!-- Scroll to Top Button-->
-        <!-- <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a> -->
-
-        <!-- REQUIRED SCRIPTS -->
-        <!-- Bootstrap 5.3.3 -->
-        <script src="plugins/bootstrap-5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
-        <!-- jQuery -->
-        <script src="plugins/jQuery-3.7.1/jquery-3.7.1.min.js"></script>
-        <!-- AdminLTE App -->
-        <script src="plugins/dist/js/adminlte.js"></script>
-        <!-- Sweet Alert2 -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-        <!-- My JavaScript  -->
-        <script src="javascript/supplier.js"></script>
+</html>
