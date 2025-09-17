@@ -22,7 +22,7 @@ $(document).ready(function () {
     }).done(function(result){
         if (result) {
           // return;
-          window.location = "dashboard.php";
+          window.location = "index.php";
         } else {
           Swal.fire({
             icon: "error",
