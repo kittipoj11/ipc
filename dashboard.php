@@ -25,6 +25,7 @@ $poList = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // --- Chart Data ---
 $chartPO = $pdo->query("SELECT po_status_name, COUNT(*) as cnt FROM po_main INNER JOIN po_status ON po_status = po_status_id  GROUP BY po_status_name")->fetchAll(PDO::FETCH_ASSOC);
+$chartInspection = $pdo->query("SELECT inspection_status, COUNT(*) as cnt FROM inspection GROUP BY inspection_status")->fetchAll(PDO::FETCH_ASSOC);
 $chartIPC = $pdo->query("SELECT ipc_status, COUNT(*) as cnt FROM ipc GROUP BY ipc_status")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -45,19 +46,27 @@ $chartIPC = $pdo->query("SELECT ipc_status, COUNT(*) as cnt FROM ipc GROUP BY ip
         }
 
         .card-po {
-            border-color: #007bff;
+            border-color: #004691ff;
+            background: #4e9df1ff;
         }
 
         .card-inspection {
-            border-color: #ffc107;
+            border-color: #a17a05ff;
+            background: #ffc107;
         }
 
         .card-ipc {
-            border-color: #28a745;
+            border-color: #19692cff;
+            background: #28a745;
         }
 
         .card-closed {
-            border-color: #6c757d;
+            border-color: #972284ff;
+            background: #ec33ceff;
+        }
+
+        .status {
+            width: 40%;
         }
     </style>
 </head>
@@ -71,7 +80,7 @@ $chartIPC = $pdo->query("SELECT ipc_status, COUNT(*) as cnt FROM ipc GROUP BY ip
             <div class="col-md-3">
                 <div class="card card-summary card-po shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-primary">Total PO</h5>
+                        <h5 class="card-title text-black col-6">Total PO</h5>
                         <h2><?= $totalPO ?></h2>
                     </div>
                 </div>
@@ -79,7 +88,7 @@ $chartIPC = $pdo->query("SELECT ipc_status, COUNT(*) as cnt FROM ipc GROUP BY ip
             <div class="col-md-3">
                 <div class="card card-summary card-inspection shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-warning">Total Inspection</h5>
+                        <h5 class="card-title text-black col-6">Total Inspection</h5>
                         <h2><?= $totalInspection ?></h2>
                     </div>
                 </div>
@@ -87,7 +96,7 @@ $chartIPC = $pdo->query("SELECT ipc_status, COUNT(*) as cnt FROM ipc GROUP BY ip
             <div class="col-md-3">
                 <div class="card card-summary card-ipc shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-success">Total IPC</h5>
+                        <h5 class="card-title text-black col-6">Total IPC</h5>
                         <h2><?= $totalIPC ?></h2>
                     </div>
                 </div>
@@ -95,7 +104,7 @@ $chartIPC = $pdo->query("SELECT ipc_status, COUNT(*) as cnt FROM ipc GROUP BY ip
             <div class="col-md-3">
                 <div class="card card-summary card-closed shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-secondary">Closed PO</h5>
+                        <h5 class="card-title text-black col-6">Closed PO</h5>
                         <h2><?= $closedPO ?></h2>
                     </div>
                 </div>
@@ -104,7 +113,7 @@ $chartIPC = $pdo->query("SELECT ipc_status, COUNT(*) as cnt FROM ipc GROUP BY ip
 
         <!-- Charts -->
         <div class="row mb-4">
-            <div class="col-md-6">
+            <div class="col-md-4 statusx">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">PO by Status</h5>
@@ -112,7 +121,15 @@ $chartIPC = $pdo->query("SELECT ipc_status, COUNT(*) as cnt FROM ipc GROUP BY ip
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4 statusx">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Inspection by Status</h5>
+                        <canvas id="inspectionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 statusx">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">IPC by Status</h5>
@@ -160,7 +177,15 @@ $chartIPC = $pdo->query("SELECT ipc_status, COUNT(*) as cnt FROM ipc GROUP BY ip
             datasets: [{
                 label: 'PO Count',
                 data: <?= json_encode(array_column($chartPO, 'cnt')) ?>,
-                backgroundColor: ['#007bff', '#28a745', '#ffc107', '#6c757d', '#17a2b8']
+                backgroundColor: ['#28a745', '#ffc107', '#17a2b8', '#6c757d', '#007bff']
+            }]
+        };
+        const inspectionData = {
+            labels: <?= json_encode(array_column($chartInspection, 'inspection_status')) ?>,
+            datasets: [{
+                label: 'Inspection Count',
+                data: <?= json_encode(array_column($chartInspection, 'cnt')) ?>,
+                backgroundColor: ['#28a745', '#ffc107', '#17a2b8', '#6c757d', '#007bff']
             }]
         };
         const ipcData = {
@@ -176,6 +201,10 @@ $chartIPC = $pdo->query("SELECT ipc_status, COUNT(*) as cnt FROM ipc GROUP BY ip
         new Chart(document.getElementById('poChart'), {
             type: 'pie',
             data: poData
+        });
+        new Chart(document.getElementById('inspectionChart'), {
+            type: 'pie',
+            data: inspectionData
         });
         new Chart(document.getElementById('ipcChart'), {
             type: 'pie',

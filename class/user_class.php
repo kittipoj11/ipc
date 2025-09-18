@@ -24,7 +24,7 @@ class User
         $sql = <<<EOD
                     select user_id, user_code, username, password, full_name, u.role_id, u.department_id 
                     , d.department_name, r.role_name
-                    , u.filename
+                    , u.filename, u.email
                     from users u
                     left join departments d
                         on u.department_id = d.department_id
@@ -61,7 +61,7 @@ class User
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
                     , D.department_name
                     , R.role_name
-                    , U.filename
+                    , U.filename, U.email
                     FROM users U
                     LEFT JOIN departments D
                         ON D.department_id = U.department_id
@@ -82,7 +82,7 @@ class User
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
                     , D.department_name
                     , R.role_name
-                    , U.filename
+                    , U.filename, U.email
                     FROM users U
                     LEFT JOIN departments D
                         ON D.department_id = U.department_id
@@ -106,7 +106,7 @@ class User
                     SELECT U.user_id, U.user_code, U.username, U.password, U.full_name, U.role_id, U.department_id, U.is_deleted 
                     , D.department_name
                     , R.role_name
-                    , U.filename
+                    , U.filename, U.email
                     FROM users U
                     LEFT JOIN departments D
                         ON D.department_id = U.department_id
@@ -178,8 +178,8 @@ class User
         $hashedPassword = $data['password'];//ตอนนี้ใช้การเก็บค่าโดยตรง   ซึ่งต่อไปต้องแยก transaction ของการเก็บรหัสผ่่านไว้อีกฟังก์ชั่นหนึ่ง
         if (empty($userId)) {
 
-            $sql = "INSERT INTO users (user_code, username, password, full_name, role_id, department_id, filename)
-                VALUES (:user_code, :username, :password, :full_name, :role_id, :department_id, :filename)";
+            $sql = "INSERT INTO users (user_code, username, password, full_name, role_id, department_id, filename, email)
+                VALUES (:user_code, :username, :password, :full_name, :role_id, :department_id, :filename, :email)";
 
             $stmt = $this->db->prepare($sql);
             /* //รูปแบบเดิม
@@ -199,6 +199,7 @@ class User
                 ':role_id'       => $data['role_id'],
                 ':department_id' => $data['department_id'],
                 ':filename' => $data['filename'],
+                ':email' => $data['email'],
             ]);
             // คืนค่า ID ของแถวที่เพิ่งเพิ่มเข้าไปใหม่
             $userId =  $this->db->lastInsertId();
@@ -211,9 +212,9 @@ class User
                 , role_id = :role_id
                 , department_id = :department_id
                 , filename = :filename
+                , email = :email
                 WHERE user_id = :user_id";
             $stmt = $this->db->prepare($sql);
-            $_SESSION['before']="execute";
             $stmt->execute([
                 ':user_code'     => $data['user_code'],
                 ':full_name'     => $data['full_name'],
@@ -221,9 +222,9 @@ class User
                 ':role_id'       => $data['role_id'],
                 ':department_id' => $data['department_id'],
                 ':filename'      => $data['filename'],
+                ':email'         => $data['email'],
                 ':user_id'       => $userId,
             ]);
-            $_SESSION['after']="execute";
         }
         return (int)$userId;
     }

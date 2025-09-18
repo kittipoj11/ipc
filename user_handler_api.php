@@ -19,16 +19,12 @@ if (!$requestData) {
 // $_SESSION['requestData'] = $requestData;
 // return;
 if (isset($requestData['action'])) {
-    $_SESSION['requestData3'] = $requestData;
     $connection = new Connection();
     $pdo = $connection->getDbConnection();
     
-    $_SESSION['requestData4'] = $requestData;
     $user = new User($pdo);
-    $_SESSION['requestData5'] = $requestData;
     switch ($requestData['action']) {
         case 'check_login':
-            $_SESSION['requestData6'] = $requestData;
             try {
                 // ตรวจสอบว่ามีการส่งข้อมูล username และ password 
                 if (isset($requestData['username']) && isset($requestData['password'])) {
@@ -42,9 +38,7 @@ if (isset($requestData['action'])) {
                     $user = new User($pdo);
                     
                     // 3. ตรวจสอบการ login และรับผลลัพธ์ (จะเป็น array ข้อมูลผู้ใช้ หรือ false)
-                    $_SESSION['requestData7'] = $requestData;
                     $loggedInUser = $user->checkLogin($username, $password);
-                    $_SESSION['requestData8'] = $requestData;
                 }
                 // 4. กำหนด Content-Type เป็น application/json
                 // header('Content-Type: application/json');///ประกาศอยู่ด้านบนแล้ว
@@ -63,6 +57,7 @@ if (isset($requestData['action'])) {
                     $_SESSION['role_id'] = $loggedInUser['role_id'];
                     $_SESSION['role_name'] = $loggedInUser['role_name'];
                     $_SESSION['department_name'] = $loggedInUser['department_name'];
+                    $_SESSION['email'] = $loggedInUser['email'];
                     $_SESSION['logged_in'] = true; // สร้างตัวแปรเช็คสถานะ login
 
                     $_SESSION['user_menu'] = buildMenuForRole($pdo, $loggedInUser['role_id']);

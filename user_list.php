@@ -77,6 +77,7 @@ require_once 'auth.php';
                         <th class="text-center p-1">Fullname</th>
                         <th class="text-center p-1">Role</th>
                         <th class="text-center p-1">Department</th>
+                        <th class="text-center p-1">Email</th>
                         <th class="text-center p-1">Active</th>
                         <th class="text-center" style="width: 120px;">Action</th>
                       </tr>

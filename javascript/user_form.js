@@ -39,14 +39,17 @@ $(document).ready(function () {
     e.preventDefault();
 
     // 1) upload รูปก่อน
-    if(selectedFile){ 
-      const resUpload = await uploadSignatureFile(selectedFile);
+    if (selectedFile) {
+      const resUpload = await uploadSignatureFile(
+        selectedFile,
+        $("#filename").val()
+      );//ต้องส่งชื่อไฟล์ที่เปลี่ยนใหม่ไปกับฟังก์ชันด้วย
     }
-    
+
     // 2) save user + path ของรูป
     const myForm = $("#myForm");
     const userId = myForm.data("user-id");
-    const filename = `uploads/signatures/${$("#filename").val()}`;
+    const filename = `uploads/signatures/${$("#filename").val()}`; //พาธ+ชื่อไฟล์ที่จะถูกบันทึก
 
     const headerData = {
       user_id: userId,
@@ -57,6 +60,7 @@ $(document).ready(function () {
       role_id: $("#role_id").val(),
       department_id: $("#department_id").val(),
       filename: filename,
+      email: $("#email").val(),
     };
 
     const data_sent = {
@@ -68,7 +72,7 @@ $(document).ready(function () {
       url: "user_handler_api.php",
       type: "POST",
       contentType: "application/json",
-      dataType: 'json',
+      dataType: "json",
       data: JSON.stringify(data_sent),
     })
       .done(function (result) {
@@ -108,11 +112,12 @@ $(document).ready(function () {
 
 
   
-function uploadSignatureFile(selectedFile) {
+function uploadSignatureFile(selectedFile, fileNewNameText) {
   return new Promise((resolve, reject) => {
     const formData = new FormData();
     formData.append("file", selectedFile);
-
+    formData.append("file_new_name_text", fileNewNameText);
+    console.log(formData);
     $.ajax({
       url: "upload_handler_api.php",
       type: "POST",

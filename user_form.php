@@ -166,6 +166,13 @@ require_once 'auth.php';
 
                     <div class="row m-1">
                       <div class="col-4 input-group input-group-sm">
+                        <label for="email" class="input-group-text">Email</label>
+                        <input type="email" class="form-control" name="email" id="email" value="<?= (isset($rsUser['email']) ? $rsUser['email'] : '') ?>">
+                      </div>
+                    </div>
+
+                    <div class="row m-1">
+                      <div class="col-4 input-group input-group-sm">
                         <a href="" class="btn btn-primary btn-sm btnAdd <?= $mode ?>" title="Add" style="margin: 0px 5px 5px 5px;" data-bs-toggle="modal" data-bs-target="#imageModal">
                           <!-- <i class="fa-solid fa-plus"></i> -->
                           เลือกลายเซ็นต์

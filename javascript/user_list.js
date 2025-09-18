@@ -53,6 +53,7 @@ $(document).ready(function () {
                           <td class="tdMain p-0">${data.full_name}</td>
                           <td class="tdMain p-0">${data.role_name}</td>
                           <td class="tdMain p-0 text-left">${data.department_name}</td>
+                          <td class="tdMain p-0 text-left">${data.email}</td>
                           <td class="tdMain p-0 text-center"><input type="checkbox" value="" ${checked}></td>
                           <td class="tdMain p-0 action" align='center'>
                               <div class='btn-group-sm ${display}'>
