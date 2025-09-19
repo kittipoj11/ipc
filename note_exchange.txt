@@ -1,3 +1,6 @@
+ติดตั้ง
+composer require phpmailer/phpmailer
+
 🔹🔹กรณีใช้ Microsoft Exchange (On-Premise ในบริษัท)
 🔹ข้อมูล SMTP Server ของบริษัทคืออะไร (Host / Port / Encryption / Auth)
 - Host (เช่น mail.company.local หรือ exchange.company.com)

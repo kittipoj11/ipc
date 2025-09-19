@@ -147,7 +147,7 @@ $(document).ready(function () {
   //   }
   // });
 
-  // // แก้ไขใหม่
+  // แก้ไขใหม่
   $("#workload_actual_completed_percent").on("blur", function () {
     calculateAndDisplay();
   });
@@ -295,7 +295,7 @@ $(document).ready(function () {
     }
   });
 
-  // Approval *****************
+  // ########## APPROVE  ########## 
   $(".approve").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();
@@ -356,6 +356,7 @@ $(document).ready(function () {
     sendRequest("approve", data);
   });
 
+  // ########## REJECT  ##########
   $(".reject").on("click", function (e) {
     // $(document).on("click", "#btnSave", function (e) {
     e.preventDefault();

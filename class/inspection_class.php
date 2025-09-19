@@ -172,7 +172,7 @@ class Inspection
         // $_SESSION['rsApprover'] = $rsApprover;
 
         $sql = "SELECT W.approver_id, W.order_in_block, W.approval_level
-                , U.full_name
+                , U.full_name, U.email
                 , case when I.current_approval_level > W.approval_level then U.filename else '' end as signature
                 , case when I.current_approval_level > W.approval_level then 'inline-block' else 'none' end as display
                 from workflow_steps W
@@ -463,19 +463,19 @@ class Inspection
                 SET `inspection_status` = :inspection_status
                 , `current_approver_id` = :approver_id
                 , `current_approval_level` = :approval_level
-                , `approved1_by` = CASE WHEN :order_in_block_1 = 1 THEN :current_approver_id_1 ELSE approved1_by END
-                , `approved2_by` = CASE WHEN :order_in_block_2 = 2 THEN :current_approver_id_2 ELSE approved2_by END
                 WHERE `inspection_id` = :inspection_id";
+// , `approved1_by` = CASE WHEN :order_in_block_1 = 1 THEN :current_approver_id_1 ELSE approved1_by END
+// , `approved2_by` = CASE WHEN :order_in_block_2 = 2 THEN :current_approver_id_2 ELSE approved2_by END
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':inspection_id', $inspectionId, PDO::PARAM_INT);
         $stmt->bindParam(':approver_id', $approverId, PDO::PARAM_INT);
         $stmt->bindParam(':approval_level', $approvalLevel, PDO::PARAM_INT);
         $stmt->bindParam(':inspection_status', $inspectionStatus, PDO::PARAM_STR);
-        $stmt->bindParam(':current_approver_id_1', $currentApproverId, PDO::PARAM_INT);
-        $stmt->bindParam(':order_in_block_1', $orderInBlock, PDO::PARAM_INT);
-        $stmt->bindParam(':current_approver_id_2', $currentApproverId, PDO::PARAM_INT);
-        $stmt->bindParam(':order_in_block_2', $orderInBlock, PDO::PARAM_INT);
+        // $stmt->bindParam(':current_approver_id_1', $currentApproverId, PDO::PARAM_INT);
+        // $stmt->bindParam(':order_in_block_1', $orderInBlock, PDO::PARAM_INT);
+        // $stmt->bindParam(':current_approver_id_2', $currentApproverId, PDO::PARAM_INT);
+        // $stmt->bindParam(':order_in_block_2', $orderInBlock, PDO::PARAM_INT);
 
         $stmt->execute();
         // $_SESSION['after execute'] = $stmt->execute();

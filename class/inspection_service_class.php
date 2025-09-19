@@ -6,6 +6,11 @@ require_once 'po_class.php';
 require_once 'inspection_class.php';
 require_once 'ipc_class.php';
 require_once 'workflows_class.php';
+require_once 'user_class.php';
+require 'vendor/autoload.php'; // PHPMailer
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class InspectionService
 {
@@ -14,6 +19,7 @@ class InspectionService
     private $inspection;
     private $ipc;
     private $workflow;
+    private $user;
 
     public function __construct(PDO $pdoConnection, Po $po, Inspection $inspection, Ipc $ipc, Workflows $workflow)
     {
@@ -22,6 +28,7 @@ class InspectionService
         $this->inspection = $inspection;
         $this->ipc = $ipc;
         $this->workflow = $workflow;
+        $this->user = new User($this->db);
     }
 
     public function saveInspection(array $periodData, array $detailsData): int
@@ -110,9 +117,10 @@ class InspectionService
             // 3.หา workflow_step 
             $workflowId = $rsInspection['period']['workflow_id'];
             $currentLevel = $rsInspection['period']['current_approval_level'];
+
             // 3.1 หา workflow_step ปัจจุบันก่อน  เพื่อนำค่า order_in_block เพื่อมาบันทึกค่าให้ approved1_by หรือ approved2_by ถ้ามีการกำหนดไว้
-            $rsWorkflow = $this->workflow->getStep($workflowId, $currentLevel);
-            $orderInBlock = $rsWorkflow['order_in_block'];
+            // $rsWorkflow = $this->workflow->getStep($workflowId, $currentLevel);
+            // $orderInBlock = $rsWorkflow['order_in_block'];
             // $_SESSION['order in block'] = $orderInBlock;
 
             // 3.2 หา workflow_step ลำดับถัดไป
@@ -131,17 +139,21 @@ class InspectionService
             if ($rsWorkflow) {
                 // ถ้ายังมีข้อมูล  แสดงว่ายังไม่ใช่ลำดับสุดท้าย
                 $nextApproverId = $rsWorkflow['approver_id'];
-                
-                // $userId คือ ผู้ที่ทำการ approve, $orderInBlock คือลำดับการวางชื่อของ userId ที่ทำการ approve นี้(ถ้าใน workflow_steps เป็น NULL หรือกำหนดเป็น 0 แสดงว่าไม่มี)
-                $this->inspection->updateStatus($inspectionId, 'pending-approve', $nextApproverId, $nextLevel, $userId, $orderInBlock);
 
-                // 7.log history 
+                // $userId คือ ผู้ที่ทำการ approve, $orderInBlock คือลำดับการวางชื่อของ userId ที่ทำการ approve นี้(ถ้าใน workflow_steps เป็น NULL หรือกำหนดเป็น 0 แสดงว่าไม่มี)
+                $this->inspection->updateStatus($inspectionId, 'pending-approve', $nextApproverId, $nextLevel);
+
+                // 7.send email 
+                $message = "เอกสาร Inspection หมายเลข: {$rsInspection['header']['po_number']}-{$rsInspection['period']['period_number']}";
+                $this->send_email($nextApproverId, $message);
+
+                // 8.log history 
                 $this->inspection->logHistory($inspectionId, $userId, "Approved at Step {$currentLevel}");
             } else {
                 //inspection_status สถานะปัจจุบัน (Completed)
                 //current_approver_id บอกว่าไม่มีใครต้องทำอะไรต่อ (Null) 
                 //current_level บอกประวัติว่าไปถึงขั้นตอนไหน (ขั้นตอนสุดท้าย)
-                $this->inspection->updateStatus($inspectionId, 'completed', NULL, $nextLevel, $userId, $orderInBlock);
+                $this->inspection->updateStatus($inspectionId, 'completed', NULL, $nextLevel);
 
                 // 7.log history 
                 $this->inspection->logHistory($inspectionId, $userId, "Final Approved at Step {$currentLevel}. Status: Completed");
@@ -249,14 +261,12 @@ class InspectionService
             $userId = $_SESSION['user_id'];
             // 2.หา current_approval_level, workflow_id จาก inspection
             $rsIpc = $this->ipc->getIpcByIpcId($ipcId);
-            // $_SESSION['rsIpc XXXXXXXXXXXXX']=$rsIpc;
-            // return $ipcId;
 
             // 3.หา workflow_step
-            $currentLevel = $rsIpc['ipc']['current_approval_level'];
-            $nextLevel = $currentLevel + 1;
             $workflowId = $rsIpc['ipc']['workflow_id'];
+            $currentLevel = $rsIpc['ipc']['current_approval_level'];
 
+            $nextLevel = $currentLevel + 1;
             $rsWorkflow = $this->workflow->getStep($workflowId, $nextLevel);
 
             // 4.update ipc status
@@ -322,6 +332,66 @@ class InspectionService
             // error_log($e->getMessage());
             return 0;
         }
+    }
+
+    public function send_email($userId, $message)
+    {
+        $_SESSION['message']=$message;
+        $rsUser = $this->user->getByUserId($userId);
+        $email = $rsUser['email'];
+        $token = bin2hex(random_bytes(16));
+
+        // สร้างลิงก์
+        // $approveLink = "http://localhost:8080/example/alert_email/exchange/action.php?token=$token&status=approved";
+        // $rejectLink  = "http://localhost:8080/example/alert_email/exchange/action.php?token=$token&status=rejected";
+        $approveLink = "http://localhost:8080/ipc/action.php?token=$token&status=approve";
+        $rejectLink  = "http://localhost:8080/ipc/action.php?token=$token&status=reject";
+
+        // บันทึกลง DB
+        $sql = "INSERT INTO requests (email, message, token) VALUES (:email, :message, :token)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->bindParam(':message', $message, PDO::PARAM_STR);
+        $stmt->bindParam(':token', $token, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host       = 'mail.impact.co.th';
+        $mail->SMTPAuth   = false;
+        $mail->Username   = 'nathapats@impact.co.th';  // อีเมลบริษัท
+        $mail->Password   = 'db99br0oN';          // รหัสผ่าน AD/Exchange
+        $mail->SMTPSecure = false;
+        $mail->Port = 25;
+
+        $mail->SMTPOptions = [
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            ]
+        ];
+
+        // ตั้งค่าการเข้ารหัสเป็น UTF-8
+        $mail->CharSet = "UTF-8";
+        $mail->Encoding = "base64";
+
+        $mail->setFrom('no-reply@impact.co.th', 'ระบบอนุมัติ');
+        $mail->addAddress($email);
+
+        $mail->isHTML(true);
+        $mail->Subject = 'กรุณาอนุมัติคำขอ';
+        $mail->Body    = "
+        <p><b>$message</b></p>
+        <p>
+          <a href='$approveLink' style='padding:10px;background:green;color:white;text-decoration:none;'>✅ อนุมัติ</a>
+          &nbsp;&nbsp;
+          <a href='$rejectLink' style='padding:10px;background:red;color:white;text-decoration:none;'>❌ ปฏิเสธ</a>
+        </p>
+    ";
+
+        $mail->send();
     }
 }
 /*Example

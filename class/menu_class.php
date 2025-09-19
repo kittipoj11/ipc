@@ -36,11 +36,103 @@ class Menu {
         $stmt->execute();
         $rs = $stmt->fetch();
         
+        // แบบใหม่
         if (!$rs) {
             return null; // ไม่พบข้อมูล
         }
         return $rs;
+
+        // แบบเก่า
+        // if ($rs) {
+        //     // ❗️ สำคัญ: คืนค่าเป็น array ข้อมูล Data ทั้งหมด
+        //     return $rs;
+        //     // return true;
+        // } else {
+        //     // ถ้าไม่เจอ Data  ให้คืนค่า false
+        //     return false;
+        // }
     }
+
+    /**
+     * สร้างข้อมูลใหม่ในฐานข้อมูล (INSERT)
+     * @param array $getData ข้อมูลในรูปแบบ associative array
+     * @return string|false ID ของที่สร้างใหม่ หรือ false หากล้มเหลว
+     */
+    public function create(array $getData)
+    {
+        $sql = <<<EOD
+                    INSERT INTO menu_items(department_name)
+                    VALUES (:department_name)
+                EOD;
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            /* //รูปแบบเดิม
+            $stmt->bindParam(':department_name', $department_name, PDO::PARAM_STR);
+            $stmt->execute();
+            */
+
+            $stmt->execute([
+                ':department_name'      => $getData['department_name']
+            ]);
+
+            // คืนค่า ID ของแถวที่เพิ่งเพิ่มเข้าไปใหม่
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            // ในสถานการณ์จริง ควรจะ Log error แทนการ echo
+            // error_log($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * อัปเดตข้อมูล Data  (UPDATE)
+     * @param int $getId ID ของ Data ที่ต้องการแก้ไข
+     * @param array $getData ข้อมูลใหม่ที่ต้องการอัปเดต
+     * @return bool true หากสำเร็จ, false หากล้มเหลว
+     */
+    public function update(int $getId, array $getData)
+    {
+        $sql = "UPDATE menu_items 
+                SET department_name = :department_name
+                WHERE department_id = :department_id";
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                ':department_name'     => $getData['department_name'],
+                ':department_id'       => $getId
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * ลบผู้ใช้ (DELETE)
+     * @param int $getId ID ของผู้ใช้ที่ต้องการลบ
+     * @return bool true หากสำเร็จ, false หากล้มเหลว
+     */
+    public function delete(int $getId)
+    {
+        // คำแนะนำ: ในระบบงานจริงส่วนใหญ่นิยมใช้วิธี "Soft Delete"
+        // คือการอัปเดต field เช่น is_deleted = 1 แทนการลบข้อมูลจริงออกจากฐานข้อมูล
+        $sql = "UPDATE menu_items 
+                SET is_deleted = 1
+                WHERE department_id = :department_id";
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([':department_id' => $getId]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    /*
+        create() คืนค่า lastInsertId() เพื่อให้เรารู้ว่าข้อมูลใหม่ที่สร้างมี ID อะไร สามารถนำไปใช้ต่อได้ทันที
+        update() และ delete() คืนค่าเป็น boolean (true/false) เพื่อบอกสถานะความสำเร็จให้โค้ดที่เรียกใช้ทราบได้ง่ายๆ
+    */
+        
 }
 
 

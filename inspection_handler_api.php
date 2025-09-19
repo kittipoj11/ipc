@@ -52,6 +52,27 @@ if (isset($requestData['action']) && $userId > 0) {
             echo json_encode($response);
             break;
 
+        case 'select':
+            $rs = $inspection->getPoMainAll();
+            echo json_encode($rs);
+            break;
+
+        case 'selectInspectionPeriodAll':
+            $rs = $inspection->getAllPeriodByPoId($requestData['po_id']);
+            echo json_encode($rs);
+            break;
+
+        case 'selectInspectionFiles':
+            $rsInspectionFiles = $inspection->getInspectionFilesByInspectionId($requestData['po_id'], $requestData['period_id'], $requestData['inspection_id']);
+            echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
+            break;
+        case 'insertInspectionFiles':
+            $inspection->insertInspectionFiles($requestData);
+            break;
+        case 'deleteInspectionFiles':
+            $inspection->deleteInspectionFiles($requestData['file_id']);
+            break;
+
         case 'approve':
             // $savedInspectionId = $inspection->save($requestData['periodData'], $requestData['detailsData']);
             $savedInspectionId = $inspectionService->approveInspection($requestData['periodData'], $requestData['detailsData']);
@@ -72,27 +93,6 @@ if (isset($requestData['action']) && $userId > 0) {
                 'data' => ['inspection_id' => $savedInspectionId]
             ];
             echo json_encode($response);
-            break;
-
-        case 'select':
-            $rs = $inspection->getPoMainAll();
-            echo json_encode($rs);
-            break;
-
-        case 'selectInspectionPeriodAll':
-            $rs = $inspection->getAllPeriodByPoId($requestData['po_id']);
-            echo json_encode($rs);
-            break;
-
-        case 'selectInspectionFiles':
-            $rsInspectionFiles = $inspection->getInspectionFilesByInspectionId($requestData['po_id'], $requestData['period_id'], $requestData['inspection_id']);
-            echo json_encode(['status' => 'success', 'data' => $rsInspectionFiles]);
-            break;
-        case 'insertInspectionFiles':
-            $inspection->insertInspectionFiles($requestData);
-            break;
-        case 'deleteInspectionFiles':
-            $inspection->deleteInspectionFiles($requestData['file_id']);
             break;
         default:
     }
